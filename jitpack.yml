@@ -15,3 +15,4 @@ install:
   - "sdk use java 17.0.1-open"
   - "java -version"
   - "bash gradlew build publishToMavenLocal"
+  - "find . -type f -name '*-dev.jar' -exec rm -f {} \;" # Remove paperweight-userdev -dev.jar files
