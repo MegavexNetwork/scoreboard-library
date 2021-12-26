@@ -5,8 +5,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -41,17 +40,17 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
 
         private void sendTeamPacket(Collection<Player> players, boolean create) {
             ScoreboardManagerNMS.sendLocaleDependantPackets(null, impl, players, locale -> {
-                PacketPlayOutScoreboardTeam.b parameters = parametersConstructor.invoke();
+                ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
                 fillParameters(parameters, locale);
                 return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName, parameters, properties.entries());
             });
         }
 
         @Override
-        protected void fillParameters(PacketPlayOutScoreboardTeam.b parameters, Locale locale) {
+        protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
             super.fillParameters(parameters, locale);
 
-            IChatBaseComponent vanilla = impl.fromAdventure(properties.displayName(), locale);
+            net.minecraft.network.chat.Component vanilla = impl.fromAdventure(properties.displayName(), locale);
             UnsafeUtilities.setField(displayNameField, parameters, vanilla);
 
             vanilla = impl.fromAdventure(properties.prefix(), locale);

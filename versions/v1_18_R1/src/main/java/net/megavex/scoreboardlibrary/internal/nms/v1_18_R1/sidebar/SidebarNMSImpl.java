@@ -5,8 +5,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardObjective;
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -16,8 +15,8 @@ import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarNMSImpl extends AbstractSidebarImpl {
 
-    private final PacketPlayOutScoreboardObjective createPacket;
-    private final PacketPlayOutScoreboardObjective updatePacket;
+    private final ClientboundSetObjectivePacket createPacket;
+    private final ClientboundSetObjectivePacket updatePacket;
 
     public SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
         super(impl, sidebar);
@@ -37,8 +36,8 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
         }
     }
 
-    private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-        IChatBaseComponent vanilla = impl.fromAdventure(displayName, locale);
+    private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
+        net.minecraft.network.chat.Component vanilla = impl.fromAdventure(displayName, locale);
         UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
     }
 
@@ -57,7 +56,7 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
             impl.sendPacket(players, create ? createPacket : updatePacket);
         } else {
             ScoreboardManagerNMS.sendLocaleDependantPackets(sidebar.locale(), impl, players, locale -> {
-                PacketPlayOutScoreboardObjective packet = objectivePacketConstructor.invoke();
+                ClientboundSetObjectivePacket packet = objectivePacketConstructor.invoke();
                 createObjectivePacket(createPacket, create ? 0 : 2);
                 updateDisplayName(packet, sidebar.title(), locale);
                 return packet;

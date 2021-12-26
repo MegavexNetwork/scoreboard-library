@@ -5,10 +5,10 @@ import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardObjective;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardScore;
-import net.minecraft.server.ScoreboardServer;
-import net.minecraft.world.scores.criteria.IScoreboardCriteria;
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
+import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
+import net.minecraft.server.ServerScoreboard;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandles;
@@ -19,31 +19,31 @@ import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtiliti
 
 public abstract class AbstractSidebarImpl extends SidebarNMS<Packet<?>, NMSImpl> {
 
-    static final UnsafeUtilities.PacketConstructor<PacketPlayOutScoreboardObjective> objectivePacketConstructor = UnsafeUtilities
-            .findPacketConstructor(PacketPlayOutScoreboardObjective.class, MethodHandles.lookup());
-    static final Field objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "d"),
-            objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "e"),
-            objectiveRenderTypeField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "f");
-    private static final Field objectiveModeField = getField(PacketPlayOutScoreboardObjective.class, "g");
+    static final UnsafeUtilities.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor = UnsafeUtilities
+            .findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
+    static final Field objectiveNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "d"),
+            objectiveDisplayNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "e"),
+            objectiveRenderTypeField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "f");
+    private static final Field objectiveModeField = getField(ClientboundSetObjectivePacket.class, "g");
 
     public AbstractSidebarImpl(NMSImpl impl, Sidebar sidebar) {
         super(impl, sidebar);
     }
 
-    protected void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode) {
+    protected void createObjectivePacket(ClientboundSetObjectivePacket packet, int mode) {
         UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
         UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(objectiveModeField), mode);
-        UnsafeUtilities.setField(objectiveRenderTypeField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.a);
+        UnsafeUtilities.setField(objectiveRenderTypeField, packet, ObjectiveCriteria.RenderType.INTEGER);
     }
 
     @Override
     public void removeLine(Collection<Player> players, String line) {
-        impl.sendPacket(players, new PacketPlayOutScoreboardScore(ScoreboardServer.Action.b, impl.objectiveName, line, 0));
+        impl.sendPacket(players, new ClientboundSetScorePacket(ServerScoreboard.Method.REMOVE, impl.objectiveName, line, 0));
     }
 
     @Override
     public void score(Collection<Player> players, int score, String line) {
-        PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(ScoreboardServer.Action.a, impl.objectiveName, line, score);
+        ClientboundSetScorePacket packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, impl.objectiveName, line, score);
         impl.sendPacket(players, packet);
     }
 }

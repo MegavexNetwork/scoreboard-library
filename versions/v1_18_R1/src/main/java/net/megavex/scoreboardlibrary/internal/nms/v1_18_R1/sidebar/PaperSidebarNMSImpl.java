@@ -5,8 +5,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util.NativeAdventureUtil;
-import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardObjective;
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -16,8 +15,8 @@ import java.util.Collection;
  */
 public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
 
-    private PacketPlayOutScoreboardObjective createPacket;
-    private PacketPlayOutScoreboardObjective updatePacket;
+    private ClientboundSetObjectivePacket createPacket;
+    private ClientboundSetObjectivePacket updatePacket;
 
     public PaperSidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
         super(impl, sidebar);
@@ -33,14 +32,14 @@ public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
         updateTitle(sidebar.title());
     }
 
-    private void updateDisplayName(PacketPlayOutScoreboardObjective packet, IChatBaseComponent displayName) {
+    private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {
         UnsafeUtilities.setField(objectiveDisplayNameField, packet, displayName);
     }
 
     @Override
     public void updateTitle(Component displayName) {
         if (createPacket != null && updatePacket != null) {
-            IChatBaseComponent vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
+            net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
             updateDisplayName(createPacket, vanilla);
             updateDisplayName(updatePacket, vanilla);
         }

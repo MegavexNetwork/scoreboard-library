@@ -7,9 +7,9 @@ import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
-import net.minecraft.EnumChatFormat;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandles;
@@ -25,35 +25,35 @@ import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtiliti
 
 public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
 
-    protected static final Field displayNameField = getField(PacketPlayOutScoreboardTeam.b.class, "a"),
-            prefixField = getField(PacketPlayOutScoreboardTeam.b.class, "b"),
-            suffixField = getField(PacketPlayOutScoreboardTeam.b.class, "c"),
-            entriesField = getField(PacketPlayOutScoreboardTeam.class, "j"),
-            nameTagVisibilityField = getField(PacketPlayOutScoreboardTeam.b.class, "d"),
-            collisionRuleField = getField(PacketPlayOutScoreboardTeam.b.class, "e"),
-            colorField = getField(PacketPlayOutScoreboardTeam.b.class, "f"),
-            optionsField = getField(PacketPlayOutScoreboardTeam.b.class, "g");
-    private static final Constructor<PacketPlayOutScoreboardTeam> teamPacketConstructor;
+    protected static final Field displayNameField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "a"),
+            prefixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "b"),
+            suffixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "c"),
+            entriesField = getField(ClientboundSetPlayerTeamPacket.class, "j"),
+            nameTagVisibilityField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "d"),
+            collisionRuleField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "e"),
+            colorField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "f"),
+            optionsField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "g");
+    private static final Constructor<ClientboundSetPlayerTeamPacket> teamPacketConstructor;
 
     static {
         try {
-            teamPacketConstructor = PacketPlayOutScoreboardTeam.class.getDeclaredConstructor(String.class, int.class, Optional.class, Collection.class);
+            teamPacketConstructor = ClientboundSetPlayerTeamPacket.class.getDeclaredConstructor(String.class, int.class, Optional.class, Collection.class);
             teamPacketConstructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
             throw new ExceptionInInitializerError(e);
         }
     }
 
-    protected PacketPlayOutScoreboardTeam removePacket;
+    protected ClientboundSetPlayerTeamPacket removePacket;
 
     AbstractTeamNMSImpl(NMSImpl impl, String teamName) {
         super(impl, teamName);
     }
 
-    public static PacketPlayOutScoreboardTeam createTeamsPacket(
+    public static ClientboundSetPlayerTeamPacket createTeamsPacket(
             int method,
             String name,
-            PacketPlayOutScoreboardTeam.b parameters,
+            ClientboundSetPlayerTeamPacket.Parameters parameters,
             Collection<String> entries
     ) {
         try {
@@ -79,7 +79,8 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
 
     abstract class TeamInfoNMSImpl extends TeamNMS.TeamInfoNMS<Component> {
 
-        static final UnsafeUtilities.PacketConstructor<PacketPlayOutScoreboardTeam.b> parametersConstructor = UnsafeUtilities.findPacketConstructor(PacketPlayOutScoreboardTeam.b.class, MethodHandles.lookup());
+        static final UnsafeUtilities.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
+                UnsafeUtilities.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
 
         public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties) {
             super(properties);
@@ -99,28 +100,28 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
             impl.sendPacket(players, createTeamsPacket(action, teamName, null, entries));
         }
 
-        protected void fillTeamPacket(PacketPlayOutScoreboardTeam packet, Collection<String> entries) {
-            if (packet.e() != entries) {
+        protected void fillTeamPacket(ClientboundSetPlayerTeamPacket packet, Collection<String> entries) {
+            if (packet.getPlayers() != entries) {
                 UnsafeUtilities.setField(entriesField, packet, entries);
             }
         }
 
-        protected void fillParameters(PacketPlayOutScoreboardTeam.b parameters, Locale locale) {
+        protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
             String key = properties.nameTagVisibility().key();
-            if (!Objects.equals(parameters.d(), key)) {
+            if (!Objects.equals(parameters.getNametagVisibility(), key)) {
                 UnsafeUtilities.setField(nameTagVisibilityField, parameters, key);
             }
 
             key = properties.collisionRule().key();
-            if (!Objects.equals(parameters.e(), key))
+            if (!Objects.equals(parameters.getCollisionRule(), key))
                 UnsafeUtilities.setField(collisionRuleField, parameters, key);
 
             char c = LegacyFormatUtil.getChar(properties.playerColor());
-            if (parameters.c() == null || parameters.c().a() != c)
-                UnsafeUtilities.setField(colorField, parameters, EnumChatFormat.a(c));
+            if (parameters.getColor() == null || parameters.getColor().code != c)
+                UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(c));
 
             int options = properties.packOptions();
-            if (parameters.b() != options)
+            if (parameters.getOptions() != options)
                 UnsafeUtilities.UNSAFE.putInt(parameters, UnsafeUtilities.UNSAFE.objectFieldOffset(optionsField), options);
         }
     }

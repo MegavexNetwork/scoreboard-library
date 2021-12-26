@@ -6,7 +6,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util.NativeAdventureUtil;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -25,9 +25,9 @@ public class PaperTeamNMSImpl extends AbstractTeamNMSImpl {
 
     private class TeamInfoNMSImpl extends AbstractTeamNMSImpl.TeamInfoNMSImpl {
 
-        final PacketPlayOutScoreboardTeam.b parameters = parametersConstructor.invoke();
-        protected final PacketPlayOutScoreboardTeam createPacket = createTeamsPacket(TeamNMS.MODE_CREATE, teamName, parameters, null);
-        protected final PacketPlayOutScoreboardTeam updatePacket = createTeamsPacket(TeamNMS.MODE_UPDATE, teamName, parameters, null);
+        final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
+        protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(TeamNMS.MODE_CREATE, teamName, parameters, null);
+        protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(TeamNMS.MODE_UPDATE, teamName, parameters, null);
         private Component displayName, prefix, suffix;
 
         public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties) {
@@ -52,7 +52,7 @@ public class PaperTeamNMSImpl extends AbstractTeamNMSImpl {
         }
 
         @Override
-        protected void fillParameters(PacketPlayOutScoreboardTeam.b parameters, Locale locale) {
+        protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
             super.fillParameters(parameters, locale);
 
             if (properties.displayName() != displayName) {

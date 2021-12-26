@@ -15,10 +15,9 @@ import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.team.PaperTeamNMSImpl
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.team.TeamNMSImpl;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util.ProtocolSupportUtil;
-import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardDisplayObjective;
-import net.minecraft.network.protocol.game.PacketPlayOutScoreboardObjective;
+import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -33,14 +32,14 @@ import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtiliti
 
 public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
-    private final PacketPlayOutScoreboardDisplayObjective displayPacket = new PacketPlayOutScoreboardDisplayObjective(1, null);
-    private final PacketPlayOutScoreboardObjective removePacket = UnsafeUtilities.findPacketConstructor(PacketPlayOutScoreboardObjective.class, MethodHandles.lookup()).invoke();
+    private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(1, null);
+    private final ClientboundSetObjectivePacket removePacket = UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
     private boolean nativeAdventure, protocolSupport;
 
     public NMSImpl() {
-        setField(getField(PacketPlayOutScoreboardDisplayObjective.class, "b"), displayPacket, objectiveName);
-        setField(getField(PacketPlayOutScoreboardObjective.class, "d"), removePacket, objectiveName);
-        UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(PacketPlayOutScoreboardDisplayObjective.class, "a")), 1);
+        setField(getField(ClientboundSetDisplayObjectivePacket.class, "b"), displayPacket, objectiveName);
+        setField(getField(ClientboundSetObjectivePacket.class, "d"), removePacket, objectiveName);
+        UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetDisplayObjectivePacket.class, "a")), 1);
 
         try {
             Class.forName("io.papermc.paper.adventure.PaperAdventure");
@@ -92,13 +91,13 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
     @Override
     public void sendPacket(Player player, Packet<?> packet) {
-        ((CraftPlayer) player).getHandle().b.a(packet);
+        ((CraftPlayer) player).getHandle().connection.send(packet);
     }
 
-    public IChatBaseComponent fromAdventure(Component component, Locale locale) {
+    public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
         if (nativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
 
         component = GlobalTranslator.render(component, Objects.requireNonNull(locale));
-        return IChatBaseComponent.ChatSerializer.a(gson().serializeToTree(component));
+        return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(component));
     }
 }
