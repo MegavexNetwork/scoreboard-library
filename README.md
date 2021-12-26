@@ -13,8 +13,7 @@ Note that this project is not yet stable, so expect bugs.
 
 ## Supported Versions
 
-- 1.18.1 (sidebars will not flicker for players on new versions, but will flicker on 1.8 players playing
-  through [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) if a line is long enough)
+- 1.18.1 (sidebars will not flicker for players on 1.13+, but will flicker on older versions through [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/))
 - 1.8.8 (sidebars will flicker if a line is long enough)
 
 ## Getting started
