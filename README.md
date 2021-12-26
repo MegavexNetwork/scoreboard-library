@@ -19,7 +19,7 @@ Note that this project is not yet stable, so expect bugs.
 
 ## Getting started
 
-See installation instructions [here](TODO)
+See installation instructions [here](https://github.com/MegavexNetwork/scoreboard-library/blob/master/INSTALLATION.md)
 
 ### Getting a `ScoreboardManager`:
 
@@ -79,17 +79,17 @@ teamInfo.playerColor(NamedTextColor.RED);
 teamManager.addPlayer(player); // Player will be added to the global TeamInfo
 
 // You can change the TeamInfo like this:
-TeamInfo newTeamInfo = TeamInfo.teamInfo();
+TeamInfo newTeamInfo = TeamInfo.teamInfo(); // Creates a blank TeamInfo
 team.teamInfo(player, newTeamInfo);
 ```
 
-There's an example plugin [here](https://github.com/MegavexNetwork/scoreboard-library-example).
+See the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example) for more examples.
 
 ## Notes
 
 - When a player leaves, they will be automatically removed from any Sidebar or TeamManager they were in to prevent a
   memory leak.
-- One player cannot have more than 1 Sidebar or TeamManager at the same time, it will throw an exception (atleast for
+- One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (atleast for
   now).
 - Not thread-safe and should only be used from the main thread (atleast for now).
 
