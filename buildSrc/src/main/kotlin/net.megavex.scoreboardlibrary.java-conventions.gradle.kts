@@ -20,7 +20,7 @@ dependencies {
 }
 
 group = "net.megavex.scoreboardlibrary"
-version = "1.6"
+version = "1.0.0"
 
 tasks {
     compileJava {
