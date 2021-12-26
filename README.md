@@ -25,7 +25,7 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 ```java
 // If you're using the standalone plugin, you don't need to do this:
 try {
-    ScoreboardLibraryImplementation.init(this);
+    ScoreboardLibraryImplementation.init();
 } catch (ScoreboardLibraryLoadException e) {
     // Couldn't load the library.
     // Probably because the servers version is unsupported.
@@ -94,5 +94,5 @@ See the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-ex
 
 ## Building
 
-Clone the project, and just do `gradlew build`, you'll find the jars in `build/` of every module. If you also want to
+Make sure you have Java 17, then just run `gradlew build`, you'll find the jars in `build/libs/` of every module. If you also want to
 publish the artifacts to your Maven local repository, you can do `gradlew publishToMavenLocal`.
