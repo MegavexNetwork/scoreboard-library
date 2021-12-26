@@ -7,7 +7,7 @@ Note that this project is not yet stable, so expect bugs.
 
 - Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
   the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.1 server, it will be
-  automatically utilized for players below 1.12.2.
+  automatically utilized for players below at or below 1.12.2.
 - Teams API
 - Packet-level
 
