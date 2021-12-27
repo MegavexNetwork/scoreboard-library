@@ -1,6 +1,7 @@
 plugins {
     id("net.megavex.scoreboardlibrary.nms-conventions")
     id("io.papermc.paperweight.userdev") version "1.3.3"
+    `maven-publish`
 }
 
 repositories {
@@ -16,5 +17,12 @@ dependencies {
 tasks {
     assemble {
         dependsOn(reobfJar)
+    }
+}
+
+publishing {
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
+        artifact(tasks.reobfJar)
     }
 }
