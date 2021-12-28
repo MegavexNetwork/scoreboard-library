@@ -13,8 +13,8 @@ Note that this project is not yet stable, so expect bugs.
 
 ## Supported Versions
 
-- 1.18.1 (sidebars will not flicker for players on 1.13+, but will flicker on older versions through [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/))
-- 1.8.8 (sidebars will flicker if a line is long enough)
+- 1.18.1 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance because of native [Adventure](https://github.com/KyoriPowered/adventure))
+- 1.8.8
 
 ## Getting started
 
@@ -94,5 +94,5 @@ See the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-ex
 
 ## Building
 
-Make sure you have Java 17, then just run `gradlew build`, you'll find the jars in `build/libs/` of every module. If you also want to
-publish the artifacts to your Maven local repository, you can do `gradlew publishToMavenLocal`.
+Make sure you have Java 17, then just run `gradlew build`, you'll find the jars in `build/libs/` of every module. If you
+also want to publish the artifacts to your Maven local repository, you can do `gradlew publishToMavenLocal`.
