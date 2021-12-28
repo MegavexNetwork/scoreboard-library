@@ -38,7 +38,7 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
         if (removePacket == null) {
             removePacket = new PacketPlayOutScoreboardTeam();
             UnsafeUtilities.setField(teamNameField, removePacket, teamName);
-            UnsafeUtilities.setField(teamModeField, removePacket, MODE_REMOVE);
+            UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), MODE_REMOVE);
         }
         impl.sendPacket(players, removePacket);
     }
@@ -72,7 +72,7 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
         protected void teamEntry(Collection<Player> players, Collection<String> entries, int action) {
             PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
             UnsafeUtilities.setField(teamNameField, packet, teamName);
-            UnsafeUtilities.setField(teamModeField, packet, action);
+            UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), action);
             UnsafeUtilities.setField(teamEntriesField, packet, entries);
             impl.sendPacket(players, packet);
         }
@@ -88,19 +88,19 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
         }
 
         private void sendTeamPacket(boolean update, Collection<Player> players) {
-            ScoreboardManagerNMS.sendLocaleDependantPackets(null, impl, players, locale -> {
+            ScoreboardManagerNMS.sendLocalePackets(null, impl, players, locale -> {
                 String displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamNMS.LEGACY_CHARACTER_LIMIT);
                 String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamNMS.LEGACY_CHARACTER_LIMIT);
                 String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamNMS.LEGACY_CHARACTER_LIMIT);
 
                 PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
                 UnsafeUtilities.setField(teamNameField, packet, teamName);
-                UnsafeUtilities.setField(teamModeField, packet, update ? MODE_UPDATE : MODE_CREATE);
+                UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE : MODE_CREATE);
                 UnsafeUtilities.setField(teamDisplayNameField, packet, displayName);
                 UnsafeUtilities.setField(teamPrefixField, packet, prefix);
                 UnsafeUtilities.setField(teamSuffixField, packet, suffix);
                 UnsafeUtilities.setField(teamNameTagVisibilityField, packet, properties.nameTagVisibility().key());
-                UnsafeUtilities.setField(teamRulesField, packet, properties.packOptions());
+                UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamRulesField), properties.packOptions());
                 if (!update) {
                     UnsafeUtilities.setField(teamEntriesField, packet, properties.entries());
                 }

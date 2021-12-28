@@ -35,6 +35,14 @@ public class UnsafeUtilities {
     }
 
     public static void setField(Field field, Object packet, Object value) {
+        if (field == null || packet == null || value == null) {
+            throw new NullPointerException();
+        } else if (field.getDeclaringClass() != packet.getClass()) {
+            throw new RuntimeException("Field class does not match the packet class!");
+        } else if (!field.getType().isInstance(value)) {
+            throw new RuntimeException("Field type does not match value type!");
+        }
+
         UNSAFE.putObject(packet, UNSAFE.objectFieldOffset(field), value);
     }
 

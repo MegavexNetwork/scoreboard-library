@@ -22,7 +22,7 @@ public abstract class ScoreboardManagerNMS<P> {
         INSTANCE = this;
     }
 
-    public static <P> void sendLocaleDependantPackets(
+    public static <P> void sendLocalePackets(
             Locale specificLocale,
             ScoreboardManagerNMS<P> nms,
             Collection<Player> players,

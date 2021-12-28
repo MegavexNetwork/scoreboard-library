@@ -13,7 +13,7 @@ public final class NativeAdventureUtil {
     static {
         try {
             clazz = Class.forName("io.papermc.paper.adventure.AdventureComponent");
-            wrappedField = clazz.getDeclaredField("vanilla");
+            wrappedField = clazz.getDeclaredField("wrapped");
         } catch (ClassNotFoundException | NoSuchFieldException e) {
             throw new ExceptionInInitializerError(e);
         }

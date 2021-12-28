@@ -67,6 +67,11 @@ class LocaleLineImpl implements LocaleLine<Component> {
     }
 
     @Override
+    public Collection<String> entries() {
+        return entries;
+    }
+
+    @Override
     public Component displayName() {
         return empty();
     }

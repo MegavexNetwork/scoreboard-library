@@ -39,7 +39,7 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
         }
 
         private void sendTeamPacket(Collection<Player> players, boolean create) {
-            ScoreboardManagerNMS.sendLocaleDependantPackets(null, impl, players, locale -> {
+            ScoreboardManagerNMS.sendLocalePackets(null, impl, players, locale -> {
                 ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
                 fillParameters(parameters, locale);
                 return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName, parameters, properties.entries());

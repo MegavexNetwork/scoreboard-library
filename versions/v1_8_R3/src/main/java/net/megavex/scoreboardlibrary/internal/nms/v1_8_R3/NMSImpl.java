@@ -26,11 +26,19 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
     public NMSImpl() {
         // Setup static packets
-        UnsafeUtilities.setField(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "a"), displayPacket, 1);
+        UnsafeUtilities.UNSAFE.putInt(
+                displayPacket,
+                UnsafeUtilities.UNSAFE.objectFieldOffset(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "a")),
+                1
+        );
         UnsafeUtilities.setField(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "b"), displayPacket, objectiveName);
 
         UnsafeUtilities.setField(UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a"), removePacket, objectiveName);
-        UnsafeUtilities.setField(objectiveModeField, removePacket, 1);
+        UnsafeUtilities.UNSAFE.putInt(
+                removePacket,
+                UnsafeUtilities.UNSAFE.objectFieldOffset(objectiveModeField),
+                1
+        );
     }
 
     @Override

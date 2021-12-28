@@ -52,7 +52,7 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
 
     private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
         UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
-        UnsafeUtilities.setField(NMSImpl.objectiveModeField, packet, mode);
+        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(NMSImpl.objectiveModeField), mode);
         UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
         updateDisplayName(packet, displayName, locale);
     }
@@ -76,9 +76,9 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
         if (sidebar.locale() != null) {
             impl.sendPacket(players, create ? createPacket : updatePacket);
         } else {
-            ScoreboardManagerNMS.sendLocaleDependantPackets(sidebar.locale(), impl, players, locale -> {
+            ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
                 PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
-                createObjectivePacket(createPacket, create ? 0 : 2, sidebar.title(), locale);
+                createObjectivePacket(packet, create ? 0 : 2, sidebar.title(), locale);
                 return packet;
             });
         }
@@ -94,7 +94,7 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
         PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
         UnsafeUtilities.setField(scoreNameField, packet, line);
         UnsafeUtilities.setField(scoreObjectiveNameField, packet, impl.objectiveName);
-        UnsafeUtilities.setField(scoreScoreField, packet, score);
+        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);
         UnsafeUtilities.setField(scoreActionField, packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
         impl.sendPacket(players, packet);
     }

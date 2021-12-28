@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 import java.util.Locale;
 
-import static net.kyori.adventure.text.Component.empty;
-
 public class SidebarNMSImpl extends AbstractSidebarImpl {
 
     private final ClientboundSetObjectivePacket createPacket;
@@ -25,11 +23,11 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
         if (locale != null) {
             createPacket = objectivePacketConstructor.invoke();
             createObjectivePacket(createPacket, 0);
-            updateDisplayName(createPacket, empty(), locale);
+            updateDisplayName(createPacket, sidebar.title(), locale);
 
             updatePacket = objectivePacketConstructor.invoke();
             createObjectivePacket(updatePacket, 2);
-            updateDisplayName(updatePacket, empty(), locale);
+            updateDisplayName(updatePacket, sidebar.title(), locale);
         } else {
             createPacket = null;
             updatePacket = null;
@@ -55,9 +53,9 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
         if (sidebar.locale() != null) {
             impl.sendPacket(players, create ? createPacket : updatePacket);
         } else {
-            ScoreboardManagerNMS.sendLocaleDependantPackets(sidebar.locale(), impl, players, locale -> {
+            ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
                 ClientboundSetObjectivePacket packet = objectivePacketConstructor.invoke();
-                createObjectivePacket(createPacket, create ? 0 : 2);
+                createObjectivePacket(packet, create ? 0 : 2);
                 updateDisplayName(packet, sidebar.title(), locale);
                 return packet;
             });
