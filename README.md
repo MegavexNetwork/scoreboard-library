@@ -23,7 +23,6 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 ### Getting a `ScoreboardManager`:
 
 ```java
-// If you're using the standalone plugin, you don't need to do this:
 try {
     ScoreboardLibraryImplementation.init();
 } catch (ScoreboardLibraryLoadException e) {
@@ -37,7 +36,7 @@ ScoreboardManager scoreboardManager = ScoreboardManager.scoreboardManager(plugin
 
 // On plugin shutdown:
 scoreboardManager.close();
-ScoreboardLibraryImplementation.close(); // Also not needed if using the standalone plugin
+ScoreboardLibraryImplementation.close();
 ```
 
 ### Sidebar
@@ -63,7 +62,7 @@ sidebar.visible(true); // Make the sidebar visible
 
 ```java
 TeamManager teamManager = scoreboardManager.teamManager();
-ScoreboardTeam team = teamManager.createIfAbsent("TeamName");
+ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
 // A TeamInfo holds all the properties that a team can have (except the name).
 // The global TeamInfo is the default one that will be applied to players,
@@ -82,7 +81,7 @@ TeamInfo newTeamInfo = TeamInfo.teamInfo(); // Creates a blank TeamInfo
 team.teamInfo(player, newTeamInfo);
 ```
 
-See the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example) for more examples.
+For more examples, check out the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example).
 
 ## Notes
 
