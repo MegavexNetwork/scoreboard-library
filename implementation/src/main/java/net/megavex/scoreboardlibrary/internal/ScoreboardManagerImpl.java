@@ -7,7 +7,6 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.internal.listener.LocaleListener;
 import net.megavex.scoreboardlibrary.internal.listener.PlayerListener;
-import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.internal.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.internal.sidebar.SidebarUpdaterTask;
@@ -23,6 +22,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardManagerImpl implements ScoreboardManager {
 
@@ -116,7 +116,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
 
     public Set<TeamManagerImpl> getTeamManagers0() {
         if (teamManagers == null) {
-            teamManagers = CollectionProvider.set(4);
+            teamManagers = ConcurrentHashMap.newKeySet(4);
             teamTask = new TeamUpdaterTask(this);
         }
         return teamManagers;
@@ -124,7 +124,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
 
     public Set<AbstractSidebar> getSidebars0() {
         if (sidebars == null) {
-            sidebars = CollectionProvider.set(4);
+            sidebars = ConcurrentHashMap.newKeySet(4);
             sidebarTask = new SidebarUpdaterTask(this);
         }
         return sidebars;

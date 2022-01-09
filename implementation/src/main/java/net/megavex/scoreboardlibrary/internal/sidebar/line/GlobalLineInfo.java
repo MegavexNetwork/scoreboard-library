@@ -16,11 +16,11 @@ public class GlobalLineInfo {
         }
     }
 
-    private final byte line;
-    private final TeamNMS<?, ?> bridge;
-    private Component value;
-    private byte objectiveScore;
-    private boolean update, updateTeams, updateScore;
+    public final byte line;
+    public final TeamNMS<?, ?> bridge;
+    public Component value;
+    public byte objectiveScore;
+    public boolean update, updateTeams, updateScore;
 
     public GlobalLineInfo(byte line) {
         this.line = line;
@@ -29,53 +29,5 @@ public class GlobalLineInfo {
 
     public String player() {
         return lineColors[line];
-    }
-
-    public byte line() {
-        return this.line;
-    }
-
-    public TeamNMS<?, ?> bridge() {
-        return this.bridge;
-    }
-
-    public Component value() {
-        return this.value;
-    }
-
-    public byte objectiveScore() {
-        return this.objectiveScore;
-    }
-
-    public boolean update() {
-        return update;
-    }
-
-    public boolean updateTeams() {
-        return this.updateTeams;
-    }
-
-    public boolean updateScore() {
-        return this.updateScore;
-    }
-
-    public void value(Component value) {
-        this.value = value;
-    }
-
-    public void objectiveScore(byte objectiveScore) {
-        this.objectiveScore = objectiveScore;
-    }
-
-    public void update(boolean update) {
-        this.update = update;
-    }
-
-    public void updateTeams(boolean updateTeams) {
-        this.updateTeams = updateTeams;
-    }
-
-    public void updateScore(boolean updateScore) {
-        this.updateScore = updateScore;
     }
 }

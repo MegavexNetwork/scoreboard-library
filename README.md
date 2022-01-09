@@ -10,10 +10,12 @@ Note that this project is not yet stable, so expect bugs.
   automatically utilized for players below at or below 1.12.2.
 - Teams API
 - Packet-level
+- Mostly async
 
 ## Supported Versions
 
-- 1.18.1 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance because of native [Adventure](https://github.com/KyoriPowered/adventure))
+- 1.18.1 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
+  because of native [Adventure](https://github.com/KyoriPowered/adventure))
 - 1.8.8
 
 ## Getting started
@@ -89,7 +91,7 @@ For more examples, check out the [example plugin](https://github.com/MegavexNetw
   memory leak.
 - One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (atleast for
   now).
-- Not thread-safe and should only be used from the main thread (atleast for now).
+- Should only be used from the main thread (most of the heavy work will still be done async anyways).
 
 ## Building
 

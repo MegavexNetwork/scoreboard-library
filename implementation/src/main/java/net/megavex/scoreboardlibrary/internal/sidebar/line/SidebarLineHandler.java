@@ -92,11 +92,11 @@ public class SidebarLineHandler {
 
         for (LocaleLine<?> line : lines) {
             if (line != null) {
-                if (line.info().updateTeams()) {
+                if (line.info().updateTeams) {
                     line.updateTeam();
                 }
 
-                if (line.info().updateScore()) {
+                if (line.info().updateScore && sidebar.visible()) {
                     line.sendScore(players);
                 }
             }
@@ -109,11 +109,17 @@ public class SidebarLineHandler {
     }
 
     public void setLine(int line, Component renderedLine, LineType lineType) {
+        setLine(line, renderedLine, lineType, true);
+    }
+
+    public void setLine(int line, Component renderedLine, LineType lineType, boolean sendPackets) {
         LocaleLine<?>[] lines = lines(lineType);
         if (lines == null) return;
 
         LocaleLine<?> localeLine = lines[line];
-        if (renderedLine == null && localeLine == null) return;
+        if (renderedLine == null && localeLine == null) {
+            return;
+        }
 
         boolean newlyCreated = false;
         if (localeLine == null) {
@@ -121,15 +127,20 @@ public class SidebarLineHandler {
             newlyCreated = true;
         }
 
-        Set<Player> players = players(lineType);
         if (renderedLine == null) {
-            localeLine.hide(players);
             lines[line] = null;
         } else {
             localeLine.value(renderedLine);
-            if (newlyCreated) {
-                localeLine.show(players);
-            }
+        }
+
+        if (!sidebar.visible() || !sendPackets) return;
+
+        Collection<Player> players = players(lineType);
+
+        if (renderedLine == null) {
+            localeLine.hide(players);
+        } else if (newlyCreated) {
+            localeLine.show(players);
         }
     }
 
@@ -146,16 +157,17 @@ public class SidebarLineHandler {
     public void show(Collection<Player> players, LineType lineType) {
         LocaleLine<?>[] lines = linesInit(lineType);
         for (LocaleLine<?> line : lines) {
-            if (line != null && line.info().value() != null) {
+            if (line != null && line.info().value != null) {
                 line.show(players);
             }
         }
     }
 
     public void hide(Collection<Player> players, LineType lineType) {
-        LocaleLine<?>[] lines = linesInit(lineType);
+        LocaleLine<?>[] lines = lines(lineType);
+        if (lines == null) return;
         for (LocaleLine<?> line : lines) {
-            if (line != null && line.info().value() != null) {
+            if (line != null && ((line.info().update) || line.info().value != null)) {
                 line.hide(players);
             }
         }
@@ -164,7 +176,7 @@ public class SidebarLineHandler {
     private void initLines(LineType lineType) {
         for (GlobalLineInfo line : sidebar.lines) {
             if (line != null) {
-                setLine(line.line(), GlobalTranslator.render(line.value(), locale), lineType);
+                setLine(line.line, GlobalTranslator.render(line.value, locale), lineType, false);
             }
         }
     }

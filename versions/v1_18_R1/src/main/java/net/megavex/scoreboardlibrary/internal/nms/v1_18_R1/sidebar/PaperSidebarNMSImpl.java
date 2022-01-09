@@ -23,13 +23,17 @@ public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
     }
 
     private void initialisePackets() {
-        if (createPacket != null && updatePacket != null) return;
-
-        createPacket = objectivePacketConstructor.invoke();
-        updatePacket = objectivePacketConstructor.invoke();
-        createObjectivePacket(createPacket, 0);
-        createObjectivePacket(updatePacket, 2);
-        updateTitle(sidebar.title());
+        if (createPacket == null || updatePacket == null) {
+            synchronized (this) {
+                if (createPacket == null || updatePacket == null) {
+                    createPacket = objectivePacketConstructor.invoke();
+                    updatePacket = objectivePacketConstructor.invoke();
+                    createObjectivePacket(createPacket, 0);
+                    createObjectivePacket(updatePacket, 2);
+                    updateTitle(sidebar.title());
+                }
+            }
+        }
     }
 
     private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {

@@ -24,7 +24,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
         this.info = info;
         this.handler = handler;
         this.entries = Collections.singletonList(info.player());
-        this.bridge = info.bridge().createTeamInfoNMS(this);
+        this.bridge = info.bridge.createTeamInfoNMS(this);
         bridge.updateTeamPackets(entries);
     }
 
@@ -45,13 +45,13 @@ class LocaleLineImpl implements LocaleLine<Component> {
         }
 
         bridge.updateTeamPackets(entries);
-        bridge.updateTeam(handler.players(LineType.NEW));
+        if (handler.sidebar().visible()) bridge.updateTeam(handler.players(LineType.NEW));
         update = false;
     }
 
     @Override
     public void sendScore(Collection<Player> players) {
-        handler.sidebar().sidebarBridge().score(players, info.objectiveScore(), info.player());
+        handler.sidebar().sidebarBridge().score(players, info.objectiveScore, info.player());
     }
 
     @Override
@@ -63,7 +63,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
     @Override
     public void hide(Collection<Player> players) {
         handler.sidebar().sidebarBridge().removeLine(players, info.player());
-        info.bridge().removeTeam(players);
+        info.bridge.removeTeam(players);
     }
 
     @Override
@@ -78,7 +78,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
 
     @Override
     public Component prefix() {
-        return info.value();
+        return info.value;
     }
 
     @Override

@@ -10,8 +10,8 @@ repositories {
 }
 ```
 
-Then go [here](https://jitpack.io/#MegavexNetwork/scoreboard-library) and find the latest version.
-Now, you can add the dependencies:
+Then go [here](https://jitpack.io/#MegavexNetwork/scoreboard-library) and find the latest version. Now, you can add the
+dependencies:
 
 ```kotlin
 dependencies {
@@ -28,4 +28,5 @@ dependencies {
 }
 ```
 
-You will need to shade these dependencies and relocate them with something like [Shadow](https://imperceptiblethoughts.com/shadow/).
+You will need to shade these dependencies and relocate them with something
+like [Shadow](https://imperceptiblethoughts.com/shadow/).

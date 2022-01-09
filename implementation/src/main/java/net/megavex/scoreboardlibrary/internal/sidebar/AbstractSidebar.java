@@ -9,17 +9,16 @@ import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProviderImpl;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
-import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.locale.LineType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
@@ -27,14 +26,17 @@ import static net.kyori.adventure.text.Component.empty;
 public abstract class AbstractSidebar implements Sidebar {
 
     public final GlobalLineInfo[] lines;
+    protected final Object lock = new Object();
+    protected final Object visibilityLock = new Object();
+    protected final Object playerLock = new Object();
     private final ScoreboardManager scoreboardManager;
-    protected Map<Player, SidebarLineHandler> playerMap = CollectionProvider.map(1);
+    private final AtomicBoolean updateTitle = new AtomicBoolean(),
+            updateLines = new AtomicBoolean();
+    protected volatile boolean closed, visible, visibilityChanged;
     private Component title = empty();
-    private boolean closed, visible, visibilityChanged;
+    private volatile SidebarNMS<?, ?> nms;
 
-    // Internal
-    private boolean updateTitle, updateLines;
-    private SidebarNMS<?, ?> nms;
+    //public final List<Player> doNotUpdate = CollectionProvider.list(1);
 
     public AbstractSidebar(ScoreboardManager scoreboardManager, int size) {
         this.scoreboardManager = scoreboardManager;
@@ -44,24 +46,24 @@ public abstract class AbstractSidebar implements Sidebar {
 
     protected abstract void forEachSidebar(Consumer<SidebarLineHandler> consumer);
 
-    protected abstract SidebarLineHandler lineHandler(Player player);
+    protected abstract SidebarLineHandler addPlayer0(Player player);
+
+    protected abstract SidebarLineHandler removePlayer0(Player player);
 
     protected void updateScores() {
         byte size = 0;
         for (GlobalLineInfo line : lines) {
-            if (line != null && line.value() != null) {
+            if (line != null && line.value != null) {
                 size++;
             }
         }
 
         byte i = 0;
         for (GlobalLineInfo line : lines) {
-            if (line != null && line.value() != null) {
-                byte oldScore = line.objectiveScore();
-                line.objectiveScore((byte) (size - i - 1));
-                if (line.objectiveScore() != oldScore) {
-                    line.updateScore(true);
-                }
+            if (line != null && line.value != null) {
+                byte oldScore = line.objectiveScore;
+                line.objectiveScore = (byte) (size - i - 1);
+                if (line.objectiveScore != oldScore) line.updateScore = true;
                 i++;
             }
         }
@@ -78,76 +80,107 @@ public abstract class AbstractSidebar implements Sidebar {
     }
 
     public void update() {
-        if (visibilityChanged) {
-            if (playerMap != null) {
-                if (visible) {
-                    sidebarBridge().create(playerMap.keySet());
-                    forEachSidebar(SidebarLineHandler::show);
-                    ScoreboardManagerNMS.INSTANCE.displaySidebar(playerMap.keySet());
-                } else {
-                    forEachSidebar(SidebarLineHandler::hide);
-                    ScoreboardManagerNMS.INSTANCE.removeSidebar(playerMap.keySet());
+        if (closed) return;
+
+        synchronized (lock) {
+            if (closed) return;
+
+            synchronized (playerLock) {
+                Collection<Player> players = players();
+//                if (!doNotUpdate.isEmpty()) {
+//                    if (doNotUpdate.size() == players.size()) {
+//                        players = Collections.emptyList();
+//                    } else {
+//                        players = new ArrayList<>(players);
+//                        players.removeAll(doNotUpdate);
+//                    }
+//                }
+
+                if (visibilityChanged) {
+                    synchronized (visibilityLock) {
+                        if (!visibilityChanged) return;
+
+                        if (visible) {
+                            sidebarBridge().create(players);
+                            forEachSidebar(SidebarLineHandler::show);
+                            ScoreboardManagerNMS.INSTANCE.displaySidebar(players);
+                        } else {
+                            forEachSidebar(SidebarLineHandler::hide);
+                            ScoreboardManagerNMS.INSTANCE.removeSidebar(players);
+                        }
+
+                        visibilityChanged = false;
+                    }
                 }
+
+                if (updateTitle.getAndSet(false)) {
+                    sidebarBridge().updateTitle(title);
+                    if (visible) {
+                        nms.update(players);
+                    }
+                }
+
+                //doNotUpdate.clear();
             }
-            visibilityChanged = false;
-        }
 
-        if (updateTitle) {
-            updateTitle = false;
-            sidebarBridge().updateTitle(title);
-            nms.update(playerMap.keySet());
-        }
-
-        if (updateLines) {
-            updateScores();
-
-            for (GlobalLineInfo line : lines) {
-                if (line == null || !line.update()) continue;
-                line.updateTeams(true);
-
-
+            if (updateLines.getAndSet(false)) {
                 updateScores();
 
-                forEachSidebar(s -> {
-                    if (line.value() != null) {
-                        Component rendered = GlobalTranslator.render(line.value(), s.locale());
-                        s.setLine(line.line(), rendered);
-                    } else {
-                        s.setLine(line.line(), null);
+                boolean updateTeams = false;
+                for (GlobalLineInfo line : lines) {
+                    if (line == null || !line.update) continue;
+                    line.updateTeams = true;
+                    updateTeams = true;
+
+                    forEachSidebar(s -> {
+                        if (line.value != null) {
+                            Component rendered = GlobalTranslator.render(line.value, s.locale());
+                            s.setLine(line.line, rendered);
+                        } else {
+                            s.setLine(line.line, null);
+                        }
+                    });
+
+                    line.update = false;
+                }
+
+                if (updateTeams) {
+                    forEachSidebar(SidebarLineHandler::update);
+
+                    for (GlobalLineInfo line : lines) {
+                        if (line != null) line.updateTeams = false;
                     }
-                });
+                }
             }
-
-            updateLines = false;
-            forEachSidebar(SidebarLineHandler::update);
         }
-    }
 
-    @Override
-    public Set<Player> players() {
-        if (closed || playerMap == null) return Collections.emptySet();
-        return playerMap.keySet();
+
     }
 
     @Override
     public boolean addPlayer(Player player) {
         checkClosed();
         checkPlayer(player);
-        if (playerMap().containsKey(player)) return false;
 
-        SidebarLineHandler sidebar = lineHandler(player);
-        playerMap.put(player, sidebar);
-        LineType lineType = LineType.getType(player);
-        sidebar.playersInit(lineType).add(player);
+        synchronized (playerLock) {
+            SidebarLineHandler sidebar = addPlayer0(player);
+            if (sidebar == null) return false;
 
-        if (visible) {
-            var singleton = Collections.singleton(player);
-            sidebarBridge().create(singleton);
-            sidebar.show(singleton, lineType);
-            ScoreboardManagerNMS.INSTANCE.displaySidebar(singleton);
+            LineType lineType = LineType.getType(player);
+            sidebar.playersInit(lineType).add(player);
+
+            ScoreboardManagerProviderImpl.instance().sidebarMap.put(player, this);
+
+            if (visible) {
+                //doNotUpdate.add(player);
+
+                var singleton = Collections.singleton(player);
+                sidebarBridge().create(singleton);
+                sidebar.show(singleton, lineType);
+                ScoreboardManagerNMS.INSTANCE.displaySidebar(singleton);
+            }
         }
 
-        ScoreboardManagerProviderImpl.instance().sidebarMap.put(player, this);
         return true;
     }
 
@@ -155,21 +188,23 @@ public abstract class AbstractSidebar implements Sidebar {
     public boolean removePlayer(Player player) {
         checkClosed();
 
-        SidebarLineHandler sidebar;
-        if (playerMap == null ||
-                (sidebar = playerMap.remove(player)) == null) {
-            return false;
+        synchronized (playerLock) {
+            SidebarLineHandler sidebar = removePlayer0(player);
+            if (sidebar == null) return false;
+
+            LineType lineType = LineType.getType(player);
+            sidebar.players(lineType).remove(player);
+
+            ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player, this);
+            //doNotUpdate.remove(player);
+
+            if (visible) {
+                var singleton = Collections.singleton(player);
+                sidebar.hide(singleton, lineType);
+                ScoreboardManagerNMS.INSTANCE.removeSidebar(singleton);
+            }
         }
 
-        LineType lineType = LineType.getType(player);
-        ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player, this);
-        if (visible) {
-            var singleton = Collections.singleton(player);
-            sidebar.hide(singleton, lineType);
-            ScoreboardManagerNMS.INSTANCE.removeSidebar(singleton);
-        }
-
-        sidebar.players(lineType).remove(player);
         return true;
     }
 
@@ -182,7 +217,11 @@ public abstract class AbstractSidebar implements Sidebar {
     public void visible(boolean visible) {
         checkClosed();
 
-        if (this.visible != visible) {
+        if (this.visible == visible) return;
+
+        synchronized (visibilityLock) {
+            if (this.visible == visible) return;
+
             this.visible = visible;
             this.visibilityChanged = !visibilityChanged;
         }
@@ -202,15 +241,18 @@ public abstract class AbstractSidebar implements Sidebar {
         if (Objects.equals(value, component)) return;
 
         GlobalLineInfo lineInfo = getLineInfo(line);
-        lineInfo.value(value);
-        lineInfo.update(true);
-        updateLines = true;
+        lineInfo.value = value;
+
+        if (visible) {
+            lineInfo.update = true;
+            updateLines.set(true);
+        }
     }
 
     @Override
     public @Nullable Component line(int line) {
         GlobalLineInfo info = lines[line];
-        return info == null ? null : info.value();
+        return info == null ? null : info.value;
     }
 
     public GlobalLineInfo getLineInfo(int line) {
@@ -229,17 +271,17 @@ public abstract class AbstractSidebar implements Sidebar {
 
         if (!this.title.equals(title)) {
             this.title = title;
-            updateTitle = true;
+            updateTitle.set(true);
         }
     }
 
     @Override
     public void close() {
-        if (playerMap != null) {
-            visible(false);
-            playerMap = null;
+        synchronized (lock) {
+            removePlayers(players());
+            visible = false;
+            closed = true;
         }
-        closed = true;
     }
 
     @Override
@@ -248,13 +290,12 @@ public abstract class AbstractSidebar implements Sidebar {
     }
 
     public SidebarNMS<?, ?> sidebarBridge() {
-        if (nms == null) nms = ScoreboardManagerNMS.INSTANCE.createSidebarNMS(this);
-        return nms;
-    }
+        if (nms == null)
+            synchronized (lock) {
+                if (nms == null) nms = ScoreboardManagerNMS.INSTANCE.createSidebarNMS(this);
+            }
 
-    public Map<Player, SidebarLineHandler> playerMap() {
-        if (playerMap == null) playerMap = CollectionProvider.map(1);
-        return playerMap;
+        return nms;
     }
 
     private void checkPlayer(Player player) {

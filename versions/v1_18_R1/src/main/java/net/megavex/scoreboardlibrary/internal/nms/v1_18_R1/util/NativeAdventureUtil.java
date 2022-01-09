@@ -8,15 +8,28 @@ import java.lang.reflect.Field;
 public final class NativeAdventureUtil {
 
     private static final Class<?> clazz;
-    private static final Field wrappedField;
+    private static Field vanillaField;
 
     static {
         try {
             clazz = Class.forName("io.papermc.paper.adventure.AdventureComponent");
-            wrappedField = clazz.getDeclaredField("wrapped");
-        } catch (ClassNotFoundException | NoSuchFieldException e) {
+        } catch (ClassNotFoundException e) {
             throw new ExceptionInInitializerError(e);
         }
+
+        Field wrappedField;
+        try {
+            wrappedField = clazz.getDeclaredField("vanilla");
+        } catch (NoSuchFieldException e) {
+            try {
+                wrappedField = clazz.getDeclaredField("wrapped");
+            } catch (NoSuchFieldException ex) {
+                throw new ExceptionInInitializerError(e);
+            }
+        }
+
+        wrappedField.setAccessible(true);
+        NativeAdventureUtil.vanillaField = wrappedField;
     }
 
     private NativeAdventureUtil() {
@@ -29,7 +42,7 @@ public final class NativeAdventureUtil {
     public static Component toAdventureComponent(net.minecraft.network.chat.Component component) {
         if (clazz.isInstance(component)) {
             try {
-                return (Component) wrappedField.get(component);
+                return (Component) vanillaField.get(component);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

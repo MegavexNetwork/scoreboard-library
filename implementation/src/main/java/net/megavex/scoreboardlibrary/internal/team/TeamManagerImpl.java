@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -21,6 +22,7 @@ public class TeamManagerImpl implements TeamManager {
     private static int idCounter = 0;
 
     public final Map<String, ScoreboardTeamImpl> teams = CollectionProvider.map(5);
+    public final AtomicBoolean update = new AtomicBoolean();
     private final ScoreboardManagerImpl scoreboardManager;
     private final Set<Player> players = CollectionProvider.set(4);
     private final int id = idCounter++;
@@ -31,13 +33,15 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     public void update() {
-        for (ScoreboardTeamImpl team : teams.values()) {
-            if (team.infoSet == null) continue;
-            for (TeamInfoImpl teamInfo : team.infoSet) {
-                if (teamInfo.autoUpdate) {
-                    teamInfo.update();
-                }
-            }
+        if (!update.getAndSet(false)) return;
+
+        ImmutableList<ScoreboardTeamImpl> list;
+        synchronized (teams) {
+            list = ImmutableList.copyOf(teams.values());
+        }
+
+        for (ScoreboardTeamImpl team : list) {
+            team.update();
         }
     }
 
@@ -53,7 +57,9 @@ public class TeamManagerImpl implements TeamManager {
 
     @Override
     public Collection<ScoreboardTeam> teams() {
-        return Collections.unmodifiableCollection(teams.values());
+        synchronized (teams) {
+            return Collections.unmodifiableCollection(teams.values());
+        }
     }
 
     @Override
@@ -61,7 +67,9 @@ public class TeamManagerImpl implements TeamManager {
         checkDestroyed();
         checkTeamName(name);
 
-        return teams.get(name);
+        synchronized (teams) {
+            return teams.get(name);
+        }
     }
 
     @Override
@@ -76,7 +84,9 @@ public class TeamManagerImpl implements TeamManager {
         if (team != null)
             return team;
         team = new ScoreboardTeamImpl(this, name);
-        teams.put(name, team);
+        synchronized (teams) {
+            teams.put(name, team);
+        }
 
         for (Player player : players) {
             team.teamInfo(player, teamInfoFunction == null ? null : teamInfoFunction.apply(player, team));
@@ -118,6 +128,7 @@ public class TeamManagerImpl implements TeamManager {
                 ScoreboardManagerProviderImpl.instance().teamManagerMap.put(player, this);
             }
         }
+
         if (!filteredPlayers.isEmpty()) {
             for (ScoreboardTeamImpl team : teams.values()) {
                 TeamInfoImpl info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
@@ -158,8 +169,7 @@ public class TeamManagerImpl implements TeamManager {
 
         List<Player> filteredPlayers = CollectionProvider.list(players.size());
         for (Player player : players) {
-            if (!this.players.remove(player))
-                continue;
+            if (!this.players.remove(player)) continue;
             ScoreboardManagerProviderImpl.instance().teamManagerMap.remove(player);
             for (ScoreboardTeamImpl team : teams.values()) {
                 TeamInfoImpl info = team.getTeamInfo(player, false, true);

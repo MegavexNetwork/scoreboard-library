@@ -10,6 +10,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -19,7 +20,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     public final TeamManagerImpl teamManager;
     public final String name;
     public final TeamNMS<?, ?> nms;
-    public Set<TeamInfoImpl> infoSet;
+    public Collection<TeamInfoImpl> infos;
     public boolean closed;
     short idCounter = 0;
     private TeamInfoImpl globalInfo;
@@ -30,18 +31,27 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         this.nms = ScoreboardManagerNMS.INSTANCE.createTeamNMS(name);
     }
 
-    public Set<TeamInfoImpl> getInfoSet() {
-        if (infoSet == null) {
-            infoSet = CollectionProvider.set(1);
+    public Collection<TeamInfoImpl> teamInfos() {
+        if (infos == null) {
+            infos = CollectionProvider.set(1);
         }
 
-        return infoSet;
+        return infos;
     }
 
+    public void update() {
+        if (infos == null) return;
+        for (TeamInfoImpl teamInfo : infos) {
+            teamInfo.update();
+        }
+    }
+
+    @Override
     public TeamInfoImpl globalInfo() {
         if (globalInfo == null) {
-            globalInfo = new TeamInfoImpl(this);
-            infoSet.add(globalInfo);
+            globalInfo = new TeamInfoImpl();
+            globalInfo.assign(this);
+            infos.add(globalInfo);
         }
 
         return globalInfo;
@@ -68,7 +78,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
             checkPlayer(player);
         }
 
-        for (TeamInfoImpl teamInfo : infoSet) {
+        for (TeamInfoImpl teamInfo : infos) {
             if (teamInfo.players.contains(player)) {
                 return teamInfo;
             }
@@ -123,8 +133,8 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
             return;
         }
 
-        if (infoSet != null) {
-            infoSet.forEach(info -> {
+        if (infos != null) {
+            infos.forEach(info -> {
                 if (info != null && info.team() != null) {
                     Objects.requireNonNull(info.team()).nms.removeTeam(info.players);
                 }
@@ -145,7 +155,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
                 Objects.equals(name, that.name) &&
                 Objects.equals(nms, that.nms) &&
                 Objects.equals(globalInfo, that.globalInfo) &&
-                Objects.equals(infoSet, that.infoSet);
+                Objects.equals(infos, that.infos);
     }
 
     @Override

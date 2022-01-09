@@ -62,15 +62,9 @@ public interface TeamInfo {
         return team() == null ? null : team().name();
     }
 
-    // Update
-
-    boolean autoUpdate();
-
-    void autoUpdate(boolean autoUpdate);
-
-    void update();
-
     // Entries
+
+    Collection<String> entries();
 
     /**
      * Adds an entry

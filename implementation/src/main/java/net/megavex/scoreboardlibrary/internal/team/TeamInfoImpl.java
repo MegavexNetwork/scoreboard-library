@@ -13,6 +13,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Objects.requireNonNull;
 import static net.kyori.adventure.text.Component.empty;
@@ -20,29 +21,23 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 
 public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component> {
 
-    public final Set<Player> players = CollectionProvider.set(4);
+    public final Set<Player> players = Collections.synchronizedSet(CollectionProvider.set(4));
     public final Set<String> entries = Collections.synchronizedSet(CollectionProvider.set(4));
-    public List<String> addEntries = CollectionProvider.list(1);
-    public List<String> removeEntries = CollectionProvider.list(1);
-    public Component displayName = empty(), prefix = empty(), suffix = empty();
-    public boolean allowFriendlyFire;
-    public boolean canSeeFriendlyInvisibles;
-
-    public byte nameTagVisibility = NameTagVisibility.ALWAYS.id();
-    public byte collisionRule = CollisionRule.ALWAYS.getId();
+    private final AtomicBoolean updateTeam = new AtomicBoolean();
+    public Component displayName = empty(),
+            prefix = empty(),
+            suffix = empty();
+    public boolean allowFriendlyFire, canSeeFriendlyInvisibles;
+    public byte nameTagVisibility = NameTagVisibility.ALWAYS.id(),
+            collisionRule = CollisionRule.ALWAYS.getId();
     public char playerColor = '\0';
-
     public TeamNMS.TeamInfoNMS<Component> nms;
-    boolean updateTeam, updateEntries;
-    boolean autoUpdate = true;
     private ScoreboardTeamImpl team;
+    private List<String> addEntries, removeEntries;
     private short id;
+    private volatile boolean updateEntries;
 
     public TeamInfoImpl() {
-    }
-
-    public TeamInfoImpl(ScoreboardTeamImpl team) {
-        assign(team);
     }
 
     public static void syncEntries(Collection<Player> players, TeamInfoImpl old, TeamInfoImpl info) {
@@ -62,14 +57,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     public void assign(ScoreboardTeamImpl team) {
-        if (this.team == team) {
-            return;
-        }
+        if (this.team == team) return;
 
         this.team = team;
         this.id = team.idCounter++;
 
-        team.getInfoSet().add(this);
+        team.teamInfos().add(this);
         nms = team.nms.createTeamInfoNMS(this);
         nms.updateTeamPackets(entries);
     }
@@ -86,51 +79,59 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public void unassign() {
-        if (isAssigned()) {
-            Preconditions.checkState(team.globalInfo() != this, "Cannot unnasign a global TeamInfo");
-            team.getInfoSet().remove(this);
+    public synchronized void unassign() {
+        if (!isAssigned()) return;
 
-            TeamInfoImpl global = team.globalInfo();
-            global.addPlayers(players);
-            global.nms.updateTeam(players);
+        Preconditions.checkState(team.globalInfo() != this, "Cannot unnasign a global TeamInfo");
+        team.teamInfos().remove(this);
 
-            syncEntries(players, this, global);
+        TeamInfoImpl global = team.globalInfo();
+        global.addPlayers(players);
+        global.nms.updateTeam(players);
 
-            players.clear();
-            team = null;
-        }
+        syncEntries(players, this, global);
+
+        players.clear();
+        team = null;
     }
 
     @Override
-    public Set<String> entries() {
+    public Collection<String> entries() {
         return Collections.unmodifiableSet(entries);
     }
 
     @Override
     public boolean addEntry(String entry) {
-        Preconditions.checkNotNull(entry, "entry");
-        if (entries.add(entry)) {
-            entries.add(entry);
-            addEntries.add(entry);
-            removeEntries.remove(entry);
-            updateEntries();
-            return true;
+        Preconditions.checkNotNull(entry);
+
+        synchronized (entries) {
+            if (entries.add(entry)) {
+                entries.add(entry);
+                if (addEntries == null) addEntries = CollectionProvider.list(1);
+                addEntries.add(entry);
+                if (removeEntries != null) removeEntries.remove(entry);
+                updateEntries();
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
     @Override
     public boolean removeEntry(String entry) {
-        Preconditions.checkNotNull(entry, "entry");
-        if (entries.remove(entry)) {
-            entries.remove(entry);
-            removeEntries.add(entry);
-            addEntries.remove(entry);
-            updateEntries();
-            return true;
+        Preconditions.checkNotNull(entry);
+
+        synchronized (entries) {
+            if (entries.remove(entry)) {
+                entries.remove(entry);
+                if (removeEntries == null) removeEntries = CollectionProvider.list(1);
+                removeEntries.add(entry);
+                if (addEntries != null) addEntries.remove(entry);
+                updateEntries();
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -144,7 +145,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
         if (!Objects.equals(displayName, this.displayName)) {
             this.displayName = displayName;
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -159,7 +161,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
         if ((!Objects.equals(prefix, this.prefix))) {
             this.prefix = prefix;
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -174,7 +177,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
         if (!Objects.equals(suffix, this.suffix)) {
             this.suffix = suffix;
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -187,7 +191,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     public void friendlyFire(boolean allowFriendlyFire) {
         if (this.allowFriendlyFire != allowFriendlyFire) {
             this.allowFriendlyFire = allowFriendlyFire;
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -195,7 +200,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     public void canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
         if (this.canSeeFriendlyInvisibles != canSeeFriendlyInvisibles) {
             this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -211,11 +217,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
     @Override
     public void nameTagVisibility(NameTagVisibility nameTagVisibility) {
-        Preconditions.checkNotNull(nameTagVisibility, "nameTagVisibility");
+        Preconditions.checkNotNull(nameTagVisibility);
 
         if (this.nameTagVisibility != nameTagVisibility.id()) {
             this.nameTagVisibility = nameTagVisibility.id();
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -226,11 +233,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
     @Override
     public void collisionRule(CollisionRule collisionRule) {
-        Preconditions.checkNotNull(collisionRule, "collisionRule");
+        Preconditions.checkNotNull(collisionRule);
 
         if (this.collisionRule != collisionRule.getId()) {
             this.collisionRule = collisionRule.getId();
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
         }
     }
 
@@ -250,64 +258,59 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
         char c = LegacyFormatUtil.getChar(color);
         if (this.playerColor != c) {
             this.playerColor = c;
-            updateTeam = true;
+            updateTeam.set(true);
+            scheduleUpdate();
+        }
+    }
+
+    public void scheduleUpdate() {
+        team.teamManager.update.set(true);
+    }
+
+    public void update() {
+        if (updateTeam.getAndSet(false)) {
+            nms.updateTeamPackets(entries);
+            if (!players.isEmpty()) {
+                nms.updateTeam(players);
+            }
+        }
+
+        if (updateEntries) {
+            synchronized (entries) {
+                if (!players.isEmpty()) {
+                    if (addEntries != null && !addEntries.isEmpty()) {
+                        nms.addEntries(players, addEntries);
+                        addEntries.clear();
+                    }
+                    if (removeEntries != null && !removeEntries.isEmpty()) {
+                        nms.removeEntries(players, removeEntries);
+                        removeEntries.clear();
+                    }
+                }
+                updateEntries = false;
+            }
+        }
+    }
+
+    public void addPlayers(Collection<Player> players) {
+        this.players.addAll(players);
+    }
+
+    private void updateEntries() {
+        if (updateEntries) return;
+
+        if (!players.isEmpty()) {
+            updateEntries = true;
+            scheduleUpdate();
+        } else {
+            if (addEntries != null) addEntries.clear();
+            if (removeEntries != null) removeEntries.clear();
         }
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(team, id);
-    }
-
-    @Override
-    public boolean autoUpdate() {
-        return autoUpdate;
-    }
-
-    @Override
-    public void autoUpdate(boolean autoUpdate) {
-        this.autoUpdate = autoUpdate;
-    }
-
-    @Override
-    public void update() {
-        if (updateTeam) {
-            nms.updateTeamPackets(entries);
-            if (!players.isEmpty()) {
-                nms.updateTeam(players);
-            }
-            updateTeam = false;
-        }
-
-        if (updateEntries) {
-            if (!players.isEmpty()) {
-                if (!addEntries.isEmpty()) {
-                    nms.addEntries(players, addEntries);
-                    addEntries = CollectionProvider.list(1);
-                }
-                if (!removeEntries.isEmpty()) {
-                    nms.removeEntries(players, removeEntries);
-                    removeEntries = CollectionProvider.list(1);
-                }
-            }
-            updateEntries = false;
-        }
-    }
-
-    public void addPlayers(Collection<Player> players) {
-        update();
-        this.players.addAll(players);
-    }
-
-    protected void updateEntries() {
-        if (!updateEntries) {
-            if (!players.isEmpty()) {
-                updateEntries = true;
-            } else {
-                addEntries.clear();
-                removeEntries.clear();
-            }
-        }
     }
 
     @Override
@@ -332,7 +335,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
     @Override
     public String toString() {
-        return "TeamInfoImpl{" +
+        return "TeamInfo{" +
                 "players=" + players +
                 ", entries=" + entries +
                 ", team=" + team +
