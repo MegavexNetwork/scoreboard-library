@@ -46,7 +46,7 @@ ScoreboardLibraryImplementation.close();
 ```java
 Sidebar sidebar = scoreboardManager.sidebar(
     Sidebar.MAX_LINES, // 15
-    null // Locale that should be used for translating Components, or null if it should depend on each player's client locale
+    null // Locale that should be used for translating Components, or null if it should depend on each player's client locale (it will use a bit more memory though)
 );
 
 sidebar.title(Component.text("Sidebar Title"));

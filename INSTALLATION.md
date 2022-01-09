@@ -30,3 +30,8 @@ dependencies {
 
 You will need to shade these dependencies and relocate them with something
 like [Shadow](https://imperceptiblethoughts.com/shadow/).
+
+Then add `ProtocolSupport` as a softdepend in your plugin.yml:
+```yaml
+softdepend: [ ProtocolSupport ]
+```
