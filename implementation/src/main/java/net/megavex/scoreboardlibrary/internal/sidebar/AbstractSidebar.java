@@ -36,8 +36,6 @@ public abstract class AbstractSidebar implements Sidebar {
     private Component title = empty();
     private volatile SidebarNMS<?, ?> nms;
 
-    //public final List<Player> doNotUpdate = CollectionProvider.list(1);
-
     public AbstractSidebar(ScoreboardManager scoreboardManager, int size) {
         this.scoreboardManager = scoreboardManager;
         SidebarUtilities.checkLineBounds(size);
@@ -87,14 +85,6 @@ public abstract class AbstractSidebar implements Sidebar {
 
             synchronized (playerLock) {
                 Collection<Player> players = players();
-//                if (!doNotUpdate.isEmpty()) {
-//                    if (doNotUpdate.size() == players.size()) {
-//                        players = Collections.emptyList();
-//                    } else {
-//                        players = new ArrayList<>(players);
-//                        players.removeAll(doNotUpdate);
-//                    }
-//                }
 
                 if (visibilityChanged) {
                     synchronized (visibilityLock) {
@@ -119,8 +109,6 @@ public abstract class AbstractSidebar implements Sidebar {
                         nms.update(players);
                     }
                 }
-
-                //doNotUpdate.clear();
             }
 
             if (updateLines.getAndSet(false)) {
@@ -172,8 +160,6 @@ public abstract class AbstractSidebar implements Sidebar {
             ScoreboardManagerProviderImpl.instance().sidebarMap.put(player, this);
 
             if (visible) {
-                //doNotUpdate.add(player);
-
                 var singleton = Collections.singleton(player);
                 sidebarBridge().create(singleton);
                 sidebar.show(singleton, lineType);
@@ -196,7 +182,6 @@ public abstract class AbstractSidebar implements Sidebar {
             sidebar.players(lineType).remove(player);
 
             ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player, this);
-            //doNotUpdate.remove(player);
 
             if (visible) {
                 var singleton = Collections.singleton(player);
