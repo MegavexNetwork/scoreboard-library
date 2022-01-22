@@ -13,16 +13,11 @@ dependencies {
 
 bukkit {
     name = "ScoreboardLibrary"
-    main = "ScoreboardLibraryPlugin"
+    main = "net.megavex.scoreboardlibrary.plugin.ScoreboardLibraryPlugin"
     apiVersion = "1.18"
     description = "https://github.com/MegavexNetwork/scoreboard-library"
     author = "VytskaLT"
 }
-
-/*tasks {
-    named<ShadowJar>("shadowJar") {
-    }
-}*/
 
 tasks {
     build {
