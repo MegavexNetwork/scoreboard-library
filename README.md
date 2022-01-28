@@ -73,7 +73,7 @@ TeamInfo teamInfo = team.globalInfo();
 
 teamInfo.displayName(Component.text("Team Name"));
 teamInfo.prefix(Component.text("[Prefix] "));
-teamInfo.suffix(Component.text("[Suffix] "));
+teamInfo.suffix(Component.text(" [Suffix]"));
 teamInfo.playerColor(NamedTextColor.RED);
 
 teamManager.addPlayer(player); // Player will be added to the global TeamInfo
