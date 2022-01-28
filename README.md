@@ -7,7 +7,7 @@ Note that this project is not yet stable, so expect bugs.
 
 - Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
   the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.1 server, it will be
-  automatically utilized for players below at or below 1.12.2.
+  automatically utilized for players at or below 1.12.2.
 - Teams API
 - Packet-level
 - Mostly async
@@ -91,7 +91,7 @@ For more examples, check out the [example plugin](https://github.com/MegavexNetw
   memory leak.
 - One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (atleast for
   now).
-- Should only be used from the main thread (most of the heavy work will still be done async anyways).
+- Should only be used from the main thread (most of the packet work will still be done async anyways).
 
 ## Building
 
