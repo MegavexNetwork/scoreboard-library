@@ -3,6 +3,8 @@
 A Scoreboard library for Paper/Spigot servers using the [Adventure](https://github.com/KyoriPowered/adventure) library.
 Note that this project is not yet stable, so expect bugs.
 
+Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support.
+
 ## Features:
 
 - Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
