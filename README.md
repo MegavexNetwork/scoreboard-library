@@ -3,18 +3,20 @@
 A Scoreboard library for Paper/Spigot servers using the [Adventure](https://github.com/KyoriPowered/adventure) library.
 Note that this project is not yet stable, so expect bugs.
 
+Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support.
+
 ## Features:
 
 - Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
-  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.2 server, it will be
-  automatically utilized for players below at or below 1.12.2.
+  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.1 server, it will be
+  automatically utilized for players at or below 1.12.2.
 - Teams API
 - Packet-level
 - Mostly async
 
 ## Supported Versions
 
-- 1.18.2 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
+- 1.18.1 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
   because of native [Adventure](https://github.com/KyoriPowered/adventure))
 - 1.8.8
 
@@ -73,7 +75,7 @@ TeamInfo teamInfo = team.globalInfo();
 
 teamInfo.displayName(Component.text("Team Name"));
 teamInfo.prefix(Component.text("[Prefix] "));
-teamInfo.suffix(Component.text("[Suffix] "));
+teamInfo.suffix(Component.text(" [Suffix]"));
 teamInfo.playerColor(NamedTextColor.RED);
 
 teamManager.addPlayer(player); // Player will be added to the global TeamInfo
@@ -91,7 +93,7 @@ For more examples, check out the [example plugin](https://github.com/MegavexNetw
   memory leak.
 - One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (atleast for
   now).
-- Should only be used from the main thread (most of the heavy work will still be done async anyways).
+- Should only be used from the main thread (most of the packet work will still be done async anyways).
 
 ## Building
 
