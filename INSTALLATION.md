@@ -20,7 +20,7 @@ dependencies {
 
     // I want this plugin to support 1.18 & 1.8, so I'll add both version implementations:
     runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$libraryVersion")
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_18_R1:$libraryVersion")
+    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_18_R2:$libraryVersion")
 
     // If you're targeting a server that doesn't have native Adventure support (1.8 or Spigot 1.18),
     // you will need to add Adventure too:
