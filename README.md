@@ -6,7 +6,7 @@ Note that this project is not yet stable, so expect bugs.
 ## Features:
 
 - Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
-  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.1 server, it will be
+  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.2 server, it will be
   automatically utilized for players below at or below 1.12.2.
 - Teams API
 - Packet-level
@@ -14,7 +14,7 @@ Note that this project is not yet stable, so expect bugs.
 
 ## Supported Versions
 
-- 1.18.1 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
+- 1.18.2 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
   because of native [Adventure](https://github.com/KyoriPowered/adventure))
 - 1.8.8
 

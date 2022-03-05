@@ -1,9 +1,9 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.sidebar;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.sidebar;
 
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.NMSImpl;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;

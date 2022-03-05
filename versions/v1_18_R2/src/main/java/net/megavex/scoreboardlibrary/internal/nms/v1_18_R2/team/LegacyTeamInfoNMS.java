@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.team;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team;
 
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;

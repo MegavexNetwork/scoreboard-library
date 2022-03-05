@@ -1,9 +1,7 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util;
 
 import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;
-
-import java.lang.reflect.Field;
 
 public final class NativeAdventureUtil {
 

@@ -1,11 +1,11 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.team;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.NMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 

@@ -1,10 +1,10 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.sidebar;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.sidebar;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.NMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 

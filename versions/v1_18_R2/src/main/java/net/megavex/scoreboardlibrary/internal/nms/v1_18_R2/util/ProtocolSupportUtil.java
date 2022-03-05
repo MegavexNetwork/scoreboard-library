@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.util;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util;
 
 import org.bukkit.entity.Player;
 import protocolsupport.api.Connection;

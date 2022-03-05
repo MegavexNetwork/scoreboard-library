@@ -8,7 +8,7 @@ dependencies {
     api(project(":implementation"))
 
     implementation(project(":v1_8_R3"))
-    implementation(project(":v1_18_R1"))
+    implementation(project(":v1_18_R2"))
 }
 
 bukkit {

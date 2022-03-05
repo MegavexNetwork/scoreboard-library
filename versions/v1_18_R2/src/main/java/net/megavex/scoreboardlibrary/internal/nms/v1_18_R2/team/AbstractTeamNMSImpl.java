@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.team;
+package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team;
 
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
@@ -6,7 +6,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R1.NMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.NMSImpl;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
