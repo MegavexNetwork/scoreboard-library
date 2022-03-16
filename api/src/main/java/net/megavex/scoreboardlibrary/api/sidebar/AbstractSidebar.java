@@ -68,7 +68,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
      * @param line  Line to register
      * @param value Static value
      */
-    protected final @NotNull SidebarLine registerStaticLine(int line, Component value) {
+    protected final @NotNull SidebarLine registerStaticLine(int line, @NotNull Component value) {
         SidebarLine sidebarLine = SidebarLine.staticLine(value);
         registerLine(line, sidebarLine);
         return sidebarLine;
@@ -81,8 +81,10 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
      * @param supplier Supplier
      * @return The created LineSupplier
      */
-    protected final SidebarLine registerLine(int line, Supplier<Component> supplier) {
+    protected final SidebarLine registerLine(int line, @NotNull Supplier<Component> supplier) {
+        checkClosed();
         Preconditions.checkNotNull(supplier);
+
         return registerLine(line, new SidebarLine() {
             @Override
             public boolean lineStatic() {
@@ -108,8 +110,10 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
      * @param supplier Supplier
      * @return The same LineSupplier for convenience
      */
-    protected final <S extends SidebarLine> S registerLine(int line, S supplier) {
+    protected final <S extends SidebarLine> S registerLine(int line, @NotNull S supplier) {
         checkClosed();
+        Objects.requireNonNull(supplier);
+
         SidebarUtilities.checkLineBounds(line);
         if (lines[line] != null) {
             throw new IllegalStateException("Line " + line + " is already registered");
@@ -142,7 +146,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
     }
 
     @Override
-    public final ScoreboardManager scoreboardManager() {
+    public final @NotNull ScoreboardManager scoreboardManager() {
         return sidebar.scoreboardManager();
     }
 

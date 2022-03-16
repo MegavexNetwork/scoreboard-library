@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -16,7 +17,7 @@ public interface TeamInfo {
      *
      * @return TeamInfo
      */
-    static TeamInfo teamInfo() {
+    static @NotNull TeamInfo teamInfo() {
         return teamInfo(null);
     }
 
@@ -26,7 +27,7 @@ public interface TeamInfo {
      * @param entries Entries the TeamInfo should have
      * @return TeamInfo
      */
-    static TeamInfo teamInfo(@Nullable Collection<String> entries) {
+    static @NotNull TeamInfo teamInfo(@Nullable Collection<String> entries) {
         return ScoreboardManagerProvider.instance().teamInfo(entries);
     }
 
@@ -64,7 +65,7 @@ public interface TeamInfo {
 
     // Entries
 
-    Collection<String> entries();
+    @NotNull Collection<String> entries();
 
     /**
      * Adds an entry
@@ -72,7 +73,7 @@ public interface TeamInfo {
      * @param entry Entry to add
      * @return Whether the entry was added
      */
-    boolean addEntry(String entry);
+    boolean addEntry(@NotNull String entry);
 
     /**
      * Removes an entry
@@ -80,36 +81,36 @@ public interface TeamInfo {
      * @param entry Entry to remove
      * @return Whether the entry was removed
      */
-    boolean removeEntry(String entry);
+    boolean removeEntry(@NotNull String entry);
 
     // Properties
 
-    Component displayName();
+    @NotNull Component displayName();
 
     /**
      * Sets the display name
      *
      * @param displayName Display name
      */
-    void displayName(Component displayName);
+    void displayName(@NotNull Component displayName);
 
-    Component prefix();
+    @NotNull Component prefix();
 
     /**
      * Sets the prefix
      *
      * @param prefix Prefix
      */
-    void prefix(Component prefix);
+    void prefix(@NotNull Component prefix);
 
-    Component suffix();
+    @NotNull Component suffix();
 
     /**
      * Sets the suffix
      *
      * @param suffix Suffix
      */
-    void suffix(Component suffix);
+    void suffix(@NotNull Component suffix);
 
     default boolean friendlyFire() {
         return false;
@@ -133,7 +134,7 @@ public interface TeamInfo {
      */
     void canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles);
 
-    default NameTagVisibility nameTagVisibility() {
+    default @NotNull NameTagVisibility nameTagVisibility() {
         return NameTagVisibility.ALWAYS;
     }
 
@@ -142,14 +143,14 @@ public interface TeamInfo {
      *
      * @param nameTagVisibility Name tag visibility rule
      */
-    void nameTagVisibility(NameTagVisibility nameTagVisibility);
+    void nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
 
     /**
      * Gets the {@link CollisionRule}. This will be ignored on 1.8 since in this version teams don't support this
      *
      * @return Collision rule
      */
-    default CollisionRule collisionRule() {
+    default @NotNull CollisionRule collisionRule() {
         return CollisionRule.ALWAYS;
     }
 
@@ -158,7 +159,7 @@ public interface TeamInfo {
      *
      * @param collisionRule Collision rule
      */
-    void collisionRule(CollisionRule collisionRule);
+    void collisionRule(@NotNull CollisionRule collisionRule);
 
     /**
      * Gets the {@link NamedTextColor} of the player. This will be ignored on 1.8 since in this version teams don't support this
@@ -175,7 +176,7 @@ public interface TeamInfo {
      *
      * @param color Color
      */
-    void playerColor(NamedTextColor color);
+    void playerColor(@Nullable NamedTextColor color);
 
     // Options
 

@@ -13,6 +13,7 @@ import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.locale.LineType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -25,12 +26,12 @@ import static net.kyori.adventure.text.Component.empty;
 
 public abstract class AbstractSidebar implements Sidebar {
 
-    private final ScoreboardManager scoreboardManager;
-    private final ComponentTranslator componentTranslator;
     public final GlobalLineInfo[] lines;
     protected final Object lock = new Object();
     protected final Object visibilityLock = new Object();
     protected final Object playerLock = new Object();
+    private final ScoreboardManager scoreboardManager;
+    private final ComponentTranslator componentTranslator;
     private final AtomicBoolean updateTitle = new AtomicBoolean(),
             updateLines = new AtomicBoolean();
     protected volatile boolean closed, visible, visibilityChanged;
@@ -70,12 +71,12 @@ public abstract class AbstractSidebar implements Sidebar {
     }
 
     @Override
-    public ScoreboardManager scoreboardManager() {
+    public @NotNull ScoreboardManager scoreboardManager() {
         return scoreboardManager;
     }
 
     @Override
-    public ComponentTranslator componentTranslator() {
+    public @NotNull ComponentTranslator componentTranslator() {
         return componentTranslator;
     }
 
@@ -153,7 +154,7 @@ public abstract class AbstractSidebar implements Sidebar {
     }
 
     @Override
-    public boolean addPlayer(Player player) {
+    public boolean addPlayer(@NotNull Player player) {
         checkClosed();
         checkPlayer(player);
 
@@ -178,7 +179,7 @@ public abstract class AbstractSidebar implements Sidebar {
     }
 
     @Override
-    public boolean removePlayer(Player player) {
+    public boolean removePlayer(@NotNull Player player) {
         checkClosed();
 
         synchronized (playerLock) {

@@ -5,6 +5,7 @@ import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -25,7 +26,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
     }
 
     @Override
-    public Collection<Player> players() {
+    public @NotNull Collection<Player> players() {
         return players == null ? Collections.emptySet() : Collections.unmodifiableCollection(players);
     }
 

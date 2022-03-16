@@ -5,6 +5,7 @@ import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.function.Function;
  */
 public interface TeamManager extends Closeable, HasScoreboardManager, Players {
 
-    ComponentTranslator componentTranslator();
+    @NotNull ComponentTranslator componentTranslator();
 
     // Teams
 
@@ -25,7 +26,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      *
      * @return Teams
      */
-    Collection<ScoreboardTeam> teams();
+    @NotNull Collection<ScoreboardTeam> teams();
 
     /**
      * Returns team based on its name
@@ -33,7 +34,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param name Name of team
      * @return Team with this name
      */
-    ScoreboardTeam team(String name);
+    @Nullable ScoreboardTeam team(@NotNull String name);
 
     /**
      * Returns whether a team by the name exists
@@ -41,7 +42,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param name Name of team
      * @return Whether a team by the name exists
      */
-    boolean teamExists(String name);
+    boolean teamExists(@NotNull String name);
 
     /**
      * Returns team based on its name. If it doesn't already exist, creates it
@@ -49,7 +50,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param name Name of team.
      * @return Team with this name, null if not found
      */
-    default ScoreboardTeam createIfAbsent(String name) {
+    default @NotNull ScoreboardTeam createIfAbsent(@NotNull String name) {
         return createIfAbsent(name, null);
     }
 
@@ -60,7 +61,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param teamInfoFunction A function that provides team info's for each player
      * @return Team with this name
      */
-    ScoreboardTeam createIfAbsent(String name, BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction);
+    @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction);
 
     // Players
 
@@ -70,7 +71,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param player Player to add to TeamManager
      * @return Whether the player was added
      */
-    default boolean addPlayer(Player player) {
+    default boolean addPlayer(@NotNull Player player) {
         return addPlayer(player, null);
     }
 
@@ -81,14 +82,14 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param teamInfoFunction A function that returns the {@link TeamInfo} that the player should have
      * @return Whether the player was added
      */
-    boolean addPlayer(Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction);
+    boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction);
 
     /**
      * Adds a player to this TeamManager
      *
      * @param players Players to add
      */
-    default void addPlayers(Collection<Player> players) {
+    default void addPlayers(@NotNull Collection<Player> players) {
         addPlayers(players, null);
     }
 
@@ -99,7 +100,7 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param teamInfoFunction A function that returns the {@link TeamInfo} that the player should have
      * @return A collection of players that have been added
      */
-    Collection<Player> addPlayers(Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction);
+    @NotNull Collection<Player> addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction);
 
     /**
      * Removes a player from this TeamManager
@@ -107,12 +108,12 @@ public interface TeamManager extends Closeable, HasScoreboardManager, Players {
      * @param player Player to remove
      * @return If the player was removed
      */
-    boolean removePlayer(Player player);
+    boolean removePlayer(@NotNull Player player);
 
     /**
      * Removes a list of players from this TeamManager
      *
      * @param players Player to remove
      */
-    void removePlayers(Collection<Player> players);
+    void removePlayers(@NotNull Collection<Player> players);
 }

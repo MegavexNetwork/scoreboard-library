@@ -1,7 +1,9 @@
 package net.megavex.scoreboardlibrary.api.util;
 
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public final class SidebarUtilities {
 
     private SidebarUtilities() {

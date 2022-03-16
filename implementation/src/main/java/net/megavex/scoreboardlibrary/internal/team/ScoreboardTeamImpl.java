@@ -8,6 +8,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -47,7 +48,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public TeamInfoImpl globalInfo() {
+    public @NotNull TeamInfoImpl globalInfo() {
         if (globalInfo == null) {
             globalInfo = new TeamInfoImpl();
             globalInfo.assign(this);
@@ -58,17 +59,17 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public String name() {
+    public @NotNull String name() {
         return name;
     }
 
     @Override
-    public TeamManager teamManager() {
+    public @NotNull TeamManager teamManager() {
         return teamManager;
     }
 
     @Override
-    public TeamInfoImpl teamInfo(Player player) {
+    public @NotNull TeamInfoImpl teamInfo(Player player) {
         return getTeamInfo(player, true, false);
     }
 
@@ -93,7 +94,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public TeamInfoImpl teamInfo(Player player, @Nullable TeamInfo teamInfo) {
+    public @NotNull TeamInfoImpl teamInfo(Player player, @Nullable TeamInfo teamInfo) {
         checkDestroyed();
         checkPlayer(player);
 

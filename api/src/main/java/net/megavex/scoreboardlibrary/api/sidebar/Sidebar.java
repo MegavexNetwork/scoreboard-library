@@ -1,10 +1,11 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
+import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
@@ -12,28 +13,20 @@ import java.util.Locale;
 /**
  * Represents an in-game Sidebar
  */
-public interface Sidebar extends Closeable, Players {
+public interface Sidebar extends HasScoreboardManager, Closeable, Players {
 
     // Constants
 
     byte MAX_LINES = 15;
-    byte MAX_TITLE_LENGTH = 32;
 
     // Main
-
-    /**
-     * Gets the {@link ScoreboardManager} of this Sidebar
-     *
-     * @return Scoreboard Manager
-     */
-    ScoreboardManager scoreboardManager();
 
     /**
      * Gets the {@link ComponentTranslator} of this Sidebar
      *
      * @return Component translator
      */
-    ComponentTranslator componentTranslator();
+    @NotNull ComponentTranslator componentTranslator();
 
     /**
      * Gets the max amount of lines this sidebar can have
@@ -88,12 +81,12 @@ public interface Sidebar extends Closeable, Players {
      *
      * @return Title
      */
-    Component title();
+    @NotNull Component title();
 
     /**
      * Sets the title
      *
      * @param title Title
      */
-    void title(Component title);
+    void title(@NotNull Component title);
 }

@@ -11,6 +11,7 @@ import net.megavex.scoreboardlibrary.internal.ScoreboardManagerImpl;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProviderImpl;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -21,11 +22,10 @@ import java.util.function.Function;
 public class TeamManagerImpl implements TeamManager {
 
     private static int idCounter = 0;
-
-    private final ScoreboardManagerImpl scoreboardManager;
-    private final ComponentTranslator componentTranslator;
     public final Map<String, ScoreboardTeamImpl> teams = CollectionProvider.map(5);
     public final AtomicBoolean update = new AtomicBoolean();
+    private final ScoreboardManagerImpl scoreboardManager;
+    private final ComponentTranslator componentTranslator;
     private final Set<Player> players = CollectionProvider.set(4);
     private final int id = idCounter++;
     private boolean closed;
@@ -49,29 +49,29 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
-    public ScoreboardManager scoreboardManager() {
+    public @NotNull ScoreboardManager scoreboardManager() {
         return scoreboardManager;
     }
 
     @Override
-    public Collection<Player> players() {
+    public @NotNull Collection<Player> players() {
         return Collections.unmodifiableCollection(players);
     }
 
     @Override
-    public ComponentTranslator componentTranslator() {
+    public @NotNull ComponentTranslator componentTranslator() {
         return componentTranslator;
     }
 
     @Override
-    public Collection<ScoreboardTeam> teams() {
+    public @NotNull Collection<ScoreboardTeam> teams() {
         synchronized (teams) {
             return Collections.unmodifiableCollection(teams.values());
         }
     }
 
     @Override
-    public ScoreboardTeamImpl team(String name) {
+    public @Nullable ScoreboardTeamImpl team(@NotNull String name) {
         checkDestroyed();
         checkTeamName(name);
 
@@ -86,7 +86,7 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
-    public ScoreboardTeam createIfAbsent(String name, BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
         checkDestroyed();
         ScoreboardTeamImpl team = team(name);
         if (team != null)
@@ -103,7 +103,7 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
-    public boolean addPlayer(Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
         checkDestroyed();
 
         checkPlayer(player);
@@ -124,7 +124,7 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
-    public Collection<Player> addPlayers(Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    public @NotNull Collection<Player> addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
         checkDestroyed();
         Preconditions.checkNotNull(players, "Players cannot be null");
 
@@ -151,7 +151,7 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
-    public boolean removePlayer(Player player) {
+    public boolean removePlayer(@NotNull Player player) {
         checkDestroyed();
         checkPlayer(player);
 
@@ -171,7 +171,7 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
-    public void removePlayers(Collection<Player> players) {
+    public void removePlayers(@NotNull Collection<Player> players) {
         checkDestroyed();
         Preconditions.checkNotNull(players);
 

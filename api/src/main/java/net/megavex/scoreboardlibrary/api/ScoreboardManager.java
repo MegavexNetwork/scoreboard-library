@@ -27,7 +27,7 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
     }
 
     @Override
-    default ScoreboardManager scoreboardManager() {
+    default @NotNull ScoreboardManager scoreboardManager() {
         return this;
     }
 
@@ -63,10 +63,10 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
     /**
      * Creates a {@link Sidebar}
      *
-     * @param maxLines Max sidebar lines
+     * @param maxLines            Max sidebar lines
      * @param componentTranslator Component translator
-     * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
-     *                 or null if the locale should depend on the player
+     * @param locale              Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
+     *                            or null if the locale should depend on the player
      * @return Sidebar
      */
     @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);

@@ -1,10 +1,11 @@
 package net.megavex.scoreboardlibrary.api.sidebar.line;
 
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
 public interface SidebarLine {
 
-    static SidebarLine staticLine(Component component) {
+    static @NotNull SidebarLine staticLine(@NotNull Component component) {
         return new StaticLine(component);
     }
 

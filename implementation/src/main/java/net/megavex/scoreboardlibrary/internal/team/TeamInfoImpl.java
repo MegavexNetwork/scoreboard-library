@@ -3,7 +3,6 @@ package net.megavex.scoreboardlibrary.internal.team;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
@@ -12,6 +11,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,7 +30,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
             suffix = empty();
     public boolean allowFriendlyFire, canSeeFriendlyInvisibles;
     public byte nameTagVisibility = NameTagVisibility.ALWAYS.id(),
-            collisionRule = CollisionRule.ALWAYS.getId();
+            collisionRule = CollisionRule.ALWAYS.id();
     public char playerColor = '\0';
     public TeamNMS.TeamInfoNMS<Component> nms;
     private ScoreboardTeamImpl team;
@@ -97,12 +97,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public Collection<String> entries() {
+    public @NotNull Collection<String> entries() {
         return Collections.unmodifiableSet(entries);
     }
 
     @Override
-    public boolean addEntry(String entry) {
+    public boolean addEntry(@NotNull String entry) {
         Preconditions.checkNotNull(entry);
 
         synchronized (entries) {
@@ -119,7 +119,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public boolean removeEntry(String entry) {
+    public boolean removeEntry(@NotNull String entry) {
         Preconditions.checkNotNull(entry);
 
         synchronized (entries) {
@@ -136,12 +136,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public Component displayName() {
+    public @NotNull Component displayName() {
         return displayName;
     }
 
     @Override
-    public void displayName(Component displayName) {
+    public void displayName(@NotNull Component displayName) {
         Preconditions.checkNotNull(displayName);
 
         if (!Objects.equals(displayName, this.displayName)) {
@@ -152,12 +152,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public Component prefix() {
+    public @NotNull Component prefix() {
         return prefix;
     }
 
     @Override
-    public void prefix(Component prefix) {
+    public void prefix(@NotNull Component prefix) {
         Preconditions.checkNotNull(prefix);
 
         if ((!Objects.equals(prefix, this.prefix))) {
@@ -168,12 +168,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public Component suffix() {
+    public @NotNull Component suffix() {
         return suffix;
     }
 
     @Override
-    public void suffix(Component suffix) {
+    public void suffix(@NotNull Component suffix) {
         Preconditions.checkNotNull(suffix);
 
         if (!Objects.equals(suffix, this.suffix)) {
@@ -212,12 +212,12 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public NameTagVisibility nameTagVisibility() {
+    public @NotNull NameTagVisibility nameTagVisibility() {
         return NameTagVisibility.of(nameTagVisibility);
     }
 
     @Override
-    public void nameTagVisibility(NameTagVisibility nameTagVisibility) {
+    public void nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
         Preconditions.checkNotNull(nameTagVisibility);
 
         if (this.nameTagVisibility != nameTagVisibility.id()) {
@@ -228,16 +228,16 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     }
 
     @Override
-    public CollisionRule collisionRule() {
+    public @NotNull CollisionRule collisionRule() {
         return CollisionRule.of(collisionRule);
     }
 
     @Override
-    public void collisionRule(CollisionRule collisionRule) {
+    public void collisionRule(@NotNull CollisionRule collisionRule) {
         Preconditions.checkNotNull(collisionRule);
 
-        if (this.collisionRule != collisionRule.getId()) {
-            this.collisionRule = collisionRule.getId();
+        if (this.collisionRule != collisionRule.id()) {
+            this.collisionRule = collisionRule.id();
             updateTeam.set(true);
             scheduleUpdate();
         }
