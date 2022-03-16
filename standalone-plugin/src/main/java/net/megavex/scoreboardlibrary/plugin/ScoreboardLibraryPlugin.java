@@ -8,18 +8,18 @@ import java.util.logging.Level;
 
 public class ScoreboardLibraryPlugin extends JavaPlugin {
 
-    @Override
-    public void onEnable() {
-        try {
-            ScoreboardLibraryImplementation.init();
-        } catch (ScoreboardLibraryLoadException e) {
-            getLogger().log(Level.SEVERE, "Couldn't load ScoreboardLibrary", e);
-            getServer().getPluginManager().disablePlugin(this);
-        }
+  @Override
+  public void onEnable() {
+    try {
+      ScoreboardLibraryImplementation.init();
+    } catch (ScoreboardLibraryLoadException e) {
+      getLogger().log(Level.SEVERE, "Couldn't load ScoreboardLibrary", e);
+      getServer().getPluginManager().disablePlugin(this);
     }
+  }
 
-    @Override
-    public void onDisable() {
-        ScoreboardLibraryImplementation.close();
-    }
+  @Override
+  public void onDisable() {
+    ScoreboardLibraryImplementation.close();
+  }
 }

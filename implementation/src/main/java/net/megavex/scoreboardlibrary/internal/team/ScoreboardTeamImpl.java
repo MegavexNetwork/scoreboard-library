@@ -18,166 +18,166 @@ import java.util.Set;
 
 public class ScoreboardTeamImpl implements ScoreboardTeam {
 
-    public final TeamManagerImpl teamManager;
-    public final String name;
-    public final TeamNMS<?, ?> nms;
-    public Collection<TeamInfoImpl> infos;
-    public boolean closed;
-    short idCounter = 0;
-    private TeamInfoImpl globalInfo;
+  public final TeamManagerImpl teamManager;
+  public final String name;
+  public final TeamNMS<?, ?> nms;
+  public Collection<TeamInfoImpl> infos;
+  public boolean closed;
+  short idCounter = 0;
+  private TeamInfoImpl globalInfo;
 
-    public ScoreboardTeamImpl(TeamManagerImpl teamManager, String name) {
-        this.teamManager = teamManager;
-        this.name = name;
-        this.nms = ScoreboardManagerNMS.INSTANCE.createTeamNMS(name);
+  public ScoreboardTeamImpl(TeamManagerImpl teamManager, String name) {
+    this.teamManager = teamManager;
+    this.name = name;
+    this.nms = ScoreboardManagerNMS.INSTANCE.createTeamNMS(name);
+  }
+
+  public Collection<TeamInfoImpl> teamInfos() {
+    if (infos == null) {
+      infos = CollectionProvider.set(1);
     }
 
-    public Collection<TeamInfoImpl> teamInfos() {
-        if (infos == null) {
-            infos = CollectionProvider.set(1);
-        }
+    return infos;
+  }
 
-        return infos;
+  public void update() {
+    if (infos == null) return;
+    for (TeamInfoImpl teamInfo : infos) {
+      teamInfo.update();
+    }
+  }
+
+  @Override
+  public @NotNull TeamInfoImpl globalInfo() {
+    if (globalInfo == null) {
+      globalInfo = new TeamInfoImpl();
+      globalInfo.assign(this);
+      infos.add(globalInfo);
     }
 
-    public void update() {
-        if (infos == null) return;
-        for (TeamInfoImpl teamInfo : infos) {
-            teamInfo.update();
-        }
+    return globalInfo;
+  }
+
+  @Override
+  public @NotNull String name() {
+    return name;
+  }
+
+  @Override
+  public @NotNull TeamManager teamManager() {
+    return teamManager;
+  }
+
+  @Override
+  public @NotNull TeamInfoImpl teamInfo(Player player) {
+    return getTeamInfo(player, true, false);
+  }
+
+  public TeamInfoImpl getTeamInfo(Player player, boolean check, boolean nullable) {
+    checkDestroyed();
+    if (check) {
+      checkPlayer(player);
     }
 
-    @Override
-    public @NotNull TeamInfoImpl globalInfo() {
-        if (globalInfo == null) {
-            globalInfo = new TeamInfoImpl();
-            globalInfo.assign(this);
-            infos.add(globalInfo);
-        }
-
-        return globalInfo;
+    for (TeamInfoImpl teamInfo : infos) {
+      if (teamInfo.players.contains(player)) {
+        return teamInfo;
+      }
     }
 
-    @Override
-    public @NotNull String name() {
-        return name;
+    if (nullable) {
+      return null;
     }
 
-    @Override
-    public @NotNull TeamManager teamManager() {
-        return teamManager;
-    }
+    globalInfo().players.add(player);
+    return globalInfo;
+  }
 
-    @Override
-    public @NotNull TeamInfoImpl teamInfo(Player player) {
-        return getTeamInfo(player, true, false);
-    }
+  @Override
+  public @NotNull TeamInfoImpl teamInfo(Player player, @Nullable TeamInfo teamInfo) {
+    checkDestroyed();
+    checkPlayer(player);
 
-    public TeamInfoImpl getTeamInfo(Player player, boolean check, boolean nullable) {
-        checkDestroyed();
-        if (check) {
-            checkPlayer(player);
-        }
+    TeamInfoImpl impl = teamInfo == null ? globalInfo() : (TeamInfoImpl) teamInfo;
 
-        for (TeamInfoImpl teamInfo : infos) {
-            if (teamInfo.players.contains(player)) {
-                return teamInfo;
-            }
-        }
-
-        if (nullable) {
-            return null;
-        }
-
-        globalInfo().players.add(player);
-        return globalInfo;
-    }
-
-    @Override
-    public @NotNull TeamInfoImpl teamInfo(Player player, @Nullable TeamInfo teamInfo) {
-        checkDestroyed();
-        checkPlayer(player);
-
-        TeamInfoImpl impl = teamInfo == null ? globalInfo() : (TeamInfoImpl) teamInfo;
-
-        TeamInfoImpl oldInfo = getTeamInfo(player, true, true);
-        if (oldInfo != null) {
-            if (oldInfo == impl)
-                return impl;
-            oldInfo.players.remove(player);
-        }
-
-        if (impl.team() != this)
-            impl.unassign();
-        impl.assign(this);
-
-        Set<Player> singleton = Collections.singleton(player);
-        impl.addPlayers(singleton);
-        if (oldInfo != null) {
-            impl.nms.updateTeam(singleton);
-            TeamInfoImpl.syncEntries(singleton, oldInfo, impl);
-        } else {
-            impl.nms.createTeam(singleton);
-        }
-
+    TeamInfoImpl oldInfo = getTeamInfo(player, true, true);
+    if (oldInfo != null) {
+      if (oldInfo == impl)
         return impl;
+      oldInfo.players.remove(player);
     }
 
-    @Override
-    public boolean closed() {
-        return closed;
+    if (impl.team() != this)
+      impl.unassign();
+    impl.assign(this);
+
+    Set<Player> singleton = Collections.singleton(player);
+    impl.addPlayers(singleton);
+    if (oldInfo != null) {
+      impl.nms.updateTeam(singleton);
+      TeamInfoImpl.syncEntries(singleton, oldInfo, impl);
+    } else {
+      impl.nms.createTeam(singleton);
     }
 
-    @Override
-    public void close() {
-        if (closed) {
-            return;
+    return impl;
+  }
+
+  @Override
+  public boolean closed() {
+    return closed;
+  }
+
+  @Override
+  public void close() {
+    if (closed) {
+      return;
+    }
+
+    if (infos != null) {
+      infos.forEach(info -> {
+        if (info != null && info.team() != null) {
+          Objects.requireNonNull(info.team()).nms.removeTeam(info.players);
         }
-
-        if (infos != null) {
-            infos.forEach(info -> {
-                if (info != null && info.team() != null) {
-                    Objects.requireNonNull(info.team()).nms.removeTeam(info.players);
-                }
-            });
-        }
-        teamManager.teams.remove(name);
-        closed = true;
+      });
     }
+    teamManager.teams.remove(name);
+    closed = true;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ScoreboardTeamImpl that = (ScoreboardTeamImpl) o;
-        return closed == that.closed &&
-                idCounter == that.idCounter &&
-                Objects.equals(teamManager, that.teamManager) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(nms, that.nms) &&
-                Objects.equals(globalInfo, that.globalInfo) &&
-                Objects.equals(infos, that.infos);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ScoreboardTeamImpl that = (ScoreboardTeamImpl) o;
+    return closed == that.closed &&
+      idCounter == that.idCounter &&
+      Objects.equals(teamManager, that.teamManager) &&
+      Objects.equals(name, that.name) &&
+      Objects.equals(nms, that.nms) &&
+      Objects.equals(globalInfo, that.globalInfo) &&
+      Objects.equals(infos, that.infos);
+  }
 
-    @Override
-    public String toString() {
-        return "ScoreboardTeamImpl{" +
-                "name='" + name + '\'' +
-                ", destroyed=" + closed +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "ScoreboardTeamImpl{" +
+      "name='" + name + '\'' +
+      ", destroyed=" + closed +
+      '}';
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(teamManager, name);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(teamManager, name);
+  }
 
-    protected void checkDestroyed() {
-        Preconditions.checkState(!closed, "Team is closed");
-    }
+  protected void checkDestroyed() {
+    Preconditions.checkState(!closed, "Team is closed");
+  }
 
-    protected void checkPlayer(Player player) {
-        Preconditions.checkNotNull(player, "Player cannot be null");
-        Preconditions.checkArgument(teamManager.players().contains(player), "Player is not in fillTeamPacket teamManager");
-    }
+  protected void checkPlayer(Player player) {
+    Preconditions.checkNotNull(player, "Player cannot be null");
+    Preconditions.checkArgument(teamManager.players().contains(player), "Player is not in fillTeamPacket teamManager");
+  }
 }

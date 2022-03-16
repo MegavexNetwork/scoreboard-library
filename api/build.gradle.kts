@@ -1,3 +1,3 @@
 plugins {
-    id("net.megavex.scoreboardlibrary.publish-conventions")
+  id("net.megavex.scoreboardlibrary.publish-conventions")
 }

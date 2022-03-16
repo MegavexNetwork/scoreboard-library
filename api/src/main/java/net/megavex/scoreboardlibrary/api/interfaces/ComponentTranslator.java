@@ -8,8 +8,8 @@ import java.util.Locale;
 
 public interface ComponentTranslator {
 
-    ComponentTranslator GLOBAL = GlobalTranslator::render;
-    ComponentTranslator NONE = (component, locale) -> component;
+  ComponentTranslator GLOBAL = GlobalTranslator::render;
+  ComponentTranslator NONE = (component, locale) -> component;
 
-    @NotNull Component translate(@NotNull Component component, @NotNull Locale locale);
+  @NotNull Component translate(@NotNull Component component, @NotNull Locale locale);
 }

@@ -12,17 +12,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public record PlayerListener(ScoreboardManagerImpl instance) implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        AbstractSidebar sidebar = ScoreboardManagerProviderImpl.instance().sidebarMap.get(player);
-        if (sidebar != null) {
-            sidebar.removePlayer(player);
-        }
-
-        TeamManagerImpl teamManager = ScoreboardManagerProviderImpl.instance().teamManagerMap.get(player);
-        if (teamManager != null) {
-            teamManager.removePlayer(player);
-        }
+  @EventHandler(priority = EventPriority.MONITOR)
+  public void onPlayerQuit(PlayerQuitEvent event) {
+    Player player = event.getPlayer();
+    AbstractSidebar sidebar = ScoreboardManagerProviderImpl.instance().sidebarMap.get(player);
+    if (sidebar != null) {
+      sidebar.removePlayer(player);
     }
+
+    TeamManagerImpl teamManager = ScoreboardManagerProviderImpl.instance().teamManagerMap.get(player);
+    if (teamManager != null) {
+      teamManager.removePlayer(player);
+    }
+  }
 }

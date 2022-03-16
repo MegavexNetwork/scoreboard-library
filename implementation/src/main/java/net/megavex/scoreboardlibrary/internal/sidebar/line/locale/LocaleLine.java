@@ -8,15 +8,15 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 
 public interface LocaleLine<C> extends ImmutableTeamProperties<C> {
-    GlobalLineInfo info();
+  GlobalLineInfo info();
 
-    void value(Component renderedComponent);
+  void value(Component renderedComponent);
 
-    void updateTeam();
+  void updateTeam();
 
-    void sendScore(Collection<Player> players);
+  void sendScore(Collection<Player> players);
 
-    void show(Collection<Player> players);
+  void show(Collection<Player> players);
 
-    void hide(Collection<Player> players);
+  void hide(Collection<Player> players);
 }

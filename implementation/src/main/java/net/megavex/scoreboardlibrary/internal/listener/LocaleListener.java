@@ -18,27 +18,27 @@ import java.util.Collections;
 
 public record LocaleListener(ScoreboardManagerImpl instance) implements Listener {
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerLocaleChanged(PlayerLocaleChangeEvent event) {
-        Player player = event.getPlayer();
-        // Need to wait a tick because the locale didn't update yet
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                TeamManagerImpl teamManager = ScoreboardManagerProviderImpl.instance().teamManager(player);
-                if (teamManager != null) {
-                    for (ScoreboardTeamImpl team : teamManager.teams.values()) {
-                        TeamInfoImpl teamInfo = team.teamInfo(player);
-                        teamInfo.nms.updateTeam(Collections.singleton(player));
-                    }
-                }
+  @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+  public void onPlayerLocaleChanged(PlayerLocaleChangeEvent event) {
+    Player player = event.getPlayer();
+    // Need to wait a tick because the locale didn't update yet
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        TeamManagerImpl teamManager = ScoreboardManagerProviderImpl.instance().teamManager(player);
+        if (teamManager != null) {
+          for (ScoreboardTeamImpl team : teamManager.teams.values()) {
+            TeamInfoImpl teamInfo = team.teamInfo(player);
+            teamInfo.nms.updateTeam(Collections.singleton(player));
+          }
+        }
 
-                AbstractSidebar sidebar = ScoreboardManagerProviderImpl.instance().sidebarMap.get(player);
-                if (sidebar instanceof PlayerDependantLocaleSidebar) {
-                    sidebar.removePlayer(player);
-                    sidebar.addPlayer(player);
-                }
-            }
-        }.runTaskLater(instance.plugin, 1);
-    }
+        AbstractSidebar sidebar = ScoreboardManagerProviderImpl.instance().sidebarMap.get(player);
+        if (sidebar instanceof PlayerDependantLocaleSidebar) {
+          sidebar.removePlayer(player);
+          sidebar.addPlayer(player);
+        }
+      }
+    }.runTaskLater(instance.plugin, 1);
+  }
 }

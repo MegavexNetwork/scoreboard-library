@@ -18,44 +18,44 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 
 public final class LegacyFormatUtil {
 
-    private static final Map<NamedTextColor, Character> legacyMap;
+  private static final Map<NamedTextColor, Character> legacyMap;
 
-    static {
-        ChatColor[] values = ChatColor.values();
-        legacyMap = CollectionProvider.map(values.length);
-        for (ChatColor value : values) {
-            if (!value.isColor()) continue;
+  static {
+    ChatColor[] values = ChatColor.values();
+    legacyMap = CollectionProvider.map(values.length);
+    for (ChatColor value : values) {
+      if (!value.isColor()) continue;
 
-            char c = value.getChar();
-            LegacyFormat format = Objects.requireNonNull(parseChar(c));
-            legacyMap.put((NamedTextColor) format.color(), c);
-        }
+      char c = value.getChar();
+      LegacyFormat format = Objects.requireNonNull(parseChar(c));
+      legacyMap.put((NamedTextColor) format.color(), c);
+    }
+  }
+
+  private LegacyFormatUtil() {
+  }
+
+  public static String limitLegacyText(String text, int limit) {
+    if (text.length() <= limit) {
+      return text;
     }
 
-    private LegacyFormatUtil() {
+    int lastNotColorCharIndex = limit - 1;
+    while (text.charAt(lastNotColorCharIndex) == ChatColor.COLOR_CHAR) {
+      lastNotColorCharIndex--;
     }
+    return text.substring(0, lastNotColorCharIndex + 1);
+  }
 
-    public static String limitLegacyText(String text, int limit) {
-        if (text.length() <= limit) {
-            return text;
-        }
+  public static String serialize(@NotNull ComponentTranslator componentTranslator, @Nullable Component component, Locale locale) {
+    if (component == null || component == empty()) return "";
 
-        int lastNotColorCharIndex = limit - 1;
-        while (text.charAt(lastNotColorCharIndex) == ChatColor.COLOR_CHAR) {
-            lastNotColorCharIndex--;
-        }
-        return text.substring(0, lastNotColorCharIndex + 1);
-    }
+    return legacySection().serialize(componentTranslator.translate(component, locale));
+  }
 
-    public static String serialize(@NotNull ComponentTranslator componentTranslator, @Nullable Component component, Locale locale) {
-        if (component == null || component == empty()) return "";
+  public static char getChar(NamedTextColor color) {
+    if (color == null) return 'r';
 
-        return legacySection().serialize(componentTranslator.translate(component, locale));
-    }
-
-    public static char getChar(NamedTextColor color) {
-        if (color == null) return 'r';
-
-        return legacyMap.getOrDefault(color, '\0');
-    }
+    return legacyMap.getOrDefault(color, '\0');
+  }
 }

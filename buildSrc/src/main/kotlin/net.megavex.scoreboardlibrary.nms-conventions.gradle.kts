@@ -1,7 +1,7 @@
 plugins {
-    id("net.megavex.scoreboardlibrary.java-conventions")
+  id("net.megavex.scoreboardlibrary.java-conventions")
 }
 
 dependencies {
-    compileOnly(project(":nms-base"))
+  compileOnly(project(":nms-base"))
 }

@@ -18,52 +18,52 @@ import java.util.Collection;
 @ApiStatus.Internal
 public abstract class ScoreboardManagerProvider {
 
-    private static ScoreboardManagerProvider instance;
-    private static JavaPlugin loaderPlugin;
+  private static ScoreboardManagerProvider instance;
+  private static JavaPlugin loaderPlugin;
 
-    public static ScoreboardManagerProvider instance() {
-        return instance;
-    }
+  public static ScoreboardManagerProvider instance() {
+    return instance;
+  }
 
-    public static void instance(ScoreboardManagerProvider instance) {
-        ScoreboardManagerProvider.instance = instance;
-    }
+  public static void instance(ScoreboardManagerProvider instance) {
+    ScoreboardManagerProvider.instance = instance;
+  }
 
-    public static JavaPlugin loaderPlugin() {
-        return loaderPlugin;
-    }
+  public static JavaPlugin loaderPlugin() {
+    return loaderPlugin;
+  }
 
-    public static void loaderPlugin(JavaPlugin loaderPlugin) {
-        ScoreboardManagerProvider.loaderPlugin = loaderPlugin;
-    }
+  public static void loaderPlugin(JavaPlugin loaderPlugin) {
+    ScoreboardManagerProvider.loaderPlugin = loaderPlugin;
+  }
 
-    @NotNull
-    public TeamInfo teamInfo() {
-        return teamInfo(null);
-    }
+  @NotNull
+  public TeamInfo teamInfo() {
+    return teamInfo(null);
+  }
 
-    @NotNull
-    public abstract TeamInfo teamInfo(@Nullable Collection<String> entries);
+  @NotNull
+  public abstract TeamInfo teamInfo(@Nullable Collection<String> entries);
 
 
-    @NotNull
-    public abstract ScoreboardManager scoreboardManager(JavaPlugin plugin);
+  @NotNull
+  public abstract ScoreboardManager scoreboardManager(JavaPlugin plugin);
 
-    /**
-     * Gets the {@link Sidebar} that a player has
-     *
-     * @param player Player
-     * @return Sidebar
-     */
-    @Nullable
-    public abstract Sidebar sidebar(Player player);
+  /**
+   * Gets the {@link Sidebar} that a player has
+   *
+   * @param player Player
+   * @return Sidebar
+   */
+  @Nullable
+  public abstract Sidebar sidebar(Player player);
 
-    /**
-     * Gets the {@link TeamManager} that a player has
-     *
-     * @param player Player
-     * @return Sidebar
-     */
-    @Nullable
-    public abstract TeamManager teamManager(Player player);
+  /**
+   * Gets the {@link TeamManager} that a player has
+   *
+   * @param player Player
+   * @return Sidebar
+   */
+  @Nullable
+  public abstract TeamManager teamManager(Player player);
 }

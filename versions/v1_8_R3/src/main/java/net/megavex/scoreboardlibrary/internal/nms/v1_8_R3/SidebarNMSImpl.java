@@ -20,82 +20,82 @@ import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
 
-    private static final Field objectiveNameField, objectiveDisplayNameField, objectiveHealthDisplayField, scoreNameField, scoreObjectiveNameField, scoreScoreField, scoreActionField;
+  private static final Field objectiveNameField, objectiveDisplayNameField, objectiveHealthDisplayField, scoreNameField, scoreObjectiveNameField, scoreScoreField, scoreActionField;
 
-    static {
-        objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a");
-        objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "b");
-        objectiveHealthDisplayField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "c");
-        scoreNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "a");
-        scoreObjectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "b");
-        scoreScoreField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "c");
-        scoreActionField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "d");
+  static {
+    objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a");
+    objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "b");
+    objectiveHealthDisplayField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "c");
+    scoreNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "a");
+    scoreObjectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "b");
+    scoreScoreField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "c");
+    scoreActionField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "d");
+  }
+
+  private final PacketPlayOutScoreboardObjective createPacket;
+  private final PacketPlayOutScoreboardObjective updatePacket;
+
+  SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
+    super(impl, sidebar);
+
+    Locale locale = sidebar.locale();
+    if (locale != null) {
+      createPacket = new PacketPlayOutScoreboardObjective();
+      updatePacket = new PacketPlayOutScoreboardObjective();
+      createObjectivePacket(createPacket, 0, empty(), locale);
+      createObjectivePacket(updatePacket, 2, empty(), locale);
+    } else {
+      createPacket = null;
+      updatePacket = null;
     }
+  }
 
-    private final PacketPlayOutScoreboardObjective createPacket;
-    private final PacketPlayOutScoreboardObjective updatePacket;
+  private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
+    UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
+    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(NMSImpl.objectiveModeField), mode);
+    UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
+    updateDisplayName(packet, displayName, locale);
+  }
 
-    SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
-        super(impl, sidebar);
+  private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
+    String value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
+    UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
+  }
 
-        Locale locale = sidebar.locale();
-        if (locale != null) {
-            createPacket = new PacketPlayOutScoreboardObjective();
-            updatePacket = new PacketPlayOutScoreboardObjective();
-            createObjectivePacket(createPacket, 0, empty(), locale);
-            createObjectivePacket(updatePacket, 2, empty(), locale);
-        } else {
-            createPacket = null;
-            updatePacket = null;
-        }
+  @Override
+  public void updateTitle(Component displayName) {
+    Locale locale = sidebar.locale();
+    if (locale != null) {
+      updateDisplayName(createPacket, displayName, locale);
+      updateDisplayName(updatePacket, displayName, locale);
     }
+  }
 
-    private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
-        UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
-        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(NMSImpl.objectiveModeField), mode);
-        UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
-        updateDisplayName(packet, displayName, locale);
+  @Override
+  protected void sendObjectivePacket(Collection<Player> players, boolean create) {
+    if (sidebar.locale() != null) {
+      impl.sendPacket(players, create ? createPacket : updatePacket);
+    } else {
+      ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
+        PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
+        createObjectivePacket(packet, create ? 0 : 2, sidebar.title(), locale);
+        return packet;
+      });
     }
+  }
 
-    private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-        String value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
-        UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
-    }
+  @Override
+  public void removeLine(Collection<Player> players, String line) {
+    impl.sendPacket(players, new PacketPlayOutScoreboardScore(line));
+  }
 
-    @Override
-    public void updateTitle(Component displayName) {
-        Locale locale = sidebar.locale();
-        if (locale != null) {
-            updateDisplayName(createPacket, displayName, locale);
-            updateDisplayName(updatePacket, displayName, locale);
-        }
-    }
-
-    @Override
-    protected void sendObjectivePacket(Collection<Player> players, boolean create) {
-        if (sidebar.locale() != null) {
-            impl.sendPacket(players, create ? createPacket : updatePacket);
-        } else {
-            ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
-                PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
-                createObjectivePacket(packet, create ? 0 : 2, sidebar.title(), locale);
-                return packet;
-            });
-        }
-    }
-
-    @Override
-    public void removeLine(Collection<Player> players, String line) {
-        impl.sendPacket(players, new PacketPlayOutScoreboardScore(line));
-    }
-
-    @Override
-    public void score(Collection<Player> players, int score, String line) {
-        PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
-        UnsafeUtilities.setField(scoreNameField, packet, line);
-        UnsafeUtilities.setField(scoreObjectiveNameField, packet, impl.objectiveName);
-        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);
-        UnsafeUtilities.setField(scoreActionField, packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
-        impl.sendPacket(players, packet);
-    }
+  @Override
+  public void score(Collection<Player> players, int score, String line) {
+    PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
+    UnsafeUtilities.setField(scoreNameField, packet, line);
+    UnsafeUtilities.setField(scoreObjectiveNameField, packet, impl.objectiveName);
+    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);
+    UnsafeUtilities.setField(scoreActionField, packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
+    impl.sendPacket(players, packet);
+  }
 }

@@ -5,10 +5,10 @@ import net.kyori.adventure.text.Component;
 
 public final class NativeAdventureUtil {
 
-    private NativeAdventureUtil() {
-    }
+  private NativeAdventureUtil() {
+  }
 
-    public static net.minecraft.network.chat.Component fromAdventureComponent(Component component) {
-        return new AdventureComponent(component);
-    }
+  public static net.minecraft.network.chat.Component fromAdventureComponent(Component component) {
+    return new AdventureComponent(component);
+  }
 }

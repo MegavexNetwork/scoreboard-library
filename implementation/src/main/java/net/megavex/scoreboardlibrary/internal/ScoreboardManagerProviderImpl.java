@@ -18,53 +18,53 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardManagerProviderImpl extends ScoreboardManagerProvider {
 
-    private static ScoreboardManagerProviderImpl instance;
-    public final Map<Player, AbstractSidebar> sidebarMap = new ConcurrentHashMap<>();
-    public final Map<Player, TeamManagerImpl> teamManagerMap = new ConcurrentHashMap<>();
-    public final Map<JavaPlugin, ScoreboardManager> scoreboardManagerMap = CollectionProvider.map(1);
+  private static ScoreboardManagerProviderImpl instance;
+  public final Map<Player, AbstractSidebar> sidebarMap = new ConcurrentHashMap<>();
+  public final Map<Player, TeamManagerImpl> teamManagerMap = new ConcurrentHashMap<>();
+  public final Map<JavaPlugin, ScoreboardManager> scoreboardManagerMap = CollectionProvider.map(1);
 
-    private ScoreboardManagerProviderImpl() {
+  private ScoreboardManagerProviderImpl() {
+  }
+
+  public static ScoreboardManagerProviderImpl instance() {
+    return instance;
+  }
+
+  public static void instance(ScoreboardManagerProviderImpl instance) {
+    ScoreboardManagerProviderImpl.instance = instance;
+  }
+
+  public static synchronized void init() {
+    Preconditions.checkState(instance == null && ScoreboardManagerProvider.instance() == null);
+    ScoreboardManagerProviderImpl provider = new ScoreboardManagerProviderImpl();
+    instance = provider;
+    ScoreboardManagerProvider.instance(provider);
+  }
+
+  @Override
+  @NotNull
+  public TeamInfo teamInfo(Collection<String> entries) {
+    TeamInfoImpl impl = new TeamInfoImpl();
+    if (entries != null) {
+      impl.entries.addAll(entries);
     }
 
-    public static ScoreboardManagerProviderImpl instance() {
-        return instance;
-    }
+    return impl;
+  }
 
-    public static void instance(ScoreboardManagerProviderImpl instance) {
-        ScoreboardManagerProviderImpl.instance = instance;
-    }
+  @Override
+  @NotNull
+  public ScoreboardManager scoreboardManager(JavaPlugin plugin) {
+    return scoreboardManagerMap.computeIfAbsent(plugin, name -> new ScoreboardManagerImpl(plugin));
+  }
 
-    public static synchronized void init() {
-        Preconditions.checkState(instance == null && ScoreboardManagerProvider.instance() == null);
-        ScoreboardManagerProviderImpl provider = new ScoreboardManagerProviderImpl();
-        instance = provider;
-        ScoreboardManagerProvider.instance(provider);
-    }
+  @Override
+  public Sidebar sidebar(Player player) {
+    return sidebarMap.get(player);
+  }
 
-    @Override
-    @NotNull
-    public TeamInfo teamInfo(Collection<String> entries) {
-        TeamInfoImpl impl = new TeamInfoImpl();
-        if (entries != null) {
-            impl.entries.addAll(entries);
-        }
-
-        return impl;
-    }
-
-    @Override
-    @NotNull
-    public ScoreboardManager scoreboardManager(JavaPlugin plugin) {
-        return scoreboardManagerMap.computeIfAbsent(plugin, name -> new ScoreboardManagerImpl(plugin));
-    }
-
-    @Override
-    public Sidebar sidebar(Player player) {
-        return sidebarMap.get(player);
-    }
-
-    @Override
-    public TeamManagerImpl teamManager(Player player) {
-        return teamManagerMap.get(player);
-    }
+  @Override
+  public TeamManagerImpl teamManager(Player player) {
+    return teamManagerMap.get(player);
+  }
 }

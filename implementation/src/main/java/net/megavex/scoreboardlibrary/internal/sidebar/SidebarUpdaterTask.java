@@ -10,25 +10,25 @@ import java.util.logging.Logger;
 
 public class SidebarUpdaterTask extends BukkitRunnable {
 
-    private final Logger logger;
-    private final Set<AbstractSidebar> sidebars;
+  private final Logger logger;
+  private final Set<AbstractSidebar> sidebars;
 
-    public SidebarUpdaterTask(ScoreboardManagerImpl manager) {
-        Preconditions.checkNotNull(manager);
-        this.logger = manager.plugin().getLogger();
-        this.sidebars = manager.sidebars;
+  public SidebarUpdaterTask(ScoreboardManagerImpl manager) {
+    Preconditions.checkNotNull(manager);
+    this.logger = manager.plugin().getLogger();
+    this.sidebars = manager.sidebars;
 
-        runTaskTimerAsynchronously(manager.plugin(), 1, 1);
+    runTaskTimerAsynchronously(manager.plugin(), 1, 1);
+  }
+
+  @Override
+  public void run() {
+    for (AbstractSidebar sidebar : sidebars) {
+      try {
+        sidebar.update();
+      } catch (Exception e) {
+        logger.log(Level.WARNING, "Exception caught when updating Sidebar", e);
+      }
     }
-
-    @Override
-    public void run() {
-        for (AbstractSidebar sidebar : sidebars) {
-            try {
-                sidebar.update();
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Exception caught when updating Sidebar", e);
-            }
-        }
-    }
+  }
 }

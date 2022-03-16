@@ -10,47 +10,47 @@ import java.util.Collections;
 
 public interface ImmutableTeamProperties<T> {
 
-    default Collection<String> entries() {
-        return Collections.emptySet();
+  default Collection<String> entries() {
+    return Collections.emptySet();
+  }
+
+  T displayName();
+
+  T prefix();
+
+  T suffix();
+
+  default boolean friendlyFire() {
+    return false;
+  }
+
+  default boolean canSeeFriendlyInvisibles() {
+    return false;
+  }
+
+  default NameTagVisibility nameTagVisibility() {
+    return NameTagVisibility.ALWAYS;
+  }
+
+  default CollisionRule collisionRule() {
+    return CollisionRule.ALWAYS;
+  }
+
+  @Nullable
+  default NamedTextColor playerColor() {
+    return null;
+  }
+
+  default int packOptions() {
+    int options = 0;
+    if (this.friendlyFire()) {
+      options |= 1;
     }
 
-    T displayName();
-
-    T prefix();
-
-    T suffix();
-
-    default boolean friendlyFire() {
-        return false;
+    if (this.canSeeFriendlyInvisibles()) {
+      options |= 2;
     }
 
-    default boolean canSeeFriendlyInvisibles() {
-        return false;
-    }
-
-    default NameTagVisibility nameTagVisibility() {
-        return NameTagVisibility.ALWAYS;
-    }
-
-    default CollisionRule collisionRule() {
-        return CollisionRule.ALWAYS;
-    }
-
-    @Nullable
-    default NamedTextColor playerColor() {
-        return null;
-    }
-
-    default int packOptions() {
-        int options = 0;
-        if (this.friendlyFire()) {
-            options |= 1;
-        }
-
-        if (this.canSeeFriendlyInvisibles()) {
-            options |= 2;
-        }
-
-        return options;
-    }
+    return options;
+  }
 }

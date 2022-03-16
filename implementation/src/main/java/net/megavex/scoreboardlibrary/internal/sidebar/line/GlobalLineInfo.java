@@ -7,27 +7,27 @@ import org.bukkit.ChatColor;
 
 public class GlobalLineInfo {
 
-    private static final String[] lineColors = new String[15];
+  private static final String[] lineColors = new String[15];
 
-    static {
-        ChatColor[] values = ChatColor.values();
-        for (byte i = 0; i < lineColors.length; i++) {
-            lineColors[i] = values[i].toString();
-        }
+  static {
+    ChatColor[] values = ChatColor.values();
+    for (byte i = 0; i < lineColors.length; i++) {
+      lineColors[i] = values[i].toString();
     }
+  }
 
-    public final byte line;
-    public final TeamNMS<?, ?> bridge;
-    public Component value;
-    public byte objectiveScore;
-    public boolean update, updateTeams, updateScore;
+  public final byte line;
+  public final TeamNMS<?, ?> bridge;
+  public Component value;
+  public byte objectiveScore;
+  public boolean update, updateTeams, updateScore;
 
-    public GlobalLineInfo(byte line) {
-        this.line = line;
-        this.bridge = ScoreboardManagerNMS.INSTANCE.createTeamNMS("_l" + line);
-    }
+  public GlobalLineInfo(byte line) {
+    this.line = line;
+    this.bridge = ScoreboardManagerNMS.INSTANCE.createTeamNMS("_l" + line);
+  }
 
-    public String player() {
-        return lineColors[line];
-    }
+  public String player() {
+    return lineColors[line];
+  }
 }

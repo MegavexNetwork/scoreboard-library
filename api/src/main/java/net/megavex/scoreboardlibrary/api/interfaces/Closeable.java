@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.api.interfaces;
 
 public interface Closeable {
-    void close();
+  void close();
 
-    boolean closed();
+  boolean closed();
 }

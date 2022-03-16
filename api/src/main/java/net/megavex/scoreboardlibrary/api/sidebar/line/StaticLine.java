@@ -6,12 +6,12 @@ import java.util.Objects;
 
 record StaticLine(Component value) implements SidebarLine {
 
-    StaticLine(Component value) {
-        this.value = Objects.requireNonNull(value, "value");
-    }
+  StaticLine(Component value) {
+    this.value = Objects.requireNonNull(value, "value");
+  }
 
-    @Override
-    public Component computeValue() {
-        return value;
-    }
+  @Override
+  public Component computeValue() {
+    return value;
+  }
 }

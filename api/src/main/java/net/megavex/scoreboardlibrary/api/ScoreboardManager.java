@@ -16,89 +16,89 @@ import java.util.Locale;
 
 public interface ScoreboardManager extends Closeable, HasScoreboardManager {
 
-    /**
-     * Gets the ScoreboardManager for a plugin
-     *
-     * @param plugin Plugin
-     * @return ScoreboardManager
-     */
-    static ScoreboardManager scoreboardManager(JavaPlugin plugin) {
-        return ScoreboardManagerProvider.instance().scoreboardManager(plugin);
-    }
+  /**
+   * Gets the ScoreboardManager for a plugin
+   *
+   * @param plugin Plugin
+   * @return ScoreboardManager
+   */
+  static ScoreboardManager scoreboardManager(JavaPlugin plugin) {
+    return ScoreboardManagerProvider.instance().scoreboardManager(plugin);
+  }
 
-    @Override
-    default @NotNull ScoreboardManager scoreboardManager() {
-        return this;
-    }
+  @Override
+  default @NotNull ScoreboardManager scoreboardManager() {
+    return this;
+  }
 
-    /**
-     * Gets the Plugin owner of this ScoreboardManager
-     *
-     * @return Plugin owner
-     */
-    @NotNull Plugin plugin();
+  /**
+   * Gets the Plugin owner of this ScoreboardManager
+   *
+   * @return Plugin owner
+   */
+  @NotNull Plugin plugin();
 
-    /**
-     * Creates a {@link Sidebar}
-     *
-     * @param maxLines Max sidebar lines
-     * @return Sidebar
-     */
-    default @NotNull Sidebar sidebar(int maxLines) {
-        return sidebar(maxLines, null);
-    }
+  /**
+   * Creates a {@link Sidebar}
+   *
+   * @param maxLines Max sidebar lines
+   * @return Sidebar
+   */
+  default @NotNull Sidebar sidebar(int maxLines) {
+    return sidebar(maxLines, null);
+  }
 
-    /**
-     * Creates a {@link Sidebar}
-     *
-     * @param maxLines Max sidebar lines
-     * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
-     *                 or null if the locale should depend on the player
-     * @return Sidebar
-     */
-    default @NotNull Sidebar sidebar(int maxLines, @Nullable Locale locale) {
-        return sidebar(maxLines, ComponentTranslator.GLOBAL, locale);
-    }
+  /**
+   * Creates a {@link Sidebar}
+   *
+   * @param maxLines Max sidebar lines
+   * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
+   *                 or null if the locale should depend on the player
+   * @return Sidebar
+   */
+  default @NotNull Sidebar sidebar(int maxLines, @Nullable Locale locale) {
+    return sidebar(maxLines, ComponentTranslator.GLOBAL, locale);
+  }
 
-    /**
-     * Creates a {@link Sidebar}
-     *
-     * @param maxLines            Max sidebar lines
-     * @param componentTranslator Component translator
-     * @param locale              Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
-     *                            or null if the locale should depend on the player
-     * @return Sidebar
-     */
-    @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
+  /**
+   * Creates a {@link Sidebar}
+   *
+   * @param maxLines            Max sidebar lines
+   * @param componentTranslator Component translator
+   * @param locale              Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
+   *                            or null if the locale should depend on the player
+   * @return Sidebar
+   */
+  @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
 
-    /**
-     * Gets the sidebars associated with this ScoreboardManager
-     *
-     * @return Sidebars
-     */
-    @NotNull Collection<Sidebar> sidebars();
+  /**
+   * Gets the sidebars associated with this ScoreboardManager
+   *
+   * @return Sidebars
+   */
+  @NotNull Collection<Sidebar> sidebars();
 
-    /**
-     * Creates a {@link TeamManager} with the global component translator
-     *
-     * @return TeamManager
-     */
-    default @NotNull TeamManager teamManager() {
-        return teamManager(ComponentTranslator.GLOBAL);
-    }
+  /**
+   * Creates a {@link TeamManager} with the global component translator
+   *
+   * @return TeamManager
+   */
+  default @NotNull TeamManager teamManager() {
+    return teamManager(ComponentTranslator.GLOBAL);
+  }
 
-    /**
-     * Creates a {@link TeamManager}
-     *
-     * @param componentTranslator Component translator
-     * @return TeamManager
-     */
-    @NotNull TeamManager teamManager(@NotNull ComponentTranslator componentTranslator);
+  /**
+   * Creates a {@link TeamManager}
+   *
+   * @param componentTranslator Component translator
+   * @return TeamManager
+   */
+  @NotNull TeamManager teamManager(@NotNull ComponentTranslator componentTranslator);
 
-    /**
-     * Gets the team managers associated with this {@link JavaPlugin}
-     *
-     * @return Team Managers
-     */
-    Collection<TeamManager> teamManagers();
+  /**
+   * Gets the team managers associated with this {@link JavaPlugin}
+   *
+   * @return Team Managers
+   */
+  Collection<TeamManager> teamManagers();
 }

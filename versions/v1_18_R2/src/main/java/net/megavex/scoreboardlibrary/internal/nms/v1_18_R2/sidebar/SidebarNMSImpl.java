@@ -13,52 +13,52 @@ import java.util.Locale;
 
 public class SidebarNMSImpl extends AbstractSidebarImpl {
 
-    private final ClientboundSetObjectivePacket createPacket;
-    private final ClientboundSetObjectivePacket updatePacket;
+  private final ClientboundSetObjectivePacket createPacket;
+  private final ClientboundSetObjectivePacket updatePacket;
 
-    public SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
-        super(impl, sidebar);
+  public SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
+    super(impl, sidebar);
 
-        Locale locale = sidebar.locale();
-        if (locale != null) {
-            createPacket = objectivePacketConstructor.invoke();
-            createObjectivePacket(createPacket, 0);
-            updateDisplayName(createPacket, sidebar.title(), locale);
+    Locale locale = sidebar.locale();
+    if (locale != null) {
+      createPacket = objectivePacketConstructor.invoke();
+      createObjectivePacket(createPacket, 0);
+      updateDisplayName(createPacket, sidebar.title(), locale);
 
-            updatePacket = objectivePacketConstructor.invoke();
-            createObjectivePacket(updatePacket, 2);
-            updateDisplayName(updatePacket, sidebar.title(), locale);
-        } else {
-            createPacket = null;
-            updatePacket = null;
-        }
+      updatePacket = objectivePacketConstructor.invoke();
+      createObjectivePacket(updatePacket, 2);
+      updateDisplayName(updatePacket, sidebar.title(), locale);
+    } else {
+      createPacket = null;
+      updatePacket = null;
     }
+  }
 
-    private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
-        net.minecraft.network.chat.Component vanilla = impl.fromAdventure(displayName, locale, sidebar.componentTranslator());
-        UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
-    }
+  private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
+    net.minecraft.network.chat.Component vanilla = impl.fromAdventure(displayName, locale, sidebar.componentTranslator());
+    UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
+  }
 
-    @Override
-    public void updateTitle(Component displayName) {
-        Locale locale = sidebar.locale();
-        if (locale != null) {
-            updateDisplayName(createPacket, displayName, locale);
-            updateDisplayName(updatePacket, displayName, locale);
-        }
+  @Override
+  public void updateTitle(Component displayName) {
+    Locale locale = sidebar.locale();
+    if (locale != null) {
+      updateDisplayName(createPacket, displayName, locale);
+      updateDisplayName(updatePacket, displayName, locale);
     }
+  }
 
-    @Override
-    protected void sendObjectivePacket(Collection<Player> players, boolean create) {
-        if (sidebar.locale() != null) {
-            impl.sendPacket(players, create ? createPacket : updatePacket);
-        } else {
-            ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
-                ClientboundSetObjectivePacket packet = objectivePacketConstructor.invoke();
-                createObjectivePacket(packet, create ? 0 : 2);
-                updateDisplayName(packet, sidebar.title(), locale);
-                return packet;
-            });
-        }
+  @Override
+  protected void sendObjectivePacket(Collection<Player> players, boolean create) {
+    if (sidebar.locale() != null) {
+      impl.sendPacket(players, create ? createPacket : updatePacket);
+    } else {
+      ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
+        ClientboundSetObjectivePacket packet = objectivePacketConstructor.invoke();
+        createObjectivePacket(packet, create ? 0 : 2);
+        updateDisplayName(packet, sidebar.title(), locale);
+        return packet;
+      });
     }
+  }
 }

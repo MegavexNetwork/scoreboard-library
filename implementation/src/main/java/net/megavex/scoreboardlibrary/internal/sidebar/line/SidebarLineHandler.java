@@ -13,170 +13,170 @@ import java.util.Set;
 
 public class SidebarLineHandler {
 
-    private final AbstractSidebar sidebar;
-    private final Locale locale;
+  private final AbstractSidebar sidebar;
+  private final Locale locale;
 
-    private Set<Player> players, legacyPlayers;
-    private LocaleLine<?>[] lines, legacyLines;
+  private Set<Player> players, legacyPlayers;
+  private LocaleLine<?>[] lines, legacyLines;
 
-    public SidebarLineHandler(AbstractSidebar sidebar, Locale locale) {
-        this.sidebar = sidebar;
-        this.locale = locale;
+  public SidebarLineHandler(AbstractSidebar sidebar, Locale locale) {
+    this.sidebar = sidebar;
+    this.locale = locale;
+  }
+
+  public AbstractSidebar sidebar() {
+    return sidebar;
+  }
+
+  public Locale locale() {
+    return locale;
+  }
+
+  public boolean hasPlayers() {
+    if (players != null && !players.isEmpty()) return true;
+    return legacyPlayers != null && !legacyPlayers.isEmpty();
+  }
+
+  public Set<Player> players(LineType lineType) {
+    if (lineType == LineType.NEW) {
+      return players;
+    } else {
+      return legacyPlayers;
     }
+  }
 
-    public AbstractSidebar sidebar() {
-        return sidebar;
+  public Set<Player> playersInit(LineType lineType) {
+    if (lineType == LineType.NEW) {
+      if (players == null) players = CollectionProvider.set(1);
+      return players;
+    } else {
+      if (legacyPlayers == null) legacyPlayers = CollectionProvider.set(1);
+      return legacyPlayers;
     }
+  }
 
-    public Locale locale() {
-        return locale;
+  public LocaleLine<?>[] lines(LineType lineType) {
+    if (lineType == LineType.NEW) {
+      return lines;
+    } else {
+      return legacyLines;
     }
+  }
 
-    public boolean hasPlayers() {
-        if (players != null && !players.isEmpty()) return true;
-        return legacyPlayers != null && !legacyPlayers.isEmpty();
+  public LocaleLine<?>[] linesInit(LineType lineType) {
+    if (lineType == LineType.NEW) {
+      if (lines == null) {
+        lines = new LocaleLine[sidebar.maxLines()];
+        initLines(lineType);
+      }
+      return lines;
+    } else {
+      if (legacyLines == null) {
+        legacyLines = new LocaleLine[sidebar.maxLines()];
+        initLines(lineType);
+      }
+      return legacyLines;
     }
+  }
 
-    public Set<Player> players(LineType lineType) {
-        if (lineType == LineType.NEW) {
-            return players;
-        } else {
-            return legacyPlayers;
-        }
-    }
+  public void update() {
+    update(LineType.NEW);
+    update(LineType.LEGACY);
+  }
 
-    public Set<Player> playersInit(LineType lineType) {
-        if (lineType == LineType.NEW) {
-            if (players == null) players = CollectionProvider.set(1);
-            return players;
-        } else {
-            if (legacyPlayers == null) legacyPlayers = CollectionProvider.set(1);
-            return legacyPlayers;
-        }
-    }
+  private void update(LineType lineType) {
+    LocaleLine<?>[] lines = lines(lineType);
+    if (lines == null) return;
+    Set<Player> players = players(lineType);
 
-    public LocaleLine<?>[] lines(LineType lineType) {
-        if (lineType == LineType.NEW) {
-            return lines;
-        } else {
-            return legacyLines;
-        }
-    }
-
-    public LocaleLine<?>[] linesInit(LineType lineType) {
-        if (lineType == LineType.NEW) {
-            if (lines == null) {
-                lines = new LocaleLine[sidebar.maxLines()];
-                initLines(lineType);
-            }
-            return lines;
-        } else {
-            if (legacyLines == null) {
-                legacyLines = new LocaleLine[sidebar.maxLines()];
-                initLines(lineType);
-            }
-            return legacyLines;
-        }
-    }
-
-    public void update() {
-        update(LineType.NEW);
-        update(LineType.LEGACY);
-    }
-
-    private void update(LineType lineType) {
-        LocaleLine<?>[] lines = lines(lineType);
-        if (lines == null) return;
-        Set<Player> players = players(lineType);
-
-        for (LocaleLine<?> line : lines) {
-            if (line != null) {
-                if (line.info().updateTeams) {
-                    line.updateTeam();
-                }
-
-                if (line.info().updateScore && sidebar.visible()) {
-                    line.sendScore(players);
-                }
-            }
-        }
-    }
-
-    public void setLine(int line, Component renderedLine) {
-        setLine(line, renderedLine, LineType.NEW);
-        setLine(line, renderedLine, LineType.LEGACY);
-    }
-
-    public void setLine(int line, Component renderedLine, LineType lineType) {
-        setLine(line, renderedLine, lineType, true);
-    }
-
-    public void setLine(int line, Component renderedLine, LineType lineType, boolean sendPackets) {
-        LocaleLine<?>[] lines = lines(lineType);
-        if (lines == null) return;
-
-        LocaleLine<?> localeLine = lines[line];
-        if (renderedLine == null && localeLine == null) {
-            return;
+    for (LocaleLine<?> line : lines) {
+      if (line != null) {
+        if (line.info().updateTeams) {
+          line.updateTeam();
         }
 
-        boolean newlyCreated = false;
-        if (localeLine == null) {
-            lines[line] = localeLine = lineType.create(sidebar.getLineInfo(line), this);
-            newlyCreated = true;
+        if (line.info().updateScore && sidebar.visible()) {
+          line.sendScore(players);
         }
+      }
+    }
+  }
 
-        if (renderedLine == null) {
-            lines[line] = null;
-        } else {
-            localeLine.value(renderedLine);
-        }
+  public void setLine(int line, Component renderedLine) {
+    setLine(line, renderedLine, LineType.NEW);
+    setLine(line, renderedLine, LineType.LEGACY);
+  }
 
-        if (!sidebar.visible() || !sendPackets) return;
+  public void setLine(int line, Component renderedLine, LineType lineType) {
+    setLine(line, renderedLine, lineType, true);
+  }
 
-        Collection<Player> players = players(lineType);
+  public void setLine(int line, Component renderedLine, LineType lineType, boolean sendPackets) {
+    LocaleLine<?>[] lines = lines(lineType);
+    if (lines == null) return;
 
-        if (renderedLine == null) {
-            localeLine.hide(players);
-        } else if (newlyCreated) {
-            localeLine.show(players);
-        }
+    LocaleLine<?> localeLine = lines[line];
+    if (renderedLine == null && localeLine == null) {
+      return;
     }
 
-    public void show() {
-        if (players != null) show(players, LineType.NEW);
-        if (legacyPlayers != null) show(legacyPlayers, LineType.LEGACY);
+    boolean newlyCreated = false;
+    if (localeLine == null) {
+      lines[line] = localeLine = lineType.create(sidebar.getLineInfo(line), this);
+      newlyCreated = true;
     }
 
-    public void hide() {
-        if (players != null) hide(players, LineType.NEW);
-        if (legacyPlayers != null) hide(legacyPlayers, LineType.LEGACY);
+    if (renderedLine == null) {
+      lines[line] = null;
+    } else {
+      localeLine.value(renderedLine);
     }
 
-    public void show(Collection<Player> players, LineType lineType) {
-        LocaleLine<?>[] lines = linesInit(lineType);
-        for (LocaleLine<?> line : lines) {
-            if (line != null && line.info().value != null) {
-                line.show(players);
-            }
-        }
-    }
+    if (!sidebar.visible() || !sendPackets) return;
 
-    public void hide(Collection<Player> players, LineType lineType) {
-        LocaleLine<?>[] lines = lines(lineType);
-        if (lines == null) return;
-        for (LocaleLine<?> line : lines) {
-            if (line != null && ((line.info().update) || line.info().value != null)) {
-                line.hide(players);
-            }
-        }
-    }
+    Collection<Player> players = players(lineType);
 
-    private void initLines(LineType lineType) {
-        for (GlobalLineInfo line : sidebar.lines) {
-            if (line != null) {
-                setLine(line.line, sidebar.componentTranslator().translate(line.value, locale), lineType, false);
-            }
-        }
+    if (renderedLine == null) {
+      localeLine.hide(players);
+    } else if (newlyCreated) {
+      localeLine.show(players);
     }
+  }
+
+  public void show() {
+    if (players != null) show(players, LineType.NEW);
+    if (legacyPlayers != null) show(legacyPlayers, LineType.LEGACY);
+  }
+
+  public void hide() {
+    if (players != null) hide(players, LineType.NEW);
+    if (legacyPlayers != null) hide(legacyPlayers, LineType.LEGACY);
+  }
+
+  public void show(Collection<Player> players, LineType lineType) {
+    LocaleLine<?>[] lines = linesInit(lineType);
+    for (LocaleLine<?> line : lines) {
+      if (line != null && line.info().value != null) {
+        line.show(players);
+      }
+    }
+  }
+
+  public void hide(Collection<Player> players, LineType lineType) {
+    LocaleLine<?>[] lines = lines(lineType);
+    if (lines == null) return;
+    for (LocaleLine<?> line : lines) {
+      if (line != null && ((line.info().update) || line.info().value != null)) {
+        line.hide(players);
+      }
+    }
+  }
+
+  private void initLines(LineType lineType) {
+    for (GlobalLineInfo line : sidebar.lines) {
+      if (line != null) {
+        setLine(line.line, sidebar.componentTranslator().translate(line.value, locale), lineType, false);
+      }
+    }
+  }
 }

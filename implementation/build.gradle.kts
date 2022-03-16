@@ -1,8 +1,8 @@
 plugins {
-    id("net.megavex.scoreboardlibrary.publish-conventions")
+  id("net.megavex.scoreboardlibrary.publish-conventions")
 }
 
 dependencies {
-    api(project(":api"))
-    implementation(project(":nms-base"))
+  api(project(":api"))
+  implementation(project(":nms-base"))
 }

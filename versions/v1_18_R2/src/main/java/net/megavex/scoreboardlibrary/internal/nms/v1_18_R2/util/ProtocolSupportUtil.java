@@ -7,14 +7,14 @@ import protocolsupport.api.ProtocolVersion;
 
 public final class ProtocolSupportUtil {
 
-    private ProtocolSupportUtil() {
-    }
+  private ProtocolSupportUtil() {
+  }
 
-    public static boolean isLegacy(Player player) {
-        Connection connection = ProtocolSupportAPI.getConnection(player);
-        if (connection == null) return false;
+  public static boolean isLegacy(Player player) {
+    Connection connection = ProtocolSupportAPI.getConnection(player);
+    if (connection == null) return false;
 
-        // TODO: may work on older versions, need to test that
-        return connection.getVersion().isBetween(ProtocolVersion.MINECRAFT_1_12_2, ProtocolVersion.MINECRAFT_1_8);
-    }
+    // TODO: may work on older versions, need to test that
+    return connection.getVersion().isBetween(ProtocolVersion.MINECRAFT_1_12_2, ProtocolVersion.MINECRAFT_1_8);
+  }
 }

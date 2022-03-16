@@ -15,43 +15,43 @@ import java.util.Collection;
  */
 public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
 
-    private ClientboundSetObjectivePacket createPacket;
-    private ClientboundSetObjectivePacket updatePacket;
+  private ClientboundSetObjectivePacket createPacket;
+  private ClientboundSetObjectivePacket updatePacket;
 
-    public PaperSidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
-        super(impl, sidebar);
-    }
+  public PaperSidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
+    super(impl, sidebar);
+  }
 
-    private void initialisePackets() {
+  private void initialisePackets() {
+    if (createPacket == null || updatePacket == null) {
+      synchronized (this) {
         if (createPacket == null || updatePacket == null) {
-            synchronized (this) {
-                if (createPacket == null || updatePacket == null) {
-                    createPacket = objectivePacketConstructor.invoke();
-                    updatePacket = objectivePacketConstructor.invoke();
-                    createObjectivePacket(createPacket, 0);
-                    createObjectivePacket(updatePacket, 2);
-                    updateTitle(sidebar.title());
-                }
-            }
+          createPacket = objectivePacketConstructor.invoke();
+          updatePacket = objectivePacketConstructor.invoke();
+          createObjectivePacket(createPacket, 0);
+          createObjectivePacket(updatePacket, 2);
+          updateTitle(sidebar.title());
         }
+      }
     }
+  }
 
-    private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {
-        UnsafeUtilities.setField(objectiveDisplayNameField, packet, displayName);
-    }
+  private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {
+    UnsafeUtilities.setField(objectiveDisplayNameField, packet, displayName);
+  }
 
-    @Override
-    public void updateTitle(Component displayName) {
-        if (createPacket != null && updatePacket != null) {
-            net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
-            updateDisplayName(createPacket, vanilla);
-            updateDisplayName(updatePacket, vanilla);
-        }
+  @Override
+  public void updateTitle(Component displayName) {
+    if (createPacket != null && updatePacket != null) {
+      net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
+      updateDisplayName(createPacket, vanilla);
+      updateDisplayName(updatePacket, vanilla);
     }
+  }
 
-    @Override
-    protected void sendObjectivePacket(Collection<Player> players, boolean create) {
-        initialisePackets();
-        impl.sendPacket(players, create ? createPacket : updatePacket);
-    }
+  @Override
+  protected void sendObjectivePacket(Collection<Player> players, boolean create) {
+    initialisePackets();
+    impl.sendPacket(players, create ? createPacket : updatePacket);
+  }
 }

@@ -1,38 +1,38 @@
 plugins {
-    `java-library`
-    `maven-publish`
+  `java-library`
+  `maven-publish`
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
-    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
+  mavenLocal()
+  mavenCentral()
+  maven { url = uri("https://oss.sonatype.org/content/groups/public/") }
+  maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+  compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
 
-    val adventureVersion = "4.9.3"
-    compileOnly("net.kyori:adventure-api:$adventureVersion")
-    compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-    compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+  val adventureVersion = "4.9.3"
+  compileOnly("net.kyori:adventure-api:$adventureVersion")
+  compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
+  compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
 }
 
 group = "net.megavex.scoreboardlibrary"
 version = "1.0.0"
 
 tasks {
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
-    }
+  compileJava {
+    options.encoding = Charsets.UTF_8.name()
+    options.release.set(17)
+  }
 
-    javadoc {
-        options.encoding = Charsets.UTF_8.name()
-    }
+  javadoc {
+    options.encoding = Charsets.UTF_8.name()
+  }
 
-    processResources {
-        filteringCharset = Charsets.UTF_8.name()
-    }
+  processResources {
+    filteringCharset = Charsets.UTF_8.name()
+  }
 }
