@@ -36,7 +36,7 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
      *
      * @return Plugin owner
      */
-    Plugin plugin();
+    @NotNull Plugin plugin();
 
     /**
      * Creates a {@link Sidebar}
@@ -44,7 +44,7 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
      * @param maxLines Max sidebar lines
      * @return Sidebar
      */
-    default Sidebar sidebar(int maxLines) {
+    default @NotNull Sidebar sidebar(int maxLines) {
         return sidebar(maxLines, null);
     }
 
@@ -56,7 +56,7 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
      *                 or null if the locale should depend on the player
      * @return Sidebar
      */
-    default Sidebar sidebar(int maxLines, @Nullable Locale locale) {
+    default @NotNull Sidebar sidebar(int maxLines, @Nullable Locale locale) {
         return sidebar(maxLines, ComponentTranslator.GLOBAL, locale);
     }
 
@@ -69,21 +69,31 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
      *                 or null if the locale should depend on the player
      * @return Sidebar
      */
-    Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
+    @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
 
     /**
      * Gets the sidebars associated with this ScoreboardManager
      *
      * @return Sidebars
      */
-    Collection<Sidebar> sidebars();
+    @NotNull Collection<Sidebar> sidebars();
+
+    /**
+     * Creates a {@link TeamManager} with the global component translator
+     *
+     * @return TeamManager
+     */
+    default @NotNull TeamManager teamManager() {
+        return teamManager(ComponentTranslator.GLOBAL);
+    }
 
     /**
      * Creates a {@link TeamManager}
      *
+     * @param componentTranslator Component translator
      * @return TeamManager
      */
-    TeamManager teamManager();
+    @NotNull TeamManager teamManager(@NotNull ComponentTranslator componentTranslator);
 
     /**
      * Gets the team managers associated with this {@link JavaPlugin}

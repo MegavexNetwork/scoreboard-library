@@ -45,8 +45,8 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
     }
 
     @Override
-    public TeamNMS.TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties) {
-        return new AdventureTeamInfoNMS(properties);
+    public TeamNMS.TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+        return new AdventureTeamInfoNMS(properties, componentTranslator);
     }
 
     @Override
@@ -115,13 +115,16 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
 
     private class AdventureTeamInfoNMS extends AbstractTeamInfoNMS<Component> {
 
-        public AdventureTeamInfoNMS(ImmutableTeamProperties<Component> properties) {
+        private final ComponentTranslator componentTranslator;
+
+        public AdventureTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
             super(properties);
+            this.componentTranslator = componentTranslator;
         }
 
         @Override
         protected String toLegacy(Component component, Locale locale) {
-            return LegacyFormatUtil.serialize(ComponentTranslator.GLOBAL, component, locale);
+            return LegacyFormatUtil.serialize(componentTranslator, component, locale);
         }
     }
 

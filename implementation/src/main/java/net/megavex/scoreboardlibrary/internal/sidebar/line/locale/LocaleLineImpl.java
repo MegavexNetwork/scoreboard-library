@@ -24,7 +24,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
         this.info = info;
         this.handler = handler;
         this.entries = Collections.singletonList(info.player());
-        this.bridge = info.bridge.createTeamInfoNMS(this);
+        this.bridge = info.bridge.createTeamInfoNMS(this, handler.sidebar().componentTranslator());
         bridge.updateTeamPackets(entries);
     }
 

@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
@@ -18,14 +19,17 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
     }
 
     @Override
-    public TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties) {
-        return new TeamInfoNMSImpl(properties);
+    public TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+        return new TeamInfoNMSImpl(properties, componentTranslator);
     }
 
     private class TeamInfoNMSImpl extends AbstractTeamNMSImpl.TeamInfoNMSImpl {
 
-        public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties) {
+        private final ComponentTranslator componentTranslator;
+
+        public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
             super(properties);
+            this.componentTranslator = componentTranslator;
         }
 
         @Override
@@ -50,13 +54,13 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
         protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
             super.fillParameters(parameters, locale);
 
-            net.minecraft.network.chat.Component vanilla = impl.fromAdventure(properties.displayName(), locale);
+            net.minecraft.network.chat.Component vanilla = impl.fromAdventure(properties.displayName(), locale, componentTranslator);
             UnsafeUtilities.setField(displayNameField, parameters, vanilla);
 
-            vanilla = impl.fromAdventure(properties.prefix(), locale);
+            vanilla = impl.fromAdventure(properties.prefix(), locale, componentTranslator);
             UnsafeUtilities.setField(prefixField, parameters, vanilla);
 
-            vanilla = impl.fromAdventure(properties.suffix(), locale);
+            vanilla = impl.fromAdventure(properties.suffix(), locale, componentTranslator);
             UnsafeUtilities.setField(suffixField, parameters, vanilla);
         }
     }

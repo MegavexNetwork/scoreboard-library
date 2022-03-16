@@ -94,10 +94,6 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
         ((CraftPlayer) player).getHandle().connection.send(packet);
     }
 
-    public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
-        return fromAdventure(component, locale, ComponentTranslator.GLOBAL);
-    }
-
     public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale, ComponentTranslator componentTranslator) {
         if (nativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
 

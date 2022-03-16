@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
@@ -19,7 +20,7 @@ public class PaperTeamNMSImpl extends AbstractTeamNMSImpl {
     }
 
     @Override
-    public TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties) {
+    public TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
         return new TeamInfoNMSImpl(properties);
     }
 

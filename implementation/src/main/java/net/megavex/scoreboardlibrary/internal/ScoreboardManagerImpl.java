@@ -52,12 +52,12 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
     }
 
     @Override
-    public Plugin plugin() {
+    public @NotNull Plugin plugin() {
         return plugin;
     }
 
     @Override
-    public Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale) {
+    public @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale) {
         checkDestroyed();
         getSidebars0();
 
@@ -77,11 +77,11 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
     }
 
     @Override
-    public TeamManagerImpl teamManager() {
+    public @NotNull TeamManagerImpl teamManager(@NotNull ComponentTranslator componentTranslator) {
         checkDestroyed();
         getTeamManagers0();
 
-        TeamManagerImpl teamManager = new TeamManagerImpl(this);
+        TeamManagerImpl teamManager = new TeamManagerImpl(this, componentTranslator);
         teamManagers.add(teamManager);
         return teamManager;
     }

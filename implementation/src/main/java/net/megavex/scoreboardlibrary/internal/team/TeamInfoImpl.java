@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.internal.team;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
@@ -63,7 +64,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
         this.id = team.idCounter++;
 
         team.teamInfos().add(this);
-        nms = team.nms.createTeamInfoNMS(this);
+        nms = team.nms.createTeamInfoNMS(this, team.teamManager.componentTranslator());
         nms.updateTeamPackets(entries);
     }
 

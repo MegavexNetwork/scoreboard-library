@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.internal.team;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -21,15 +22,17 @@ public class TeamManagerImpl implements TeamManager {
 
     private static int idCounter = 0;
 
+    private final ScoreboardManagerImpl scoreboardManager;
+    private final ComponentTranslator componentTranslator;
     public final Map<String, ScoreboardTeamImpl> teams = CollectionProvider.map(5);
     public final AtomicBoolean update = new AtomicBoolean();
-    private final ScoreboardManagerImpl scoreboardManager;
     private final Set<Player> players = CollectionProvider.set(4);
     private final int id = idCounter++;
     private boolean closed;
 
-    public TeamManagerImpl(ScoreboardManagerImpl scoreboardManager) {
+    public TeamManagerImpl(ScoreboardManagerImpl scoreboardManager, ComponentTranslator componentTranslator) {
         this.scoreboardManager = Objects.requireNonNull(scoreboardManager);
+        this.componentTranslator = Objects.requireNonNull(componentTranslator);
     }
 
     public void update() {
@@ -53,6 +56,11 @@ public class TeamManagerImpl implements TeamManager {
     @Override
     public Collection<Player> players() {
         return Collections.unmodifiableCollection(players);
+    }
+
+    @Override
+    public ComponentTranslator componentTranslator() {
+        return componentTranslator;
     }
 
     @Override
