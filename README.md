@@ -16,9 +16,9 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Supported Versions
 
-- 1.18.1 ([Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
-  because of native [Adventure](https://github.com/KyoriPowered/adventure))
-- 1.8.8
+- **1.18.1.** [Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
+  because of native [Adventure](https://github.com/KyoriPowered/adventure)
+- **1.8.8.** Note that you'll need to use Java 17.
 
 ## Getting started
 
