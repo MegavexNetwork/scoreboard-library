@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.api.sidebar;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,6 +27,13 @@ public interface Sidebar extends Closeable, Players {
      * @return Scoreboard Manager
      */
     ScoreboardManager scoreboardManager();
+
+    /**
+     * Gets the {@link ComponentTranslator} of this Sidebar
+     *
+     * @return Component translator
+     */
+    ComponentTranslator componentTranslator();
 
     /**
      * Gets the max amount of lines this sidebar can have

@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.internal;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.internal.listener.LocaleListener;
@@ -16,6 +17,7 @@ import net.megavex.scoreboardlibrary.internal.team.TeamUpdaterTask;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -55,7 +57,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
     }
 
     @Override
-    public Sidebar sidebar(int maxLines, @Nullable Locale locale) {
+    public Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale) {
         checkDestroyed();
         getSidebars0();
 
@@ -65,9 +67,9 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
 
         AbstractSidebar sidebar;
         if (locale == null) {
-            sidebar = new PlayerDependantLocaleSidebar(this, 15);
+            sidebar = new PlayerDependantLocaleSidebar(this, componentTranslator, maxLines);
         } else {
-            sidebar = new SingleLocaleSidebar(this, 15, locale);
+            sidebar = new SingleLocaleSidebar(this, componentTranslator, maxLines, locale);
         }
 
         sidebars.add(sidebar);

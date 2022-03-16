@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_8_R3;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
@@ -120,7 +121,7 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
 
         @Override
         protected String toLegacy(Component component, Locale locale) {
-            return LegacyFormatUtil.serialize(component, locale);
+            return LegacyFormatUtil.serialize(ComponentTranslator.GLOBAL, component, locale);
         }
     }
 

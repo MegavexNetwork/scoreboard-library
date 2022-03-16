@@ -58,7 +58,7 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
     }
 
     private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-        String value = LegacyFormatUtil.serialize(displayName, locale);
+        String value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
         UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
     }
 

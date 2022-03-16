@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.translation.GlobalTranslator;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
@@ -95,9 +95,13 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
     }
 
     public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
+        return fromAdventure(component, locale, ComponentTranslator.GLOBAL);
+    }
+
+    public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale, ComponentTranslator componentTranslator) {
         if (nativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
 
-        component = GlobalTranslator.render(component, Objects.requireNonNull(locale));
+        component = componentTranslator.translate(component, Objects.requireNonNull(locale));
         return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(component));
     }
 }

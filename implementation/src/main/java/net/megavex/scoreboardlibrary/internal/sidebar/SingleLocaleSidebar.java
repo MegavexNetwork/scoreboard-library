@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.sidebar;
 
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
@@ -18,8 +19,8 @@ public class SingleLocaleSidebar extends AbstractSidebar {
     private volatile SidebarLineHandler sidebar;
     private volatile Set<Player> players;
 
-    public SingleLocaleSidebar(ScoreboardManager scoreboardManager, int size, Locale locale) {
-        super(scoreboardManager, size);
+    public SingleLocaleSidebar(ScoreboardManager scoreboardManager, ComponentTranslator componentTranslator, int size, Locale locale) {
+        super(scoreboardManager, componentTranslator, size);
         this.locale = locale;
     }
 

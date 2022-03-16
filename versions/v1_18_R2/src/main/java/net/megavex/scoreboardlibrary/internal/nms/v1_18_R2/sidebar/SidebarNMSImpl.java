@@ -35,7 +35,7 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
     }
 
     private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
-        net.minecraft.network.chat.Component vanilla = impl.fromAdventure(displayName, locale);
+        net.minecraft.network.chat.Component vanilla = impl.fromAdventure(displayName, locale, sidebar.componentTranslator());
         UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
     }
 

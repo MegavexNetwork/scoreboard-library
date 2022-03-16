@@ -1,12 +1,14 @@
 package net.megavex.scoreboardlibrary.api;
 
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -40,11 +42,34 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
      * Creates a {@link Sidebar}
      *
      * @param maxLines Max sidebar lines
+     * @return Sidebar
+     */
+    default Sidebar sidebar(int maxLines) {
+        return sidebar(maxLines, null);
+    }
+
+    /**
+     * Creates a {@link Sidebar}
+     *
+     * @param maxLines Max sidebar lines
      * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
      *                 or null if the locale should depend on the player
      * @return Sidebar
      */
-    Sidebar sidebar(int maxLines, @Nullable Locale locale);
+    default Sidebar sidebar(int maxLines, @Nullable Locale locale) {
+        return sidebar(maxLines, ComponentTranslator.GLOBAL, locale);
+    }
+
+    /**
+     * Creates a {@link Sidebar}
+     *
+     * @param maxLines Max sidebar lines
+     * @param componentTranslator Component translator
+     * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
+     *                 or null if the locale should depend on the player
+     * @return Sidebar
+     */
+    Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
 
     /**
      * Gets the sidebars associated with this ScoreboardManager

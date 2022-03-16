@@ -2,8 +2,8 @@ package net.megavex.scoreboardlibrary.internal.sidebar;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProviderImpl;
@@ -25,19 +25,21 @@ import static net.kyori.adventure.text.Component.empty;
 
 public abstract class AbstractSidebar implements Sidebar {
 
+    private final ScoreboardManager scoreboardManager;
+    private final ComponentTranslator componentTranslator;
     public final GlobalLineInfo[] lines;
     protected final Object lock = new Object();
     protected final Object visibilityLock = new Object();
     protected final Object playerLock = new Object();
-    private final ScoreboardManager scoreboardManager;
     private final AtomicBoolean updateTitle = new AtomicBoolean(),
             updateLines = new AtomicBoolean();
     protected volatile boolean closed, visible, visibilityChanged;
     private Component title = empty();
     private volatile SidebarNMS<?, ?> nms;
 
-    public AbstractSidebar(ScoreboardManager scoreboardManager, int size) {
+    public AbstractSidebar(ScoreboardManager scoreboardManager, ComponentTranslator componentTranslator, int size) {
         this.scoreboardManager = scoreboardManager;
+        this.componentTranslator = componentTranslator;
         SidebarUtilities.checkLineBounds(size);
         this.lines = new GlobalLineInfo[size];
     }
@@ -70,6 +72,11 @@ public abstract class AbstractSidebar implements Sidebar {
     @Override
     public ScoreboardManager scoreboardManager() {
         return scoreboardManager;
+    }
+
+    @Override
+    public ComponentTranslator componentTranslator() {
+        return componentTranslator;
     }
 
     @Override
@@ -122,7 +129,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
                     forEachSidebar(s -> {
                         if (line.value != null) {
-                            Component rendered = GlobalTranslator.render(line.value, s.locale());
+                            Component rendered = componentTranslator.translate(line.value, s.locale());
                             s.setLine(line.line, rendered);
                         } else {
                             s.setLine(line.line, null);

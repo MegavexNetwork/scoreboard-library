@@ -1,7 +1,6 @@
 package net.megavex.scoreboardlibrary.internal.sidebar.line;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.locale.LineType;
@@ -176,7 +175,7 @@ public class SidebarLineHandler {
     private void initLines(LineType lineType) {
         for (GlobalLineInfo line : sidebar.lines) {
             if (line != null) {
-                setLine(line.line, GlobalTranslator.render(line.value, locale), lineType, false);
+                setLine(line.line, sidebar.componentTranslator().translate(line.value, locale), lineType, false);
             }
         }
     }

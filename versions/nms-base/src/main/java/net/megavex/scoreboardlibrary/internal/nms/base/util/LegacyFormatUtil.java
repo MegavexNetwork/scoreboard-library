@@ -3,7 +3,9 @@ package net.megavex.scoreboardlibrary.internal.nms.base.util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
+import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
@@ -13,7 +15,6 @@ import java.util.Objects;
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.parseChar;
-import static net.kyori.adventure.translation.GlobalTranslator.render;
 
 public final class LegacyFormatUtil {
 
@@ -46,10 +47,10 @@ public final class LegacyFormatUtil {
         return text.substring(0, lastNotColorCharIndex + 1);
     }
 
-    public static String serialize(@Nullable Component component, Locale locale) {
+    public static String serialize(@NotNull ComponentTranslator componentTranslator, @Nullable Component component, Locale locale) {
         if (component == null || component == empty()) return "";
 
-        return legacySection().serialize(render(component, locale));
+        return legacySection().serialize(componentTranslator.translate(component, locale));
     }
 
     public static char getChar(NamedTextColor color) {
