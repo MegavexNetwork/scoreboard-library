@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.sidebar;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
@@ -271,9 +272,7 @@ public abstract class AbstractSidebar implements Sidebar {
   @Override
   public void close() {
     synchronized (lock) {
-      if (!players().isEmpty()) {
-        removePlayers(players());
-      }
+      removePlayers(ImmutableList.copyOf(players()));
       visible = false;
       closed = true;
     }
