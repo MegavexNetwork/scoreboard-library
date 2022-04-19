@@ -271,7 +271,9 @@ public abstract class AbstractSidebar implements Sidebar {
   @Override
   public void close() {
     synchronized (lock) {
-      removePlayers(players());
+      if (!players().isEmpty()) {
+        removePlayers(players());
+      }
       visible = false;
       closed = true;
     }
