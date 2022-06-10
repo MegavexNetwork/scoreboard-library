@@ -15,7 +15,7 @@ public class UnsafeUtilities {
 
   static {
     try {
-      Field theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+      var theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
       theUnsafeField.setAccessible(true);
       UNSAFE = Objects.requireNonNull((Unsafe) theUnsafeField.get(null));
     } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -48,7 +48,7 @@ public class UnsafeUtilities {
 
   public static <T> PacketConstructor<T> findPacketConstructor(Class<T> packetClass, MethodHandles.Lookup lookup) {
     try {
-      MethodHandle constructor = lookup.findConstructor(packetClass, VOID_METHOD_TYPE);
+      var constructor = lookup.findConstructor(packetClass, VOID_METHOD_TYPE);
       return () -> {
         try {
           // noinspection unchecked

@@ -85,11 +85,11 @@ public class SidebarLineHandler {
   }
 
   private void update(LineType lineType) {
-    LocaleLine<?>[] lines = lines(lineType);
+    var lines = lines(lineType);
     if (lines == null) return;
-    Set<Player> players = players(lineType);
+    var players = players(lineType);
 
-    for (LocaleLine<?> line : lines) {
+    for (var line : lines) {
       if (line != null) {
         if (line.info().updateTeams) {
           line.updateTeam();
@@ -112,15 +112,15 @@ public class SidebarLineHandler {
   }
 
   public void setLine(int line, Component renderedLine, LineType lineType, boolean sendPackets) {
-    LocaleLine<?>[] lines = lines(lineType);
+    var lines = lines(lineType);
     if (lines == null) return;
 
-    LocaleLine<?> localeLine = lines[line];
+    var localeLine = lines[line];
     if (renderedLine == null && localeLine == null) {
       return;
     }
 
-    boolean newlyCreated = false;
+    var newlyCreated = false;
     if (localeLine == null) {
       lines[line] = localeLine = lineType.create(sidebar.getLineInfo(line), this);
       newlyCreated = true;
@@ -134,7 +134,7 @@ public class SidebarLineHandler {
 
     if (!sidebar.visible() || !sendPackets) return;
 
-    Collection<Player> players = players(lineType);
+    var players = players(lineType);
 
     if (renderedLine == null) {
       localeLine.hide(players);
@@ -154,8 +154,8 @@ public class SidebarLineHandler {
   }
 
   public void show(Collection<Player> players, LineType lineType) {
-    LocaleLine<?>[] lines = linesInit(lineType);
-    for (LocaleLine<?> line : lines) {
+    var lines = linesInit(lineType);
+    for (var line : lines) {
       if (line != null && line.info().value != null) {
         line.show(players);
       }
@@ -163,9 +163,9 @@ public class SidebarLineHandler {
   }
 
   public void hide(Collection<Player> players, LineType lineType) {
-    LocaleLine<?>[] lines = lines(lineType);
+    var lines = lines(lineType);
     if (lines == null) return;
-    for (LocaleLine<?> line : lines) {
+    for (var line : lines) {
       if (line != null && ((line.info().update) || line.info().value != null)) {
         line.hide(players);
       }
@@ -173,7 +173,7 @@ public class SidebarLineHandler {
   }
 
   private void initLines(LineType lineType) {
-    for (GlobalLineInfo line : sidebar.lines) {
+    for (var line : sidebar.lines) {
       if (line != null) {
         setLine(line.line, sidebar.componentTranslator().translate(line.value, locale), lineType, false);
       }

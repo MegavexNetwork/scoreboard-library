@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 
 public interface ComponentTranslator {
-
   ComponentTranslator GLOBAL = GlobalTranslator::render;
   ComponentTranslator NONE = (component, locale) -> component;
 

@@ -9,7 +9,7 @@ public class ScoreboardLibraryLogger {
   public static final boolean DEBUG;
 
   static {
-    String property = System.getProperty(ScoreboardLibrary.NAMESPACE + ".debug");
+    var property = System.getProperty(ScoreboardLibrary.NAMESPACE + ".debug");
     if (property != null) {
       DEBUG = property.equalsIgnoreCase("true");
       logMessage("Debug enabled.");
@@ -20,7 +20,6 @@ public class ScoreboardLibraryLogger {
 
   public static void logMessage(String message) {
     if (DEBUG) {
-      ScoreboardManagerProvider provider = ScoreboardManagerProvider.instance();
       ScoreboardManagerProvider
         .loaderPlugin()
         .getLogger()

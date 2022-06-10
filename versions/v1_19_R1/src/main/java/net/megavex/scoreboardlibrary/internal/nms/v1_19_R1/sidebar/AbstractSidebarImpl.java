@@ -1,5 +1,8 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.sidebar;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
+import java.util.Collection;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
@@ -11,16 +14,12 @@ import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Field;
-import java.util.Collection;
-
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities.getField;
 
 public abstract class AbstractSidebarImpl extends SidebarNMS<Packet<?>, NMSImpl> {
 
-  static final UnsafeUtilities.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor = UnsafeUtilities
-    .findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
+  static final UnsafeUtilities.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor =
+    UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
   static final Field objectiveNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "d"),
     objectiveDisplayNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "e"),
     objectiveRenderTypeField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "f");
@@ -43,7 +42,7 @@ public abstract class AbstractSidebarImpl extends SidebarNMS<Packet<?>, NMSImpl>
 
   @Override
   public void score(Collection<Player> players, int score, String line) {
-    ClientboundSetScorePacket packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, impl.objectiveName, line, score);
+    var packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, impl.objectiveName, line, score);
     impl.sendPacket(players, packet);
   }
 }

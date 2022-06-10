@@ -23,7 +23,7 @@ public class TeamUpdaterTask extends BukkitRunnable {
 
   @Override
   public void run() {
-    for (TeamManagerImpl teamManager : teamManagers) {
+    for (var teamManager : teamManagers) {
       try {
         teamManager.update();
       } catch (Exception e) {

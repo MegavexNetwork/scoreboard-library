@@ -27,7 +27,7 @@ public final class ScoreboardLibraryImplementation {
       return; // Already initialised
     }
 
-    JavaPlugin plugin = JavaPlugin.getProvidingPlugin(ScoreboardLibraryImplementation.class);
+    var plugin = JavaPlugin.getProvidingPlugin(ScoreboardLibraryImplementation.class);
     ScoreboardManagerProvider.loaderPlugin(plugin);
 
     try {
@@ -36,7 +36,7 @@ public final class ScoreboardLibraryImplementation {
       throw new ScoreboardLibraryLoadException("Adventure is not in the classpath");
     }
 
-    String versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    var versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     Class<?> nmsClass;
     try {
       nmsClass = Class.forName("net.megavex.scoreboardlibrary.internal.nms." + versionName + ".NMSImpl");
@@ -59,7 +59,7 @@ public final class ScoreboardLibraryImplementation {
       return;
     }
 
-    ScoreboardManagerProviderImpl provider = ScoreboardManagerProviderImpl.instance();
+    var provider = ScoreboardManagerProviderImpl.instance();
     if (provider != null && !provider.scoreboardManagerMap.isEmpty()) {
       ImmutableList.copyOf(provider.scoreboardManagerMap.values()).forEach(ScoreboardManager::close);
     }

@@ -19,7 +19,7 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
   public SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
-    Locale locale = sidebar.locale();
+    var locale = sidebar.locale();
     if (locale != null) {
       createPacket = objectivePacketConstructor.invoke();
       createObjectivePacket(createPacket, 0);
@@ -35,13 +35,13 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
   }
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
-    net.minecraft.network.chat.Component vanilla = impl.fromAdventure(displayName, locale, sidebar.componentTranslator());
+    var vanilla = impl.fromAdventure(displayName, locale, sidebar.componentTranslator());
     UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
   }
 
   @Override
   public void updateTitle(Component displayName) {
-    Locale locale = sidebar.locale();
+    var locale = sidebar.locale();
     if (locale != null) {
       updateDisplayName(createPacket, displayName, locale);
       updateDisplayName(updatePacket, displayName, locale);
@@ -54,7 +54,7 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
       impl.sendPacket(players, create ? createPacket : updatePacket);
     } else {
       ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
-        ClientboundSetObjectivePacket packet = objectivePacketConstructor.invoke();
+        var packet = objectivePacketConstructor.invoke();
         createObjectivePacket(packet, create ? 0 : 2);
         updateDisplayName(packet, sidebar.title(), locale);
         return packet;

@@ -36,7 +36,7 @@ public class ScoreboardManagerProviderImpl extends ScoreboardManagerProvider {
 
   public static synchronized void init() {
     Preconditions.checkState(instance == null && ScoreboardManagerProvider.instance() == null);
-    ScoreboardManagerProviderImpl provider = new ScoreboardManagerProviderImpl();
+    var provider = new ScoreboardManagerProviderImpl();
     instance = provider;
     ScoreboardManagerProvider.instance(provider);
   }
@@ -44,7 +44,7 @@ public class ScoreboardManagerProviderImpl extends ScoreboardManagerProvider {
   @Override
   @NotNull
   public TeamInfo teamInfo(Collection<String> entries) {
-    TeamInfoImpl impl = new TeamInfoImpl();
+    var impl = new TeamInfoImpl();
     if (entries != null) {
       impl.entries.addAll(entries);
     }

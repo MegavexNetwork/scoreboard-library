@@ -43,7 +43,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
   public static void syncEntries(Collection<Player> players, TeamInfoImpl old, TeamInfoImpl info) {
     if (old != null && !old.entries.isEmpty()) {
-      List<String> entries = new ArrayList<>(old.entries);
+      var entries = new ArrayList<>(old.entries);
       entries.removeAll(info.entries);
       if (!entries.isEmpty())
         info.nms.removeEntries(players, entries);
@@ -86,7 +86,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     Preconditions.checkState(team.globalInfo() != this, "Cannot unnasign a global TeamInfo");
     team.teamInfos().remove(this);
 
-    TeamInfoImpl global = team.globalInfo();
+    var global = team.globalInfo();
     global.addPlayers(players);
     global.nms.updateTeam(players);
 
@@ -256,7 +256,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       return;
     }
 
-    char c = LegacyFormatUtil.getChar(color);
+    var c = LegacyFormatUtil.getChar(color);
     if (this.playerColor != c) {
       this.playerColor = c;
       updateTeam.set(true);
@@ -319,7 +319,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    TeamInfoImpl teamInfo = (TeamInfoImpl) o;
+    var teamInfo = (TeamInfoImpl) o;
     return allowFriendlyFire == teamInfo.allowFriendlyFire &&
       canSeeFriendlyInvisibles == teamInfo.canSeeFriendlyInvisibles &&
       Objects.equals(players, teamInfo.players) &&

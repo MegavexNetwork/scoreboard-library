@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.internal.nms.base.util;
 
+import java.lang.invoke.MethodHandles.Lookup;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 
 import java.lang.invoke.MethodHandle;
@@ -13,8 +14,8 @@ public final class CollectionProvider {
   private static final MethodHandle mapConstructor, setConstructor, listConstructor;
 
   static {
-    MethodHandles.Lookup lookup = MethodHandles.publicLookup();
-    MethodType parameters = MethodType.methodType(void.class, int.class);
+    Lookup lookup = MethodHandles.publicLookup();
+    var parameters = MethodType.methodType(void.class, int.class);
     mapConstructor = getConstructor(lookup, FASTUTIL + "Object2ObjectOpenHashMap", HashMap.class, parameters);
     setConstructor = getConstructor(lookup, FASTUTIL + "ObjectOpenHashSet", HashSet.class, parameters);
     listConstructor = getConstructor(lookup, FASTUTIL + "ObjectArrayList", ArrayList.class, parameters);
@@ -23,7 +24,7 @@ public final class CollectionProvider {
   private CollectionProvider() {
   }
 
-  private static MethodHandle getConstructor(MethodHandles.Lookup lookup, String fastUtilClass, Class<?> fallback, MethodType parameters) {
+  private static MethodHandle getConstructor(Lookup lookup, String fastUtilClass, Class<?> fallback, MethodType parameters) {
     Class<?> clazz;
     try {
       clazz = Class.forName(fastUtilClass);

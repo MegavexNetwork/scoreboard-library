@@ -43,7 +43,7 @@ public class TeamManagerImpl implements TeamManager {
       list = ImmutableList.copyOf(teams.values());
     }
 
-    for (ScoreboardTeamImpl team : list) {
+    for (var team : list) {
       team.update();
     }
   }
@@ -81,14 +81,14 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
-  public boolean teamExists(String name) {
+  public boolean teamExists(@NotNull String name) {
     return team(name) != null;
   }
 
   @Override
   public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
     checkDestroyed();
-    ScoreboardTeamImpl team = team(name);
+    var team = team(name);
     if (team != null)
       return team;
     team = new ScoreboardTeamImpl(this, name);
@@ -96,7 +96,7 @@ public class TeamManagerImpl implements TeamManager {
       teams.put(name, team);
     }
 
-    for (Player player : players) {
+    for (var player : players) {
       team.teamInfo(player, teamInfoFunction == null ? null : teamInfoFunction.apply(player, team));
     }
     return team;
@@ -109,17 +109,19 @@ public class TeamManagerImpl implements TeamManager {
     checkPlayer(player);
     if (players.add(player)) {
       ScoreboardManagerProviderImpl.instance().teamManagerMap.put(player, this);
-      for (ScoreboardTeamImpl team : teams.values()) {
-        TeamInfoImpl info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
+      for (var team : teams.values()) {
+        var info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
         info = info == null ? team.globalInfo() : info;
 
-        Collection<Player> singleton = Collections.singletonList(player);
+        var singleton = Set.of(player);
         info.assign(team);
         info.addPlayers(singleton);
         info.nms.createTeam(singleton);
       }
+
       return true;
     }
+
     return false;
   }
 
@@ -128,8 +130,8 @@ public class TeamManagerImpl implements TeamManager {
     checkDestroyed();
     Preconditions.checkNotNull(players, "Players cannot be null");
 
-    List<Player> filteredPlayers = new ArrayList<>(players.size());
-    for (Player player : players) {
+    var filteredPlayers = new ArrayList<Player>(players.size());
+    for (var player : players) {
       checkPlayer(player);
       if (this.players.add(player)) {
         filteredPlayers.add(player);
@@ -138,8 +140,8 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     if (!filteredPlayers.isEmpty()) {
-      for (ScoreboardTeamImpl team : teams.values()) {
-        TeamInfoImpl info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
+      for (var team : teams.values()) {
+        var info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
         info = info == null ? team.globalInfo() : info;
 
         info.assign(team);
@@ -147,6 +149,7 @@ public class TeamManagerImpl implements TeamManager {
         info.nms.createTeam(filteredPlayers);
       }
     }
+
     return filteredPlayers;
   }
 
@@ -156,17 +159,20 @@ public class TeamManagerImpl implements TeamManager {
     checkPlayer(player);
 
     if (players.remove(player)) {
-      Collection<Player> singleton = Collections.singleton(player);
-      for (ScoreboardTeamImpl team : teams.values()) {
-        TeamInfoImpl info = team.getTeamInfo(player, false, true);
+      var singleton = Set.of(player);
+      for (var team : teams.values()) {
+        var info = team.getTeamInfo(player, false, true);
         if (info != null) {
           info.players.remove(player);
           team.nms.removeTeam(singleton);
         }
       }
+
       ScoreboardManagerProviderImpl.instance().teamManagerMap.remove(player);
+
       return true;
     }
+
     return false;
   }
 
@@ -176,18 +182,19 @@ public class TeamManagerImpl implements TeamManager {
     Preconditions.checkNotNull(players);
 
     List<Player> filteredPlayers = CollectionProvider.list(players.size());
-    for (Player player : players) {
+    for (var player : players) {
       if (!this.players.remove(player)) continue;
       ScoreboardManagerProviderImpl.instance().teamManagerMap.remove(player);
-      for (ScoreboardTeamImpl team : teams.values()) {
-        TeamInfoImpl info = team.getTeamInfo(player, false, true);
+      for (var team : teams.values()) {
+        var info = team.getTeamInfo(player, false, true);
         if (info != null) {
           info.players.remove(player);
           filteredPlayers.add(player);
         }
       }
     }
-    for (ScoreboardTeamImpl team : teams.values()) {
+
+    for (var team : teams.values()) {
       team.nms.removeTeam(filteredPlayers);
     }
   }
@@ -205,7 +212,7 @@ public class TeamManagerImpl implements TeamManager {
         scoreboardManager.teamManagers.remove(this);
       }
 
-      for (Player player : players) {
+      for (var player : players) {
         ScoreboardManagerProviderImpl.instance().teamManagerMap.remove(player);
       }
       players.clear(); // Prevent a memory leak

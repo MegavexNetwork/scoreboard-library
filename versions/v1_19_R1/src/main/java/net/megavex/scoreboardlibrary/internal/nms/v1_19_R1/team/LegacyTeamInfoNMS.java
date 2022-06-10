@@ -1,17 +1,15 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team;
 
+import java.util.Collection;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import org.bukkit.entity.Player;
-import protocolsupport.api.Connection;
 import protocolsupport.api.ProtocolSupportAPI;
 import protocolsupport.protocol.ConnectionImpl;
 import protocolsupport.protocol.codec.StringCodec;
 import protocolsupport.protocol.codec.VarNumberCodec;
 import protocolsupport.protocol.packet.ClientBoundPacketData;
 import protocolsupport.protocol.packet.ClientBoundPacketType;
-
-import java.util.Collection;
 
 public class LegacyTeamInfoNMS extends TeamNMS.TeamInfoNMS<String> {
 
@@ -43,22 +41,22 @@ public class LegacyTeamInfoNMS extends TeamNMS.TeamInfoNMS<String> {
   }
 
   private void sendPacket(Collection<Player> players, ClientBoundPacketData data) {
-    for (Player player : players) {
-      Connection connection = ProtocolSupportAPI.getConnection(player);
+    for (var player : players) {
+      var connection = ProtocolSupportAPI.getConnection(player);
       if (connection == null) continue;
       ((ConnectionImpl) connection).getPacketDataIO().writeClientbound(data);
     }
   }
 
   private ClientBoundPacketData createPacket(int mode) {
-    ClientBoundPacketData data = ClientBoundPacketData.create(ClientBoundPacketType.PLAY_SCOREBOARD_TEAM);
+    var data = ClientBoundPacketData.create(ClientBoundPacketType.PLAY_SCOREBOARD_TEAM);
     StringCodec.writeVarIntUTF8String(data, teamName);
     data.writeByte(mode);
     return data;
   }
 
   private ClientBoundPacketData createInfoPacket(boolean create) {
-    ClientBoundPacketData data = createPacket(create ? TeamNMS.MODE_CREATE : TeamNMS.MODE_UPDATE);
+    var data = createPacket(create ? TeamNMS.MODE_CREATE:TeamNMS.MODE_UPDATE);
 
     StringCodec.writeVarIntUTF8String(data, properties.displayName());
     StringCodec.writeVarIntUTF8String(data, properties.prefix());
@@ -75,7 +73,7 @@ public class LegacyTeamInfoNMS extends TeamNMS.TeamInfoNMS<String> {
   }
 
   private ClientBoundPacketData createEntriesPacket(boolean add, Collection<String> entries) {
-    ClientBoundPacketData data = createPacket(add ? TeamNMS.MODE_ADD_ENTRIES : TeamNMS.MODE_REMOVE_ENTRIES);
+    var data = createPacket(add ? TeamNMS.MODE_ADD_ENTRIES:TeamNMS.MODE_REMOVE_ENTRIES);
     writeEntries(data, entries);
     return data;
   }

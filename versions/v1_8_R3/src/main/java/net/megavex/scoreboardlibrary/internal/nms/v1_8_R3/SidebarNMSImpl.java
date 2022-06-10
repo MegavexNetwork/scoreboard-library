@@ -1,5 +1,8 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_8_R3;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
@@ -12,15 +15,17 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Locale;
-
 import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
 
-  private static final Field objectiveNameField, objectiveDisplayNameField, objectiveHealthDisplayField, scoreNameField, scoreObjectiveNameField, scoreScoreField, scoreActionField;
+  private static final Field objectiveNameField,
+    objectiveDisplayNameField,
+    objectiveHealthDisplayField,
+    scoreNameField,
+    scoreObjectiveNameField,
+    scoreScoreField,
+    scoreActionField;
 
   static {
     objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a");
@@ -38,7 +43,7 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
   SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
-    Locale locale = sidebar.locale();
+    var locale = sidebar.locale();
     if (locale != null) {
       createPacket = new PacketPlayOutScoreboardObjective();
       updatePacket = new PacketPlayOutScoreboardObjective();
@@ -58,13 +63,13 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
   }
 
   private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-    String value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
+    var value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
     UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
   }
 
   @Override
   public void updateTitle(Component displayName) {
-    Locale locale = sidebar.locale();
+    var locale = sidebar.locale();
     if (locale != null) {
       updateDisplayName(createPacket, displayName, locale);
       updateDisplayName(updatePacket, displayName, locale);
@@ -74,11 +79,11 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
   @Override
   protected void sendObjectivePacket(Collection<Player> players, boolean create) {
     if (sidebar.locale() != null) {
-      impl.sendPacket(players, create ? createPacket : updatePacket);
+      impl.sendPacket(players, create ? createPacket:updatePacket);
     } else {
       ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
         PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
-        createObjectivePacket(packet, create ? 0 : 2, sidebar.title(), locale);
+        createObjectivePacket(packet, create ? 0:2, sidebar.title(), locale);
         return packet;
       });
     }
@@ -91,7 +96,7 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
 
   @Override
   public void score(Collection<Player> players, int score, String line) {
-    PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
+    var packet = new PacketPlayOutScoreboardScore();
     UnsafeUtilities.setField(scoreNameField, packet, line);
     UnsafeUtilities.setField(scoreObjectiveNameField, packet, impl.objectiveName);
     UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);

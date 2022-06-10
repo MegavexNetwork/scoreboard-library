@@ -10,7 +10,7 @@ public class GlobalLineInfo {
   private static final String[] lineColors = new String[15];
 
   static {
-    ChatColor[] values = ChatColor.values();
+    var values = ChatColor.values();
     for (byte i = 0; i < lineColors.length; i++) {
       lineColors[i] = values[i].toString();
     }

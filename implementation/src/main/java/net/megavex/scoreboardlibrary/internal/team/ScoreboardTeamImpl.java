@@ -1,6 +1,9 @@
 package net.megavex.scoreboardlibrary.internal.team;
 
 import com.google.common.base.Preconditions;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -10,11 +13,6 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
 
 public class ScoreboardTeamImpl implements ScoreboardTeam {
 
@@ -42,7 +40,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
 
   public void update() {
     if (infos == null) return;
-    for (TeamInfoImpl teamInfo : infos) {
+    for (var teamInfo : infos) {
       teamInfo.update();
     }
   }
@@ -79,7 +77,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
       checkPlayer(player);
     }
 
-    for (TeamInfoImpl teamInfo : infos) {
+    for (var teamInfo : infos) {
       if (teamInfo.players.contains(player)) {
         return teamInfo;
       }
@@ -98,9 +96,9 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     checkDestroyed();
     checkPlayer(player);
 
-    TeamInfoImpl impl = teamInfo == null ? globalInfo() : (TeamInfoImpl) teamInfo;
+    var impl = teamInfo == null ? globalInfo() : (TeamInfoImpl) teamInfo;
 
-    TeamInfoImpl oldInfo = getTeamInfo(player, true, true);
+    var oldInfo = getTeamInfo(player, true, true);
     if (oldInfo != null) {
       if (oldInfo == impl)
         return impl;
@@ -111,7 +109,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
       impl.unassign();
     impl.assign(this);
 
-    Set<Player> singleton = Collections.singleton(player);
+    var singleton = Set.of(player);
     impl.addPlayers(singleton);
     if (oldInfo != null) {
       impl.nms.updateTeam(singleton);
@@ -141,6 +139,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         }
       });
     }
+
     teamManager.teams.remove(name);
     closed = true;
   }
@@ -149,7 +148,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    ScoreboardTeamImpl that = (ScoreboardTeamImpl) o;
+    var that = (ScoreboardTeamImpl) o;
     return closed == that.closed &&
       idCounter == that.idCounter &&
       Objects.equals(teamManager, that.teamManager) &&

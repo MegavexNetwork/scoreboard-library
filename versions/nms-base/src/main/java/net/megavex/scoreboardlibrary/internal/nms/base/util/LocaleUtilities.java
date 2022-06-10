@@ -1,24 +1,23 @@
 package net.megavex.scoreboardlibrary.internal.nms.base.util;
 
-import net.kyori.adventure.translation.Translator;
-import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
-import org.bukkit.entity.Player;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Locale;
+import net.kyori.adventure.translation.Translator;
+import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
+import org.bukkit.entity.Player;
 
 public final class LocaleUtilities {
 
   private static MethodHandle adventureMethod, legacySpigotMethod, legacyMethod;
 
   static {
-    MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+    var lookup = MethodHandles.publicLookup();
     try {
       adventureMethod = lookup.findVirtual(Player.class, "locale", MethodType.methodType(Locale.class));
     } catch (IllegalAccessException | NoSuchMethodException e) {
-      MethodType methodType = MethodType.methodType(String.class);
+      var methodType = MethodType.methodType(String.class);
       try {
         legacySpigotMethod = lookup.findVirtual(Player.Spigot.class, "getLocale", methodType);
       } catch (IllegalAccessException | NoSuchMethodException ex) {

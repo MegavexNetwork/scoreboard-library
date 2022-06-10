@@ -2,6 +2,8 @@ package net.megavex.scoreboardlibrary.internal.sidebar;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import java.util.HashSet;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
@@ -169,7 +171,7 @@ public abstract class AbstractSidebar implements Sidebar {
       ScoreboardManagerProviderImpl.instance().sidebarMap.put(player, this);
 
       if (visible) {
-        var singleton = Collections.singleton(player);
+        var singleton = Set.of(player);
         sidebarBridge().create(singleton);
         sidebar.show(singleton, lineType);
         ScoreboardManagerNMS.INSTANCE.displaySidebar(singleton);
@@ -193,7 +195,7 @@ public abstract class AbstractSidebar implements Sidebar {
       ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player, this);
 
       if (visible) {
-        var singleton = Collections.singleton(player);
+        var singleton = Set.of(player);
         sidebar.hide(singleton, lineType);
         ScoreboardManagerNMS.INSTANCE.removeSidebar(singleton);
       }
@@ -222,7 +224,7 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   @Override
-  public Component title() {
+  public @NotNull Component title() {
     return title;
   }
 
@@ -259,7 +261,7 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   @Override
-  public void title(Component title) {
+  public void title(@NotNull Component title) {
     checkClosed();
     Preconditions.checkNotNull(title);
 

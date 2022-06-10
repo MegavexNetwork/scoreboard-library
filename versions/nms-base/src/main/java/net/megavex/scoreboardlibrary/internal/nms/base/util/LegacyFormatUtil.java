@@ -21,13 +21,13 @@ public final class LegacyFormatUtil {
   private static final Map<NamedTextColor, Character> legacyMap;
 
   static {
-    ChatColor[] values = ChatColor.values();
+    var values = ChatColor.values();
     legacyMap = CollectionProvider.map(values.length);
-    for (ChatColor value : values) {
+    for (var value : values) {
       if (!value.isColor()) continue;
 
       char c = value.getChar();
-      LegacyFormat format = Objects.requireNonNull(parseChar(c));
+      var format = Objects.requireNonNull(parseChar(c));
       legacyMap.put((NamedTextColor) format.color(), c);
     }
   }
@@ -40,10 +40,11 @@ public final class LegacyFormatUtil {
       return text;
     }
 
-    int lastNotColorCharIndex = limit - 1;
+    var lastNotColorCharIndex = limit - 1;
     while (text.charAt(lastNotColorCharIndex) == ChatColor.COLOR_CHAR) {
       lastNotColorCharIndex--;
     }
+
     return text.substring(0, lastNotColorCharIndex + 1);
   }
 

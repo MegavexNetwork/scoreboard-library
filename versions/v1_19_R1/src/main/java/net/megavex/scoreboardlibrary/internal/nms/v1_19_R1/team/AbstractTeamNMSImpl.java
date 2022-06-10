@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team;
 
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
@@ -57,7 +58,7 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
     Collection<String> entries
   ) {
     try {
-      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? ImmutableList.of() : entries);
+      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? List.of() : entries);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
@@ -107,7 +108,7 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
     }
 
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
-      String key = properties.nameTagVisibility().key();
+      var key = properties.nameTagVisibility().key();
       if (!Objects.equals(parameters.getNametagVisibility(), key)) {
         UnsafeUtilities.setField(nameTagVisibilityField, parameters, key);
       }
@@ -116,11 +117,11 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
       if (!Objects.equals(parameters.getCollisionRule(), key))
         UnsafeUtilities.setField(collisionRuleField, parameters, key);
 
-      char c = LegacyFormatUtil.getChar(properties.playerColor());
+      var c = LegacyFormatUtil.getChar(properties.playerColor());
       if (parameters.getColor() == null || parameters.getColor().code != c)
         UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(c));
 
-      int options = properties.packOptions();
+      var options = properties.packOptions();
       if (parameters.getOptions() != options)
         UnsafeUtilities.UNSAFE.putInt(parameters, UnsafeUtilities.UNSAFE.objectFieldOffset(optionsField), options);
     }

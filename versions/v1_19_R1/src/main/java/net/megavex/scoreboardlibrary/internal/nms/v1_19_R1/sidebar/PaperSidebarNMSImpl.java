@@ -43,7 +43,7 @@ public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
   @Override
   public void updateTitle(Component displayName) {
     if (createPacket != null && updatePacket != null) {
-      net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
+      var vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
       updateDisplayName(createPacket, vanilla);
       updateDisplayName(updatePacket, vanilla);
     }

@@ -22,7 +22,7 @@ public class TeamInfoBuilder {
   private Collection<String> entries;
 
   public TeamInfo build() {
-    TeamInfo teamInfo = ScoreboardManagerProvider.instance().teamInfo(entries);
+    var teamInfo = ScoreboardManagerProvider.instance().teamInfo(entries);
     teamInfo.displayName(displayName);
     teamInfo.prefix(prefix);
     teamInfo.suffix(suffix);

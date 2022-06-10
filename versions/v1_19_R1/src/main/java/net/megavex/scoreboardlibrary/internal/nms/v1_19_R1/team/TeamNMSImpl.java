@@ -44,7 +44,7 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
 
     private void sendTeamPacket(Collection<Player> players, boolean create) {
       ScoreboardManagerNMS.sendLocalePackets(null, impl, players, locale -> {
-        ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
+        var parameters = parametersConstructor.invoke();
         fillParameters(parameters, locale);
         return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName, parameters, properties.entries());
       });
@@ -54,7 +54,7 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
       super.fillParameters(parameters, locale);
 
-      net.minecraft.network.chat.Component vanilla = impl.fromAdventure(properties.displayName(), locale, componentTranslator);
+      var vanilla = impl.fromAdventure(properties.displayName(), locale, componentTranslator);
       UnsafeUtilities.setField(displayNameField, parameters, vanilla);
 
       vanilla = impl.fromAdventure(properties.prefix(), locale, componentTranslator);

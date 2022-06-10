@@ -52,7 +52,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    * @return Unregistered line
    */
   protected final @Nullable SidebarLine unregisterLine(int line) {
-    SidebarLine lineSupplier = lines[line];
+    var lineSupplier = lines[line];
     if (lineSupplier == null) {
       return null;
     }
@@ -69,7 +69,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    * @param value Static value
    */
   protected final @NotNull SidebarLine registerStaticLine(int line, @NotNull Component value) {
-    SidebarLine sidebarLine = SidebarLine.staticLine(value);
+    var sidebarLine = SidebarLine.staticLine(value);
     registerLine(line, sidebarLine);
     return sidebarLine;
   }

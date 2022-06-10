@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.internal.sidebar;
 
+import java.util.Set;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.LocaleUtilities;
@@ -32,7 +33,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   @Override
   protected void forEachSidebar(Consumer<SidebarLineHandler> consumer) {
     if (localeMap != null) {
-      for (SidebarLineHandler value : localeMap.values()) {
+      for (var value : localeMap.values()) {
         consumer.accept(value);
       }
     }
@@ -40,17 +41,17 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return playerMap == null ? Collections.emptySet() : playerMap.keySet();
+    return playerMap == null ? Set.of(): playerMap.keySet();
   }
 
   @Override
   protected SidebarLineHandler addPlayer0(Player player) {
-    SidebarLineHandler sidebar = playerMap == null ? null : playerMap.get(player);
+    var sidebar = playerMap == null ? null : playerMap.get(player);
     if (sidebar != null) {
       return sidebar;
     }
 
-    Locale locale = LocaleUtilities.getLocaleOfPlayer(player);
+    var locale = LocaleUtilities.getLocaleOfPlayer(player);
 
     if (localeMap == null)
       synchronized (lock) {
@@ -80,7 +81,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   protected SidebarLineHandler removePlayer0(Player player) {
     if (playerMap == null) return null;
 
-    SidebarLineHandler lineHandler = playerMap.remove(player);
+    var lineHandler = playerMap.remove(player);
     if (lineHandler == null) return null;
 
     if (!lineHandler.hasPlayers() && localeMap != null) {

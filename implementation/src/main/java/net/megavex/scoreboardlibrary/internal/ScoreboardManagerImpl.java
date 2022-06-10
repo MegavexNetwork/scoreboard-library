@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.internal;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -42,6 +43,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
     this.plugin = plugin;
 
     plugin.getServer().getPluginManager().registerEvents(playerListener, plugin);
+
     try {
       Class.forName("org.bukkit.event.player.PlayerLocaleChangeEvent");
       ScoreboardLibraryLogger.logMessage("PlayerLocaleChangeEvent was found");
@@ -81,7 +83,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
     checkDestroyed();
     getTeamManagers0();
 
-    TeamManagerImpl teamManager = new TeamManagerImpl(this, componentTranslator);
+    var teamManager = new TeamManagerImpl(this, componentTranslator);
     teamManagers.add(teamManager);
     return teamManager;
   }
@@ -98,14 +100,14 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
 
     if (teamManagers != null) {
       teamTask.cancel();
-      for (TeamManagerImpl teamManager : teamManagers) {
+      for (var teamManager : teamManagers) {
         teamManager.close();
       }
     }
 
     if (sidebars != null) {
       sidebarTask.cancel();
-      for (AbstractSidebar sidebar : ImmutableList.copyOf(sidebars)) {
+      for (var sidebar : List.copyOf(sidebars)) {
         sidebar.close();
       }
     }
@@ -138,7 +140,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
   }
 
   @Override
-  public Set<Sidebar> sidebars() {
+  public @NotNull Set<Sidebar> sidebars() {
     return Collections.unmodifiableSet(getSidebars0());
   }
 
@@ -146,7 +148,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    ScoreboardManagerImpl that = (ScoreboardManagerImpl) o;
+    var that = (ScoreboardManagerImpl) o;
     return closed == that.closed &&
       Objects.equals(plugin, that.plugin) &&
       Objects.equals(teamTask, that.teamTask) &&

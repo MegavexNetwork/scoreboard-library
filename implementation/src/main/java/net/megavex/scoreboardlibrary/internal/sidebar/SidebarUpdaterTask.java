@@ -23,7 +23,7 @@ public class SidebarUpdaterTask extends BukkitRunnable {
 
   @Override
   public void run() {
-    for (AbstractSidebar sidebar : sidebars) {
+    for (var sidebar : sidebars) {
       try {
         sidebar.update();
       } catch (Exception e) {

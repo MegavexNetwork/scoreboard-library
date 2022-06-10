@@ -51,12 +51,12 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
   @Override
   public Collection<String> entries() {
-    return Collections.singleton(player);
+    return Set.of(player);
   }
 
   @Override
   public void value(Component renderedComponent) {
-    String legacyValue = LegacyComponentSerializer.legacySection().serialize(renderedComponent);
+    var legacyValue = LegacyComponentSerializer.legacySection().serialize(renderedComponent);
 
     oldPlayer = player;
 
@@ -68,18 +68,18 @@ class LegacyLocaleLine implements LocaleLine<String> {
         this.player = info.player();
       }
     } else {
-      boolean color = legacyValue.charAt(15) == ChatColor.COLOR_CHAR;
+      var color = legacyValue.charAt(15) == ChatColor.COLOR_CHAR;
 
-      int prefixEnd = color ? 15 : 16;
+      var prefixEnd = color ? 15 : 16;
       this.prefix = legacyValue.substring(0, prefixEnd);
 
       this.player = info.player() + ChatColor.RESET
         + ChatColor.getLastColors(prefix +
         ChatColor.COLOR_CHAR + (color ? legacyValue.charAt(16) : ""));
 
-      int playerEnd = prefixEnd;
+      var playerEnd = prefixEnd;
       if (legacyValue.length() > 32) {
-        int remaining = 16 - player.length();
+        var remaining = 16 - player.length();
         assert remaining > 0;
 
         playerEnd += remaining;
@@ -88,7 +88,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
       this.suffix = legacyValue.substring(playerEnd + (color ? 2 : 0));
       if (suffix.length() > 16) {
-        String newSuffix = suffix.substring(0, 16);
+        var newSuffix = suffix.substring(0, 16);
         if (newSuffix.endsWith(String.valueOf(ChatColor.COLOR_CHAR)) &&
           ChatColor.getByChar(suffix.charAt(16)) != null) {
           newSuffix = newSuffix.substring(0, 15);
@@ -112,14 +112,14 @@ class LegacyLocaleLine implements LocaleLine<String> {
       return;
     }
 
-    Set<Player> players = handler.players(LineType.LEGACY);
+    var players = handler.players(LineType.LEGACY);
     if (oldPlayer != null) {
-      bridge.removeEntries(players, Collections.singleton(oldPlayer));
+      bridge.removeEntries(players, Set.of(oldPlayer));
       handler.sidebar().sidebarBridge().removeLine(players, oldPlayer);
       oldPlayer = null;
     }
 
-    Collection<String> entries = entries();
+    var entries = entries();
     bridge.updateTeamPackets(entries);
     bridge.addEntries(players, entries);
     bridge.updateTeam(players);

@@ -33,17 +33,17 @@ public abstract class ScoreboardManagerNMS<P> {
     if (players.isEmpty()) return;
 
     if (specificLocale != null) {
-      P packet = packetFunction.apply(specificLocale);
+      var packet = packetFunction.apply(specificLocale);
       nms.sendPacket(players, packet);
     } else if (players.size() == 1) {
-      Player player = players.iterator().next();
-      P packet = packetFunction.apply(LocaleUtilities.getLocaleOfPlayer(player));
+      var player = players.iterator().next();
+      var packet = packetFunction.apply(LocaleUtilities.getLocaleOfPlayer(player));
       nms.sendPacket(player, packet);
     } else {
       Map<Locale, P> map = CollectionProvider.map(1);
-      for (Player player : players) {
-        Locale locale = LocaleUtilities.getLocaleOfPlayer(player);
-        P packet = map.get(locale);
+      for (var player : players) {
+        var locale = LocaleUtilities.getLocaleOfPlayer(player);
+        var packet = map.get(locale);
         if (packet == null) {
           map.put(locale, packetFunction.apply(locale));
         }
