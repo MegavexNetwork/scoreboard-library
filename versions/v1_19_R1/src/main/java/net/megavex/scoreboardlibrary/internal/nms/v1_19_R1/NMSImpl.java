@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2;
+package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
@@ -9,17 +9,17 @@ import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.sidebar.PaperSidebarNMSImpl;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.sidebar.SidebarNMSImpl;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team.PaperTeamNMSImpl;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.team.TeamNMSImpl;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util.NativeAdventureUtil;
-import net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util.ProtocolSupportUtil;
+import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.sidebar.PaperSidebarNMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.sidebar.SidebarNMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team.PaperTeamNMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team.TeamNMSImpl;
+import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.util.ProtocolSupportUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandles;

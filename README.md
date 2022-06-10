@@ -8,7 +8,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 ## Features:
 
 - Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
-  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.18.1 server, it will be
+  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.19 server, it will be
   automatically utilized for players at or below 1.12.2.
 - Teams API
 - Packet-level
@@ -16,9 +16,9 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Supported Versions
 
-- **1.18.1.** [Spigot](https://www.spigotmc.org/) does work, but with [Paper](https://papermc.io/) it has better performance
-  because of native [Adventure](https://github.com/KyoriPowered/adventure)
-- **1.8.8.** Note that you'll need to use Java 17.
+- **1.19.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because scoreboard-library
+  takes advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to improve performance.
+- **1.8.8.** Note that you'll still need to use Java 17.
 
 ## Getting started
 

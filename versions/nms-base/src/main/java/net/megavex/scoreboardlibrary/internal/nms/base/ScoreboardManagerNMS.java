@@ -1,25 +1,27 @@
 package net.megavex.scoreboardlibrary.internal.nms.base;
 
 import com.google.common.base.Preconditions;
-import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
-import net.megavex.scoreboardlibrary.internal.nms.base.util.LocaleUtilities;
-import org.apache.commons.lang.RandomStringUtils;
-import org.bukkit.entity.Player;
-
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
+import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
+import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
+import net.megavex.scoreboardlibrary.internal.nms.base.util.LocaleUtilities;
+import org.bukkit.entity.Player;
 
 public abstract class ScoreboardManagerNMS<P> {
 
   public static ScoreboardManagerNMS<?> INSTANCE;
-  public final String objectiveName = "_s" + RandomStringUtils.randomAlphanumeric(5);
+  public final String objectiveName;
 
   public ScoreboardManagerNMS() {
     Preconditions.checkState(INSTANCE == null);
     INSTANCE = this;
+
+    var random = UUID.randomUUID().toString().substring(0, 5);
+    this.objectiveName = "_s" + random;
   }
 
   public static <P> void sendLocalePackets(

@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.internal.nms.v1_18_R2.util;
+package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.util;
 
 import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;

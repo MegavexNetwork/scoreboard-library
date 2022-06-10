@@ -6,7 +6,7 @@ First, add the [Jitpack](https://jitpack.io/) repository:
 
 ```kotlin
 repositories {
-    maven { url = uri("https://jitpack.io/") }
+  maven("https://jitpack.io/")
 }
 ```
 
@@ -18,11 +18,11 @@ dependencies {
     val libraryVersion = "..."
     implementation("com.github.MegavexNetwork.scoreboard-library:implementation:$libraryVersion") // Includes the API and the implementation
 
-    // I want this plugin to support 1.18 & 1.8, so I'll add both version implementations:
+    // I want this plugin to support 1.8 & 1.19, so I'll add both version implementations:
     runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$libraryVersion")
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_18_R2:$libraryVersion")
+    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_19_R1:$libraryVersion")
 
-    // If you're targeting a server that doesn't have native Adventure support (1.8 or Spigot 1.18),
+    // If you're targeting a server that doesn't have native Adventure support (1.8 or Spigot 1.19),
     // you will need to add Adventure too:
     implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 }
