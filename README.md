@@ -20,6 +20,8 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
   takes advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to improve performance.
 - **1.8.8.** Note that you'll still need to use Java 17.
 
+**Only the latest version and 1.8.8 will be supported (at least for now)**
+
 ## Getting started
 
 See installation instructions [here](https://github.com/MegavexNetwork/scoreboard-library/blob/master/INSTALLATION.md)
@@ -91,7 +93,7 @@ For more examples, check out the [example plugin](https://github.com/MegavexNetw
 
 - When a player leaves, they will be automatically removed from any Sidebar or TeamManager they were in to prevent a
   memory leak.
-- One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (atleast for
+- One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (at least for
   now).
 - Should only be used from the main thread (most of the packet work will still be done async anyways).
 
