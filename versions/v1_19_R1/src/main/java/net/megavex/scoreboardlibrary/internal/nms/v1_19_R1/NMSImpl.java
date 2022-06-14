@@ -54,7 +54,7 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
       if (description.getDepend().contains("ProtocolSupport")
         || description.getSoftDepend().contains("ProtocolSupport")) {
         protocolSupport = true;
-        ScoreboardLibraryLogger.logMessage("Detected ProtocolSupport");
+        ScoreboardLibraryLogger.logMessage("Utilizing ProtocolSupport");
       }
     }
   }
