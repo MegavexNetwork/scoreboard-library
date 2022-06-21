@@ -5,8 +5,10 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public class ScoreboardLibraryLogger {
-
   public static final boolean DEBUG;
+
+  private ScoreboardLibraryLogger() {
+  }
 
   static {
     var property = System.getProperty(ScoreboardLibrary.NAMESPACE + ".debug");
