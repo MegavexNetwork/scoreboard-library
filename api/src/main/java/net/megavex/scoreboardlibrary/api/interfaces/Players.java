@@ -1,9 +1,8 @@
 package net.megavex.scoreboardlibrary.api.interfaces;
 
+import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 public interface Players {
   @NotNull Collection<Player> players();

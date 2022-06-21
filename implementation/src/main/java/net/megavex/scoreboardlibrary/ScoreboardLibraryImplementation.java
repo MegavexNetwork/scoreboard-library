@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary;
 
 import com.google.common.collect.ImmutableList;
+import java.lang.reflect.InvocationTargetException;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.exception.ScoreboardLibraryLoadException;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
@@ -8,8 +9,6 @@ import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProviderImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Main ScoreboardManager library implementation class

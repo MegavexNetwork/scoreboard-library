@@ -1,7 +1,14 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team;
 
-import com.google.common.collect.ImmutableList;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
@@ -13,14 +20,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
 
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities.getField;
 
@@ -58,7 +57,7 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
     Collection<String> entries
   ) {
     try {
-      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? List.of() : entries);
+      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? List.of():entries);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }

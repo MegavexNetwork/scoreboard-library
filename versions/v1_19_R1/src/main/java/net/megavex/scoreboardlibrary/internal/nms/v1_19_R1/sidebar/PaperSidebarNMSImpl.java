@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.sidebar;
 
+import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
@@ -7,8 +8,6 @@ import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 /**
  * Sidebar implementation for PaperMC, using its native Adventure support to make performance better
@@ -52,6 +51,6 @@ public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
   @Override
   protected void sendObjectivePacket(Collection<Player> players, boolean create) {
     initialisePackets();
-    impl.sendPacket(players, create ? createPacket : updatePacket);
+    impl.sendPacket(players, create ? createPacket:updatePacket);
   }
 }

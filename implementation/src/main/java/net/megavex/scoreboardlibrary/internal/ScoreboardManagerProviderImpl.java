@@ -1,6 +1,9 @@
 package net.megavex.scoreboardlibrary.internal;
 
 import com.google.common.base.Preconditions;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
@@ -11,10 +14,6 @@ import net.megavex.scoreboardlibrary.internal.team.TeamManagerImpl;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardManagerProviderImpl extends ScoreboardManagerProvider {
 

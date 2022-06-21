@@ -1,12 +1,11 @@
 package net.megavex.scoreboardlibrary.internal.team;
 
 import com.google.common.base.Preconditions;
-import net.megavex.scoreboardlibrary.internal.ScoreboardManagerImpl;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.megavex.scoreboardlibrary.internal.ScoreboardManagerImpl;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TeamUpdaterTask extends BukkitRunnable {
 

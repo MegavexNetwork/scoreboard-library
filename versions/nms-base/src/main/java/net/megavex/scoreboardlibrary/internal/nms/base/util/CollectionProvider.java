@@ -1,12 +1,16 @@
 package net.megavex.scoreboardlibrary.internal.nms.base.util;
 
-import java.lang.invoke.MethodHandles.Lookup;
-import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 
 public final class CollectionProvider {
 

@@ -1,5 +1,8 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1;
 
+import java.lang.invoke.MethodHandles;
+import java.util.Locale;
+import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -22,9 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Locale;
-import java.util.Objects;
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities.getField;
@@ -65,7 +65,7 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
   @Override
   public SidebarNMS<Packet<?>, ?> createSidebarNMS(Sidebar sidebar) {
-    return nativeAdventure ? new PaperSidebarNMSImpl(this, sidebar) : new SidebarNMSImpl(this, sidebar);
+    return nativeAdventure ? new PaperSidebarNMSImpl(this, sidebar):new SidebarNMSImpl(this, sidebar);
   }
 
   @Override
@@ -80,7 +80,7 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
   @Override
   public TeamNMS<?, ?> createTeamNMS(String teamName) {
-    return nativeAdventure ? new PaperTeamNMSImpl(this, teamName) : new TeamNMSImpl(this, teamName);
+    return nativeAdventure ? new PaperTeamNMSImpl(this, teamName):new TeamNMSImpl(this, teamName);
   }
 
   @Override

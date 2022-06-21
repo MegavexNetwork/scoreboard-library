@@ -15,6 +15,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
 import org.bukkit.entity.Player;
 
+
 import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {

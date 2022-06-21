@@ -1,11 +1,10 @@
 package net.megavex.scoreboardlibrary.internal.sidebar.line.locale;
 
+import java.util.function.BiFunction;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
-
-import java.util.function.BiFunction;
 
 public enum LineType {
   NEW(LocaleLineImpl::new),
@@ -18,7 +17,7 @@ public enum LineType {
   }
 
   public static LineType getType(Player player) {
-    return ScoreboardManagerNMS.INSTANCE.isLegacy(player) ? LEGACY : NEW;
+    return ScoreboardManagerNMS.INSTANCE.isLegacy(player) ? LEGACY:NEW;
   }
 
   public LocaleLine<?> create(GlobalLineInfo line, SidebarLineHandler sidebarLineHandler) {

@@ -1,10 +1,9 @@
 package net.megavex.scoreboardlibrary.internal.nms.base;
 
+import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 public abstract class SidebarNMS<P, T extends ScoreboardManagerNMS<P>> {
 

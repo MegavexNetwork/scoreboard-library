@@ -1,5 +1,10 @@
 package net.megavex.scoreboardlibrary.internal.sidebar;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Set;
+import java.util.function.Consumer;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
@@ -7,12 +12,6 @@ import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.Consumer;
 
 public class SingleLocaleSidebar extends AbstractSidebar {
 
@@ -27,7 +26,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return players == null ? Set.of() : Collections.unmodifiableCollection(players);
+    return players == null ? Set.of():Collections.unmodifiableCollection(players);
   }
 
   @Override

@@ -1,5 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.sidebar.line.locale;
 
+import java.util.Collection;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
@@ -7,10 +9,6 @@ import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 
 class LegacyLocaleLine implements LocaleLine<String> {
 
@@ -70,12 +68,12 @@ class LegacyLocaleLine implements LocaleLine<String> {
     } else {
       var color = legacyValue.charAt(15) == ChatColor.COLOR_CHAR;
 
-      var prefixEnd = color ? 15 : 16;
+      var prefixEnd = color ? 15:16;
       this.prefix = legacyValue.substring(0, prefixEnd);
 
       this.player = info.player() + ChatColor.RESET
         + ChatColor.getLastColors(prefix +
-        ChatColor.COLOR_CHAR + (color ? legacyValue.charAt(16) : ""));
+        ChatColor.COLOR_CHAR + (color ? legacyValue.charAt(16):""));
 
       var playerEnd = prefixEnd;
       if (legacyValue.length() > 32) {
@@ -86,7 +84,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
         player += legacyValue.substring(prefixEnd, playerEnd);
       }
 
-      this.suffix = legacyValue.substring(playerEnd + (color ? 2 : 0));
+      this.suffix = legacyValue.substring(playerEnd + (color ? 2:0));
       if (suffix.length() > 16) {
         var newSuffix = suffix.substring(0, 16);
         if (newSuffix.endsWith(String.valueOf(ChatColor.COLOR_CHAR)) &&

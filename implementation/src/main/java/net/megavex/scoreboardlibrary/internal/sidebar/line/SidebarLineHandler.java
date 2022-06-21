@@ -1,15 +1,14 @@
 package net.megavex.scoreboardlibrary.internal.sidebar.line;
 
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.locale.LineType;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.locale.LocaleLine;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Set;
 
 public class SidebarLineHandler {
 

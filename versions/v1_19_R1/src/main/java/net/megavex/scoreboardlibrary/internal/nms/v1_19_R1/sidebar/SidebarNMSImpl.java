@@ -1,5 +1,7 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.sidebar;
 
+import java.util.Collection;
+import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
@@ -7,9 +9,6 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.NMSImpl;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
-import java.util.Locale;
 
 public class SidebarNMSImpl extends AbstractSidebarImpl {
 
@@ -51,11 +50,11 @@ public class SidebarNMSImpl extends AbstractSidebarImpl {
   @Override
   protected void sendObjectivePacket(Collection<Player> players, boolean create) {
     if (sidebar.locale() != null) {
-      impl.sendPacket(players, create ? createPacket : updatePacket);
+      impl.sendPacket(players, create ? createPacket:updatePacket);
     } else {
       ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
         var packet = objectivePacketConstructor.invoke();
-        createObjectivePacket(packet, create ? 0 : 2);
+        createObjectivePacket(packet, create ? 0:2);
         updateDisplayName(packet, sidebar.title(), locale);
         return packet;
       });

@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.internal;
 
+import java.util.Collection;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
@@ -9,8 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 /**
  * Bridges the implementation and the API

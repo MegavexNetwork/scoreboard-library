@@ -1,10 +1,9 @@
 package net.megavex.scoreboardlibrary.plugin;
 
+import java.util.logging.Level;
 import net.megavex.scoreboardlibrary.ScoreboardLibraryImplementation;
 import net.megavex.scoreboardlibrary.exception.ScoreboardLibraryLoadException;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Level;
 
 public class ScoreboardLibraryPlugin extends JavaPlugin {
 

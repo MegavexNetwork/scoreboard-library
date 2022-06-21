@@ -1,5 +1,8 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_8_R3;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.ImmutableTeamProperties;
@@ -11,9 +14,6 @@ import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Locale;
 
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil.limitLegacyText;
 
@@ -97,7 +97,7 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
 
         var packet = new PacketPlayOutScoreboardTeam();
         UnsafeUtilities.setField(teamNameField, packet, teamName);
-        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE : MODE_CREATE);
+        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE:MODE_CREATE);
         UnsafeUtilities.setField(teamDisplayNameField, packet, displayName);
         UnsafeUtilities.setField(teamPrefixField, packet, prefix);
         UnsafeUtilities.setField(teamSuffixField, packet, suffix);

@@ -14,6 +14,7 @@ import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 
+
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities.getField;
 
 public abstract class AbstractSidebarImpl extends SidebarNMS<Packet<?>, NMSImpl> {

@@ -1,6 +1,11 @@
 package net.megavex.scoreboardlibrary.internal.sidebar;
 
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.LocaleUtilities;
@@ -8,13 +13,6 @@ import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 public class PlayerDependantLocaleSidebar extends AbstractSidebar {
 
@@ -41,12 +39,12 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return playerMap == null ? Set.of(): playerMap.keySet();
+    return playerMap == null ? Set.of():playerMap.keySet();
   }
 
   @Override
   protected SidebarLineHandler addPlayer0(Player player) {
-    var sidebar = playerMap == null ? null : playerMap.get(player);
+    var sidebar = playerMap == null ? null:playerMap.get(player);
     if (sidebar != null) {
       return sidebar;
     }

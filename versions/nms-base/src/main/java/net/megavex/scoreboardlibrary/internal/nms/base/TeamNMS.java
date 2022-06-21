@@ -1,10 +1,9 @@
 package net.megavex.scoreboardlibrary.internal.nms.base;
 
+import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 public abstract class TeamNMS<P, T extends ScoreboardManagerNMS<P>> {
 

@@ -2,6 +2,16 @@ package net.megavex.scoreboardlibrary.internal.team;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
@@ -13,11 +23,6 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class TeamManagerImpl implements TeamManager {
 
@@ -97,7 +102,7 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     for (var player : players) {
-      team.teamInfo(player, teamInfoFunction == null ? null : teamInfoFunction.apply(player, team));
+      team.teamInfo(player, teamInfoFunction == null ? null:teamInfoFunction.apply(player, team));
     }
     return team;
   }
@@ -110,8 +115,8 @@ public class TeamManagerImpl implements TeamManager {
     if (players.add(player)) {
       ScoreboardManagerProviderImpl.instance().teamManagerMap.put(player, this);
       for (var team : teams.values()) {
-        var info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
-        info = info == null ? team.globalInfo() : info;
+        var info = teamInfoFunction == null ? team.globalInfo():(TeamInfoImpl) teamInfoFunction.apply(team);
+        info = info == null ? team.globalInfo():info;
 
         var singleton = Set.of(player);
         info.assign(team);
@@ -141,8 +146,8 @@ public class TeamManagerImpl implements TeamManager {
 
     if (!filteredPlayers.isEmpty()) {
       for (var team : teams.values()) {
-        var info = teamInfoFunction == null ? team.globalInfo() : (TeamInfoImpl) teamInfoFunction.apply(team);
-        info = info == null ? team.globalInfo() : info;
+        var info = teamInfoFunction == null ? team.globalInfo():(TeamInfoImpl) teamInfoFunction.apply(team);
+        info = info == null ? team.globalInfo():info;
 
         info.assign(team);
         info.players.addAll(players);

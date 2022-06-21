@@ -1,13 +1,13 @@
 package net.megavex.scoreboardlibrary.internal.sidebar.line.locale;
 
+import java.util.Collection;
+import java.util.Collections;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.Collections;
 
 import static net.kyori.adventure.text.Component.empty;
 

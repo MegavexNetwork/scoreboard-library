@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.internal.nms.v1_8_R3;
 
+import java.lang.reflect.Field;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
@@ -10,8 +11,6 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-
-import java.lang.reflect.Field;
 
 public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
