@@ -2,13 +2,9 @@ package net.megavex.scoreboardlibrary.api.sidebar.line;
 
 public abstract class AbstractSidebarLine implements SidebarLine {
 
-  protected final byte line;
+  protected final int line;
 
   public AbstractSidebarLine(int line) {
-    this((byte) line);
-  }
-
-  public AbstractSidebarLine(byte line) {
     this.line = line;
   }
 
