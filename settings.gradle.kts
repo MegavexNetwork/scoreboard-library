@@ -5,7 +5,7 @@ pluginManagement {
   }
 }
 
-rootProject.name = "scoreboard-library"
+rootProject.name = "scoreboard-library-root"
 
 include(":api")
 include(":implementation")

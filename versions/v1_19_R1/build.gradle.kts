@@ -1,5 +1,4 @@
 plugins {
-  id("net.megavex.scoreboardlibrary.nms-conventions")
   id("io.papermc.paperweight.userdev") version "1.3.5"
   `maven-publish`
 }
@@ -9,8 +8,9 @@ repositories {
 }
 
 dependencies {
-  paperDevBundle("1.19-R0.1-SNAPSHOT")
+  compileOnly(project(":nms-base"))
 
+  paperDevBundle("1.19-R0.1-SNAPSHOT")
   compileOnly("com.github.ProtocolSupport:ProtocolSupport:05b7689664")
 }
 

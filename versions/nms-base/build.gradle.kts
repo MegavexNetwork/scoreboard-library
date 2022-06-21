@@ -5,7 +5,3 @@ plugins {
 dependencies {
   api(project(":api"))
 }
-
-tasks.withType<JavaCompile> {
-  options.compilerArgs.add("-XDignore.symbol.file")
-}
