@@ -14,7 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Main ScoreboardManager library implementation class
  */
 public final class ScoreboardLibraryImplementation {
-
   private ScoreboardLibraryImplementation() {
   }
 

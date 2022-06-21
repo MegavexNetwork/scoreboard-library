@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ScoreboardTeamImpl implements ScoreboardTeam {
-
   public final TeamManagerImpl teamManager;
   public final String name;
   public final TeamNMS<?, ?> nms;

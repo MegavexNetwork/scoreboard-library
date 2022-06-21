@@ -25,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TeamManagerImpl implements TeamManager {
-
   private static int idCounter = 0;
   public final Map<String, ScoreboardTeamImpl> teams = CollectionProvider.map(5);
   public final AtomicBoolean update = new AtomicBoolean();

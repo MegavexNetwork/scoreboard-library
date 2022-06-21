@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface SidebarLine {
-
   static @NotNull SidebarLine staticLine(@Nullable Component component) {
     return new StaticLine(component);
   }

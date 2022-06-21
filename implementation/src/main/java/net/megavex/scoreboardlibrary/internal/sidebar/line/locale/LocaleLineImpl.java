@@ -11,9 +11,8 @@ import org.bukkit.entity.Player;
 
 import static net.kyori.adventure.text.Component.empty;
 
-// Implementation for new versions above 1.12.2
+// Implementation for versions above 1.12.2
 class LocaleLineImpl implements LocaleLine<Component> {
-
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;

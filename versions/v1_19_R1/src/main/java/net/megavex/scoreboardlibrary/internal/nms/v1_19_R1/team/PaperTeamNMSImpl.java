@@ -13,7 +13,6 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 public class PaperTeamNMSImpl extends AbstractTeamNMSImpl {
-
   public PaperTeamNMSImpl(NMSImpl impl, String teamName) {
     super(impl, teamName);
   }

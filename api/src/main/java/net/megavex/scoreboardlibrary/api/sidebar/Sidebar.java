@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Range;
  * Represents an in-game Sidebar
  */
 public interface Sidebar extends HasScoreboardManager, Closeable, Players {
-
   // Constants
 
   int MAX_LINES = 15;

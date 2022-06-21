@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
  */
 @ApiStatus.Internal
 public abstract class ScoreboardManagerProvider {
-
   private static ScoreboardManagerProvider instance;
   private static JavaPlugin loaderPlugin;
 

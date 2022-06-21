@@ -7,7 +7,6 @@ import java.util.Objects;
 import sun.misc.Unsafe;
 
 public class UnsafeUtilities {
-
   public static final Unsafe UNSAFE;
   private static final MethodType VOID_METHOD_TYPE = MethodType.methodType(void.class);
 

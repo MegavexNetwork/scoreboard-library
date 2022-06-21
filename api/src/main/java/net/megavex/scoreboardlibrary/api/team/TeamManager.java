@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
  * Represents a list of Scoreboard Teams
  */
 public interface TeamManager extends Closeable, HasScoreboardManager, Players {
-
   /**
    * @return {@link ComponentTranslator} of this team manager
    */

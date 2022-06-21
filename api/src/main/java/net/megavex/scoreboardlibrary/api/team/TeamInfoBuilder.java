@@ -12,7 +12,6 @@ import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
  * Builder for {@link TeamInfo}s
  */
 public class TeamInfoBuilder {
-
   private Component displayName, prefix, suffix;
   private boolean allowFriendlyFire, canSeeFriendlyInvisibles;
   private NameTagVisibility nameTagVisibility;

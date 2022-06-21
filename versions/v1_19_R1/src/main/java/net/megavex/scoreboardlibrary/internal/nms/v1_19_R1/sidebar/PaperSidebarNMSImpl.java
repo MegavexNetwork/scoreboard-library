@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
  * Sidebar implementation for PaperMC, using its native Adventure support to make performance better
  */
 public class PaperSidebarNMSImpl extends AbstractSidebarImpl {
-
   private ClientboundSetObjectivePacket createPacket;
   private ClientboundSetObjectivePacket updatePacket;
 

@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ScoreboardManagerImpl implements ScoreboardManager {
-
   public final JavaPlugin plugin;
   public final PlayerListener playerListener = new PlayerListener(this);
   public LocaleListener localeListener;

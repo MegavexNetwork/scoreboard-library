@@ -5,7 +5,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class SidebarUtilities {
-
   private SidebarUtilities() {
   }
 

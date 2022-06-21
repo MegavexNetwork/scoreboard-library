@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import static net.kyori.adventure.text.Component.empty;
 
 public class AbstractSidebar implements HasScoreboardManager, Closeable {
-
   private static final SidebarLine emptyLine = SidebarLine.staticLine(empty());
   protected final Sidebar sidebar;
   private SidebarLine[] lines;

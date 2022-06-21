@@ -5,7 +5,6 @@ import protocolsupport.api.ProtocolSupportAPI;
 import protocolsupport.api.ProtocolVersion;
 
 public final class ProtocolSupportUtil {
-
   private ProtocolSupportUtil() {
   }
 

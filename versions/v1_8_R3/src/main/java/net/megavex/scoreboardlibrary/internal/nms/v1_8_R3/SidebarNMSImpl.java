@@ -19,7 +19,6 @@ import org.bukkit.entity.Player;
 import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
-
   private static final Field objectiveNameField,
     objectiveDisplayNameField,
     objectiveHealthDisplayField,

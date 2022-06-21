@@ -6,7 +6,6 @@ import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import org.bukkit.ChatColor;
 
 public class GlobalLineInfo {
-
   private static final String[] lineColors = new String[15];
 
   static {

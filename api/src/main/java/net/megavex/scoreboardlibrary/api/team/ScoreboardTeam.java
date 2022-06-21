@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
  * Represents a Scoreboard Team
  */
 public interface ScoreboardTeam extends Closeable {
-
   /**
    * @return {@link TeamManager} of this team
    */

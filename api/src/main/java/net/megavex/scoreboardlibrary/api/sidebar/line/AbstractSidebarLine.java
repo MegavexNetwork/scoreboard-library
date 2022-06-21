@@ -1,7 +1,6 @@
 package net.megavex.scoreboardlibrary.api.sidebar.line;
 
 public abstract class AbstractSidebarLine implements SidebarLine {
-
   protected final int line;
 
   public AbstractSidebarLine(int line) {

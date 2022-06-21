@@ -12,7 +12,6 @@ import protocolsupport.protocol.packet.ClientBoundPacketData;
 import protocolsupport.protocol.packet.ClientBoundPacketType;
 
 public class LegacyTeamInfoNMS extends TeamNMS.TeamInfoNMS<String> {
-
   private final String teamName;
 
   public LegacyTeamInfoNMS(ImmutableTeamProperties<String> properties, String teamName) {

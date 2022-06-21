@@ -4,7 +4,6 @@ import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;
 
 public final class NativeAdventureUtil {
-
   private NativeAdventureUtil() {
   }
 

@@ -11,7 +11,6 @@ import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 
 public class SidebarNMSImpl extends AbstractSidebarImpl {
-
   private final ClientboundSetObjectivePacket createPacket;
   private final ClientboundSetObjectivePacket updatePacket;
 

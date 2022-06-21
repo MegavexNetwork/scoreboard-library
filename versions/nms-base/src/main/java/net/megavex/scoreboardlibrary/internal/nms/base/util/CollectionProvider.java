@@ -13,7 +13,6 @@ import java.util.Set;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 
 public final class CollectionProvider {
-
   private static final String FASTUTIL = "it.unimi.dsi.fastutil.objects.";
   private static final MethodHandle mapConstructor, setConstructor, listConstructor;
 

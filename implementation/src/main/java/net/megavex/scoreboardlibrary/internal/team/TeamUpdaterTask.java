@@ -8,7 +8,6 @@ import net.megavex.scoreboardlibrary.internal.ScoreboardManagerImpl;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TeamUpdaterTask extends BukkitRunnable {
-
   private final Logger logger;
   private final Set<TeamManagerImpl> teamManagers;
 

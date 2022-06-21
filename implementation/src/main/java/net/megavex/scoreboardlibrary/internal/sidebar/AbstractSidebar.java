@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import static net.kyori.adventure.text.Component.empty;
 
 public abstract class AbstractSidebar implements Sidebar {
-
   public final GlobalLineInfo[] lines;
   protected final Object lock = new Object();
   protected final Object visibilityLock = new Object();

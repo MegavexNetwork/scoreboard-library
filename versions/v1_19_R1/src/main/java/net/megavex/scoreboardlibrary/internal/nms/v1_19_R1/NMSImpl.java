@@ -31,7 +31,6 @@ import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtiliti
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities.setField;
 
 public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
-
   private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(1, null);
   private final ClientboundSetObjectivePacket removePacket = UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
   private boolean nativeAdventure, protocolSupport;

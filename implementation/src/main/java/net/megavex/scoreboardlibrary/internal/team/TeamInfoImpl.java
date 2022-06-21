@@ -26,7 +26,6 @@ import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.parseChar;
 
 public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component> {
-
   public final Set<Player> players = Collections.synchronizedSet(CollectionProvider.set(4));
   public final Set<String> entries = Collections.synchronizedSet(CollectionProvider.set(4));
   private final AtomicBoolean updateTeam = new AtomicBoolean();

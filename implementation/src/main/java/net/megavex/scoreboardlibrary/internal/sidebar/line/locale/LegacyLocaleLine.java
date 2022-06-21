@@ -11,7 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 class LegacyLocaleLine implements LocaleLine<String> {
-
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final TeamNMS.TeamInfoNMS<String> bridge;

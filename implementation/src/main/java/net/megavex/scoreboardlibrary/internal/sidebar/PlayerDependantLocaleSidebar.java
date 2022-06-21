@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerDependantLocaleSidebar extends AbstractSidebar {
-
   private volatile Map<Player, SidebarLineHandler> playerMap;
   private volatile Map<Locale, SidebarLineHandler> localeMap;
 

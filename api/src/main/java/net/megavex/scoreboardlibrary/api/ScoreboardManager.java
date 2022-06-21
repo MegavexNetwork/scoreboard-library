@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 public interface ScoreboardManager extends Closeable, HasScoreboardManager {
-
   /**
    * Gets the ScoreboardManager for a plugin
    *

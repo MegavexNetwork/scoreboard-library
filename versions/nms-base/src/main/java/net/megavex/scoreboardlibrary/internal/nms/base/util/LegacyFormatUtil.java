@@ -16,7 +16,6 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.parseChar;
 
 public final class LegacyFormatUtil {
-
   private static final Map<NamedTextColor, Character> legacyMap;
 
   static {

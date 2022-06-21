@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil.limitLegacyText;
 
 public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
-
   private static final Field teamNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "a"),
     teamDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "b"),
     teamPrefixField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "c"),
@@ -56,7 +55,6 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
   }
 
   private abstract class AbstractTeamInfoNMS<C> extends TeamNMS.TeamInfoNMS<C> {
-
     public AbstractTeamInfoNMS(ImmutableTeamProperties<C> properties) {
       super(properties);
     }

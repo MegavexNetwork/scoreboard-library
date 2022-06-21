@@ -12,7 +12,6 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.LocaleUtilities;
 import org.bukkit.entity.Player;
 
 public abstract class ScoreboardManagerNMS<P> {
-
   public static ScoreboardManagerNMS<?> INSTANCE;
   public final String objectiveName;
 

@@ -11,7 +11,6 @@ import net.megavex.scoreboardlibrary.internal.sidebar.line.locale.LocaleLine;
 import org.bukkit.entity.Player;
 
 public class SidebarLineHandler {
-
   private final AbstractSidebar sidebar;
   private final Locale locale;
 

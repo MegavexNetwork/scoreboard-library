@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public record LocaleListener(ScoreboardManagerImpl instance) implements Listener {
-
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void onPlayerLocaleChanged(PlayerLocaleChangeEvent event) {
     var player = event.getPlayer();

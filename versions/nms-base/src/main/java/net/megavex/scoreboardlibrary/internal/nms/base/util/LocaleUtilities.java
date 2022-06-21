@@ -9,7 +9,6 @@ import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 import org.bukkit.entity.Player;
 
 public final class LocaleUtilities {
-
   private static MethodHandle adventureMethod, legacySpigotMethod, legacyMethod;
 
   static {

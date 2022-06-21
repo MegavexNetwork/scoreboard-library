@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface TeamInfo {
-
   /**
    * Creates an empty {@link TeamInfo}
    *

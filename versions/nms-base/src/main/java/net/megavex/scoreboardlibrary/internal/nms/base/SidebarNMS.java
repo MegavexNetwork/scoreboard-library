@@ -6,7 +6,6 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.bukkit.entity.Player;
 
 public abstract class SidebarNMS<P, T extends ScoreboardManagerNMS<P>> {
-
   protected final T impl;
   protected final Sidebar sidebar;
 

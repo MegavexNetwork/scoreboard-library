@@ -16,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class ScoreboardManagerProviderImpl extends ScoreboardManagerProvider {
-
   private static ScoreboardManagerProviderImpl instance;
   public final Map<Player, AbstractSidebar> sidebarMap = new ConcurrentHashMap<>();
   public final Map<Player, TeamManagerImpl> teamManagerMap = new ConcurrentHashMap<>();

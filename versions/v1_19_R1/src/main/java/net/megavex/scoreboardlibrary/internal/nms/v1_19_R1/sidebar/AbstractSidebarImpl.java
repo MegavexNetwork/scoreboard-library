@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtilities.getField;
 
 public abstract class AbstractSidebarImpl extends SidebarNMS<Packet<?>, NMSImpl> {
-
   static final UnsafeUtilities.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor =
     UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
   static final Field objectiveNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "d"),
