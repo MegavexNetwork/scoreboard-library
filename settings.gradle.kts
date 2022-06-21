@@ -9,7 +9,6 @@ rootProject.name = "scoreboard-library"
 
 include(":api")
 include(":implementation")
-include(":standalone-plugin")
 
 include(":nms-base")
 project(":nms-base").projectDir = file("versions/nms-base")
