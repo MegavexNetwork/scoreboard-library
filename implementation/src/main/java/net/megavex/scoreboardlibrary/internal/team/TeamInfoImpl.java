@@ -1,6 +1,13 @@
 package net.megavex.scoreboardlibrary.internal.team;
 
 import com.google.common.base.Preconditions;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
@@ -13,8 +20,6 @@ import net.megavex.scoreboardlibrary.internal.nms.base.util.LegacyFormatUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.Objects.requireNonNull;
 import static net.kyori.adventure.text.Component.empty;
@@ -69,19 +74,19 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public ScoreboardTeamImpl team() {
+  public @NotNull ScoreboardTeamImpl team() {
     if (team == null) throw new IllegalStateException("Not assigned to a team");
     return team;
   }
 
   @Override
-  public boolean isAssigned() {
+  public boolean assigned() {
     return team != null;
   }
 
   @Override
   public synchronized void unassign() {
-    if (!isAssigned()) return;
+    if (!assigned()) return;
 
     Preconditions.checkState(team.globalInfo() != this, "Cannot unnasign a global TeamInfo");
     team.teamInfos().remove(this);
@@ -141,7 +146,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void displayName(@NotNull Component displayName) {
+  public @NotNull TeamInfo displayName(@NotNull Component displayName) {
     Preconditions.checkNotNull(displayName);
 
     if (!Objects.equals(displayName, this.displayName)) {
@@ -149,6 +154,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
@@ -157,7 +164,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void prefix(@NotNull Component prefix) {
+  public @NotNull TeamInfo prefix(@NotNull Component prefix) {
     Preconditions.checkNotNull(prefix);
 
     if ((!Objects.equals(prefix, this.prefix))) {
@@ -165,6 +172,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
@@ -173,7 +182,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void suffix(@NotNull Component suffix) {
+  public @NotNull TeamInfo suffix(@NotNull Component suffix) {
     Preconditions.checkNotNull(suffix);
 
     if (!Objects.equals(suffix, this.suffix)) {
@@ -181,6 +190,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
@@ -189,21 +200,25 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void friendlyFire(boolean allowFriendlyFire) {
+  public @NotNull TeamInfo friendlyFire(boolean allowFriendlyFire) {
     if (this.allowFriendlyFire != allowFriendlyFire) {
       this.allowFriendlyFire = allowFriendlyFire;
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
-  public void canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
+  public @NotNull TeamInfo canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
     if (this.canSeeFriendlyInvisibles != canSeeFriendlyInvisibles) {
       this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
@@ -217,7 +232,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
+  public @NotNull TeamInfo nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
     Preconditions.checkNotNull(nameTagVisibility);
 
     if (this.nameTagVisibility != nameTagVisibility.id()) {
@@ -225,6 +240,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
@@ -233,7 +250,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void collisionRule(@NotNull CollisionRule collisionRule) {
+  public @NotNull TeamInfo collisionRule(@NotNull CollisionRule collisionRule) {
     Preconditions.checkNotNull(collisionRule);
 
     if (this.collisionRule != collisionRule.id()) {
@@ -241,6 +258,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   @Override
@@ -250,10 +269,10 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public void playerColor(NamedTextColor color) {
+  public @NotNull TeamInfo playerColor(NamedTextColor color) {
     if (color == null) {
       playerColor = '\0';
-      return;
+      return this;
     }
 
     var c = LegacyFormatUtil.getChar(color);
@@ -262,6 +281,8 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
       updateTeam.set(true);
       scheduleUpdate();
     }
+
+    return this;
   }
 
   public void scheduleUpdate() {
@@ -316,22 +337,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    var teamInfo = (TeamInfoImpl) o;
-    return allowFriendlyFire == teamInfo.allowFriendlyFire &&
-      canSeeFriendlyInvisibles == teamInfo.canSeeFriendlyInvisibles &&
-      Objects.equals(players, teamInfo.players) &&
-      Objects.equals(entries, teamInfo.entries) &&
-      Objects.equals(addEntries, teamInfo.addEntries) &&
-      Objects.equals(removeEntries, teamInfo.removeEntries) &&
-      Objects.equals(displayName, teamInfo.displayName) &&
-      Objects.equals(prefix, teamInfo.prefix) &&
-      Objects.equals(suffix, teamInfo.suffix) &&
-      nameTagVisibility == teamInfo.nameTagVisibility &&
-      Objects.equals(nms, teamInfo.nms) &&
-      Objects.equals(team, teamInfo.team);
+    return this == o;
   }
 
   @Override

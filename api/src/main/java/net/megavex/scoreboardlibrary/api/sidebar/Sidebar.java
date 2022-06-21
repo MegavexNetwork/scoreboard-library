@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
+import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
@@ -7,8 +8,7 @@ import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
+import org.jetbrains.annotations.Range;
 
 /**
  * Represents an in-game Sidebar
@@ -17,7 +17,7 @@ public interface Sidebar extends HasScoreboardManager, Closeable, Players {
 
   // Constants
 
-  byte MAX_LINES = 15;
+  int MAX_LINES = 15;
 
   // Main
 
@@ -33,7 +33,7 @@ public interface Sidebar extends HasScoreboardManager, Closeable, Players {
    *
    * @return Max line amount
    */
-  byte maxLines();
+  @Range(from = 1, to = MAX_LINES) int maxLines();
 
   /**
    * Gets the {@link Locale} which is used to translate {@link net.kyori.adventure.text.TranslatableComponent}s
@@ -47,7 +47,7 @@ public interface Sidebar extends HasScoreboardManager, Closeable, Players {
   /**
    * Returns the visibility of this Sidebar
    *
-   * @return Visibility
+   * @return Current visibility of this Sidebar
    */
   boolean visible();
 
@@ -66,7 +66,7 @@ public interface Sidebar extends HasScoreboardManager, Closeable, Players {
    * @param line  Line
    * @param value Value
    */
-  void line(int line, Component value);
+  void line(int line, @Nullable Component value);
 
   /**
    * Gets a line's value
@@ -77,9 +77,7 @@ public interface Sidebar extends HasScoreboardManager, Closeable, Players {
   @Nullable Component line(int line);
 
   /**
-   * Returns the current title
-   *
-   * @return Title
+   * @return Current title of this Sidebar
    */
   @NotNull Component title();
 

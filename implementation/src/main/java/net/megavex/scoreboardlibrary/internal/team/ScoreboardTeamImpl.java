@@ -67,7 +67,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   @Override
-  public @NotNull TeamInfoImpl teamInfo(Player player) {
+  public @NotNull TeamInfoImpl teamInfo(@NotNull Player player) {
     return getTeamInfo(player, true, false);
   }
 
@@ -92,11 +92,11 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   @Override
-  public @NotNull TeamInfoImpl teamInfo(Player player, @Nullable TeamInfo teamInfo) {
+  public @NotNull TeamInfoImpl teamInfo(@NotNull Player player, @Nullable TeamInfo teamInfo) {
     checkDestroyed();
     checkPlayer(player);
 
-    var impl = teamInfo == null ? globalInfo() : (TeamInfoImpl) teamInfo;
+    var impl = teamInfo == null ? globalInfo():(TeamInfoImpl) teamInfo;
 
     var oldInfo = getTeamInfo(player, true, true);
     if (oldInfo != null) {

@@ -1,16 +1,15 @@
 package net.megavex.scoreboardlibrary.api.team;
 
+import java.util.Collection;
+import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 
-import java.util.Collection;
-import java.util.Objects;
-
 /**
- * Builder for {@link TeamInfo}
+ * Builder for {@link TeamInfo}s
  */
 public class TeamInfoBuilder {
 
@@ -28,8 +27,8 @@ public class TeamInfoBuilder {
     teamInfo.suffix(suffix);
     teamInfo.friendlyFire(allowFriendlyFire);
     teamInfo.canSeeFriendlyInvisibles(canSeeFriendlyInvisibles);
-    teamInfo.nameTagVisibility(nameTagVisibility == null ? NameTagVisibility.ALWAYS : nameTagVisibility);
-    teamInfo.collisionRule(collisionRule == null ? CollisionRule.ALWAYS : collisionRule);
+    teamInfo.nameTagVisibility(nameTagVisibility == null ? NameTagVisibility.ALWAYS:nameTagVisibility);
+    teamInfo.collisionRule(collisionRule == null ? CollisionRule.ALWAYS:collisionRule);
     teamInfo.playerColor(playerColor);
     return teamInfo;
   }
@@ -41,11 +40,6 @@ public class TeamInfoBuilder {
 
   public TeamInfoBuilder addEntry(String entry) {
     Objects.requireNonNull(entries).add(entry);
-    return this;
-  }
-
-  public TeamInfoBuilder removeEntry(String entry) {
-    Objects.requireNonNull(entries).remove(entry);
     return this;
   }
 

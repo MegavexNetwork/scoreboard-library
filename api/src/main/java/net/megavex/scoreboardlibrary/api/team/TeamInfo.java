@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.api.team;
 
+import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
@@ -7,8 +8,6 @@ import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 public interface TeamInfo {
 
@@ -34,19 +33,17 @@ public interface TeamInfo {
   // Main
 
   /**
-   * Gets the Team which is assigned to this TeamInfo
-   *
-   * @return Assigned Team
+   * @return Team which is assigned to this {@link TeamInfo}
    * @throws IllegalStateException If not assigned
    */
-  ScoreboardTeam team();
+  @NotNull ScoreboardTeam team();
 
   /**
    * Returns whether this TeamInfo is assigned to a Team
    *
    * @return If assigned
    */
-  boolean isAssigned();
+  boolean assigned();
 
   /**
    * Unassigns TeamInfo info from the currently assigned Team
@@ -58,9 +55,8 @@ public interface TeamInfo {
    *
    * @return Name of Team
    */
-  @Nullable
-  default String name() {
-    return team() == null ? null : team().name();
+  default @Nullable String name() {
+    return !assigned() ? null:team().name();
   }
 
   // Entries
@@ -85,6 +81,9 @@ public interface TeamInfo {
 
   // Properties
 
+  /**
+   * @return Display name
+   */
   @NotNull Component displayName();
 
   /**
@@ -92,8 +91,11 @@ public interface TeamInfo {
    *
    * @param displayName Display name
    */
-  void displayName(@NotNull Component displayName);
+  @NotNull TeamInfo displayName(@NotNull Component displayName);
 
+  /**
+   * @return Prefix
+   */
   @NotNull Component prefix();
 
   /**
@@ -101,8 +103,11 @@ public interface TeamInfo {
    *
    * @param prefix Prefix
    */
-  void prefix(@NotNull Component prefix);
+  @NotNull TeamInfo prefix(@NotNull Component prefix);
 
+  /**
+   * @return Suffix
+   */
   @NotNull Component suffix();
 
   /**
@@ -110,19 +115,23 @@ public interface TeamInfo {
    *
    * @param suffix Suffix
    */
-  void suffix(@NotNull Component suffix);
+  @NotNull TeamInfo suffix(@NotNull Component suffix);
 
-  default boolean friendlyFire() {
-    return false;
-  }
+  /**
+   * @return Friendly fire rule
+   */
+  boolean friendlyFire();
 
   /**
    * Sets whether friendly fire is allowed
    *
    * @param allowFriendlyFire whether friendly fire is allowed
    */
-  void friendlyFire(boolean allowFriendlyFire);
+  @NotNull TeamInfo friendlyFire(boolean allowFriendlyFire);
 
+  /**
+   * @return Can see friendly invisibles rule
+   */
   default boolean canSeeFriendlyInvisibles() {
     return false;
   }
@@ -132,56 +141,42 @@ public interface TeamInfo {
    *
    * @param canSeeFriendlyInvisibles whether players can see friendly invisibles
    */
-  void canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles);
+  @NotNull TeamInfo canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles);
 
-  default @NotNull NameTagVisibility nameTagVisibility() {
-    return NameTagVisibility.ALWAYS;
-  }
+  /**
+   * @return Name tag visibility rule
+   */
+  @NotNull NameTagVisibility nameTagVisibility();
 
   /**
    * Sets the {@link NameTagVisibility}
    *
    * @param nameTagVisibility Name tag visibility rule
    */
-  void nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
+  @NotNull TeamInfo nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
 
   /**
-   * Gets the {@link CollisionRule}. This will be ignored on 1.8 since in this version teams don't support this
-   *
    * @return Collision rule
    */
-  default @NotNull CollisionRule collisionRule() {
-    return CollisionRule.ALWAYS;
-  }
+  @NotNull CollisionRule collisionRule();
 
   /**
-   * Sets the {@link CollisionRule}
+   * Sets the {@link CollisionRule}.
+   * Note that this rule will not work on 1.8.
    *
    * @param collisionRule Collision rule
    */
-  void collisionRule(@NotNull CollisionRule collisionRule);
+  @NotNull TeamInfo collisionRule(@NotNull CollisionRule collisionRule);
 
   /**
-   * Gets the {@link NamedTextColor} of the player. This will be ignored on 1.8 since in this version teams don't support this
-   *
-   * @return Color
+   * @return Player color
    */
-  @Nullable
-  default NamedTextColor playerColor() {
-    return null;
-  }
+  @Nullable NamedTextColor playerColor();
 
   /**
-   * Sets the {@link NamedTextColor}
+   * Sets the player color
    *
-   * @param color Color
+   * @param playerColor Player color
    */
-  void playerColor(@Nullable NamedTextColor color);
-
-  // Options
-
-  default void unpackOptions(int options) {
-    friendlyFire((options & 1) > 0);
-    canSeeFriendlyInvisibles((options & 2) > 0);
-  }
+  @NotNull TeamInfo playerColor(@Nullable NamedTextColor playerColor);
 }

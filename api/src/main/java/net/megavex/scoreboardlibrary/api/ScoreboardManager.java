@@ -1,5 +1,7 @@
 package net.megavex.scoreboardlibrary.api;
 
+import java.util.Collection;
+import java.util.Locale;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
@@ -10,9 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.Locale;
+import org.jetbrains.annotations.Range;
 
 public interface ScoreboardManager extends Closeable, HasScoreboardManager {
 
@@ -56,7 +56,7 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
    *                 or null if the locale should depend on the player
    * @return Sidebar
    */
-  default @NotNull Sidebar sidebar(int maxLines, @Nullable Locale locale) {
+  default @NotNull Sidebar sidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale) {
     return sidebar(maxLines, ComponentTranslator.GLOBAL, locale);
   }
 
@@ -69,7 +69,7 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
    *                            or null if the locale should depend on the player
    * @return Sidebar
    */
-  @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
+  @NotNull Sidebar sidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale);
 
   /**
    * Gets the sidebars associated with this ScoreboardManager
@@ -100,5 +100,5 @@ public interface ScoreboardManager extends Closeable, HasScoreboardManager {
    *
    * @return Team Managers
    */
-  Collection<TeamManager> teamManagers();
+  @NotNull Collection<TeamManager> teamManagers();
 }

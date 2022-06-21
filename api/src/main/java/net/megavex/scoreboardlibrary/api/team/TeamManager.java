@@ -1,5 +1,8 @@
 package net.megavex.scoreboardlibrary.api.team;
 
+import java.util.Collection;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
@@ -8,15 +11,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 /**
  * Represents a list of Scoreboard Teams
  */
 public interface TeamManager extends Closeable, HasScoreboardManager, Players {
 
+  /**
+   * @return {@link ComponentTranslator} of this team manager
+   */
   @NotNull ComponentTranslator componentTranslator();
 
   // Teams

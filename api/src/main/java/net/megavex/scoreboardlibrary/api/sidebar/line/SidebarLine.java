@@ -2,10 +2,11 @@ package net.megavex.scoreboardlibrary.api.sidebar.line;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface SidebarLine {
 
-  static @NotNull SidebarLine staticLine(@NotNull Component component) {
+  static @NotNull SidebarLine staticLine(@Nullable Component component) {
     return new StaticLine(component);
   }
 
@@ -23,5 +24,5 @@ public interface SidebarLine {
     throw new UnsupportedOperationException();
   }
 
-  Component computeValue();
+  @Nullable Component computeValue();
 }

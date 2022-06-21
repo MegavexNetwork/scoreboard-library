@@ -1,8 +1,12 @@
 package net.megavex.scoreboardlibrary.internal;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -20,12 +24,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardManagerImpl implements ScoreboardManager {
 
@@ -46,7 +44,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
 
     try {
       Class.forName("org.bukkit.event.player.PlayerLocaleChangeEvent");
-      ScoreboardLibraryLogger.logMessage("PlayerLocaleChangeEvent was found");
+      ScoreboardLibraryLogger.logMessage("Registering PlayerLocaleChangeEvent listener");
       localeListener = new LocaleListener(this);
       plugin.getServer().getPluginManager().registerEvents(localeListener, plugin);
     } catch (ClassNotFoundException ignored) {
@@ -63,8 +61,8 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
     checkDestroyed();
     getSidebars0();
 
-    if (maxLines < 0 || maxLines > Sidebar.MAX_LINES) {
-      throw new IllegalArgumentException();
+    if (maxLines <= 0 || maxLines > Sidebar.MAX_LINES) {
+      throw new IllegalArgumentException("maxLines");
     }
 
     AbstractSidebar sidebar;
@@ -135,7 +133,7 @@ public class ScoreboardManagerImpl implements ScoreboardManager {
   }
 
   @Override
-  public Set<TeamManager> teamManagers() {
+  public @NotNull Set<TeamManager> teamManagers() {
     return Collections.unmodifiableSet(getTeamManagers0());
   }
 

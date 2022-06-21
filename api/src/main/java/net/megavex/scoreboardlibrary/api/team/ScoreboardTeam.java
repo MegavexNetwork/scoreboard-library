@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.api.team;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a Scoreboard Team
@@ -10,35 +11,34 @@ import org.jetbrains.annotations.NotNull;
 public interface ScoreboardTeam extends Closeable {
 
   /**
-   * Gets the TeamManager of this Team
-   *
-   * @return TeamManager
+   * @return {@link TeamManager} of this team
    */
   @NotNull TeamManager teamManager();
 
+  /**
+   * @return Global {@link TeamInfo} of this team
+   */
   @NotNull TeamInfo globalInfo();
 
   /**
-   * Gets the name of this team
-   *
-   * @return Name
+   * @return Name of this team
    */
   @NotNull String name();
 
   /**
-   * Gets the {@link TeamInfo} of a Player
+   * Gets the {@link TeamInfo} of a player
    *
    * @param player Player
-   * @return {@link TeamInfo} of Player
+   * @return {@link TeamInfo} of this player
    */
-  @NotNull TeamInfo teamInfo(Player player);
+  @NotNull TeamInfo teamInfo(@NotNull Player player);
 
   /**
-   * Changes a Player's visible {@link TeamInfo}
+   * Changes a player's visible {@link TeamInfo}
    *
    * @param player   Player
    * @param teamInfo New {@link TeamInfo} of Player
-   * @return new team info of player.
+   * @return New team info of player.
    */
-  @NotNull TeamInfo teamInfo(Player player, TeamInfo teamInfo);
+  @NotNull TeamInfo teamInfo(@NotNull Player player, @Nullable TeamInfo teamInfo);
 }

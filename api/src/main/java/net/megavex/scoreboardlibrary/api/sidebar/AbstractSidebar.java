@@ -1,17 +1,18 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
 import com.google.common.base.Preconditions;
+import java.util.Objects;
+import java.util.function.Supplier;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
 import net.megavex.scoreboardlibrary.api.sidebar.line.SidebarLine;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.function.Supplier;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -30,6 +31,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
     return sidebar;
   }
 
+  @ApiStatus.OverrideOnly
   protected void onClosed() {
   }
 
@@ -81,7 +83,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    * @param supplier Supplier
    * @return The created LineSupplier
    */
-  protected final SidebarLine registerLine(int line, @NotNull Supplier<Component> supplier) {
+  protected final @NotNull SidebarLine registerLine(int line, @NotNull Supplier<Component> supplier) {
     checkClosed();
     Preconditions.checkNotNull(supplier);
 
@@ -110,7 +112,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    * @param supplier Supplier
    * @return The same LineSupplier for convenience
    */
-  protected final <S extends SidebarLine> S registerLine(int line, @NotNull S supplier) {
+  protected final <S extends SidebarLine> @NotNull S registerLine(int line, @NotNull S supplier) {
     checkClosed();
     Objects.requireNonNull(supplier);
 
@@ -139,8 +141,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    * @param line Line
    * @return Supplier of line
    */
-  @Nullable
-  protected SidebarLine getLine(int line) {
+  protected @Nullable SidebarLine getLine(int line) {
     checkClosed();
     return lines[line];
   }

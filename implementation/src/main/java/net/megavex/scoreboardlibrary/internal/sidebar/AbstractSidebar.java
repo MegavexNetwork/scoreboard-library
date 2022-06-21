@@ -2,8 +2,11 @@ package net.megavex.scoreboardlibrary.internal.sidebar;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardManager;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
@@ -19,11 +22,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -84,8 +82,8 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   @Override
-  public byte maxLines() {
-    return (byte) lines.length;
+  public int maxLines() {
+    return lines.length;
   }
 
   public void update() {
@@ -248,7 +246,7 @@ public abstract class AbstractSidebar implements Sidebar {
   @Override
   public @Nullable Component line(int line) {
     GlobalLineInfo info = lines[line];
-    return info == null ? null : info.value;
+    return info == null ? null:info.value;
   }
 
   public GlobalLineInfo getLineInfo(int line) {
