@@ -1,6 +1,6 @@
 # scoreboard-library
 
-A Scoreboard library for Paper/Spigot servers using the [Adventure](https://github.com/KyoriPowered/adventure) library.
+A Scoreboard library for Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure) library.
 Note that this project is not yet stable, so expect bugs.
 
 Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
@@ -17,8 +17,8 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 ## Supported Versions
 
 - **1.19.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because scoreboard-library
-  takes advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to improve performance.
-- **1.8.8.** Note that you'll still need to use Java 17.
+  takes advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to improve performance
+- **1.8.8.** Note that you'll still need to use Java 17
 
 **Only the latest version and 1.8.8 will be supported (at least for now)**
 
