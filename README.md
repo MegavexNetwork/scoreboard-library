@@ -1,9 +1,9 @@
-# ScoreboardLibrary
+# scoreboard-library
 
 A Scoreboard library for Paper/Spigot servers using the [Adventure](https://github.com/KyoriPowered/adventure) library.
 Note that this project is not yet stable, so expect bugs.
 
-Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support.
+Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Features:
 
@@ -50,7 +50,7 @@ ScoreboardLibraryImplementation.close();
 ```java
 Sidebar sidebar = scoreboardManager.sidebar(
     Sidebar.MAX_LINES, // 15
-    null // Locale that should be used for translating Components, or null if it should depend on each player's client locale (it will use a bit more memory though)
+    null // Locale which should be used for translating Components, or null if it should depend on each player's client locale
 );
 
 sidebar.title(Component.text("Sidebar Title"));
@@ -87,17 +87,12 @@ TeamInfo newTeamInfo = TeamInfo.teamInfo(); // Creates a blank TeamInfo
 team.teamInfo(player, newTeamInfo);
 ```
 
-For more examples, check out the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example).
+For more examples, check out the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example)
 
 ## Notes
 
-- When a player leaves, they will be automatically removed from any Sidebar or TeamManager they were in to prevent a
-  memory leak.
+- When a player leaves, they will be automatically removed from any Sidebar or TeamManager they were in to prevent
+  memory leaks
 - One player cannot have more than one Sidebar or TeamManager at the same time, it will throw an exception (at least for
-  now).
-- Should only be used from the main thread (most of the packet work will still be done async anyways).
-
-## Building
-
-Make sure you have Java 17, then just run `gradlew build`, you'll find the jars in `build/libs/` of every module. If you
-also want to publish the artifacts to your Maven local repository, you can do `gradlew publishToMavenLocal`.
+  now)
+- Should only be used from the main thread (most of the work will still be done async anyway)
