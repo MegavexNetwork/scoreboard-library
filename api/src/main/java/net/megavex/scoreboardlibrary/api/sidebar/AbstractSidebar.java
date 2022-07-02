@@ -171,6 +171,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    */
   public final void close(boolean closeWrappedSidebar) {
     if (closed) return;
+    closed = true;
 
     if (closeWrappedSidebar) {
       sidebar.close();
