@@ -15,11 +15,13 @@ import org.jetbrains.annotations.Nullable;
 
 
 import static net.kyori.adventure.text.Component.empty;
+import static net.megavex.scoreboardlibrary.api.sidebar.line.SidebarLine.staticLine;
 
 public class AbstractSidebar implements HasScoreboardManager, Closeable {
-  private static final SidebarLine emptyLine = SidebarLine.staticLine(empty());
+  private static final SidebarLine emptyLine = staticLine(empty());
   protected final Sidebar sidebar;
   private SidebarLine[] lines;
+  private boolean closed;
 
   public AbstractSidebar(@NotNull Sidebar sidebar) {
     this.sidebar = sidebar;
@@ -70,7 +72,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    * @param value Static value
    */
   protected final @NotNull SidebarLine registerStaticLine(int line, @NotNull Component value) {
-    var sidebarLine = SidebarLine.staticLine(value);
+    var sidebarLine = staticLine(value);
     registerLine(line, sidebarLine);
     return sidebarLine;
   }
@@ -151,7 +153,7 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
   }
 
   protected final void checkClosed() {
-    Preconditions.checkState(!sidebar.closed(), "Sidebar is closed");
+    Preconditions.checkState(!closed, "AbstractSidebar is closed");
   }
 
   /**
@@ -159,16 +161,32 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
    */
   @Override
   public final void close() {
-    if (!sidebar.closed()) {
+    close(true);
+  }
+
+  /**
+   * Closes this AbstractSidebar
+   *
+   * @param closeWrappedSidebar Whether to close the wrapped {@link Sidebar} or just clear all lines from it
+   */
+  public final void close(boolean closeWrappedSidebar) {
+    if (closed) return;
+
+    if (closeWrappedSidebar) {
       sidebar.close();
-      lines = null;
-      onClosed();
+    } else {
+      for (int i = 0; i < sidebar.maxLines(); i++) {
+        sidebar.line(i, null);
+      }
     }
+
+    lines = null;
+    onClosed();
   }
 
   @Override
   public boolean closed() {
-    return sidebar.closed();
+    return closed;
   }
 
   @Override

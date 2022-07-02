@@ -19,9 +19,7 @@ public interface SidebarLine {
    * @return Line index
    * @throws UnsupportedOperationException If this is a static line
    */
-  default int line() {
-    throw new UnsupportedOperationException();
-  }
+  int line();
 
   @Nullable Component computeValue();
 }
