@@ -3,7 +3,7 @@ plugins {
 }
 
 allprojects {
-  version = "1.0.0-SNAPSHOT"
+  version = "1.0.0"
   group = "net.megavex.scoreboardlibrary"
   description = "Powerful packet-level Scoreboard library for Paper/Spigot servers"
 
@@ -18,7 +18,7 @@ subprojects {
   apply(plugin = "java-library")
 
   dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.1-R0.1-SNAPSHOT")
 
     val adventureVersion = "4.11.0"
     compileOnly("net.kyori:adventure-api:$adventureVersion")

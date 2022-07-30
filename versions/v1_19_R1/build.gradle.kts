@@ -10,7 +10,7 @@ repositories {
 dependencies {
   compileOnly(project(":nms-base"))
 
-  paperDevBundle("1.19-R0.1-SNAPSHOT")
+  paperDevBundle("1.19.1-R0.1-SNAPSHOT")
   compileOnly("com.github.ProtocolSupport:ProtocolSupport:05b7689664")
 }
 
