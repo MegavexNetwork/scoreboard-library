@@ -18,7 +18,7 @@ subprojects {
   apply(plugin = "java-library")
 
   dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
 
     val adventureVersion = "4.11.0"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
