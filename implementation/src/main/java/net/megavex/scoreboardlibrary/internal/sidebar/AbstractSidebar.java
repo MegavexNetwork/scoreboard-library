@@ -149,8 +149,6 @@ public abstract class AbstractSidebar implements Sidebar {
         }
       }
     }
-
-
   }
 
   @Override
@@ -189,9 +187,9 @@ public abstract class AbstractSidebar implements Sidebar {
       LineType lineType = LineType.getType(player);
       sidebar.players(lineType).remove(player);
 
-      ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player, this);
+      ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player);
 
-      if (visible) {
+      if (visible && !visibilityChanged) {
         var singleton = Set.of(player);
         sidebar.hide(singleton, lineType);
         ScoreboardManagerNMS.INSTANCE.removeSidebar(singleton);
@@ -271,6 +269,7 @@ public abstract class AbstractSidebar implements Sidebar {
   @Override
   public void close() {
     synchronized (lock) {
+      if (closed) return;
       removePlayers(ImmutableList.copyOf(players()));
       visible = false;
       closed = true;

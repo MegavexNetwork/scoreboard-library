@@ -45,7 +45,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   protected SidebarLineHandler addPlayer0(Player player) {
     var sidebar = playerMap == null ? null:playerMap.get(player);
     if (sidebar != null) {
-      return sidebar;
+      return null;
     }
 
     var locale = LocaleUtilities.getLocaleOfPlayer(player);
@@ -57,6 +57,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
 
     sidebar = localeMap.get(locale);
     if (sidebar != null) {
+      playerMap.put(player, sidebar);
       return sidebar;
     }
 

@@ -38,7 +38,7 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
   public NMSImpl() {
     setField(getField(ClientboundSetDisplayObjectivePacket.class, "b"), displayPacket, objectiveName);
     setField(getField(ClientboundSetObjectivePacket.class, "d"), removePacket, objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetDisplayObjectivePacket.class, "a")), 1);
+    UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetObjectivePacket.class, "g")), 1);
 
     try {
       Class.forName("io.papermc.paper.adventure.PaperAdventure");

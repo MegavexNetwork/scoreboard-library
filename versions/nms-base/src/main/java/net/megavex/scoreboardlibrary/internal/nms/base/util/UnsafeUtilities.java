@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.internal.nms.base.util;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Objects;
 import sun.misc.Unsafe;
 
@@ -25,7 +26,11 @@ public class UnsafeUtilities {
 
   public static Field getField(Class<?> clazz, String name) {
     try {
-      return clazz.getDeclaredField(name);
+      Field field = clazz.getDeclaredField(name);
+      if (Modifier.isStatic(field.getModifiers())) {
+        throw new IllegalArgumentException("Field " + field.getName() + " is static");
+      }
+      return field;
     } catch (NoSuchFieldException e) {
       throw new Error(e);
     }
