@@ -36,24 +36,19 @@ public abstract class ScoreboardManagerNMS<P> {
       nms.sendPacket(players, packet);
     } else if (players.size() == 1) {
       var player = players.iterator().next();
-      var packet = packetFunction.apply(LocaleUtilities.getLocaleOfPlayer(player));
+      var packet = packetFunction.apply(LocaleUtilities.getPlayerLocale(player));
       nms.sendPacket(player, packet);
     } else {
       Map<Locale, P> map = CollectionProvider.map(1);
       for (var player : players) {
-        var locale = LocaleUtilities.getLocaleOfPlayer(player);
-        var packet = map.get(locale);
-        if (packet == null) {
-          map.put(locale, packetFunction.apply(locale));
-        }
-
+        var locale = LocaleUtilities.getPlayerLocale(player);
+        var packet = map.computeIfAbsent(locale, i -> packetFunction.apply(locale));
         nms.sendPacket(player, packet);
       }
     }
   }
 
   // Sidebar
-
   public abstract SidebarNMS<P, ?> createSidebarNMS(Sidebar sidebar);
 
   public abstract void displaySidebar(Iterable<Player> players);
@@ -61,13 +56,11 @@ public abstract class ScoreboardManagerNMS<P> {
   public abstract void removeSidebar(Iterable<Player> players);
 
   // Team
-
   public abstract TeamNMS<?, ?> createTeamNMS(String teamName);
 
   public abstract boolean isLegacy(Player player);
 
   // Packet
-
   public abstract void sendPacket(Player players, P packet);
 
   public final void sendPacket(Iterable<Player> players, P packet) {

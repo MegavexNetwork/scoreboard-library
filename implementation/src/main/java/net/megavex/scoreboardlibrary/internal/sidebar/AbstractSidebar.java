@@ -29,7 +29,6 @@ public abstract class AbstractSidebar implements Sidebar {
   public final GlobalLineInfo[] lines;
   protected final Object lock = new Object();
   protected final Object visibilityLock = new Object();
-  protected final Object playerLock = new Object();
   private final ScoreboardManager scoreboardManager;
   private final ComponentTranslator componentTranslator;
   private final AtomicBoolean updateTitle = new AtomicBoolean(),
@@ -90,14 +89,11 @@ public abstract class AbstractSidebar implements Sidebar {
 
     synchronized (lock) {
       if (closed) return;
+      Collection<Player> players = players();
 
-      synchronized (playerLock) {
-        Collection<Player> players = players();
-
-        if (visibilityChanged) {
-          synchronized (visibilityLock) {
-            if (!visibilityChanged) return;
-
+      if (visibilityChanged) {
+        synchronized (visibilityLock) {
+          if (visibilityChanged) {
             if (visible) {
               sidebarBridge().create(players);
               forEachSidebar(SidebarLineHandler::show);
@@ -110,12 +106,12 @@ public abstract class AbstractSidebar implements Sidebar {
             visibilityChanged = false;
           }
         }
+      }
 
-        if (updateTitle.getAndSet(false)) {
-          sidebarBridge().updateTitle(title);
-          if (visible) {
-            nms.update(players);
-          }
+      if (updateTitle.getAndSet(false)) {
+        sidebarBridge().updateTitle(title);
+        if (visible) {
+          nms.update(players);
         }
       }
 
@@ -156,7 +152,7 @@ public abstract class AbstractSidebar implements Sidebar {
     checkClosed();
     checkPlayer(player);
 
-    synchronized (playerLock) {
+    synchronized (lock) {
       SidebarLineHandler sidebar = addPlayer0(player);
       if (sidebar == null) return false;
 
@@ -180,14 +176,14 @@ public abstract class AbstractSidebar implements Sidebar {
   public boolean removePlayer(@NotNull Player player) {
     checkClosed();
 
-    synchronized (playerLock) {
+    synchronized (lock) {
       SidebarLineHandler sidebar = removePlayer0(player);
       if (sidebar == null) return false;
 
       LineType lineType = LineType.getType(player);
       sidebar.players(lineType).remove(player);
 
-      ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player);
+      ScoreboardManagerProviderImpl.instance().sidebarMap.remove(player, this);
 
       if (visible && !visibilityChanged) {
         var singleton = Set.of(player);
