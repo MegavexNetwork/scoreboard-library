@@ -23,7 +23,6 @@ public class PaperTeamNMSImpl extends AbstractTeamNMSImpl {
   }
 
   private class TeamInfoNMSImpl extends AbstractTeamNMSImpl.TeamInfoNMSImpl {
-
     final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
     protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(TeamNMS.MODE_CREATE, teamName, parameters, null);
     protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(TeamNMS.MODE_UPDATE, teamName, parameters, null);
@@ -55,17 +54,20 @@ public class PaperTeamNMSImpl extends AbstractTeamNMSImpl {
       super.fillParameters(parameters, locale);
 
       if (properties.displayName() != displayName) {
-        UnsafeUtilities.setField(displayNameField, parameters, NativeAdventureUtil.fromAdventureComponent(properties.displayName()));
+        var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.displayName());
+        UnsafeUtilities.setField(displayNameField, parameters, vanilla);
         displayName = properties.displayName();
       }
 
       if (properties.prefix() != prefix) {
-        UnsafeUtilities.setField(prefixField, parameters, NativeAdventureUtil.fromAdventureComponent(properties.prefix()));
+        var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.prefix());
+        UnsafeUtilities.setField(prefixField, parameters, vanilla);
         prefix = properties.prefix();
       }
 
       if (properties.suffix() != suffix) {
-        UnsafeUtilities.setField(suffixField, parameters, NativeAdventureUtil.fromAdventureComponent(properties.suffix()));
+        var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.suffix());
+        UnsafeUtilities.setField(suffixField, parameters, vanilla);
         suffix = properties.suffix();
       }
     }

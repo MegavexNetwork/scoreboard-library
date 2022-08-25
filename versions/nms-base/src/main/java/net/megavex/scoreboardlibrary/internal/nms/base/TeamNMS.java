@@ -6,9 +6,9 @@ import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import org.bukkit.entity.Player;
 
 public abstract class TeamNMS<P, T extends ScoreboardManagerNMS<P>> {
-  public static final byte LEGACY_CHARACTER_LIMIT = 16;
+  public static final int LEGACY_CHARACTER_LIMIT = 16;
 
-  public static final byte MODE_CREATE = 0,
+  public static final int MODE_CREATE = 0,
     MODE_REMOVE = 1,
     MODE_UPDATE = 2,
     MODE_ADD_ENTRIES = 3,

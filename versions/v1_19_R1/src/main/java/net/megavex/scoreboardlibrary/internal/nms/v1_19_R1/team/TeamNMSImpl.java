@@ -22,7 +22,6 @@ public class TeamNMSImpl extends AbstractTeamNMSImpl {
   }
 
   private class TeamInfoNMSImpl extends AbstractTeamNMSImpl.TeamInfoNMSImpl {
-
     private final ComponentTranslator componentTranslator;
 
     public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {

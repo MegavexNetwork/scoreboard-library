@@ -48,7 +48,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
       return null;
     }
 
-    var locale = LocaleUtilities.getLocaleOfPlayer(player);
+    var locale = LocaleUtilities.getPlayerLocale(player);
 
     if (localeMap == null)
       synchronized (lock) {

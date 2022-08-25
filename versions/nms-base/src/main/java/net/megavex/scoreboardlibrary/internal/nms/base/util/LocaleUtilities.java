@@ -8,6 +8,7 @@ import net.kyori.adventure.translation.Translator;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("JavaLangInvokeHandleSignature")
 public final class LocaleUtilities {
   private static MethodHandle adventureMethod, legacySpigotMethod, legacyMethod;
 
@@ -32,7 +33,7 @@ public final class LocaleUtilities {
   private LocaleUtilities() {
   }
 
-  public static Locale getLocaleOfPlayer(Player player) {
+  public static Locale getPlayerLocale(Player player) {
     try {
       if (adventureMethod != null) {
         return (Locale) adventureMethod.invokeExact(player);
