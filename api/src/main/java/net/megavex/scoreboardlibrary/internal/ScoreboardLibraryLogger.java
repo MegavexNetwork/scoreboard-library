@@ -14,7 +14,7 @@ public class ScoreboardLibraryLogger {
     var property = System.getProperty(ScoreboardLibrary.NAMESPACE + ".debug");
     if (property != null) {
       DEBUG = property.equalsIgnoreCase("true");
-      logMessage("Debug enabled.");
+      logMessage("Debug enabled");
     } else {
       DEBUG = false;
     }
@@ -25,7 +25,7 @@ public class ScoreboardLibraryLogger {
       ScoreboardManagerProvider
         .loaderPlugin()
         .getLogger()
-        .info("[ScoreboardManager] " + message);
+        .info("[scoreboard-library] " + message);
     }
   }
 }
