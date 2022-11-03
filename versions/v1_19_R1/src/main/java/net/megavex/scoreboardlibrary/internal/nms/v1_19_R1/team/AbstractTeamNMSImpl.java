@@ -70,12 +70,6 @@ public abstract class AbstractTeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
     impl.sendPacket(players, removePacket);
   }
 
-  @Override
-  public TeamInfoNMS<String> createLegacyTeamInfoNMS(ImmutableTeamProperties<String> properties) {
-    if (impl.protocolSupport()) return new LegacyTeamInfoNMS(properties, teamName);
-    return super.createLegacyTeamInfoNMS(properties);
-  }
-
   abstract class TeamInfoNMSImpl extends TeamNMS.TeamInfoNMS<Component> {
 
     static final UnsafeUtilities.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =

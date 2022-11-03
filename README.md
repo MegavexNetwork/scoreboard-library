@@ -6,10 +6,8 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Features:
 
-- Sidebar API: max 42 characters per line on 1.12.2 and below, unlimited for newer versions. If you have
-  the [ProtocolSupport](https://github.com/ProtocolSupport/ProtocolSupport/) plugin on your 1.19 server, it will be
-  automatically utilized for players at or below 1.12.2.
-- Teams API
+- Sidebars
+- Teams
 - Packet-level
 - Mostly async
 

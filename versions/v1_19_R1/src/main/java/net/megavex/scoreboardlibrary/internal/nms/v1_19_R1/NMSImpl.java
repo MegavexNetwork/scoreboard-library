@@ -7,7 +7,6 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
-import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.SidebarNMS;
 import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
@@ -17,11 +16,9 @@ import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.sidebar.SidebarNMSImp
 import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team.PaperTeamNMSImpl;
 import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.team.TeamNMSImpl;
 import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.util.NativeAdventureUtil;
-import net.megavex.scoreboardlibrary.internal.nms.v1_19_R1.util.ProtocolSupportUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -33,7 +30,7 @@ import static net.megavex.scoreboardlibrary.internal.nms.base.util.UnsafeUtiliti
 public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
   private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(1, null);
   private final ClientboundSetObjectivePacket removePacket = UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
-  private boolean nativeAdventure, protocolSupport;
+  private boolean nativeAdventure;
 
   public NMSImpl() {
     setField(getField(ClientboundSetDisplayObjectivePacket.class, "b"), displayPacket, objectiveName);
@@ -47,20 +44,8 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
     } catch (ClassNotFoundException ignored) { // Imagine still using Spigot
       ScoreboardLibraryLogger.logMessage("Not using native Adventure");
     }
-
-    if (Bukkit.getPluginManager().getPlugin("ProtocolSupport") != null) {
-      var description = ScoreboardManagerProvider.loaderPlugin().getDescription();
-      if (description.getDepend().contains("ProtocolSupport")
-        || description.getSoftDepend().contains("ProtocolSupport")) {
-        protocolSupport = true;
-        ScoreboardLibraryLogger.logMessage("Utilizing ProtocolSupport");
-      }
-    }
   }
 
-  public boolean protocolSupport() {
-    return protocolSupport;
-  }
 
   @Override
   public SidebarNMS<Packet<?>, ?> createSidebarNMS(Sidebar sidebar) {
@@ -84,8 +69,7 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
   @Override
   public boolean isLegacy(Player player) {
-    if (!protocolSupport) return false;
-    return ProtocolSupportUtil.isLegacy(player);
+    return false;
   }
 
   @Override
