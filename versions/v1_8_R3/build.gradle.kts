@@ -3,13 +3,10 @@ plugins {
 }
 
 repositories {
-  maven {
-    name = "SportPaper"
-    url = uri("https://repo.ashcon.app/nexus/content/repositories/snapshots/")
-  }
+  maven("https://nexus.funkemunky.cc/content/repositories/releases/")
 }
 
 dependencies {
   compileOnly(project(":nms-base"))
-  compileOnly("app.ashcon:sportpaper:1.8.8-R0.1-SNAPSHOT")
+  compileOnly("org.github.spigot:1.8.8:1.8.8")
 }
