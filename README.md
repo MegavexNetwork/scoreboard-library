@@ -21,8 +21,6 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
   classpath.
   Should work with all versions 1.8+
 
-**Only the latest version and 1.8.8 will be supported (at least for now)**
-
 ## Getting started
 
 See installation instructions [here](https://github.com/MegavexNetwork/scoreboard-library/blob/master/INSTALLATION.md)
