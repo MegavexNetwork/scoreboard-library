@@ -5,6 +5,7 @@ import java.util.Set;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ImmutableTeamProperties<T> {
@@ -12,11 +13,11 @@ public interface ImmutableTeamProperties<T> {
     return Set.of();
   }
 
-  T displayName();
+  @NotNull T displayName();
 
-  T prefix();
+  @NotNull T prefix();
 
-  T suffix();
+  @NotNull T suffix();
 
   default boolean friendlyFire() {
     return false;
@@ -26,16 +27,15 @@ public interface ImmutableTeamProperties<T> {
     return false;
   }
 
-  default NameTagVisibility nameTagVisibility() {
+  default @NotNull NameTagVisibility nameTagVisibility() {
     return NameTagVisibility.ALWAYS;
   }
 
-  default CollisionRule collisionRule() {
+  default @NotNull CollisionRule collisionRule() {
     return CollisionRule.ALWAYS;
   }
 
-  @Nullable
-  default NamedTextColor playerColor() {
+  default @Nullable NamedTextColor playerColor() {
     return null;
   }
 

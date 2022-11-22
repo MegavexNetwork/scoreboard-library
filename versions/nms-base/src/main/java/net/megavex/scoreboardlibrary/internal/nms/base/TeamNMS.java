@@ -14,8 +14,8 @@ public abstract class TeamNMS<P, T extends ScoreboardManagerNMS<P>> {
     MODE_ADD_ENTRIES = 3,
     MODE_REMOVE_ENTRIES = 4;
 
-  protected final T impl;
-  protected final String teamName;
+  public final T impl;
+  public final String teamName;
 
   public TeamNMS(T impl, String teamName) {
     this.impl = impl;
@@ -31,7 +31,6 @@ public abstract class TeamNMS<P, T extends ScoreboardManagerNMS<P>> {
   }
 
   public abstract static class TeamInfoNMS<C> {
-
     protected final ImmutableTeamProperties<C> properties;
 
     protected TeamInfoNMS(ImmutableTeamProperties<C> properties) {

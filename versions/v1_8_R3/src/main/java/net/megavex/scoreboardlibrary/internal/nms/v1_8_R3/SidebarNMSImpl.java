@@ -37,34 +37,21 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
     scoreActionField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "d");
   }
 
-  private final PacketPlayOutScoreboardObjective createPacket;
-  private final PacketPlayOutScoreboardObjective updatePacket;
+  private final PacketPlayOutScoreboardObjective createPacket, updatePacket;
 
   SidebarNMSImpl(NMSImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
     var locale = sidebar.locale();
     if (locale != null) {
-      createPacket = new PacketPlayOutScoreboardObjective();
-      updatePacket = new PacketPlayOutScoreboardObjective();
-      createObjectivePacket(createPacket, 0, empty(), locale);
-      createObjectivePacket(updatePacket, 2, empty(), locale);
+      this.createPacket = new PacketPlayOutScoreboardObjective();
+      this.updatePacket = new PacketPlayOutScoreboardObjective();
+      createObjectivePacket(this.createPacket, 0, empty(), locale);
+      createObjectivePacket(this.updatePacket, 2, empty(), locale);
     } else {
-      createPacket = null;
-      updatePacket = null;
+      this.createPacket = null;
+      this.updatePacket = null;
     }
-  }
-
-  private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
-    UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(NMSImpl.objectiveModeField), mode);
-    UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
-    updateDisplayName(packet, displayName, locale);
-  }
-
-  private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-    var value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
-    UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
   }
 
   @Override
@@ -82,7 +69,7 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
       impl.sendPacket(players, create ? createPacket:updatePacket);
     } else {
       ScoreboardManagerNMS.sendLocalePackets(sidebar.locale(), impl, players, locale -> {
-        PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
+        var packet = new PacketPlayOutScoreboardObjective();
         createObjectivePacket(packet, create ? 0:2, sidebar.title(), locale);
         return packet;
       });
@@ -102,5 +89,17 @@ public class SidebarNMSImpl extends SidebarNMS<Packet<?>, NMSImpl> {
     UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);
     UnsafeUtilities.setField(scoreActionField, packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
     impl.sendPacket(players, packet);
+  }
+
+  private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
+    UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
+    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(NMSImpl.objectiveModeField), mode);
+    UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
+    updateDisplayName(packet, displayName, locale);
+  }
+
+  private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
+    var value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
+    UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
   }
 }

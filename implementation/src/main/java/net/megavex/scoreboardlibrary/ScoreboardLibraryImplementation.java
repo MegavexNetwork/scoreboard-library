@@ -7,8 +7,10 @@ import net.megavex.scoreboardlibrary.exception.ScoreboardLibraryLoadException;
 import net.megavex.scoreboardlibrary.internal.ScoreboardLibraryLogger;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProviderImpl;
+import net.megavex.scoreboardlibrary.internal.nms.base.ScoreboardManagerNMS;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Main ScoreboardManager library implementation class
@@ -34,22 +36,43 @@ public final class ScoreboardLibraryImplementation {
       throw new ScoreboardLibraryLoadException("Adventure is not in the classpath");
     }
 
+    var implementation = loadImplementation();
+    ScoreboardManagerNMS.INSTANCE = implementation;
+    ScoreboardManagerProviderImpl.init();
+    ScoreboardLibraryLogger.logMessage("Loaded implementation " + implementation.getClass().getName());
+  }
+
+  private static ScoreboardManagerNMS<?> loadImplementation() throws ScoreboardLibraryLoadException {
     var versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-    Class<?> nmsClass;
-    try {
-      nmsClass = Class.forName("net.megavex.scoreboardlibrary.internal.nms." + versionName + ".NMSImpl");
-    } catch (ClassNotFoundException ignored) {
-      throw new ScoreboardLibraryLoadException("Server version " + versionName + " is not supported");
+    Class<?> nmsClass = tryLoadImplementationClass(versionName);
+
+    if (nmsClass == null) {
+      // If PacketEvents exists in the classpath, try to use the PacketEvents implementation instead
+      try {
+        Class.forName("com.github.retrooper.packetevents.PacketEvents");
+      } catch (ClassNotFoundException ignored) {
+        throw new ScoreboardLibraryLoadException("No implementation found");
+      }
+
+      nmsClass = tryLoadImplementationClass("packetevents");
+      if (nmsClass == null) {
+        throw new ScoreboardLibraryLoadException("No implementation found");
+      }
     }
 
     try {
-      nmsClass.getConstructors()[0].newInstance();
+      return (ScoreboardManagerNMS<?>) nmsClass.getConstructors()[0].newInstance();
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new ScoreboardLibraryLoadException("Couldn't initialize NMS implementation", e);
     }
+  }
 
-    ScoreboardManagerProviderImpl.init();
-    ScoreboardLibraryLogger.logMessage("Loaded implementation " + nmsClass.getName());
+  private static @Nullable Class<?> tryLoadImplementationClass(String name) {
+    try {
+      return Class.forName("net.megavex.scoreboardlibrary.internal.nms." + name + ".NMSImpl");
+    } catch (ClassNotFoundException ignored) {
+      return null;
+    }
   }
 
   public static synchronized void close() {
@@ -64,6 +87,6 @@ public final class ScoreboardLibraryImplementation {
 
     ScoreboardManagerProvider.instance(null);
     ScoreboardManagerProviderImpl.instance(null);
-    ScoreboardLibraryLogger.logMessage("Closed");
+    ScoreboardLibraryLogger.logMessage("Implementation closed");
   }
 }

@@ -11,6 +11,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
   static final Field objectiveModeField;
@@ -40,32 +41,32 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
   }
 
   @Override
-  public SidebarNMS<Packet<?>, ?> createSidebarNMS(Sidebar sidebar) {
+  public @NotNull SidebarNMS<Packet<?>, ?> createSidebarNMS(@NotNull Sidebar sidebar) {
     return new SidebarNMSImpl(this, sidebar);
   }
 
   @Override
-  public void displaySidebar(Iterable<Player> players) {
+  public void displaySidebar(@NotNull Iterable<Player> players) {
     sendPacket(players, displayPacket);
   }
 
   @Override
-  public void removeSidebar(Iterable<Player> players) {
+  public void removeSidebar(@NotNull Iterable<Player> players) {
     sendPacket(players, removePacket);
   }
 
   @Override
-  public TeamNMS<?, ?> createTeamNMS(String teamName) {
+  public @NotNull TeamNMS<?, ?> createTeamNMS(@NotNull String teamName) {
     return new TeamNMSImpl(this, teamName);
   }
 
   @Override
-  public boolean isLegacy(Player player) {
+  public boolean isLegacy(@NotNull Player player) {
     return true;
   }
 
   @Override
-  public void sendPacket(Player player, Packet<?> packet) {
+  public void sendPacket(@NotNull Player player, @NotNull Packet<?> packet) {
     ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
   }
 }

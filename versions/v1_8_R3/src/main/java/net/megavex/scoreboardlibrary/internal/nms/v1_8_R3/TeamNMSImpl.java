@@ -27,7 +27,7 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
     teamModeField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "h"),
     teamRulesField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "i");
 
-  protected PacketPlayOutScoreboardTeam removePacket;
+  private PacketPlayOutScoreboardTeam removePacket;
 
   public TeamNMSImpl(NMSImpl impl, String teamName) {
     super(impl, teamName);
@@ -61,15 +61,25 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
 
     @Override
     public void addEntries(Collection<Player> players, Collection<String> entries) {
-      teamEntry(players, entries, MODE_ADD_ENTRIES);
+      sendTeamEntryPacket(players, entries, MODE_ADD_ENTRIES);
     }
 
     @Override
     public void removeEntries(Collection<Player> players, Collection<String> entries) {
-      teamEntry(players, entries, MODE_REMOVE_ENTRIES);
+      sendTeamEntryPacket(players, entries, MODE_REMOVE_ENTRIES);
     }
 
-    protected void teamEntry(Collection<Player> players, Collection<String> entries, int action) {
+    @Override
+    public void createTeam(Collection<Player> players) {
+      sendTeamPacket(players, false);
+    }
+
+    @Override
+    public void updateTeam(Collection<Player> players) {
+      sendTeamPacket(players, true);
+    }
+
+    private void sendTeamEntryPacket(Collection<Player> players, Collection<String> entries, int action) {
       var packet = new PacketPlayOutScoreboardTeam();
       UnsafeUtilities.setField(teamNameField, packet, teamName);
       UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), action);
@@ -77,17 +87,7 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
       impl.sendPacket(players, packet);
     }
 
-    @Override
-    public void createTeam(Collection<Player> players) {
-      sendTeamPacket(false, players);
-    }
-
-    @Override
-    public void updateTeam(Collection<Player> players) {
-      sendTeamPacket(true, players);
-    }
-
-    private void sendTeamPacket(boolean update, Collection<Player> players) {
+    private void sendTeamPacket(Collection<Player> players, boolean update) {
       ScoreboardManagerNMS.sendLocalePackets(null, impl, players, locale -> {
         var displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamNMS.LEGACY_CHARACTER_LIMIT);
         var prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamNMS.LEGACY_CHARACTER_LIMIT);
@@ -113,7 +113,6 @@ public class TeamNMSImpl extends TeamNMS<Packet<?>, NMSImpl> {
   }
 
   private class AdventureTeamInfoNMS extends AbstractTeamInfoNMS<Component> {
-
     private final ComponentTranslator componentTranslator;
 
     public AdventureTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {

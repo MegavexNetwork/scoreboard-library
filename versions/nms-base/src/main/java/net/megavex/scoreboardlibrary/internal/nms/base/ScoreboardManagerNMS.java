@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.internal.nms.base;
 
-import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -10,24 +9,23 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.CollectionProvider;
 import net.megavex.scoreboardlibrary.internal.nms.base.util.LocaleUtilities;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class ScoreboardManagerNMS<P> {
   public static ScoreboardManagerNMS<?> INSTANCE;
   public final String objectiveName;
 
   public ScoreboardManagerNMS() {
-    Preconditions.checkState(INSTANCE == null);
-    INSTANCE = this;
-
     var random = UUID.randomUUID().toString().substring(0, 5);
     this.objectiveName = "_s" + random;
   }
 
   public static <P> void sendLocalePackets(
-    Locale specificLocale,
-    ScoreboardManagerNMS<P> nms,
-    Collection<Player> players,
-    Function<Locale, P> packetFunction
+    @Nullable Locale specificLocale,
+    @NotNull ScoreboardManagerNMS<P> nms,
+    @NotNull Collection<Player> players,
+    @NotNull Function<Locale, P> packetFunction
   ) {
     if (players.isEmpty()) return;
 
@@ -49,21 +47,21 @@ public abstract class ScoreboardManagerNMS<P> {
   }
 
   // Sidebar
-  public abstract SidebarNMS<P, ?> createSidebarNMS(Sidebar sidebar);
+  public abstract @NotNull SidebarNMS<P, ?> createSidebarNMS(@NotNull Sidebar sidebar);
 
-  public abstract void displaySidebar(Iterable<Player> players);
+  public abstract void displaySidebar(@NotNull Iterable<Player> players);
 
-  public abstract void removeSidebar(Iterable<Player> players);
+  public abstract void removeSidebar(@NotNull Iterable<Player> players);
 
   // Team
-  public abstract TeamNMS<?, ?> createTeamNMS(String teamName);
+  public abstract @NotNull TeamNMS<?, ?> createTeamNMS(@NotNull String teamName);
 
-  public abstract boolean isLegacy(Player player);
+  public abstract boolean isLegacy(@NotNull Player player);
 
   // Packet
-  public abstract void sendPacket(Player players, P packet);
+  public abstract void sendPacket(@NotNull Player player, @NotNull P packet);
 
-  public final void sendPacket(Iterable<Player> players, P packet) {
+  public final void sendPacket(@NotNull Iterable<Player> players, @NotNull P packet) {
     for (Player player : players) {
       sendPacket(player, packet);
     }

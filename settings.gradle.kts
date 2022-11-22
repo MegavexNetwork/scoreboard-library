@@ -13,6 +13,9 @@ include(":implementation")
 include(":nms-base")
 project(":nms-base").projectDir = file("versions/nms-base")
 
+include(":packetevents")
+project(":packetevents").projectDir = file("versions/packetevents")
+
 include(":v1_19_R1")
 project(":v1_19_R1").projectDir = file("versions/v1_19_R1")
 

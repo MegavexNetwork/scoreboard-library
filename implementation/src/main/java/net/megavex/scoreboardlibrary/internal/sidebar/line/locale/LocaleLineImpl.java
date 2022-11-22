@@ -7,6 +7,7 @@ import net.megavex.scoreboardlibrary.internal.nms.base.TeamNMS;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 import static net.kyori.adventure.text.Component.empty;
@@ -71,17 +72,17 @@ class LocaleLineImpl implements LocaleLine<Component> {
   }
 
   @Override
-  public Component displayName() {
+  public @NotNull Component displayName() {
     return empty();
   }
 
   @Override
-  public Component prefix() {
+  public @NotNull Component prefix() {
     return info.value;
   }
 
   @Override
-  public Component suffix() {
+  public @NotNull Component suffix() {
     return empty();
   }
 }

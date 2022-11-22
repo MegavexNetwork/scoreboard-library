@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.internal.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.internal.sidebar.line.SidebarLineHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
@@ -32,17 +33,17 @@ class LegacyLocaleLine implements LocaleLine<String> {
   }
 
   @Override
-  public String displayName() {
+  public @NotNull String displayName() {
     return "";
   }
 
   @Override
-  public String prefix() {
+  public @NotNull String prefix() {
     return prefix;
   }
 
   @Override
-  public String suffix() {
+  public @NotNull String suffix() {
     return suffix;
   }
 

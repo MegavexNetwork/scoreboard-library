@@ -13,9 +13,13 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Supported Versions
 
-- **1.19.\*.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because scoreboard-library
+- **1.19.\*.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
+  scoreboard-library
   takes advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to improve performance
 - **1.8.8.** Note that you'll still need to use Java 17
+- **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
+  classpath.
+  Should work with all versions 1.8+
 
 **Only the latest version and 1.8.8 will be supported (at least for now)**
 

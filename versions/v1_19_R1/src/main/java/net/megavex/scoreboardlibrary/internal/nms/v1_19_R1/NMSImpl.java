@@ -21,6 +21,7 @@ import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
@@ -48,32 +49,32 @@ public class NMSImpl extends ScoreboardManagerNMS<Packet<?>> {
 
 
   @Override
-  public SidebarNMS<Packet<?>, ?> createSidebarNMS(Sidebar sidebar) {
+  public @NotNull SidebarNMS<Packet<?>, ?> createSidebarNMS(@NotNull Sidebar sidebar) {
     return nativeAdventure ? new PaperSidebarNMSImpl(this, sidebar):new SidebarNMSImpl(this, sidebar);
   }
 
   @Override
-  public void displaySidebar(Iterable<Player> players) {
+  public void displaySidebar(@NotNull Iterable<Player> players) {
     sendPacket(players, displayPacket);
   }
 
   @Override
-  public void removeSidebar(Iterable<Player> players) {
+  public void removeSidebar(@NotNull Iterable<Player> players) {
     sendPacket(players, removePacket);
   }
 
   @Override
-  public TeamNMS<?, ?> createTeamNMS(String teamName) {
+  public @NotNull TeamNMS<?, ?> createTeamNMS(@NotNull String teamName) {
     return nativeAdventure ? new PaperTeamNMSImpl(this, teamName):new TeamNMSImpl(this, teamName);
   }
 
   @Override
-  public boolean isLegacy(Player player) {
+  public boolean isLegacy(@NotNull Player player) {
     return false;
   }
 
   @Override
-  public void sendPacket(Player player, Packet<?> packet) {
+  public void sendPacket(@NotNull Player player, @NotNull Packet<?> packet) {
     ((CraftPlayer) player).getHandle().connection.send(packet);
   }
 
