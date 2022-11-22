@@ -5,30 +5,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
-import net.megavex.scoreboardlibrary.internal.ScoreboardManagerProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface TeamInfo {
-  /**
-   * Creates an empty {@link TeamInfo}
-   *
-   * @return TeamInfo
-   */
-  static @NotNull TeamInfo teamInfo() {
-    return teamInfo(null);
-  }
-
-  /**
-   * Creates a {@link TeamInfo} with specified entries
-   *
-   * @param entries Entries the TeamInfo should have
-   * @return TeamInfo
-   */
-  static @NotNull TeamInfo teamInfo(@Nullable Collection<String> entries) {
-    return ScoreboardManagerProvider.instance().teamInfo(entries);
-  }
-
   // Main
 
   /**
@@ -38,25 +18,14 @@ public interface TeamInfo {
   @NotNull ScoreboardTeam team();
 
   /**
-   * Returns whether this TeamInfo is assigned to a Team
-   *
-   * @return If assigned
+   * @return whether this TeamInfo is assigned to a Team
    */
-  boolean assigned();
+  boolean isAssigned();
 
   /**
    * Unassigns TeamInfo info from the currently assigned Team
    */
   void unassign();
-
-  /**
-   * Returns the name of the assigned Team
-   *
-   * @return Name of Team
-   */
-  default @Nullable String name() {
-    return !assigned() ? null:team().name();
-  }
 
   // Entries
 
@@ -161,7 +130,6 @@ public interface TeamInfo {
 
   /**
    * Sets the {@link CollisionRule}.
-   * Note that this rule will not work on 1.8.
    *
    * @param collisionRule Collision rule
    */

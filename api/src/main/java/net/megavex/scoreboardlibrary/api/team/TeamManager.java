@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
-import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a list of Scoreboard Teams
  */
-public interface TeamManager extends Closeable, HasScoreboardManager, Players {
+public interface TeamManager extends Closeable, HasScoreboardLibrary, Players {
   /**
    * @return {@link ComponentTranslator} of this team manager
    */

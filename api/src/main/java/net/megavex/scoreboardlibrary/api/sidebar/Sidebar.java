@@ -4,7 +4,7 @@ import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
-import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Range;
 /**
  * Represents an in-game Sidebar
  */
-public interface Sidebar extends HasScoreboardManager, Closeable, Players {
+public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
   // Constants
 
   int MAX_LINES = 15;

@@ -8,6 +8,7 @@ pluginManagement {
 rootProject.name = "scoreboard-library-root"
 
 include(":api")
+include(":commons")
 include(":implementation")
 
 include(":nms-base")

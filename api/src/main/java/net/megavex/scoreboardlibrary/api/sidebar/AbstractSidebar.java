@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import java.util.Objects;
 import java.util.function.Supplier;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.ScoreboardManager;
+import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
-import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardManager;
+import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.line.SidebarLine;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import org.jetbrains.annotations.ApiStatus;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import static net.kyori.adventure.text.Component.empty;
 import static net.megavex.scoreboardlibrary.api.sidebar.line.SidebarLine.staticLine;
 
-public class AbstractSidebar implements HasScoreboardManager, Closeable {
+public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
   private static final SidebarLine emptyLine = staticLine(empty());
   protected final Sidebar sidebar;
   private SidebarLine[] lines;
@@ -148,8 +148,8 @@ public class AbstractSidebar implements HasScoreboardManager, Closeable {
   }
 
   @Override
-  public final @NotNull ScoreboardManager scoreboardManager() {
-    return sidebar.scoreboardManager();
+  public final @NotNull ScoreboardLibrary scoreboardLibrary() {
+    return sidebar.scoreboardLibrary();
   }
 
   protected final void checkClosed() {

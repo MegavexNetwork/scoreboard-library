@@ -39,17 +39,17 @@ try {
     return;
 }
 
-ScoreboardManager scoreboardManager = ScoreboardManager.scoreboardManager(plugin);
+ScoreboardManager scoreboardLibrary = ScoreboardManager.scoreboardLibrary(plugin);
 
 // On plugin shutdown:
-scoreboardManager.close();
+scoreboardLibrary.close();
 ScoreboardLibraryImplementation.close();
 ```
 
 ### Sidebar
 
 ```java
-Sidebar sidebar = scoreboardManager.sidebar(
+Sidebar sidebar = scoreboardLibrary.sidebar(
     Sidebar.MAX_LINES, // 15
     null // Locale which should be used for translating Components, or null if it should depend on each player's client locale
 );
@@ -68,7 +68,7 @@ sidebar.visible(true); // Make the sidebar visible
 ### TeamManager
 
 ```java
-TeamManager teamManager = scoreboardManager.teamManager();
+TeamManager teamManager = scoreboardLibrary.teamManager();
 ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
 // A TeamInfo holds all the properties that a team can have (except the name).
