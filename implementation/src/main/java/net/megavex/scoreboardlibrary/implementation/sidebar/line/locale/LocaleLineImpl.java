@@ -3,7 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 import java.util.Collection;
 import java.util.Collections;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
@@ -17,14 +17,14 @@ class LocaleLineImpl implements LocaleLine<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;
-  private final TeamsPacketAdapter.TeamInfoNMS<Component> bridge;
+  private final TeamsPacketAdapter.TeamInfoPacketAdapter<Component> bridge;
   private boolean update = false;
 
   public LocaleLineImpl(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.entries = Collections.singletonList(info.player());
-    this.bridge = info.bridge.createTeamInfoNMS(this, handler.sidebar().componentTranslator());
+    this.bridge = info.bridge.createTeamInfoAdapter(this, handler.sidebar().componentTranslator());
     bridge.updateTeamPackets(entries);
   }
 

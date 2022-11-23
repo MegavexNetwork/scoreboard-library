@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.packetevents.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team;
 
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
@@ -7,7 +7,7 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
 
 public class WrapperPlayServerTeamsLegacy extends PacketWrapper<WrapperPlayServerTeamsLegacy> {
   private final String teamName;

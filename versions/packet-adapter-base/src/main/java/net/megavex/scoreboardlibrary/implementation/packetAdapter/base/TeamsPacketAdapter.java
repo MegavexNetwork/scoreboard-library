@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.base;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.base;
 
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
@@ -24,16 +24,16 @@ public abstract class TeamsPacketAdapter<P, T extends ScoreboardLibraryPacketAda
 
   public abstract void removeTeam(Iterable<Player> players);
 
-  public abstract TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator);
+  public abstract TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator);
 
-  public TeamInfoNMS<String> createLegacyTeamInfoNMS(ImmutableTeamProperties<String> properties) {
+  public TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(ImmutableTeamProperties<String> properties) {
     throw new UnsupportedOperationException();
   }
 
-  public abstract static class TeamInfoNMS<C> {
+  public abstract static class TeamInfoPacketAdapter<C> {
     protected final ImmutableTeamProperties<C> properties;
 
-    protected TeamInfoNMS(ImmutableTeamProperties<C> properties) {
+    protected TeamInfoPacketAdapter(ImmutableTeamProperties<C> properties) {
       this.properties = properties;
     }
 

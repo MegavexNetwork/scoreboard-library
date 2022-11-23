@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.packetevents;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
@@ -9,17 +9,17 @@ import java.util.Locale;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
 import org.bukkit.entity.Player;
 
 
 import static net.kyori.adventure.text.Component.empty;
 
-public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper<?>, NMSImpl> {
+public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> {
   private final WrapperPlayServerScoreboardObjective createPacket, updatePacket;
 
-  public SidebarPacketAdapterImpl(NMSImpl impl, Sidebar sidebar) {
+  public SidebarPacketAdapterImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
     var locale = sidebar.locale();

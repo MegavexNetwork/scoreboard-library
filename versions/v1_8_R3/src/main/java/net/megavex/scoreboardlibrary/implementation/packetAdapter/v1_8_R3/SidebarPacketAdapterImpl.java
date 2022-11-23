@@ -1,15 +1,14 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_8_R3;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.IScoreboardCriteria;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
@@ -19,7 +18,7 @@ import org.bukkit.entity.Player;
 
 import static net.kyori.adventure.text.Component.empty;
 
-public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, NMSImpl> {
+public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, PacketAdapterImpl> {
   private static final Field objectiveNameField,
     objectiveDisplayNameField,
     objectiveHealthDisplayField,
@@ -40,7 +39,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, NM
 
   private final PacketPlayOutScoreboardObjective createPacket, updatePacket;
 
-  SidebarPacketAdapterImpl(NMSImpl impl, Sidebar sidebar) {
+  SidebarPacketAdapterImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
     var locale = sidebar.locale();
@@ -94,7 +93,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, NM
 
   private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
     UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(NMSImpl.objectiveModeField), mode);
+    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(PacketAdapterImpl.objectiveModeField), mode);
     UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
     updateDisplayName(packet, displayName, locale);
   }

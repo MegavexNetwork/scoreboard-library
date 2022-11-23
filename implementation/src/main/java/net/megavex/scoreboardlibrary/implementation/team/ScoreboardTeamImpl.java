@@ -7,7 +7,7 @@ import java.util.Set;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   public ScoreboardTeamImpl(TeamManagerImpl teamManager, String name) {
     this.teamManager = teamManager;
     this.name = name;
-    this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter.createTeamNMS(name);
+    this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter.createTeamPacketAdapter(name);
   }
 
   public Collection<TeamInfoImpl> teamInfos() {

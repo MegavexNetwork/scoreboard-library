@@ -1,11 +1,11 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_8_R3;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import java.lang.reflect.Field;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
+public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   static final Field objectiveModeField;
 
   static {
@@ -23,7 +23,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   private final PacketPlayOutScoreboardDisplayObjective displayPacket = new PacketPlayOutScoreboardDisplayObjective();
   private final PacketPlayOutScoreboardObjective removePacket = new PacketPlayOutScoreboardObjective();
 
-  public NMSImpl() {
+  public PacketAdapterImpl() {
     // Setup static packets
     UnsafeUtilities.UNSAFE.putInt(
       displayPacket,
@@ -41,7 +41,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   }
 
   @Override
-  public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarNMS(@NotNull Sidebar sidebar) {
+  public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
     return new SidebarPacketAdapterImpl(this, sidebar);
   }
 
@@ -56,7 +56,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   }
 
   @Override
-  public @NotNull TeamsPacketAdapter<?, ?> createTeamNMS(@NotNull String teamName) {
+  public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
     return new TeamsPacketAdapterImpl(this, teamName);
   }
 

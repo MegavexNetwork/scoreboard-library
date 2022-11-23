@@ -15,7 +15,7 @@ import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.listener.LocaleListener;
 import net.megavex.scoreboardlibrary.implementation.listener.PlayerListener;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarUpdaterTask;

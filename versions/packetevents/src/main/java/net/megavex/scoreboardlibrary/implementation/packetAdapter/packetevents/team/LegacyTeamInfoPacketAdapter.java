@@ -1,20 +1,19 @@
-package net.megavex.scoreboardlibrary.implementation.nms.packetevents.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team;
 
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import java.util.Collection;
 import java.util.Optional;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.nms.packetevents.NMSImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
 import org.bukkit.entity.Player;
 
-public class LegacyTeamInfoNMS extends TeamsPacketAdapter.TeamInfoNMS<String> {
-  private final TeamsPacketAdapter<PacketWrapper<?>, NMSImpl> packetAdapter;
+public class LegacyTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPacketAdapter<String> {
+  private final TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter;
 
-  public LegacyTeamInfoNMS(TeamsPacketAdapter<PacketWrapper<?>, NMSImpl> packetAdapter, ImmutableTeamProperties<String> properties) {
+  public LegacyTeamInfoPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<String> properties) {
     super(properties);
     this.packetAdapter = packetAdapter;
   }

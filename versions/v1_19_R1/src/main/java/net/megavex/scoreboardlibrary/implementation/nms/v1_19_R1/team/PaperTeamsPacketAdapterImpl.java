@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -18,17 +18,17 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
   }
 
   @Override
-  public TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
-    return new TeamInfoNMSImpl(properties);
+  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+    return new TeamInfoPacketAdapterImpl(properties);
   }
 
-  private class TeamInfoNMSImpl extends AbstractTeamsPacketAdapterImpl.TeamInfoNMSImpl {
+  private class TeamInfoPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamInfoPacketAdapterImpl {
     final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
     protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(TeamsPacketAdapter.MODE_CREATE, teamName, parameters, null);
     protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(TeamsPacketAdapter.MODE_UPDATE, teamName, parameters, null);
     private Component displayName, prefix, suffix;
 
-    public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties) {
+    public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
     }
 

@@ -13,8 +13,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import org.bukkit.entity.Player;
@@ -38,7 +38,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     collisionRule = CollisionRule.ALWAYS.id();
   public char playerColor = '\0';
 
-  public TeamsPacketAdapter.TeamInfoNMS<Component> nms;
+  public TeamsPacketAdapter.TeamInfoPacketAdapter<Component> nms;
   private ScoreboardTeamImpl team;
   private List<String> addEntries, removeEntries;
   private short id;
@@ -70,7 +70,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     this.id = team.idCounter++;
 
     team.teamInfos().add(this);
-    nms = team.packetAdapter.createTeamInfoNMS(this, team.teamManager.componentTranslator());
+    nms = team.packetAdapter.createTeamInfoAdapter(this, team.teamManager.componentTranslator());
     nms.updateTeamPackets(entries);
   }
 

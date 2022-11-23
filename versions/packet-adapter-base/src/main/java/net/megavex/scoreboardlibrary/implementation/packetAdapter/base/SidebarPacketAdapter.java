@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.base;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.base;
 
 import java.util.Collection;
 import net.kyori.adventure.text.Component;

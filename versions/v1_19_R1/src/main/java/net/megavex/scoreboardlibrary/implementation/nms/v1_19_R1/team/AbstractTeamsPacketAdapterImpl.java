@@ -10,10 +10,10 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
@@ -21,7 +21,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 
-import static net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.getField;
 
 public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImpl> {
   protected static final Field displayNameField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "a"),
@@ -70,12 +70,12 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     impl.sendPacket(players, removePacket);
   }
 
-  abstract class TeamInfoNMSImpl extends TeamsPacketAdapter.TeamInfoNMS<Component> {
+  abstract class TeamInfoPacketAdapterImpl extends TeamInfoPacketAdapter<Component> {
 
     static final UnsafeUtilities.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
       UnsafeUtilities.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
 
-    public TeamInfoNMSImpl(ImmutableTeamProperties<Component> properties) {
+    public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
     }
 

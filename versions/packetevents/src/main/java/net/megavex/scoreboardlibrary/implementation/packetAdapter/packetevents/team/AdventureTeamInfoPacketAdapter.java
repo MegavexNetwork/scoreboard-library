@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.packetevents.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team;
 
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
@@ -6,18 +6,17 @@ import java.util.Collection;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.nms.packetevents.NMSImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
 import org.bukkit.entity.Player;
 
-public class AdventureTeamInfoNMS extends TeamsPacketAdapter.TeamInfoNMS<Component> {
-  private final TeamsPacketAdapter<PacketWrapper<?>, NMSImpl> packetAdapter;
+public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPacketAdapter<Component> {
+  private final TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter;
   private final ComponentTranslator componentTranslator;
 
-  public AdventureTeamInfoNMS(TeamsPacketAdapter<PacketWrapper<?>, NMSImpl> packetAdapter, ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+  public AdventureTeamInfoPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
     super(properties);
     this.packetAdapter = packetAdapter;
     this.componentTranslator = componentTranslator;

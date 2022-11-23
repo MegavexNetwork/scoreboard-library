@@ -2,7 +2,7 @@ package net.megavex.scoreboardlibrary.implementation;
 
 import java.lang.reflect.InvocationTargetException;
 import net.megavex.scoreboardlibrary.api.exception.PacketAdapterNotFoundException;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public final class PacketAdapterLoader {
 
   private static @Nullable Class<?> tryLoadImplementationClass(String name) {
     try {
-      return Class.forName("net.megavex.scoreboardlibrary.internal.nms." + name + ".NMSImpl");
+      return Class.forName("net.megavex.scoreboardlibrary.internal.packetAdapter." + name + ".PacketAdapterImpl");
     } catch (ClassNotFoundException ignored) {
       return null;
     }

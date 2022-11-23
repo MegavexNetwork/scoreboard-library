@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.ChatColor;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
-  private final TeamsPacketAdapter.TeamInfoNMS<String> bridge;
+  private final TeamsPacketAdapter.TeamInfoPacketAdapter<String> bridge;
   private String player, oldPlayer;
   private String prefix, suffix;
   private String currentValue;
@@ -24,7 +24,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
     this.info = info;
     this.handler = handler;
     this.player = info.player();
-    this.bridge = info.bridge.createLegacyTeamInfoNMS(this);
+    this.bridge = info.bridge.createLegacyTeamInfoAdapter(this);
     bridge.updateTeamPackets(entries());
   }
 

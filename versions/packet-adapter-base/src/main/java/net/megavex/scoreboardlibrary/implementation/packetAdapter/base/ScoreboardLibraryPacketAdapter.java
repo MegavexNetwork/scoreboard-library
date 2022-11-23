@@ -1,16 +1,10 @@
-package net.megavex.scoreboardlibrary.implementation.nms.base;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.base;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
-import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider.localeProvider;
@@ -26,14 +20,14 @@ public abstract class ScoreboardLibraryPacketAdapter<P> {
   }
 
   // Sidebar
-  public abstract @NotNull SidebarPacketAdapter<P, ?> createSidebarNMS(@NotNull Sidebar sidebar);
+  public abstract @NotNull SidebarPacketAdapter<P, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar);
 
   public abstract void displaySidebar(@NotNull Iterable<Player> players);
 
   public abstract void removeSidebar(@NotNull Iterable<Player> players);
 
   // Team
-  public abstract @NotNull TeamsPacketAdapter<?, ?> createTeamNMS(@NotNull String teamName);
+  public abstract @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName);
 
   public abstract boolean isLegacy(@NotNull Player player);
 

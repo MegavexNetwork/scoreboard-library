@@ -6,10 +6,10 @@ import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar.PaperSidebarPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar.SidebarPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team.PaperTeamsPacketAdapterImpl;
@@ -24,8 +24,8 @@ import org.jetbrains.annotations.NotNull;
 
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
-import static net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities.getField;
-import static net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities.setField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.setField;
 
 public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(1, null);
@@ -46,7 +46,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
 
 
   @Override
-  public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarNMS(@NotNull Sidebar sidebar) {
+  public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
     return nativeAdventure ? new PaperSidebarPacketAdapterImpl(this, sidebar):new SidebarPacketAdapterImpl(this, sidebar);
   }
 
@@ -61,7 +61,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   }
 
   @Override
-  public @NotNull TeamsPacketAdapter<?, ?> createTeamNMS(@NotNull String teamName) {
+  public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
     return nativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName):new TeamsPacketAdapterImpl(this, teamName);
   }
 

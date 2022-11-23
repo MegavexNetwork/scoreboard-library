@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.packetevents;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
@@ -7,18 +7,18 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDi
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
 import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.packetevents.team.TeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team.TeamsPacketAdapterImpl;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class NMSImpl extends ScoreboardLibraryPacketAdapter<PacketWrapper<?>> {
+public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrapper<?>> {
   private final WrapperPlayServerDisplayScoreboard displayPacket;
   private final WrapperPlayServerScoreboardObjective removePacket;
 
-  public NMSImpl() {
+  public PacketAdapterImpl() {
     Preconditions.checkState(PacketEvents.getAPI() != null, "PacketEvents isn't loaded");
 
     this.displayPacket = new WrapperPlayServerDisplayScoreboard(1, this.objectiveName);
@@ -31,7 +31,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<PacketWrapper<?>> {
   }
 
   @Override
-  public @NotNull SidebarPacketAdapter<PacketWrapper<?>, ?> createSidebarNMS(@NotNull Sidebar sidebar) {
+  public @NotNull SidebarPacketAdapter<PacketWrapper<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
     return new SidebarPacketAdapterImpl(this, sidebar);
   }
 
@@ -46,7 +46,7 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<PacketWrapper<?>> {
   }
 
   @Override
-  public @NotNull TeamsPacketAdapter<?, ?> createTeamNMS(@NotNull String teamName) {
+  public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
     return new TeamsPacketAdapterImpl(this, teamName);
   }
 

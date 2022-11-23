@@ -1,16 +1,15 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_8_R3;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.nms.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.nms.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.nms.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
@@ -18,7 +17,7 @@ import org.bukkit.entity.Player;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
 
-public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImpl> {
+public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, PacketAdapterImpl> {
   private static final Field teamNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "a"),
     teamDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "b"),
     teamPrefixField = UnsafeUtilities.getField(PacketPlayOutScoreboardTeam.class, "c"),
@@ -30,7 +29,7 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImp
 
   private PacketPlayOutScoreboardTeam removePacket;
 
-  public TeamsPacketAdapterImpl(NMSImpl impl, String teamName) {
+  public TeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
     super(impl, teamName);
   }
 
@@ -46,17 +45,17 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImp
   }
 
   @Override
-  public TeamsPacketAdapter.TeamInfoNMS<Component> createTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
-    return new AdventureTeamInfoNMS(properties, componentTranslator);
+  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+    return new AdventureTeamInfoPacketAdapter(properties, componentTranslator);
   }
 
   @Override
-  public TeamInfoNMS<String> createLegacyTeamInfoNMS(ImmutableTeamProperties<String> properties) {
-    return new LegacyTeamInfoNMS(properties);
+  public TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(ImmutableTeamProperties<String> properties) {
+    return new LegacyTeamInfoPacketAdapter(properties);
   }
 
-  private abstract class AbstractTeamInfoNMS<C> extends TeamsPacketAdapter.TeamInfoNMS<C> {
-    public AbstractTeamInfoNMS(ImmutableTeamProperties<C> properties) {
+  private abstract class AbstractTeamInfoPacketAdapter<C> extends TeamInfoPacketAdapter<C> {
+    public AbstractTeamInfoPacketAdapter(ImmutableTeamProperties<C> properties) {
       super(properties);
     }
 
@@ -113,10 +112,10 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImp
     protected abstract String toLegacy(C component, Locale locale);
   }
 
-  private class AdventureTeamInfoNMS extends AbstractTeamInfoNMS<Component> {
+  private class AdventureTeamInfoPacketAdapter extends AbstractTeamInfoPacketAdapter<Component> {
     private final ComponentTranslator componentTranslator;
 
-    public AdventureTeamInfoNMS(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+    public AdventureTeamInfoPacketAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
       super(properties);
       this.componentTranslator = componentTranslator;
     }
@@ -127,9 +126,9 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImp
     }
   }
 
-  private class LegacyTeamInfoNMS extends AbstractTeamInfoNMS<String> {
+  private class LegacyTeamInfoPacketAdapter extends AbstractTeamInfoPacketAdapter<String> {
 
-    public LegacyTeamInfoNMS(ImmutableTeamProperties<String> properties) {
+    public LegacyTeamInfoPacketAdapter(ImmutableTeamProperties<String> properties) {
       super(properties);
     }
 
