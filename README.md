@@ -18,30 +18,25 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
   takes advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to improve performance
 - **1.8.8.** Note that you'll still need to use Java 17
 - **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
-  classpath.
-  Should work with all versions 1.8+
+  classpath. Should work with all versions 1.8+
 
-## Getting started
+## Installation
 
 See installation instructions [here](https://github.com/MegavexNetwork/scoreboard-library/blob/master/INSTALLATION.md)
 
-### Getting a `ScoreboardManager`:
+### Getting started
 
 ```java
+ScoreboardLibrary scoreboardLibrary;
 try {
-    ScoreboardLibraryImplementation.init();
-} catch (ScoreboardLibraryLoadException e) {
-    // Couldn't load the library.
-    // Probably because the servers version is unsupported.
-    e.printStackTrace();
-    return;
+    scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
+} catch (PacketAdapterNotFoundException e) {
+    // If no packet adapter was found in the classpath, you can fallback to the no-op implementation
+    scoreboardLibrary = ScoreboardLibrary.noopScoreboardLibrary(plugin);
 }
-
-ScoreboardManager scoreboardLibrary = ScoreboardManager.scoreboardLibrary(plugin);
 
 // On plugin shutdown:
 scoreboardLibrary.close();
-ScoreboardLibraryImplementation.close();
 ```
 
 ### Sidebar
