@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
   api(project(":api"))
-  implementation(project(":nms-base"))
+  implementation(project(":packet-adapter-base"))
 }

@@ -11,8 +11,8 @@ include(":api")
 include(":commons")
 include(":implementation")
 
-include(":nms-base")
-project(":nms-base").projectDir = file("versions/nms-base")
+include(":packet-adapter-base")
+project(":packet-adapter-base").projectDir = file("versions/packet-adapter-base")
 
 include(":packetevents")
 project(":packetevents").projectDir = file("versions/packetevents")
