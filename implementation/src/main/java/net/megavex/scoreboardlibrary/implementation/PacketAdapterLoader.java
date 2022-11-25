@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation;
 
 import java.lang.reflect.InvocationTargetException;
-import net.megavex.scoreboardlibrary.api.exception.PacketAdapterNotFoundException;
+import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -11,14 +11,14 @@ public final class PacketAdapterLoader {
   private PacketAdapterLoader() {
   }
 
-  public static @NotNull ScoreboardLibraryPacketAdapter<?> loadPacketAdapter() throws PacketAdapterNotFoundException {
+  public static @NotNull ScoreboardLibraryPacketAdapter<?> loadPacketAdapter() throws NoPacketAdapterAvailableException {
     var versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     Class<?> nmsClass = tryLoadImplementationClass(versionName);
 
     if (nmsClass == null) {
       nmsClass = tryLoadImplementationClass("packetevents");
       if (nmsClass == null) {
-        throw new PacketAdapterNotFoundException();
+        throw new NoPacketAdapterAvailableException();
       }
 
       try {

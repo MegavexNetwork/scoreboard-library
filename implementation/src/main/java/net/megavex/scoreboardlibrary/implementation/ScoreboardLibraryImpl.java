@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.exception.PacketAdapterNotFoundException;
+import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
@@ -46,7 +46,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
   private final Object lock = new Object();
 
-  public ScoreboardLibraryImpl(Plugin plugin, boolean debug) throws PacketAdapterNotFoundException {
+  public ScoreboardLibraryImpl(Plugin plugin, boolean debug) throws NoPacketAdapterAvailableException {
     Preconditions.checkNotNull(plugin, "plugin");
 
     try {

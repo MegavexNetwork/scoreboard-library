@@ -3,7 +3,7 @@ package net.megavex.scoreboardlibrary.api;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Locale;
-import net.megavex.scoreboardlibrary.api.exception.PacketAdapterNotFoundException;
+import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -17,11 +17,11 @@ import org.jetbrains.annotations.Range;
 
 @ApiStatus.NonExtendable
 public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
-  static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws PacketAdapterNotFoundException {
+  static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
     return loadScoreboardLibrary(plugin, false);
   }
 
-  static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin, boolean debug) throws PacketAdapterNotFoundException {
+  static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin, boolean debug) throws NoPacketAdapterAvailableException {
     Class<?> clazz;
     try {
       clazz = Class.forName("net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl");
@@ -33,7 +33,7 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
       return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class, boolean.class).newInstance(plugin, debug);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
       if (e instanceof InvocationTargetException invocationTargetException) {
-        if (invocationTargetException.getTargetException() instanceof PacketAdapterNotFoundException adapterNotFoundException) {
+        if (invocationTargetException.getTargetException() instanceof NoPacketAdapterAvailableException adapterNotFoundException) {
           throw adapterNotFoundException;
         }
       }

@@ -30,7 +30,7 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 ScoreboardLibrary scoreboardLibrary;
 try {
     scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
-} catch (PacketAdapterNotFoundException e) {
+} catch (NoPacketAdapterAvailableException e) {
     // If no packet adapter was found in the classpath, you can fallback to the no-op implementation
     scoreboardLibrary = ScoreboardLibrary.noopScoreboardLibrary(plugin);
 }
