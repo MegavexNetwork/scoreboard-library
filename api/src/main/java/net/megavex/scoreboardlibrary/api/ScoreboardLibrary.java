@@ -42,10 +42,6 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
     }
   }
 
-  static @NotNull ScoreboardLibrary noopScoreboardLibrary(@NotNull Plugin plugin) {
-    throw new UnsupportedOperationException("TODO");
-  }
-
   @Override
   default @NotNull ScoreboardLibrary scoreboardLibrary() {
     return this;

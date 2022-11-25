@@ -22,7 +22,7 @@ public class TeamManagerImpl implements TeamManager {
   private final ScoreboardLibraryImpl scoreboardLibrary;
 
   private final Set<Player> players = CollectionProvider.set(8);
-  private final Map<String, net.megavex.scoreboardlibrary.implementation.team.ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
+  private final Map<String, ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
 
   private final Object lock = new Object();
   private volatile boolean closed = false;

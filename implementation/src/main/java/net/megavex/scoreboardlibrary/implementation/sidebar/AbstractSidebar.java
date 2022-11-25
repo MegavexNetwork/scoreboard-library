@@ -38,7 +38,6 @@ public abstract class AbstractSidebar implements Sidebar {
     this.scoreboardLibrary = scoreboardLibrary;
     SidebarUtilities.checkLineBounds(size);
     this.lines = new GlobalLineInfo[size];
-
   }
 
   protected abstract void forEachSidebar(Consumer<SidebarLineHandler> consumer);

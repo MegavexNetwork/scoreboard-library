@@ -1,6 +1,7 @@
 # scoreboard-library
 
-Powerful Scoreboard library for Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure) component library.
+Powerful Scoreboard library for Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure)
+component library.
 
 Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
@@ -32,7 +33,7 @@ try {
     scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
 } catch (NoPacketAdapterAvailableException e) {
     // If no packet adapter was found in the classpath, you can fallback to the no-op implementation
-    scoreboardLibrary = ScoreboardLibrary.noopScoreboardLibrary(plugin);
+    scoreboardLibrary = new NoopScoreboardLibrary(plugin);
 }
 
 // On plugin shutdown:

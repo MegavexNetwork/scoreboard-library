@@ -8,8 +8,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import org.bukkit.entity.Player;
 
 public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPacketAdapter<Component> {

@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.Optional;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import org.bukkit.entity.Player;
 
 public class LegacyTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPacketAdapter<String> {
