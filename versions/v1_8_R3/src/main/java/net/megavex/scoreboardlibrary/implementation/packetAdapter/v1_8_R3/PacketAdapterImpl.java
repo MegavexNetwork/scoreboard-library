@@ -2,10 +2,10 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import java.lang.reflect.Field;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;

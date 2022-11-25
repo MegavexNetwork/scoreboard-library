@@ -1,5 +1,5 @@
 plugins {
-  id("java")
+  id("net.megavex.scoreboardlibrary.publish-conventions")
 }
 
 dependencies {

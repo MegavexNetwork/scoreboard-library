@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -11,19 +11,19 @@ import java.util.Objects;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
 
-public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, NMSImpl> {
+public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, PacketAdapterImpl> {
   protected static final Field displayNameField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "a"),
     prefixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "b"),
     suffixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "c"),
@@ -45,7 +45,7 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
 
   protected ClientboundSetPlayerTeamPacket removePacket;
 
-  AbstractTeamsPacketAdapterImpl(NMSImpl impl, String teamName) {
+  AbstractTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
     super(impl, teamName);
   }
 

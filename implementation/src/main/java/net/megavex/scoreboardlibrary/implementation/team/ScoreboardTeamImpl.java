@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,13 +17,14 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   private final String name;
   private final TeamsPacketAdapter<?, ?> packetAdapter;
 
-  private final TeamInfoImpl globalInfo = new TeamInfoImpl(this);
+  private final TeamInfoImpl globalInfo;
   private final Map<Player, TeamInfoImpl> teamInfoMap = new ConcurrentHashMap<>();
 
   public ScoreboardTeamImpl(@NotNull TeamManagerImpl teamManager, @NotNull String name) {
     this.teamManager = teamManager;
     this.name = name;
     this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter.createTeamPacketAdapter(name);
+    this.globalInfo = new TeamInfoImpl(this);
   }
 
   @Override

@@ -1,12 +1,12 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar;
 
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 
@@ -14,7 +14,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   private final ClientboundSetObjectivePacket createPacket;
   private final ClientboundSetObjectivePacket updatePacket;
 
-  public SidebarPacketAdapterImpl(NMSImpl impl, Sidebar sidebar) {
+  public SidebarPacketAdapterImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
     var locale = sidebar.locale();

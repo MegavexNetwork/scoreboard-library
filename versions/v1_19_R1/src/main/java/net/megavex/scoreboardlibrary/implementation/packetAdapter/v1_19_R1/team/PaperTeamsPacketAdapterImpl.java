@@ -1,18 +1,17 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team;
 
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.util.NativeAdventureUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
-  public PaperTeamsPacketAdapterImpl(NMSImpl impl, String teamName) {
+  public PaperTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
     super(impl, teamName);
   }
 
@@ -23,8 +22,8 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
 
   private class TeamInfoPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamInfoPacketAdapterImpl {
     final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
-    protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(TeamsPacketAdapter.MODE_CREATE, teamName, parameters, null);
-    protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(TeamsPacketAdapter.MODE_UPDATE, teamName, parameters, null);
+    protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(MODE_CREATE, teamName, parameters, null);
+    protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(MODE_UPDATE, teamName, parameters, null);
     private Component displayName, prefix, suffix;
 
     public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {

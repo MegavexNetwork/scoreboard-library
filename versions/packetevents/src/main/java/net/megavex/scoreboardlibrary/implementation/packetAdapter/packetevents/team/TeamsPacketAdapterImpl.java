@@ -4,8 +4,8 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
 import org.bukkit.entity.Player;
 

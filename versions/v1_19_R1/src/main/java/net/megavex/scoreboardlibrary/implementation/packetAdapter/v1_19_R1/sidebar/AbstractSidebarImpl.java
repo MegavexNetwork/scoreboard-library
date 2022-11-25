@@ -1,12 +1,12 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -15,9 +15,9 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
 
-public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>, NMSImpl> {
+public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>, PacketAdapterImpl> {
   static final UnsafeUtilities.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor =
     UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
   static final Field objectiveNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "d"),
@@ -25,7 +25,7 @@ public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>
     objectiveRenderTypeField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "f");
   private static final Field objectiveModeField = getField(ClientboundSetObjectivePacket.class, "g");
 
-  public AbstractSidebarImpl(NMSImpl impl, Sidebar sidebar) {
+  public AbstractSidebarImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
   }
 

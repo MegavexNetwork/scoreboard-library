@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
@@ -6,15 +6,15 @@ import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar.PaperSidebarPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar.SidebarPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team.PaperTeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team.TeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.util.NativeAdventureUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar.PaperSidebarPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar.SidebarPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team.PaperTeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team.TeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
@@ -24,15 +24,15 @@ import org.jetbrains.annotations.NotNull;
 
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.getField;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities.setField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.setField;
 
-public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
+public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(1, null);
   private final ClientboundSetObjectivePacket removePacket = UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
   private boolean nativeAdventure;
 
-  public NMSImpl() {
+  public PacketAdapterImpl() {
     setField(getField(ClientboundSetDisplayObjectivePacket.class, "b"), displayPacket, objectiveName);
     setField(getField(ClientboundSetObjectivePacket.class, "d"), removePacket, objectiveName);
     UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetObjectivePacket.class, "g")), 1);

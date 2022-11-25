@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.util;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;

@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.base;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 
 import java.util.Collection;
 import java.util.Set;

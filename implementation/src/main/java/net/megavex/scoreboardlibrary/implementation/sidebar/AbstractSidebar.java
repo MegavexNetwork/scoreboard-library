@@ -12,7 +12,7 @@ import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;

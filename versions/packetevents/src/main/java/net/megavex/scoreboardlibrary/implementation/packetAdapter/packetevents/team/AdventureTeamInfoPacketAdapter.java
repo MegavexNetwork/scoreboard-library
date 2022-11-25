@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
 import org.bukkit.entity.Player;
 

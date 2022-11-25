@@ -1,17 +1,17 @@
-package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team;
 
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
 public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
-  public TeamsPacketAdapterImpl(NMSImpl impl, String teamName) {
+  public TeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
     super(impl, teamName);
   }
 

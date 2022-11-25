@@ -14,7 +14,7 @@ import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.listener.LocaleListener;
 import net.megavex.scoreboardlibrary.implementation.listener.PlayerListener;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarUpdaterTask;
@@ -24,12 +24,11 @@ import net.megavex.scoreboardlibrary.implementation.team.TeamUpdaterTask;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ScoreboardLibraryImpl implements ScoreboardLibrary {
-  public final JavaPlugin plugin;
+  public final Plugin plugin;
   public final boolean debug;
   public final ScoreboardLibraryPacketAdapter<?> packetAdapter;
   public final LocaleProvider localeProvider;
@@ -47,7 +46,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
   private final Object lock = new Object();
 
-  public ScoreboardLibraryImpl(JavaPlugin plugin, boolean debug) throws PacketAdapterNotFoundException {
+  public ScoreboardLibraryImpl(Plugin plugin, boolean debug) throws PacketAdapterNotFoundException {
     Preconditions.checkNotNull(plugin, "plugin");
 
     try {

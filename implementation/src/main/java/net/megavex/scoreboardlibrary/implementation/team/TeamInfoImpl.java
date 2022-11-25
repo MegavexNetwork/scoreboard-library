@@ -12,8 +12,8 @@ import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import static net.kyori.adventure.text.Component.empty;
 
 public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component> {
-  private final net.megavex.scoreboardlibrary.implementation.team.ScoreboardTeamImpl team;
+  private final ScoreboardTeamImpl team;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<?> packetAdapter;
 
   private final Set<Player> players = CollectionProvider.set(8);
@@ -36,7 +36,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   private CollisionRule collisionRule = CollisionRule.ALWAYS;
   private NamedTextColor playerColor = null;
 
-  public TeamInfoImpl(net.megavex.scoreboardlibrary.implementation.team.ScoreboardTeamImpl team) {
+  public TeamInfoImpl(ScoreboardTeamImpl team) {
     this.team = team;
     this.packetAdapter = team.packetAdapter().createTeamInfoAdapter(this);
   }

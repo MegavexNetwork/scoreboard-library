@@ -7,9 +7,9 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDi
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
 import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team.TeamsPacketAdapterImpl;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

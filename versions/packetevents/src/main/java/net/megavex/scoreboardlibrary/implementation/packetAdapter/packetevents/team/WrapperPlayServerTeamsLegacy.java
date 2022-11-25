@@ -7,7 +7,7 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 
 public class WrapperPlayServerTeamsLegacy extends PacketWrapper<WrapperPlayServerTeamsLegacy> {
   private final String teamName;

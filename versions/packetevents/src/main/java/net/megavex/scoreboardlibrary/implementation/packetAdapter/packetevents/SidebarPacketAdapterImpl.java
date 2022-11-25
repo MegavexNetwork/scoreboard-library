@@ -10,8 +10,8 @@ import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import org.bukkit.entity.Player;
 
 

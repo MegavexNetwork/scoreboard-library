@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import org.bukkit.ChatColor;
 

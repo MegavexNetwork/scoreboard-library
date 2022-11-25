@@ -24,13 +24,13 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin, boolean debug) throws PacketAdapterNotFoundException {
     Class<?> clazz;
     try {
-      clazz = Class.forName("net.megavex.scoreboardlibrary.internal.ScoreboardLibraryImpl");
+      clazz = Class.forName("net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl");
     } catch (ClassNotFoundException e) {
       throw new RuntimeException("scoreboard-library implementation is not shaded into the classpath");
     }
 
     try {
-      return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class, Boolean.class).newInstance(plugin, debug);
+      return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class, boolean.class).newInstance(plugin, debug);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
       if (e instanceof InvocationTargetException invocationTargetException) {
         if (invocationTargetException.getTargetException() instanceof PacketAdapterNotFoundException adapterNotFoundException) {
