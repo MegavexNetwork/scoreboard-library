@@ -4,10 +4,9 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
+import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -45,8 +44,8 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, Packet
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
-    return new AdventureTeamInfoPacketAdapter(properties, componentTranslator);
+  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+    return new AdventureTeamInfoPacketAdapter(properties);
   }
 
   @Override
@@ -113,16 +112,13 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, Packet
   }
 
   private class AdventureTeamInfoPacketAdapter extends AbstractTeamInfoPacketAdapter<Component> {
-    private final ComponentTranslator componentTranslator;
-
-    public AdventureTeamInfoPacketAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+    public AdventureTeamInfoPacketAdapter(ImmutableTeamProperties<Component> properties) {
       super(properties);
-      this.componentTranslator = componentTranslator;
     }
 
     @Override
     protected String toLegacy(Component component, Locale locale) {
-      return LegacyFormatUtil.serialize(componentTranslator, component, locale);
+      return LegacyFormatUtil.serialize(component, locale);
     }
   }
 

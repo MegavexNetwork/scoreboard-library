@@ -5,7 +5,7 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTe
 import java.util.Collection;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
@@ -14,12 +14,10 @@ import org.bukkit.entity.Player;
 
 public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPacketAdapter<Component> {
   private final TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter;
-  private final ComponentTranslator componentTranslator;
 
-  public AdventureTeamInfoPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+  public AdventureTeamInfoPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<Component> properties) {
     super(properties);
     this.packetAdapter = packetAdapter;
-    this.componentTranslator = componentTranslator;
   }
 
   @Override
@@ -60,9 +58,9 @@ public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoP
 
   private void sendTeamPacket(Collection<Player> players, boolean update) {
     LocalePacketUtilities.sendLocalePackets(packetAdapter.impl.localeProvider, null, packetAdapter.impl, players, locale -> {
-      var displayName = componentTranslator.translate(properties.displayName(), locale);
-      var prefix = componentTranslator.translate(properties.prefix(), locale);
-      var suffix = componentTranslator.translate(properties.suffix(), locale);
+      var displayName = GlobalTranslator.render(properties.displayName(), locale);
+      var prefix = GlobalTranslator.render(properties.prefix(), locale);
+      var suffix = GlobalTranslator.render(properties.suffix(), locale);
       var nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
       var collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
       var color = properties.playerColor();

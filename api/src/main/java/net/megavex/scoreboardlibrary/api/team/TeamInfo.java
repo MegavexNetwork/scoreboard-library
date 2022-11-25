@@ -5,27 +5,16 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ApiStatus.NonExtendable
 public interface TeamInfo {
-  // Main
-
   /**
    * @return Team which is assigned to this {@link TeamInfo}
-   * @throws IllegalStateException If not assigned
    */
   @NotNull ScoreboardTeam team();
-
-  /**
-   * @return whether this TeamInfo is assigned to a Team
-   */
-  boolean isAssigned();
-
-  /**
-   * Unassigns TeamInfo info from the currently assigned Team
-   */
-  void unassign();
 
   // Entries
 
@@ -93,16 +82,14 @@ public interface TeamInfo {
   /**
    * Sets whether friendly fire is allowed
    *
-   * @param allowFriendlyFire whether friendly fire is allowed
+   * @param friendlyFire whether friendly fire is allowed
    */
-  @NotNull TeamInfo friendlyFire(boolean allowFriendlyFire);
+  @NotNull TeamInfo friendlyFire(boolean friendlyFire);
 
   /**
    * @return Can see friendly invisibles rule
    */
-  default boolean canSeeFriendlyInvisibles() {
-    return false;
-  }
+  boolean canSeeFriendlyInvisibles();
 
   /**
    * Sets whether players can see friendly invisibles

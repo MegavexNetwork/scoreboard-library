@@ -5,10 +5,8 @@ import java.util.Map;
 import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
-import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.ChatColor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -47,10 +45,10 @@ public final class LegacyFormatUtil {
     return text.substring(0, lastNotColorCharIndex + 1);
   }
 
-  public static String serialize(@NotNull ComponentTranslator componentTranslator, @Nullable Component component, Locale locale) {
+  public static String serialize(@Nullable Component component, Locale locale) {
     if (component == null || component == empty()) return "";
 
-    return legacySection().serialize(componentTranslator.translate(component, locale));
+    return legacySection().serialize(GlobalTranslator.render(component, locale));
   }
 
   public static char getChar(NamedTextColor color) {

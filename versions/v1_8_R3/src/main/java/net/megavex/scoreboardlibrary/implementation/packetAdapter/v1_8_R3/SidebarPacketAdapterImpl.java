@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.IScoreboardCriteria;
@@ -99,7 +99,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, Pa
   }
 
   private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-    var value = LegacyFormatUtil.serialize(sidebar.componentTranslator(), displayName, locale);
+    var value = LegacyFormatUtil.serialize(displayName, locale);
     UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
   }
 }

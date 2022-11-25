@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.PacketAdapterNotFoundException;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
@@ -38,13 +37,13 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
   public final Map<Player, AbstractSidebar> sidebarMap = new ConcurrentHashMap<>();
   public final Map<Player, TeamManagerImpl> teamManagerMap = new ConcurrentHashMap<>();
+  public volatile Set<TeamManagerImpl> teamManagers;
+  public volatile Set<AbstractSidebar> sidebars;
 
   public LocaleListener localeListener;
   public boolean closed;
   public TeamUpdaterTask teamTask;
   public SidebarUpdaterTask sidebarTask;
-  public volatile Set<TeamManagerImpl> teamManagers;
-  public volatile Set<AbstractSidebar> sidebars;
 
   private final Object lock = new Object();
 
@@ -85,7 +84,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull Sidebar sidebar(int maxLines, @NotNull ComponentTranslator componentTranslator, @Nullable Locale locale) {
+  public @NotNull Sidebar sidebar(int maxLines, @Nullable Locale locale) {
     checkClosed();
 
     if (maxLines <= 0 || maxLines > Sidebar.MAX_LINES) {
@@ -94,9 +93,9 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
     AbstractSidebar sidebar;
     if (locale == null) {
-      sidebar = new PlayerDependantLocaleSidebar(this, componentTranslator, maxLines);
+      sidebar = new PlayerDependantLocaleSidebar(this, maxLines);
     } else {
-      sidebar = new SingleLocaleSidebar(this, componentTranslator, maxLines, locale);
+      sidebar = new SingleLocaleSidebar(this, maxLines, locale);
     }
 
     getSidebars0().add(sidebar);
@@ -104,10 +103,10 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull TeamManagerImpl teamManager(@NotNull ComponentTranslator componentTranslator) {
+  public @NotNull TeamManagerImpl teamManager() {
     checkClosed();
 
-    var teamManager = new TeamManagerImpl(this, componentTranslator);
+    var teamManager = new TeamManagerImpl(this);
     getTeamManagers0().add(teamManager);
     return teamManager;
   }
@@ -178,6 +177,8 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   private void checkClosed() {
-    Preconditions.checkState(!closed, "ScoreboardLibrary is closed");
+    if (closed) {
+      throw new IllegalStateException("ScoreboardLibrary is closed");
+    }
   }
 }

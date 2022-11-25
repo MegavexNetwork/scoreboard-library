@@ -4,22 +4,18 @@ import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a list of Scoreboard Teams
  */
+@ApiStatus.NonExtendable
 public interface TeamManager extends Closeable, HasScoreboardLibrary, Players {
-  /**
-   * @return {@link ComponentTranslator} of this team manager
-   */
-  @NotNull ComponentTranslator componentTranslator();
-
   // Teams
 
   /**
@@ -98,23 +94,11 @@ public interface TeamManager extends Closeable, HasScoreboardLibrary, Players {
    * Adds a list of players to this TeamManager
    *
    * @param players          Players to add
-   * @param teamInfoFunction A function that returns the {@link TeamInfo} that the player should have
-   * @return A collection of players that have been added
+   * @param teamInfoFunction Function that returns the {@link TeamInfo} that the player should have
    */
-  @NotNull Collection<Player> addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction);
-
-  /**
-   * Removes a player from this TeamManager
-   *
-   * @param player Player to remove
-   * @return If the player was removed
-   */
-  boolean removePlayer(@NotNull Player player);
-
-  /**
-   * Removes a list of players from this TeamManager
-   *
-   * @param players Player to remove
-   */
-  void removePlayers(@NotNull Collection<Player> players);
+  default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    for (Player player : players) {
+      addPlayer(player, teamInfoFunction);
+    }
+  }
 }

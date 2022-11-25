@@ -4,17 +4,17 @@ import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 import java.util.Objects;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar.PaperSidebarPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar.SidebarPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team.PaperTeamsPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team.TeamsPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
@@ -75,10 +75,10 @@ public class NMSImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
     ((CraftPlayer) player).getHandle().connection.send(packet);
   }
 
-  public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale, ComponentTranslator componentTranslator) {
+  public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
     if (nativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
 
-    component = componentTranslator.translate(component, Objects.requireNonNull(locale));
+    component = GlobalTranslator.render(component, Objects.requireNonNull(locale));
     return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(component));
   }
 }

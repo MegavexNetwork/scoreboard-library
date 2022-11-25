@@ -10,11 +10,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
+import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -106,12 +106,14 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
       }
 
       key = properties.collisionRule().key();
-      if (!Objects.equals(parameters.getCollisionRule(), key))
+      if (!Objects.equals(parameters.getCollisionRule(), key)) {
         UnsafeUtilities.setField(collisionRuleField, parameters, key);
+      }
 
       var c = LegacyFormatUtil.getChar(properties.playerColor());
-      if (parameters.getColor() == null || parameters.getColor().code != c)
+      if (parameters.getColor() == null || parameters.getColor().code != c) {
         UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(c));
+      }
 
       var options = properties.packOptions();
       if (parameters.getOptions() != options)

@@ -3,9 +3,9 @@ package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.sidebar;
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 

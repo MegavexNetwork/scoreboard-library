@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
@@ -28,18 +28,17 @@ public abstract class AbstractSidebar implements Sidebar {
   protected final Object lock = new Object();
   protected final Object visibilityLock = new Object();
   private final ScoreboardLibraryImpl scoreboardLibrary;
-  private final ComponentTranslator componentTranslator;
   private final AtomicBoolean updateTitle = new AtomicBoolean(),
     updateLines = new AtomicBoolean();
   protected volatile boolean closed, visible, visibilityChanged;
   private Component title = empty();
   private volatile SidebarPacketAdapter<?, ?> packetAdapter;
 
-  public AbstractSidebar(ScoreboardLibraryImpl scoreboardLibrary, ComponentTranslator componentTranslator, int size) {
+  public AbstractSidebar(ScoreboardLibraryImpl scoreboardLibrary, int size) {
     this.scoreboardLibrary = scoreboardLibrary;
-    this.componentTranslator = componentTranslator;
     SidebarUtilities.checkLineBounds(size);
     this.lines = new GlobalLineInfo[size];
+
   }
 
   protected abstract void forEachSidebar(Consumer<SidebarLineHandler> consumer);
@@ -70,11 +69,6 @@ public abstract class AbstractSidebar implements Sidebar {
   @Override
   public @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
     return scoreboardLibrary;
-  }
-
-  @Override
-  public @NotNull ComponentTranslator componentTranslator() {
-    return componentTranslator;
   }
 
   @Override
@@ -124,7 +118,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
           forEachSidebar(s -> {
             if (line.value != null) {
-              Component rendered = componentTranslator.translate(line.value, s.locale());
+              Component rendered = GlobalTranslator.render(line.value, s.locale());
               s.setLine(line.line, rendered);
             } else {
               s.setLine(line.line, null);

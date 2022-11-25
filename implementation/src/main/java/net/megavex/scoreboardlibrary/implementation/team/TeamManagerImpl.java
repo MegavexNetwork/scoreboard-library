@@ -1,18 +1,14 @@
 package net.megavex.scoreboardlibrary.implementation.team;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -23,182 +19,35 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TeamManagerImpl implements TeamManager {
-  private static int idCounter = 0;
-  public final Map<String, ScoreboardTeamImpl> teams = CollectionProvider.map(5);
-  public final AtomicBoolean update = new AtomicBoolean();
-  private final ScoreboardLibraryImpl scoreboardManager;
-  private final ComponentTranslator componentTranslator;
-  private final Set<Player> players = CollectionProvider.set(4);
-  private final int id = idCounter++;
-  private boolean closed;
+  private final ScoreboardLibraryImpl scoreboardLibrary;
 
-  public TeamManagerImpl(ScoreboardLibraryImpl scoreboardManager, ComponentTranslator componentTranslator) {
-    this.scoreboardManager = Objects.requireNonNull(scoreboardManager);
-    this.componentTranslator = Objects.requireNonNull(componentTranslator);
+  private final Set<Player> players = CollectionProvider.set(8);
+  private final Map<String, net.megavex.scoreboardlibrary.implementation.team.ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
+
+  private final Object lock = new Object();
+  private volatile boolean closed = false;
+
+  private final Queue<TeamManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
+
+  public TeamManagerImpl(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
+    this.scoreboardLibrary = scoreboardLibrary;
   }
 
-  public void update() {
-    if (!update.getAndSet(false)) return;
-
-    ImmutableList<ScoreboardTeamImpl> list;
-    synchronized (teams) {
-      list = ImmutableList.copyOf(teams.values());
+  @Override
+  public void close() {
+    if (closed) {
+      return;
     }
 
-    for (var team : list) {
-      team.update();
-    }
-  }
-
-  @Override
-  public @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
-    return scoreboardManager;
-  }
-
-  @Override
-  public @NotNull Collection<Player> players() {
-    return Collections.unmodifiableCollection(players);
-  }
-
-  @Override
-  public @NotNull ComponentTranslator componentTranslator() {
-    return componentTranslator;
-  }
-
-  @Override
-  public @NotNull Collection<ScoreboardTeam> teams() {
-    synchronized (teams) {
-      return Collections.unmodifiableCollection(teams.values());
-    }
-  }
-
-  @Override
-  public @Nullable ScoreboardTeamImpl team(@NotNull String name) {
-    checkDestroyed();
-    checkTeamName(name);
-
-    synchronized (teams) {
-      return teams.get(name);
-    }
-  }
-
-  @Override
-  public boolean teamExists(@NotNull String name) {
-    return team(name) != null;
-  }
-
-  @Override
-  public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
-    checkDestroyed();
-    var team = team(name);
-    if (team != null)
-      return team;
-    team = new ScoreboardTeamImpl(this, name);
-    synchronized (teams) {
-      teams.put(name, team);
-    }
-
-    for (var player : players) {
-      team.teamInfo(player, teamInfoFunction == null ? null:teamInfoFunction.apply(player, team));
-    }
-    return team;
-  }
-
-  @Override
-  public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
-    checkDestroyed();
-
-    checkPlayer(player);
-    if (players.add(player)) {
-      scoreboardManager.teamManagerMap.put(player, this);
-      for (var team : teams.values()) {
-        var info = teamInfoFunction == null ? team.globalInfo():(TeamInfoImpl) teamInfoFunction.apply(team);
-        info = info == null ? team.globalInfo():info;
-
-        var singleton = Set.of(player);
-        info.assign(team);
-        info.addPlayers(singleton);
-        info.nms.createTeam(singleton);
+    synchronized (lock) {
+      if (closed) {
+        return;
       }
 
-      return true;
+      closed = true;
     }
 
-    return false;
-  }
-
-  @Override
-  public @NotNull Collection<Player> addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
-    checkDestroyed();
-    Preconditions.checkNotNull(players, "Players cannot be null");
-
-    var filteredPlayers = new ArrayList<Player>(players.size());
-    for (var player : players) {
-      checkPlayer(player);
-      if (this.players.add(player)) {
-        filteredPlayers.add(player);
-        scoreboardManager.teamManagerMap.put(player, this);
-      }
-    }
-
-    if (!filteredPlayers.isEmpty()) {
-      for (var team : teams.values()) {
-        var info = teamInfoFunction == null ? team.globalInfo():(TeamInfoImpl) teamInfoFunction.apply(team);
-        info = info == null ? team.globalInfo():info;
-
-        info.assign(team);
-        info.players.addAll(players);
-        info.nms.createTeam(filteredPlayers);
-      }
-    }
-
-    return filteredPlayers;
-  }
-
-  @Override
-  public boolean removePlayer(@NotNull Player player) {
-    checkDestroyed();
-    checkPlayer(player);
-
-    if (players.remove(player)) {
-      var singleton = Set.of(player);
-      for (var team : teams.values()) {
-        var info = team.getTeamInfo(player, false, true);
-        if (info != null) {
-          info.players.remove(player);
-          team.packetAdapter.removeTeam(singleton);
-        }
-      }
-
-      scoreboardManager.teamManagerMap.remove(player);
-
-      return true;
-    }
-
-    return false;
-  }
-
-  @Override
-  public void removePlayers(@NotNull Collection<Player> players) {
-    checkDestroyed();
-    Preconditions.checkNotNull(players);
-
-    List<Player> filteredPlayers = CollectionProvider.list(players.size());
-    for (var player : players) {
-      if (!this.players.remove(player)) continue;
-      scoreboardManager.teamManagerMap.remove(player);
-      for (var team : teams.values()) {
-        var info = team.getTeamInfo(player, false, true);
-        if (info != null) {
-          info.players.remove(player);
-          filteredPlayers.add(player);
-        }
-      }
-    }
-
-    for (var team : teams.values()) {
-      team.packetAdapter.removeTeam(filteredPlayers);
-    }
+    taskQueue.add(TeamManagerTask.Close.INSTANCE);
   }
 
   @Override
@@ -207,51 +56,166 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
-  public void close() {
-    if (!closed) {
-      ImmutableList.copyOf(teams.values()).forEach(ScoreboardTeam::close);
-      if (scoreboardManager.teamManagers != null) {
-        scoreboardManager.teamManagers.remove(this);
-      }
+  public @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
+    return scoreboardLibrary;
+  }
 
+  @Override
+  public @NotNull Collection<Player> players() {
+    return closed ? Collections.emptySet():Collections.unmodifiableSet(players);
+  }
+
+  @Override
+  public @NotNull Collection<ScoreboardTeam> teams() {
+    return closed ? Collections.emptySet():Collections.unmodifiableCollection(teams.values());
+  }
+
+  @Override
+  public @Nullable ScoreboardTeam team(@NotNull String name) {
+    return teams.get(name.toLowerCase());
+  }
+
+  @Override
+  public boolean teamExists(@NotNull String name) {
+    return teams.containsKey(name.toLowerCase());
+  }
+
+  @Override
+  public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    checkClosed();
+    name = name.toLowerCase();
+
+    var team = teams.get(name);
+    if (team != null) {
+      return team;
+    }
+
+    team = new ScoreboardTeamImpl(this, name);
+    teams.put(name, team);
+
+    Map<Player, TeamInfoImpl> teamInfoMap = null;
+    if (teamInfoFunction != null) {
+      teamInfoMap = CollectionProvider.map(players.size());
       for (var player : players) {
-        scoreboardManager.teamManagerMap.remove(player);
+        var teamInfo = teamInfoFunction.apply(player, team);
+        validateTeamInfo(team, teamInfo);
+        teamInfoMap.put(player, (TeamInfoImpl) teamInfo);
+      }
+    }
+
+    var task = new TeamManagerTask.AddTeam(team, teamInfoMap);
+    taskQueue.add(task);
+    return team;
+  }
+
+  @Override
+  public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    checkClosed();
+
+    if (!players.add(player)) {
+      return false;
+    }
+
+    Map<net.megavex.scoreboardlibrary.implementation.team.ScoreboardTeamImpl, TeamInfoImpl> teamInfoMap = null;
+    if (teamInfoFunction != null) {
+      teamInfoMap = CollectionProvider.map(teams.size());
+      for (var team : teams.values()) {
+        var teamInfo = teamInfoFunction.apply(team);
+        validateTeamInfo(team, teamInfo);
+        teamInfoMap.put(team, (TeamInfoImpl) teamInfo);
+      }
+    }
+
+    var task = new TeamManagerTask.AddPlayer(player, teamInfoMap);
+    taskQueue.add(task);
+    return true;
+  }
+
+  @Override
+  public boolean removePlayer(@NotNull Player player) {
+    checkClosed();
+
+    if (!players.remove(player)) {
+      return false;
+    }
+
+    var task = new TeamManagerTask.RemovePlayer(player);
+    taskQueue.add(task);
+    return true;
+  }
+
+  public @NotNull Queue<TeamManagerTask> taskQueue() {
+    return taskQueue;
+  }
+
+  public void tick() {
+    while (true) {
+      var task = taskQueue.poll();
+      if (task == null) {
+        break;
       }
 
-      players.clear(); // Prevent a memory leak
-      closed = true;
+      if (task instanceof TeamManagerTask.Close) {
+        scoreboardLibrary.teamManagers.remove(this);
+
+        for (var team : teams.values()) {
+          team.packetAdapter().removeTeam(players);
+        }
+
+        // TODO: unregister player team
+        return;
+      } else if (task instanceof TeamManagerTask.AddPlayer addPlayerTask) {
+        var teamInfoMap = addPlayerTask.teamInfoMap();
+        for (var team : teams.values()) {
+          TeamInfoImpl teamInfo = teamInfoMap == null ? null:teamInfoMap.get(team);
+          team.addPlayer(addPlayerTask.player(), teamInfo == null ? team.globalInfo():teamInfo);
+        }
+      } else if (task instanceof TeamManagerTask.RemovePlayer removePlayerTask) {
+        for (var team : teams.values()) {
+          team.removePlayer(removePlayerTask.player());
+        }
+      } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
+        var team = addTeamTask.team();
+        var teamInfoMap = addTeamTask.teamInfoMap();
+        if (teamInfoMap == null) {
+          for (Player player : players) {
+            team.addPlayer(player, team.globalInfo());
+          }
+          continue;
+        }
+
+        for (var entry : teamInfoMap.entrySet()) {
+          team.addPlayer(entry.getKey(), entry.getValue());
+        }
+      } else if (task instanceof TeamManagerTask.UpdateTeamInfo updateTeamInfoTask) {
+        var teamInfo = updateTeamInfoTask.teamInfo();
+        teamInfo.updateTeamPackets();
+        teamInfo.packetAdapter().updateTeam(teamInfo.players());
+      } else if (task instanceof TeamManagerTask.AddEntries addEntriesTask) {
+        var teamInfo = addEntriesTask.teamInfo();
+        teamInfo.packetAdapter().addEntries(teamInfo.players(), addEntriesTask.entries());
+      } else if (task instanceof TeamManagerTask.RemoveEntries removeEntriesTask) {
+        var teamInfo = removeEntriesTask.teamInfo();
+        teamInfo.packetAdapter().removeEntries(teamInfo.players(), removeEntriesTask.entries());
+      } else if (task instanceof TeamManagerTask.ChangeTeamInfo changeTeamInfoTask) {
+        changeTeamInfoTask.team().changeTeamInfo(changeTeamInfoTask.player(), changeTeamInfoTask.oldTeamInfo(), changeTeamInfoTask.newTeamInfo());
+      }
     }
   }
 
-  @Override
-  public String toString() {
-    return "TeamManagerImpl{" +
-      "teams=" + teams +
-      ", scoreboardManager=" + scoreboardManager +
-      ", players=" + players +
-      ", closed=" + closed +
-      '}';
+  private void checkClosed() {
+    if (closed) {
+      throw new IllegalStateException("TeamManager is closed");
+    }
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(scoreboardManager, id);
-  }
+  private void validateTeamInfo(@NotNull ScoreboardTeam team, @Nullable TeamInfo teamInfo) {
+    if (teamInfo == null || teamInfo.team() != team) {
+      throw new IllegalArgumentException("invalid TeamInfo");
+    }
 
-  protected void checkDestroyed() {
-    Preconditions.checkState(!closed, "Team manager is closed");
-  }
-
-  protected void checkTeamName(String name) {
-    Preconditions.checkNotNull(name, "Team name cannot be null");
-    Preconditions.checkArgument(!name.isEmpty(), "Team name cannot be empty");
-  }
-
-  protected void checkPlayer(Player player) {
-    Preconditions.checkNotNull(player, "Player cannot be null");
-    TeamManagerImpl teamManager = scoreboardManager.teamManagerMap.get(player);
-    if (teamManager != this && teamManager != null) {
-      throw new IllegalArgumentException("player already has a TeamManager");
+    if (!(teamInfo instanceof TeamInfoImpl)) {
+      throw new IllegalArgumentException("must be TeamInfoImpl");
     }
   }
 }

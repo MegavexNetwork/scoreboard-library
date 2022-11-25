@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -23,8 +23,8 @@ class LocaleLineImpl implements LocaleLine<Component> {
   public LocaleLineImpl(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
-    this.entries = Collections.singletonList(info.player());
-    this.bridge = info.bridge.createTeamInfoAdapter(this, handler.sidebar().componentTranslator());
+    this.entries = Set.of(info.player());
+    this.bridge = info.bridge.createTeamInfoAdapter(this);
     bridge.updateTeamPackets(entries);
   }
 

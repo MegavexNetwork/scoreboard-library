@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
@@ -36,7 +37,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
   public void updateTitle(Component displayName) {
     var locale = sidebar.locale();
     if (locale != null) {
-      var translatedDisplayName = sidebar.componentTranslator().translate(displayName, locale);
+      var translatedDisplayName = GlobalTranslator.render(displayName, locale);
       createPacket.setDisplayName(translatedDisplayName);
       updatePacket.setDisplayName(translatedDisplayName);
     }
@@ -91,7 +92,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
     return new WrapperPlayServerScoreboardObjective(
       impl.objectiveName,
       mode,
-      sidebar.componentTranslator().translate(displayName, locale),
+      GlobalTranslator.render(displayName, locale),
       WrapperPlayServerScoreboardObjective.RenderType.INTEGER
     );
   }

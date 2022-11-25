@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
@@ -17,8 +16,8 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   private volatile Map<Player, SidebarLineHandler> playerMap;
   private volatile Map<Locale, SidebarLineHandler> localeMap;
 
-  public PlayerDependantLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, ComponentTranslator componentTranslator, int size) {
-    super(scoreboardLibrary, componentTranslator, size);
+  public PlayerDependantLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int size) {
+    super(scoreboardLibrary, size);
   }
 
   @Override

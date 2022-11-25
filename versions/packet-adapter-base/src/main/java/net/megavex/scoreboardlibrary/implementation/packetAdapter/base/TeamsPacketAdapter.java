@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.base;
 
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import org.bukkit.entity.Player;
 
 public abstract class TeamsPacketAdapter<P, T extends ScoreboardLibraryPacketAdapter<P>> {
@@ -24,7 +23,7 @@ public abstract class TeamsPacketAdapter<P, T extends ScoreboardLibraryPacketAda
 
   public abstract void removeTeam(Iterable<Player> players);
 
-  public abstract TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator);
+  public abstract TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties);
 
   public TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(ImmutableTeamProperties<String> properties) {
     throw new UnsupportedOperationException();

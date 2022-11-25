@@ -3,9 +3,9 @@ package net.megavex.scoreboardlibrary.api.sidebar;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.interfaces.Players;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -13,19 +13,13 @@ import org.jetbrains.annotations.Range;
 /**
  * Represents an in-game Sidebar
  */
+@ApiStatus.NonExtendable
 public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
   // Constants
 
   int MAX_LINES = 15;
 
   // Main
-
-  /**
-   * Gets the {@link ComponentTranslator} of this Sidebar
-   *
-   * @return Component translator
-   */
-  @NotNull ComponentTranslator componentTranslator();
 
   /**
    * Gets the max amount of lines this sidebar can have

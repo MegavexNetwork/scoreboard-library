@@ -4,7 +4,6 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import java.util.Optional;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
@@ -31,8 +30,8 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<PacketWrapper<?>,
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
-    return new AdventureTeamInfoPacketAdapter(this, properties, componentTranslator);
+  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+    return new AdventureTeamInfoPacketAdapter(this, properties);
   }
 
   @Override

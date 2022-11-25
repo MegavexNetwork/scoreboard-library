@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
@@ -173,7 +174,7 @@ public class SidebarLineHandler {
   private void initLines(LineType lineType) {
     for (var line : sidebar.lines) {
       if (line != null) {
-        setLine(line.line, sidebar.componentTranslator().translate(line.value, locale), lineType, false);
+        setLine(line.line, GlobalTranslator.render(line.value, locale), lineType, false);
       }
     }
   }

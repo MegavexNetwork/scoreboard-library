@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
@@ -18,8 +17,8 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   private volatile SidebarLineHandler sidebar;
   private volatile Set<Player> players;
 
-  public SingleLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, ComponentTranslator componentTranslator, int size, Locale locale) {
-    super(scoreboardLibrary, componentTranslator, size);
+  public SingleLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int size, Locale locale) {
+    super(scoreboardLibrary, size);
     this.locale = locale;
   }
 

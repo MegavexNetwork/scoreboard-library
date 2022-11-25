@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.listener;
 import java.util.Set;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
+import net.megavex.scoreboardlibrary.implementation.team.TeamInfoImpl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,9 +20,9 @@ public record LocaleListener(ScoreboardLibraryImpl scoreboardLibrary) implements
       public void run() {
         var teamManager = scoreboardLibrary.teamManagerMap.get(player);
         if (teamManager != null) {
-          for (var team : teamManager.teams.values()) {
-            var teamInfo = team.teamInfo(player);
-            teamInfo.nms.updateTeam(Set.of(player));
+          for (var team : teamManager.teams()) {
+            var teamInfo = (TeamInfoImpl) team.teamInfo(player);
+            teamInfo.packetAdapter().updateTeam(Set.of(player));
           }
         }
 

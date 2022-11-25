@@ -3,11 +3,10 @@ package net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.team;
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.ComponentTranslator;
+import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.base.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.nms.v1_19_R1.NMSImpl;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 
@@ -17,16 +16,13 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
-    return new TeamInfoPacketAdapterImpl(properties, componentTranslator);
+  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+    return new TeamInfoPacketAdapterImpl(properties);
   }
 
   private class TeamInfoPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamInfoPacketAdapterImpl {
-    private final ComponentTranslator componentTranslator;
-
-    public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties, ComponentTranslator componentTranslator) {
+    public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
-      this.componentTranslator = componentTranslator;
     }
 
     @Override
@@ -51,13 +47,13 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
       super.fillParameters(parameters, locale);
 
-      var vanilla = impl.fromAdventure(properties.displayName(), locale, componentTranslator);
+      var vanilla = impl.fromAdventure(properties.displayName(), locale);
       UnsafeUtilities.setField(displayNameField, parameters, vanilla);
 
-      vanilla = impl.fromAdventure(properties.prefix(), locale, componentTranslator);
+      vanilla = impl.fromAdventure(properties.prefix(), locale);
       UnsafeUtilities.setField(prefixField, parameters, vanilla);
 
-      vanilla = impl.fromAdventure(properties.suffix(), locale, componentTranslator);
+      vanilla = impl.fromAdventure(properties.suffix(), locale);
       UnsafeUtilities.setField(suffixField, parameters, vanilla);
     }
   }
