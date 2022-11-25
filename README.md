@@ -1,6 +1,6 @@
 # scoreboard-library
 
-A Scoreboard library for Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure) library.
+Powerful Scoreboard library for Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure) component library.
 
 Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
@@ -11,7 +11,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Packet-level
 - Mostly async
 
-## Supported Versions
+## Packet Adapters
 
 - **1.19.\*.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
   scoreboard-library
