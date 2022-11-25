@@ -32,7 +32,7 @@ ScoreboardLibrary scoreboardLibrary;
 try {
     scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
 } catch (NoPacketAdapterAvailableException e) {
-    // If no packet adapter was found in the classpath, you can fallback to the no-op implementation
+    // If no packet adapter was found, you can fallback to the no-op implementation
     scoreboardLibrary = new NoopScoreboardLibrary(plugin);
 }
 
