@@ -16,8 +16,8 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   private volatile Map<Player, SidebarLineHandler> playerMap;
   private volatile Map<Locale, SidebarLineHandler> localeMap;
 
-  public PlayerDependantLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int size) {
-    super(scoreboardLibrary, size);
+  public PlayerDependantLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
+    super(scoreboardLibrary, maxLines);
   }
 
   @Override

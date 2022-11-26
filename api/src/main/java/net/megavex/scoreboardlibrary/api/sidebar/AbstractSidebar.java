@@ -40,7 +40,7 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
    * @param value Static value
    */
   protected final void registerStaticLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line, @NotNull Component value) {
-    SidebarUtilities.checkLineBounds(line);
+    SidebarUtilities.checkLineBounds(sidebar.maxLines(), line);
     checkLineAvailable(line);
     Preconditions.checkNotNull(value);
     checkClosed();
@@ -57,7 +57,7 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
    * @return The created LineSupplier
    */
   protected final @NotNull DynamicSidebarLine registerDynamicLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line, @NotNull Supplier<@Nullable Component> lineSupplier) {
-    SidebarUtilities.checkLineBounds(line);
+    SidebarUtilities.checkLineBounds(sidebar.maxLines(), line);
     checkLineAvailable(line);
     Preconditions.checkNotNull(lineSupplier);
     checkClosed();
@@ -97,7 +97,7 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
    * @return Supplier of line
    */
   protected @Nullable SidebarLine getLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line) {
-    SidebarUtilities.checkLineBounds(line);
+    SidebarUtilities.checkLineBounds(sidebar.maxLines(), line);
     checkClosed();
     return lines[line];
   }

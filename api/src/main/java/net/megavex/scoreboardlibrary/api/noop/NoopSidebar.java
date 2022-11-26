@@ -88,13 +88,13 @@ class NoopSidebar implements Sidebar {
 
   @Override
   public void line(int line, @Nullable Component value) {
-    SidebarUtilities.checkLineBounds(line);
+    SidebarUtilities.checkLineBounds(maxLines, line);
     lines[line] = value;
   }
 
   @Override
   public @Nullable Component line(int line) {
-    SidebarUtilities.checkLineBounds(line);
+    SidebarUtilities.checkLineBounds(maxLines, line);
     return lines[line];
   }
 

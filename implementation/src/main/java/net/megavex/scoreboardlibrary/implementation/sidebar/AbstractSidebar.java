@@ -34,10 +34,9 @@ public abstract class AbstractSidebar implements Sidebar {
   private Component title = empty();
   private volatile SidebarPacketAdapter<?, ?> packetAdapter;
 
-  public AbstractSidebar(ScoreboardLibraryImpl scoreboardLibrary, int size) {
+  public AbstractSidebar(ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     this.scoreboardLibrary = scoreboardLibrary;
-    SidebarUtilities.checkLineBounds(size);
-    this.lines = new GlobalLineInfo[size];
+    this.lines = new GlobalLineInfo[maxLines];
   }
 
   protected abstract void forEachSidebar(Consumer<SidebarLineHandler> consumer);
