@@ -32,7 +32,7 @@ ScoreboardLibrary scoreboardLibrary;
 try {
     scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
 } catch (NoPacketAdapterAvailableException e) {
-    // If no packet adapter was found, you can fallback to the no-op implementation
+    // If no packet adapter is found, you can fallback to the no-op implementation
     scoreboardLibrary = new NoopScoreboardLibrary(plugin);
 }
 
@@ -43,10 +43,7 @@ scoreboardLibrary.close();
 ### Sidebar
 
 ```java
-Sidebar sidebar = scoreboardLibrary.sidebar(
-    Sidebar.MAX_LINES, // 15
-    null // Locale which should be used for translating Components, or null if it should depend on each player's client locale
-);
+Sidebar sidebar = scoreboardLibrary.sidebar();
 
 sidebar.title(Component.text("Sidebar Title"));
 sidebar.line(0, Component.empty());

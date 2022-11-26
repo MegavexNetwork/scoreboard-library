@@ -57,6 +57,15 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   /**
    * Creates a {@link Sidebar}
    *
+   * @return Sidebar
+   */
+  default @NotNull Sidebar sidebar() {
+    return sidebar(Sidebar.MAX_LINES, null);
+  }
+
+  /**
+   * Creates a {@link Sidebar}
+   *
    * @param maxLines Max sidebar lines
    * @return Sidebar
    */
@@ -75,23 +84,9 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   @NotNull Sidebar sidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale);
 
   /**
-   * Gets the sidebars associated with this ScoreboardManager
-   *
-   * @return Sidebars
-   */
-  @NotNull Collection<Sidebar> sidebars();
-
-  /**
-   * Creates a {@link TeamManager} with the global component translator
+   * Creates a {@link TeamManager}
    *
    * @return TeamManager
    */
   @NotNull TeamManager teamManager();
-
-  /**
-   * Gets the team managers associated with this {@link JavaPlugin}
-   *
-   * @return Team Managers
-   */
-  @NotNull Collection<TeamManager> teamManagers();
 }

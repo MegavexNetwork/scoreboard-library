@@ -1,7 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation;
 
 import com.google.common.base.Preconditions;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.listener.LocaleListener;
 import net.megavex.scoreboardlibrary.implementation.listener.PlayerListener;
@@ -163,16 +161,6 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
 
     return this.sidebars;
-  }
-
-  @Override
-  public @NotNull Set<TeamManager> teamManagers() {
-    return teamManagers == null ? Set.of():Collections.unmodifiableSet(teamManagers);
-  }
-
-  @Override
-  public @NotNull Set<Sidebar> sidebars() {
-    return sidebars == null ? Set.of():Collections.unmodifiableSet(sidebars);
   }
 
   private void checkClosed() {

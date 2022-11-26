@@ -20,8 +20,6 @@ import org.jetbrains.annotations.Range;
  */
 public class NoopScoreboardLibrary implements ScoreboardLibrary {
   private final Plugin plugin;
-  private final Set<Sidebar> sidebars = ConcurrentHashMap.newKeySet();
-  private final Set<TeamManager> teamManagers = ConcurrentHashMap.newKeySet();
   private boolean closed = false;
 
   public NoopScoreboardLibrary(@NotNull Plugin plugin) {
@@ -40,18 +38,8 @@ public class NoopScoreboardLibrary implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull Collection<Sidebar> sidebars() {
-    return closed ? Set.of():Collections.unmodifiableSet(sidebars);
-  }
-
-  @Override
   public @NotNull TeamManager teamManager() {
     return new NoopTeamManager(this);
-  }
-
-  @Override
-  public @NotNull Collection<TeamManager> teamManagers() {
-    return closed ? Set.of():Collections.unmodifiableSet(teamManagers);
   }
 
   @Override
