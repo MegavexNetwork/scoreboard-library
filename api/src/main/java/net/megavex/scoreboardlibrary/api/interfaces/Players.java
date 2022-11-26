@@ -12,13 +12,13 @@ public interface Players {
   boolean removePlayer(@NotNull Player player);
 
   default void addPlayers(@NotNull Collection<Player> players) {
-    for (Player player : players) {
+    for (var player : players) {
       addPlayer(player);
     }
   }
 
   default void removePlayers(@NotNull Collection<Player> players) {
-    for (Player player : players) {
+    for (var player : players) {
       removePlayer(player);
     }
   }

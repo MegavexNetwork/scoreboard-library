@@ -48,14 +48,14 @@ public abstract class AbstractSidebar implements Sidebar {
 
   protected void updateScores() {
     byte size = 0;
-    for (GlobalLineInfo line : lines) {
+    for (var line : lines) {
       if (line != null && line.value != null) {
         size++;
       }
     }
 
     byte i = 0;
-    for (GlobalLineInfo line : lines) {
+    for (var line : lines) {
       if (line != null && line.value != null) {
         byte oldScore = line.objectiveScore;
         line.objectiveScore = (byte) (size - i - 1);
@@ -110,7 +110,7 @@ public abstract class AbstractSidebar implements Sidebar {
         updateScores();
 
         boolean updateTeams = false;
-        for (GlobalLineInfo line : lines) {
+        for (var line : lines) {
           if (line == null || !line.update) continue;
           line.updateTeams = true;
           updateTeams = true;
@@ -130,7 +130,7 @@ public abstract class AbstractSidebar implements Sidebar {
         if (updateTeams) {
           forEachSidebar(SidebarLineHandler::update);
 
-          for (GlobalLineInfo line : lines) {
+          for (var line : lines) {
             if (line != null) line.updateTeams = false;
           }
         }

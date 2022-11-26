@@ -59,7 +59,7 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
    * @param line  Line
    * @param value Value
    */
-  void line(int line, @Nullable Component value);
+  void line(@Range(from = 0, to = MAX_LINES - 1) int line, @Nullable Component value);
 
   /**
    * Gets a line's value
@@ -67,7 +67,7 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
    * @param line Line
    * @return Value of line
    */
-  @Nullable Component line(int line);
+  @Nullable Component line(@Range(from = 0, to = MAX_LINES - 1) int line);
 
   /**
    * @return Current title of this Sidebar

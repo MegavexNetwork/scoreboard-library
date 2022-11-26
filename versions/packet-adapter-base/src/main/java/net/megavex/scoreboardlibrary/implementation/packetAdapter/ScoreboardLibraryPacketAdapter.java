@@ -35,7 +35,7 @@ public abstract class ScoreboardLibraryPacketAdapter<P> {
   public abstract void sendPacket(@NotNull Player player, @NotNull P packet);
 
   public final void sendPacket(@NotNull Iterable<Player> players, @NotNull P packet) {
-    for (Player player : players) {
+    for (var player : players) {
       sendPacket(player, packet);
     }
   }

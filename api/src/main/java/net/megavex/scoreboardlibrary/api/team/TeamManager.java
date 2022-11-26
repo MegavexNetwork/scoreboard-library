@@ -11,9 +11,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Represents a list of Scoreboard Teams
- */
 @ApiStatus.NonExtendable
 public interface TeamManager extends Closeable, HasScoreboardLibrary, Players {
   // Teams
@@ -97,7 +94,7 @@ public interface TeamManager extends Closeable, HasScoreboardLibrary, Players {
    * @param teamInfoFunction Function that returns the {@link TeamInfo} that the player should have
    */
   default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
-    for (Player player : players) {
+    for (var player : players) {
       addPlayer(player, teamInfoFunction);
     }
   }

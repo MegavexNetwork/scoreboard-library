@@ -1,7 +1,6 @@
 package net.megavex.scoreboardlibrary.api;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.Locale;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
@@ -9,7 +8,6 @@ import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,10 +16,6 @@ import org.jetbrains.annotations.Range;
 @ApiStatus.NonExtendable
 public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
-    return loadScoreboardLibrary(plugin, false);
-  }
-
-  static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin, boolean debug) throws NoPacketAdapterAvailableException {
     Class<?> clazz;
     try {
       clazz = Class.forName("net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl");
@@ -30,7 +24,7 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
     }
 
     try {
-      return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class, boolean.class).newInstance(plugin, debug);
+      return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class).newInstance(plugin);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
       if (e instanceof InvocationTargetException invocationTargetException) {
         if (invocationTargetException.getTargetException() instanceof NoPacketAdapterAvailableException adapterNotFoundException) {

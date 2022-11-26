@@ -9,7 +9,7 @@ public final class SidebarUtilities {
   }
 
   public static void checkLineBounds(int line) {
-    if (line > Sidebar.MAX_LINES || line < 0) {
+    if (line >= Sidebar.MAX_LINES || line < 0) {
       throw new IndexOutOfBoundsException("invalid line " + line);
     }
   }

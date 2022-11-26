@@ -27,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   public final Plugin plugin;
-  public final boolean debug;
   public final ScoreboardLibraryPacketAdapter<?> packetAdapter;
   public final LocaleProvider localeProvider;
   public final PlayerListener playerListener = new PlayerListener(this);
@@ -44,7 +43,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
   private final Object lock = new Object();
 
-  public ScoreboardLibraryImpl(Plugin plugin, boolean debug) throws NoPacketAdapterAvailableException {
+  public ScoreboardLibraryImpl(Plugin plugin) throws NoPacketAdapterAvailableException {
     Preconditions.checkNotNull(plugin, "plugin");
 
     try {
@@ -54,7 +53,6 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
 
     this.plugin = plugin;
-    this.debug = debug;
     this.packetAdapter = PacketAdapterLoader.loadPacketAdapter();
     this.localeProvider = this.packetAdapter.localeProvider;
 
@@ -62,16 +60,9 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
     try {
       Class.forName("org.bukkit.event.player.PlayerLocaleChangeEvent");
-      debug("Registering PlayerLocaleChangeEvent listener");
       this.localeListener = new LocaleListener(this);
       plugin.getServer().getPluginManager().registerEvents(this.localeListener, plugin);
     } catch (ClassNotFoundException ignored) {
-    }
-  }
-
-  public void debug(@NotNull String message) {
-    if (debug) {
-      plugin.getLogger().info("[scoreboard-library] " + message);
     }
   }
 

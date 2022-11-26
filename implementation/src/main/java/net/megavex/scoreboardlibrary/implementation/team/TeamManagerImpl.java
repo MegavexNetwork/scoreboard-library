@@ -178,7 +178,7 @@ public class TeamManagerImpl implements TeamManager {
         var team = addTeamTask.team();
         var teamInfoMap = addTeamTask.teamInfoMap();
         if (teamInfoMap == null) {
-          for (Player player : players) {
+          for (var player : players) {
             team.addPlayer(player, team.globalInfo());
           }
           continue;

@@ -1,26 +1,23 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
 import com.google.common.base.Preconditions;
-import java.util.Objects;
 import java.util.function.Supplier;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.sidebar.line.SidebarLine;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 
 import static net.kyori.adventure.text.Component.empty;
-import static net.megavex.scoreboardlibrary.api.sidebar.line.SidebarLine.staticLine;
 
 public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
-  private static final SidebarLine emptyLine = staticLine(empty());
   protected final Sidebar sidebar;
-  private SidebarLine[] lines;
+  private final SidebarLine[] lines;
   private boolean closed;
 
   public AbstractSidebar(@NotNull Sidebar sidebar) {
@@ -37,112 +34,70 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
   }
 
   /**
-   * Updates a line
+   * Registers a static line for this AbstractSidebar
    *
-   * @param lineSupplier Line to update
+   * @param line  Line to register
+   * @param value Static value
    */
-  protected final void updateLine(@NotNull SidebarLine lineSupplier) {
+  protected final void registerStaticLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line, @NotNull Component value) {
+    SidebarUtilities.checkLineBounds(line);
+    checkLineAvailable(line);
+    Preconditions.checkNotNull(value);
     checkClosed();
+
+    lines[line] = new SidebarLine(line);
+    sidebar.line(line, value);
+  }
+
+  /**
+   * Registers a line that can change its value
+   *
+   * @param line         Line to register
+   * @param lineSupplier Line value supplier
+   * @return The created LineSupplier
+   */
+  protected final @NotNull DynamicSidebarLine registerDynamicLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line, @NotNull Supplier<@Nullable Component> lineSupplier) {
+    SidebarUtilities.checkLineBounds(line);
+    checkLineAvailable(line);
     Preconditions.checkNotNull(lineSupplier);
-    Preconditions.checkArgument(!lineSupplier.lineStatic());
-    sidebar.line(lineSupplier.line(), lineSupplier.computeValue());
+    checkClosed();
+
+    var sidebarLine = new DynamicSidebarLine(line, lineSupplier);
+    lines[line] = sidebarLine;
+    sidebar.line(line, lineSupplier.get());
+    return sidebarLine;
+  }
+
+  /**
+   * Registers an empty line
+   *
+   * @param line Line to register
+   */
+  protected final void registerEmptyLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line) {
+    registerStaticLine(line, empty());
   }
 
   /**
    * Unregisters a line
    *
    * @param line Line to unregister
-   * @return Unregistered line
    */
-  protected final @Nullable SidebarLine unregisterLine(int line) {
-    var lineSupplier = lines[line];
-    if (lineSupplier == null) {
-      return null;
-    }
-
-    lines[line] = null;
-    sidebar.line(line, null);
-    return lineSupplier;
-  }
-
-  /**
-   * Registers a static line for this AbstractSidebar
-   *
-   * @param line  Line to register
-   * @param value Static value
-   */
-  protected final @NotNull SidebarLine registerStaticLine(int line, @NotNull Component value) {
-    var sidebarLine = staticLine(value);
-    registerLine(line, sidebarLine);
-    return sidebarLine;
-  }
-
-  /**
-   * Registers a line for this AbstractSidebar
-   *
-   * @param line     Line to register
-   * @param supplier Supplier
-   * @return The created LineSupplier
-   */
-  protected final @NotNull SidebarLine registerLine(int line, @NotNull Supplier<Component> supplier) {
+  protected final void unregisterLine(@NotNull SidebarLine line) {
+    Preconditions.checkNotNull(line);
     checkClosed();
-    Preconditions.checkNotNull(supplier);
 
-    return registerLine(line, new SidebarLine() {
-      @Override
-      public boolean lineStatic() {
-        return false;
-      }
-
-      @Override
-      public int line() {
-        return line;
-      }
-
-      @Override
-      public Component computeValue() {
-        return supplier.get();
-      }
-    });
+    lines[line.line] = null;
+    sidebar.line(line.line, null);
   }
 
   /**
-   * Registers a line for this AbstractSidebar
-   *
-   * @param line     Line to register
-   * @param supplier Supplier
-   * @return The same LineSupplier for convenience
-   */
-  protected final <S extends SidebarLine> @NotNull S registerLine(int line, @NotNull S supplier) {
-    checkClosed();
-    Objects.requireNonNull(supplier);
-
-    SidebarUtilities.checkLineBounds(line);
-    if (lines[line] != null) {
-      throw new IllegalStateException("Line " + line + " is already registered");
-    }
-
-    lines[line] = Objects.requireNonNull(supplier, "LineSupplier cannot be null");
-    sidebar.line(line, supplier.computeValue());
-    return supplier;
-  }
-
-  /**
-   * Registers an empty line for this AbstractSidebar
-   *
-   * @param line Line to register
-   */
-  protected final void registerEmptyLine(int line) {
-    registerLine(line, emptyLine);
-  }
-
-  /**
-   * Gets the supplier for a line
+   * Gets the {@link SidebarLine} of an index
    *
    * @param line Line
    * @return Supplier of line
    */
-  protected @Nullable SidebarLine getLine(int line) {
+  protected @Nullable SidebarLine getLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line) {
+    SidebarUtilities.checkLineBounds(line);
     checkClosed();
     return lines[line];
   }
@@ -152,21 +107,12 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
     return sidebar.scoreboardLibrary();
   }
 
-  protected final void checkClosed() {
-    Preconditions.checkState(!closed, "AbstractSidebar is closed");
-  }
-
-  /**
-   * Closes this AbstractSidebar
-   */
   @Override
   public final void close() {
     close(true);
   }
 
   /**
-   * Closes this AbstractSidebar
-   *
    * @param closeWrappedSidebar Whether to close the wrapped {@link Sidebar} or just clear all lines from it
    */
   public final void close(boolean closeWrappedSidebar) {
@@ -176,22 +122,54 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
     if (closeWrappedSidebar) {
       sidebar.close();
     } else {
-      for (int i = 0; i < sidebar.maxLines(); i++) {
-        sidebar.line(i, null);
+      for (var line : lines) {
+        if (line != null) {
+          sidebar.line(line.line, null);
+        }
       }
     }
 
-    lines = null;
     onClosed();
   }
 
   @Override
-  public boolean closed() {
+  public final boolean closed() {
     return closed;
   }
 
   @Override
   public int hashCode() {
     return sidebar.hashCode();
+  }
+
+  protected final void checkClosed() {
+    Preconditions.checkState(!closed, "AbstractSidebar is closed");
+  }
+
+  private void checkLineAvailable(int line) {
+    if (lines[line] != null) {
+      throw new IllegalArgumentException("line " + line + " is already registered");
+    }
+  }
+
+  public sealed class SidebarLine permits DynamicSidebarLine {
+    protected final int line;
+
+    private SidebarLine(int line) {
+      this.line = line;
+    }
+  }
+
+  public final class DynamicSidebarLine extends SidebarLine {
+    private final Supplier<Component> function;
+
+    private DynamicSidebarLine(int line, @NotNull Supplier<Component> function) {
+      super(line);
+      this.function = function;
+    }
+
+    public void update() {
+      sidebar.line(line, function.get());
+    }
   }
 }

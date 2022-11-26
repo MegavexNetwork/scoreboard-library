@@ -1,11 +1,7 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
 import com.google.common.base.Preconditions;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
