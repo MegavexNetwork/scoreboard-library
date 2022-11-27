@@ -61,7 +61,7 @@ public class LegacyTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPack
       locale -> new WrapperPlayServerTeamsLegacy(
         packetAdapter.teamName,
         properties,
-        update ? WrapperPlayServerTeams.TeamMode.UPDATE:WrapperPlayServerTeams.TeamMode.CREATE
+        update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE
       ));
   }
 }

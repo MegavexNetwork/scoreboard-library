@@ -24,7 +24,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return players == null ? Set.of():Collections.unmodifiableCollection(players);
+    return players == null ? Set.of() : Collections.unmodifiableCollection(players);
   }
 
   @Override

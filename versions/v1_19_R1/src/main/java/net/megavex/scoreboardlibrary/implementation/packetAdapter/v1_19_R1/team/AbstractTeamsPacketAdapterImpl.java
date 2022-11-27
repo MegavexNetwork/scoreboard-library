@@ -56,7 +56,7 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     Collection<String> entries
   ) {
     try {
-      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? List.of():entries);
+      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? List.of() : entries);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }

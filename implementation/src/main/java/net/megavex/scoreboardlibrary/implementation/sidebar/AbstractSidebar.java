@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -229,7 +228,7 @@ public abstract class AbstractSidebar implements Sidebar {
   @Override
   public @Nullable Component line(int line) {
     GlobalLineInfo info = lines[line];
-    return info == null ? null:info.value;
+    return info == null ? null : info.value;
   }
 
   public GlobalLineInfo getLineInfo(int line) {

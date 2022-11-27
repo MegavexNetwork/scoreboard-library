@@ -47,7 +47,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
 
   @Override
   public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
-    return nativeAdventure ? new PaperSidebarPacketAdapterImpl(this, sidebar):new SidebarPacketAdapterImpl(this, sidebar);
+    return nativeAdventure ? new PaperSidebarPacketAdapterImpl(this, sidebar) : new SidebarPacketAdapterImpl(this, sidebar);
   }
 
   @Override
@@ -62,7 +62,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
 
   @Override
   public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
-    return nativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName):new TeamsPacketAdapterImpl(this, teamName);
+    return nativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName) : new TeamsPacketAdapterImpl(this, teamName);
   }
 
   @Override

@@ -36,12 +36,12 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return playerMap == null ? Set.of():playerMap.keySet();
+    return playerMap == null ? Set.of() : playerMap.keySet();
   }
 
   @Override
   protected SidebarLineHandler addPlayer0(Player player) {
-    var sidebar = playerMap == null ? null:playerMap.get(player);
+    var sidebar = playerMap == null ? null : playerMap.get(player);
     if (sidebar != null) {
       return null;
     }

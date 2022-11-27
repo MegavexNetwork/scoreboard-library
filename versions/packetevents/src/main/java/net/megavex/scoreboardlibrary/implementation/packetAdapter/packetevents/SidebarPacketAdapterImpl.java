@@ -46,7 +46,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
   @Override
   protected void sendObjectivePacket(Collection<Player> players, boolean create) {
     if (sidebar.locale() != null) {
-      impl.sendPacket(players, create ? createPacket:updatePacket);
+      impl.sendPacket(players, create ? createPacket : updatePacket);
     } else {
       LocalePacketUtilities.sendLocalePackets(
         impl.localeProvider,
@@ -54,7 +54,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
         impl,
         players,
         locale -> createObjectivePacket(
-          create ? ObjectiveMode.CREATE:ObjectiveMode.UPDATE,
+          create ? ObjectiveMode.CREATE : ObjectiveMode.UPDATE,
           sidebar.title(),
           locale
         )

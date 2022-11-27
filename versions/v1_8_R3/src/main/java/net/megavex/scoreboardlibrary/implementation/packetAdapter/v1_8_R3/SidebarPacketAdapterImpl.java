@@ -66,11 +66,11 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, Pa
   @Override
   protected void sendObjectivePacket(Collection<Player> players, boolean create) {
     if (sidebar.locale() != null) {
-      impl.sendPacket(players, create ? createPacket:updatePacket);
+      impl.sendPacket(players, create ? createPacket : updatePacket);
     } else {
       LocalePacketUtilities.sendLocalePackets(impl.localeProvider, sidebar.locale(), impl, players, locale -> {
         var packet = new PacketPlayOutScoreboardObjective();
-        createObjectivePacket(packet, create ? 0:2, sidebar.title(), locale);
+        createObjectivePacket(packet, create ? 0 : 2, sidebar.title(), locale);
         return packet;
       });
     }

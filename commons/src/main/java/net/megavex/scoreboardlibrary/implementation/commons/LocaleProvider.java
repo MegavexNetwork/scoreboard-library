@@ -30,7 +30,7 @@ public interface LocaleProvider {
       return player -> {
         try {
           var locale = Translator.parseLocale((String) legacySpigotMethod.invokeExact(player.spigot()));
-          return locale == null ? DEFAULT_LOCALE:locale;
+          return locale == null ? DEFAULT_LOCALE : locale;
         } catch (Throwable e) {
           throw new RuntimeException(e);
         }
@@ -43,7 +43,7 @@ public interface LocaleProvider {
       return player -> {
         try {
           var locale = Translator.parseLocale((String) legacyMethod.invokeExact(player));
-          return locale == null ? DEFAULT_LOCALE:locale;
+          return locale == null ? DEFAULT_LOCALE : locale;
         } catch (Throwable e) {
           throw new RuntimeException(e);
         }

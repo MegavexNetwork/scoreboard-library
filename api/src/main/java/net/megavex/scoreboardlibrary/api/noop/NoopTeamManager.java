@@ -44,7 +44,7 @@ class NoopTeamManager implements TeamManager {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return closed ? Set.of():Collections.unmodifiableSet(players);
+    return closed ? Set.of() : Collections.unmodifiableSet(players);
   }
 
   @Override
@@ -64,7 +64,7 @@ class NoopTeamManager implements TeamManager {
 
   @Override
   public @NotNull Collection<ScoreboardTeam> teams() {
-    return closed ? Set.of():Collections.unmodifiableCollection(teams.values());
+    return closed ? Set.of() : Collections.unmodifiableCollection(teams.values());
   }
 
   @Override
@@ -91,7 +91,7 @@ class NoopTeamManager implements TeamManager {
 
     team = new NoopScoreboardTeam(this, name);
     for (var player : players) {
-      var teamInfo = teamInfoFunction == null ? team.globalInfo():teamInfoFunction.apply(player, team);
+      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(player, team);
       validateTeamInfo(team, teamInfo);
       team.teamInfoMap().put(player, teamInfo);
     }
@@ -108,7 +108,7 @@ class NoopTeamManager implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      var teamInfo = teamInfoFunction == null ? team.globalInfo():teamInfoFunction.apply(team);
+      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(team);
       validateTeamInfo(team, teamInfo);
       team.teamInfoMap().put(player, teamInfo);
     }

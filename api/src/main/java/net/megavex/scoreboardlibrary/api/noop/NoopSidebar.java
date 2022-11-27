@@ -51,7 +51,7 @@ class NoopSidebar implements Sidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return closed ? Set.of():Collections.unmodifiableSet(players);
+    return closed ? Set.of() : Collections.unmodifiableSet(players);
   }
 
   @Override

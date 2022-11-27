@@ -50,6 +50,6 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
   @Override
   protected void sendObjectivePacket(Collection<Player> players, boolean create) {
     initialisePackets();
-    impl.sendPacket(players, create ? createPacket:updatePacket);
+    impl.sendPacket(players, create ? createPacket : updatePacket);
   }
 }

@@ -94,7 +94,7 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, Packet
 
         var packet = new PacketPlayOutScoreboardTeam();
         UnsafeUtilities.setField(teamNameField, packet, teamName);
-        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE:MODE_CREATE);
+        UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE : MODE_CREATE);
         UnsafeUtilities.setField(teamDisplayNameField, packet, displayName);
         UnsafeUtilities.setField(teamPrefixField, packet, prefix);
         UnsafeUtilities.setField(teamSuffixField, packet, suffix);

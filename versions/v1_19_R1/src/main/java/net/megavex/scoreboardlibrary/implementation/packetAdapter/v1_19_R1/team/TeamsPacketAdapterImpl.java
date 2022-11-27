@@ -39,7 +39,7 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
       LocalePacketUtilities.sendLocalePackets(impl.localeProvider, null, impl, players, locale -> {
         var parameters = parametersConstructor.invoke();
         fillParameters(parameters, locale);
-        return createTeamsPacket(create ? MODE_CREATE:MODE_UPDATE, teamName, parameters, properties.entries());
+        return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName, parameters, properties.entries());
       });
     }
 

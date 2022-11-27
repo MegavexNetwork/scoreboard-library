@@ -29,54 +29,54 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 
 ```java
 ScoreboardLibrary scoreboardLibrary;
-try {
-    scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
-} catch (NoPacketAdapterAvailableException e) {
-    // If no packet adapter is found, you can fallback to the no-op implementation
-    scoreboardLibrary = new NoopScoreboardLibrary(plugin);
-}
+  try{
+  scoreboardLibrary=ScoreboardLibrary.loadScoreboardLibrary(plugin);
+  }catch(NoPacketAdapterAvailableException e){
+  // If no packet adapter is found, you can fallback to the no-op implementation
+  scoreboardLibrary=new NoopScoreboardLibrary(plugin);
+  }
 
 // On plugin shutdown:
-scoreboardLibrary.close();
+  scoreboardLibrary.close();
 ```
 
 ### Sidebar
 
 ```java
-Sidebar sidebar = scoreboardLibrary.createSidebar();
+Sidebar sidebar=scoreboardLibrary.createSidebar();
 
-sidebar.title(Component.text("Sidebar Title"));
-sidebar.line(0, Component.empty());
-sidebar.line(1, Component.text("Line 1"));
-sidebar.line(2, Component.text("Line 2"));
-sidebar.line(2, Component.empty());
-sidebar.line(3, Component.text("coolserver.net"));
+  sidebar.title(Component.text("Sidebar Title"));
+  sidebar.line(0,Component.empty());
+  sidebar.line(1,Component.text("Line 1"));
+  sidebar.line(2,Component.text("Line 2"));
+  sidebar.line(2,Component.empty());
+  sidebar.line(3,Component.text("coolserver.net"));
 
-sidebar.addPlayer(player); // Add the player to the sidebar
-sidebar.visible(true); // Make the sidebar visible
+  sidebar.addPlayer(player); // Add the player to the sidebar
+  sidebar.visible(true); // Make the sidebar visible
 ```
 
 ### TeamManager
 
 ```java
-TeamManager teamManager = scoreboardLibrary.createTeamManager();
-ScoreboardTeam team = teamManager.createIfAbsent("team_name");
+TeamManager teamManager=scoreboardLibrary.createTeamManager();
+  ScoreboardTeam team=teamManager.createIfAbsent("team_name");
 
 // A TeamInfo holds all the properties that a team can have (except the name).
 // The global TeamInfo is the default one that will be applied to players,
 // however you can give each player a different TeamInfo
-TeamInfo teamInfo = team.globalInfo();
+  TeamInfo teamInfo=team.globalInfo();
 
-teamInfo.displayName(Component.text("Team Name"));
-teamInfo.prefix(Component.text("[Prefix] "));
-teamInfo.suffix(Component.text(" [Suffix]"));
-teamInfo.playerColor(NamedTextColor.RED);
+  teamInfo.displayName(Component.text("Team Name"));
+  teamInfo.prefix(Component.text("[Prefix] "));
+  teamInfo.suffix(Component.text(" [Suffix]"));
+  teamInfo.playerColor(NamedTextColor.RED);
 
-teamManager.addPlayer(player); // Player will be added to the global TeamInfo
+  teamManager.addPlayer(player); // Player will be added to the global TeamInfo
 
 // You can change the TeamInfo like this:
-TeamInfo newTeamInfo = TeamInfo.teamInfo(); // Creates a blank TeamInfo
-team.teamInfo(player, newTeamInfo);
+  TeamInfo newTeamInfo=TeamInfo.teamInfo(); // Creates a blank TeamInfo
+  team.teamInfo(player,newTeamInfo);
 ```
 
 For more examples, check out the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example)

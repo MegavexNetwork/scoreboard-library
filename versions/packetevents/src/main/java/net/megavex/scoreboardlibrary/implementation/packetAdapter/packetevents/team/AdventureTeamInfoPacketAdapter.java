@@ -78,7 +78,7 @@ public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoP
 
       return new WrapperPlayServerTeams(
         packetAdapter.teamName,
-        update ? WrapperPlayServerTeams.TeamMode.UPDATE:WrapperPlayServerTeams.TeamMode.CREATE,
+        update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE,
         Optional.of(info),
         properties.entries()
       );
