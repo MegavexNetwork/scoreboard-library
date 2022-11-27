@@ -37,4 +37,9 @@ public interface ScoreboardTeam {
    * @param teamInfo New {@link TeamInfo} of Player
    */
   void teamInfo(@NotNull Player player, @NotNull TeamInfo teamInfo);
+
+  /**
+   * @return New {@link TeamInfo} which is assigned to this team
+   */
+  TeamInfo createTeamInfo();
 }

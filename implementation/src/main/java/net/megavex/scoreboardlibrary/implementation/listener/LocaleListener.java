@@ -18,11 +18,14 @@ public record LocaleListener(ScoreboardLibraryImpl scoreboardLibrary) implements
     new BukkitRunnable() {
       @Override
       public void run() {
-        var teamManager = scoreboardLibrary.teamManagerMap.get(player);
-        if (teamManager != null) {
-          for (var team : teamManager.teams()) {
-            var teamInfo = (TeamInfoImpl) team.teamInfo(player);
-            teamInfo.packetAdapter().updateTeam(Set.of(player));
+        var slPlayer = scoreboardLibrary.getPlayer(player);
+        if (slPlayer != null) {
+          var teamManager = slPlayer.teamManager();
+          if (teamManager != null) {
+            for (var team : teamManager.teams()) {
+              var teamInfo = (TeamInfoImpl) team.teamInfo(player);
+              teamInfo.packetAdapter().updateTeam(Set.of(player));
+            }
           }
         }
 

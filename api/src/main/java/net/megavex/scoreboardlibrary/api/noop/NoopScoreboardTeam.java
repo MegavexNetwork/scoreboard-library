@@ -60,7 +60,12 @@ class NoopScoreboardTeam implements ScoreboardTeam {
       throw new IllegalArgumentException("invalid TeamInfo");
     }
 
-    teamInfoMap.put(player, (NoopTeamInfo) teamInfo);
+    teamInfoMap.put(player, teamInfo);
+  }
+
+  @Override
+  public TeamInfo createTeamInfo() {
+    return new NoopTeamInfo(this);
   }
 
   public Map<Player, TeamInfo> teamInfoMap() {

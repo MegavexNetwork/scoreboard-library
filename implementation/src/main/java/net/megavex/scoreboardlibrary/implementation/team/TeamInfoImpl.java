@@ -25,7 +25,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   private final ScoreboardTeamImpl team;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<?> packetAdapter;
 
-  private final Set<Player> players = CollectionProvider.set(8);
+  private final Set<Player> players = CollectionProvider.set(4);
 
   private final Set<String> entries = CollectionProvider.set(4);
   private Component displayName = empty(),

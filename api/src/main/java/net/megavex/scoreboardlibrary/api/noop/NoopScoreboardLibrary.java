@@ -29,12 +29,12 @@ public class NoopScoreboardLibrary implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull Sidebar sidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale) {
+  public @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale) {
     return new NoopSidebar(this, maxLines, locale);
   }
 
   @Override
-  public @NotNull TeamManager teamManager() {
+  public @NotNull TeamManager createTeamManager() {
     return new NoopTeamManager(this);
   }
 

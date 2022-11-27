@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.MapMaker;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -31,8 +32,9 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   public final LocaleProvider localeProvider;
   public final PlayerListener playerListener = new PlayerListener(this);
 
+  private final Map<Player, ScoreboardLibraryPlayer> playerMap = new MapMaker().weakKeys().makeMap();
+
   public final Map<Player, AbstractSidebar> sidebarMap = new ConcurrentHashMap<>();
-  public final Map<Player, TeamManagerImpl> teamManagerMap = new ConcurrentHashMap<>();
   public volatile Set<TeamManagerImpl> teamManagers;
   public volatile Set<AbstractSidebar> sidebars;
 
@@ -72,7 +74,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull Sidebar sidebar(int maxLines, @Nullable Locale locale) {
+  public @NotNull Sidebar createSidebar(int maxLines, @Nullable Locale locale) {
     checkClosed();
 
     if (maxLines <= 0 || maxLines > Sidebar.MAX_LINES) {
@@ -91,7 +93,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull TeamManagerImpl teamManager() {
+  public @NotNull TeamManagerImpl createTeamManager() {
     checkClosed();
 
     var teamManager = new TeamManagerImpl(this);
@@ -152,6 +154,15 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
 
     return this.sidebars;
+  }
+
+  public @NotNull ScoreboardLibraryPlayer getOrCreatePlayer(@NotNull Player player) {
+    return playerMap.computeIfAbsent(player, ScoreboardLibraryPlayer::new);
+  }
+
+  public @Nullable ScoreboardLibraryPlayer getPlayer(@NotNull Player player) {
+    System.out.println(playerMap);
+    return playerMap.get(player);
   }
 
   private void checkClosed() {

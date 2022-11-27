@@ -43,7 +43,7 @@ scoreboardLibrary.close();
 ### Sidebar
 
 ```java
-Sidebar sidebar = scoreboardLibrary.sidebar();
+Sidebar sidebar = scoreboardLibrary.createSidebar();
 
 sidebar.title(Component.text("Sidebar Title"));
 sidebar.line(0, Component.empty());
@@ -59,7 +59,7 @@ sidebar.visible(true); // Make the sidebar visible
 ### TeamManager
 
 ```java
-TeamManager teamManager = scoreboardLibrary.teamManager();
+TeamManager teamManager = scoreboardLibrary.createTeamManager();
 ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
 // A TeamInfo holds all the properties that a team can have (except the name).

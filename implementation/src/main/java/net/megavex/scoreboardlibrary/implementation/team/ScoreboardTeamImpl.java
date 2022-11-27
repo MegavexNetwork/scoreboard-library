@@ -74,26 +74,39 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     teamManager.taskQueue().add(new TeamManagerTask.ChangeTeamInfo(player, this, oldTeamInfo, (TeamInfoImpl) teamInfo));
   }
 
-  public TeamsPacketAdapter<?, ?> packetAdapter() {
+  @Override
+  public TeamInfo createTeamInfo() {
+    return new TeamInfoImpl(this);
+  }
+
+  public @NotNull TeamsPacketAdapter<?, ?> packetAdapter() {
     return packetAdapter;
   }
 
-  public void addPlayer(@NotNull Player player, @NotNull TeamInfoImpl teamInfo) {
+  public @NotNull Map<Player, TeamInfoImpl> teamInfoMap() {
+    return teamInfoMap;
+  }
+
+  public void addPlayer(@NotNull Player player) {
+    var teamInfo = Objects.requireNonNull(teamInfoMap.get(player));
     if (teamInfo.players().add(player)) {
       teamInfo.packetAdapter().createTeam(Set.of(player));
     }
   }
 
   public void removePlayer(@NotNull Player player) {
-    var teamInfo = Objects.requireNonNull(teamInfoMap.get(player));
+    var teamInfo = Objects.requireNonNull(teamInfoMap.remove(player));
     if (teamInfo.players().remove(player)) {
       packetAdapter.removeTeam(Set.of(player));
     }
   }
 
   public void changeTeamInfo(@NotNull Player player, @NotNull TeamInfoImpl oldTeamInfo, @NotNull TeamInfoImpl newTeamInfo) {
-    oldTeamInfo.players().remove(player);
-    newTeamInfo.players().remove(player);
+    if (!oldTeamInfo.players().remove(player)) {
+      return;
+    }
+
+    newTeamInfo.players().add(player);
 
     var singleton = Set.of(player);
     newTeamInfo.packetAdapter().updateTeam(singleton);

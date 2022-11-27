@@ -2,7 +2,9 @@ package net.megavex.scoreboardlibrary.implementation.team;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,8 +26,7 @@ public class TeamManagerImpl implements TeamManager {
   private final Set<Player> players = CollectionProvider.set(8);
   private final Map<String, ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
 
-  private final Object lock = new Object();
-  private volatile boolean closed = false;
+  private boolean closed = false;
 
   private final Queue<TeamManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
 
@@ -35,19 +36,10 @@ public class TeamManagerImpl implements TeamManager {
 
   @Override
   public void close() {
-    if (closed) {
-      return;
-    }
-
-    synchronized (lock) {
-      if (closed) {
-        return;
-      }
-
+    if (!closed) {
       closed = true;
+      taskQueue.add(TeamManagerTask.Close.INSTANCE);
     }
-
-    taskQueue.add(TeamManagerTask.Close.INSTANCE);
   }
 
   @Override
@@ -62,12 +54,12 @@ public class TeamManagerImpl implements TeamManager {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return closed ? Collections.emptySet():Collections.unmodifiableSet(players);
+    return closed ? Collections.emptySet() : Collections.unmodifiableSet(players);
   }
 
   @Override
   public @NotNull Collection<ScoreboardTeam> teams() {
-    return closed ? Collections.emptySet():Collections.unmodifiableCollection(teams.values());
+    return closed ? Collections.emptySet() : Collections.unmodifiableCollection(teams.values());
   }
 
   @Override
@@ -93,17 +85,13 @@ public class TeamManagerImpl implements TeamManager {
     team = new ScoreboardTeamImpl(this, name);
     teams.put(name, team);
 
-    Map<Player, TeamInfoImpl> teamInfoMap = null;
-    if (teamInfoFunction != null) {
-      teamInfoMap = CollectionProvider.map(players.size());
-      for (var player : players) {
-        var teamInfo = teamInfoFunction.apply(player, team);
-        validateTeamInfo(team, teamInfo);
-        teamInfoMap.put(player, (TeamInfoImpl) teamInfo);
-      }
+    for (var player : players) {
+      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(player, team);
+      validateTeamInfo(team, teamInfo);
+      team.teamInfoMap().put(player, (TeamInfoImpl) teamInfo);
     }
 
-    var task = new TeamManagerTask.AddTeam(team, teamInfoMap);
+    var task = new TeamManagerTask.AddTeam(team);
     taskQueue.add(task);
     return team;
   }
@@ -112,22 +100,19 @@ public class TeamManagerImpl implements TeamManager {
   public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
     checkClosed();
 
+    System.out.println("Players " + players);
+
     if (!players.add(player)) {
       return false;
     }
 
-    Map<net.megavex.scoreboardlibrary.implementation.team.ScoreboardTeamImpl, TeamInfoImpl> teamInfoMap = null;
-    if (teamInfoFunction != null) {
-      teamInfoMap = CollectionProvider.map(teams.size());
-      for (var team : teams.values()) {
-        var teamInfo = teamInfoFunction.apply(team);
-        validateTeamInfo(team, teamInfo);
-        teamInfoMap.put(team, (TeamInfoImpl) teamInfo);
-      }
+    for (var team : teams.values()) {
+      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(team);
+      validateTeamInfo(team, teamInfo);
+      team.teamInfoMap().put(player, (TeamInfoImpl) teamInfo);
     }
 
-    var task = new TeamManagerTask.AddPlayer(player, teamInfoMap);
-    taskQueue.add(task);
+    taskQueue.addAll(List.of(new TeamManagerTask.AddPlayer(player), new TeamManagerTask.ShowToPlayer(player)));
     return true;
   }
 
@@ -159,33 +144,38 @@ public class TeamManagerImpl implements TeamManager {
         scoreboardLibrary.teamManagers.remove(this);
 
         for (var team : teams.values()) {
-          team.packetAdapter().removeTeam(players);
+          Set<Player> removePlayers = CollectionProvider.set(players.size());
+          for (TeamInfoImpl value : team.teamInfoMap().values()) {
+            removePlayers.addAll(value.players());
+          }
+          team.packetAdapter().removeTeam(removePlayers);
         }
 
-        // TODO: unregister player team
+        for (var player : players) {
+          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).removeTeamManager(this);
+        }
         return;
       } else if (task instanceof TeamManagerTask.AddPlayer addPlayerTask) {
-        var teamInfoMap = addPlayerTask.teamInfoMap();
-        for (var team : teams.values()) {
-          TeamInfoImpl teamInfo = teamInfoMap == null ? null:teamInfoMap.get(team);
-          team.addPlayer(addPlayerTask.player(), teamInfo == null ? team.globalInfo():teamInfo);
+        var slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
+        slPlayer.addTeamManager(this);
+      } else if (task instanceof TeamManagerTask.ShowToPlayer showToPlayerTask) {
+        var slPlayer = Objects.requireNonNull(scoreboardLibrary.getPlayer(showToPlayerTask.player()));
+        if (slPlayer.isMain(this)) {
+          for (var team : teams.values()) {
+            team.addPlayer(showToPlayerTask.player());
+          }
         }
       } else if (task instanceof TeamManagerTask.RemovePlayer removePlayerTask) {
         for (var team : teams.values()) {
           team.removePlayer(removePlayerTask.player());
         }
+
+        var slPlayer = Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player()));
+        slPlayer.removeTeamManager(this);
       } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
         var team = addTeamTask.team();
-        var teamInfoMap = addTeamTask.teamInfoMap();
-        if (teamInfoMap == null) {
-          for (var player : players) {
-            team.addPlayer(player, team.globalInfo());
-          }
-          continue;
-        }
-
-        for (var entry : teamInfoMap.entrySet()) {
-          team.addPlayer(entry.getKey(), entry.getValue());
+        for (var player : team.teamInfoMap().keySet()) {
+          team.addPlayer(player);
         }
       } else if (task instanceof TeamManagerTask.UpdateTeamInfo updateTeamInfoTask) {
         var teamInfo = updateTeamInfoTask.teamInfo();

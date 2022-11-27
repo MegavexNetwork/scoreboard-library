@@ -14,10 +14,5 @@ public record PlayerListener(ScoreboardLibraryImpl scoreboardLibrary) implements
     if (sidebar != null) {
       sidebar.removePlayer(player);
     }
-
-    var teamManager = scoreboardLibrary.teamManagerMap.get(player);
-    if (teamManager != null) {
-      teamManager.removePlayer(player);
-    }
   }
 }

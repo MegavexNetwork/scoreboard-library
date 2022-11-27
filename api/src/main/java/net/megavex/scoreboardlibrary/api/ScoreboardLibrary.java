@@ -53,8 +53,8 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
    *
    * @return Sidebar
    */
-  default @NotNull Sidebar sidebar() {
-    return sidebar(Sidebar.MAX_LINES, null);
+  default @NotNull Sidebar createSidebar() {
+    return createSidebar(Sidebar.MAX_LINES, null);
   }
 
   /**
@@ -63,8 +63,8 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
    * @param maxLines Max sidebar lines
    * @return Sidebar
    */
-  default @NotNull Sidebar sidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines) {
-    return sidebar(maxLines, null);
+  default @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines) {
+    return createSidebar(maxLines, null);
   }
 
   /**
@@ -75,12 +75,12 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
    *                 or null if the locale should depend on the player
    * @return Sidebar
    */
-  @NotNull Sidebar sidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale);
+  @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale);
 
   /**
    * Creates a {@link TeamManager}
    *
    * @return TeamManager
    */
-  @NotNull TeamManager teamManager();
+  @NotNull TeamManager createTeamManager();
 }
