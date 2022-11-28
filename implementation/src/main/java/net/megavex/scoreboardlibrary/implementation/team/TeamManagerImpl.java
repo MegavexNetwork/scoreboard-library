@@ -175,7 +175,9 @@ public class TeamManagerImpl implements TeamManager {
       } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
         var team = addTeamTask.team();
         for (var player : team.teamInfoMap().keySet()) {
-          team.addPlayer(player);
+          if (Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).isMain(this)) {
+            team.addPlayer(player);
+          }
         }
       } else if (task instanceof TeamManagerTask.UpdateTeamInfo updateTeamInfoTask) {
         var teamInfo = updateTeamInfoTask.teamInfo();
