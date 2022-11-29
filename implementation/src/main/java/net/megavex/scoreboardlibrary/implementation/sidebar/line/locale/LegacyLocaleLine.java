@@ -6,21 +6,21 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
-  private final SidebarLineHandler handler;
+  private final LocaleLineHandler handler;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<String> bridge;
   private String player, oldPlayer;
   private String prefix, suffix;
   private String currentValue;
   private boolean update = false;
 
-  public LegacyLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
+  public LegacyLocaleLine(GlobalLineInfo info, LocaleLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.player = info.player();

@@ -35,22 +35,6 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
    */
   @Nullable Locale locale();
 
-  // Visibility
-
-  /**
-   * Returns the visibility of this Sidebar
-   *
-   * @return Current visibility of this Sidebar
-   */
-  boolean visible();
-
-  /**
-   * Changes the visibility of this Sidebar
-   *
-   * @param visible New visibility of this sidebar
-   */
-  void visible(boolean visible);
-
   // Lines
 
   /**

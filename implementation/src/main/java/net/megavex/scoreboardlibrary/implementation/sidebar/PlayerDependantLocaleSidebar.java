@@ -1,20 +1,20 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PlayerDependantLocaleSidebar extends AbstractSidebar {
-  private volatile Map<Player, SidebarLineHandler> playerMap;
-  private volatile Map<Locale, SidebarLineHandler> localeMap;
+public class PlayerDependantLocaleSidebar extends BetterAbstractSidebar {
+  private final Map<Player, LocaleLineHandler> playerMap = new HashMap<>();
+  private final Map<Locale, LocaleLineHandler> localeMap = new HashMap<>();
 
   public PlayerDependantLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     super(scoreboardLibrary, maxLines);
@@ -26,7 +26,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected void forEachSidebar(Consumer<SidebarLineHandler> consumer) {
+  protected void forEachSidebar(Consumer<LocaleLineHandler> consumer) {
     if (localeMap != null) {
       for (var value : localeMap.values()) {
         consumer.accept(value);
@@ -40,18 +40,13 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected SidebarLineHandler addPlayer0(Player player) {
-    var sidebar = playerMap == null ? null : playerMap.get(player);
+  protected LocaleLineHandler addPlayer0(Player player) {
+    var sidebar = playerMap.get(player);
     if (sidebar != null) {
       return null;
     }
 
     var locale = scoreboardLibrary().localeProvider.locale(player);
-
-    if (localeMap == null)
-      synchronized (lock) {
-        if (localeMap == null) localeMap = new ConcurrentHashMap<>(4, 0.75f, 2);
-      }
 
     sidebar = localeMap.get(locale);
     if (sidebar != null) {
@@ -59,14 +54,9 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
       return sidebar;
     }
 
-    sidebar = new SidebarLineHandler(this, locale);
+    sidebar = new LocaleLineHandler(this, locale);
 
     localeMap.put(locale, sidebar);
-
-    if (playerMap == null)
-      synchronized (lock) {
-        if (playerMap == null) playerMap = new ConcurrentHashMap<>(4, 0.75f, 2);
-      }
 
     playerMap.put(player, sidebar);
 
@@ -74,7 +64,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected SidebarLineHandler removePlayer0(Player player) {
+  protected LocaleLineHandler removePlayer0(Player player) {
     if (playerMap == null) return null;
 
     var lineHandler = playerMap.remove(player);
@@ -85,15 +75,5 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
     }
 
     return lineHandler;
-  }
-
-  @Override
-  public void close() {
-    super.close();
-
-    if (closed) {
-      playerMap = null;
-      localeMap = null;
-    }
   }
 }

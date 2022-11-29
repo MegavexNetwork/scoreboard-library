@@ -7,38 +7,40 @@ import java.util.Set;
 import java.util.function.Consumer;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SingleLocaleSidebar extends AbstractSidebar {
+public class SingleLocaleSidebar extends BetterAbstractSidebar {
   private final Locale locale;
-  private volatile SidebarLineHandler sidebar;
-  private volatile Set<Player> players;
+  private final LocaleLineHandler sidebar;
+  private final Set<Player> players;
 
-  public SingleLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int size, Locale locale) {
+  public SingleLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int size, Locale locale) {
     super(scoreboardLibrary, size);
     this.locale = locale;
+    this.sidebar = new LocaleLineHandler(this, locale());
+    this.players = CollectionProvider.set(1);
   }
 
   @Override
   public @NotNull Collection<Player> players() {
-    return players == null ? Set.of() : Collections.unmodifiableCollection(players);
+    return closed() ? Set.of() : Collections.unmodifiableCollection(players);
   }
 
   @Override
-  protected SidebarLineHandler addPlayer0(Player player) {
-    if (!playerSet().add(player)) return null;
+  protected LocaleLineHandler addPlayer0(Player player) {
+    if (!players.add(player)) return null;
 
-    return lineHandler();
+    return sidebar;
   }
 
   @Override
-  protected SidebarLineHandler removePlayer0(Player player) {
+  protected LocaleLineHandler removePlayer0(Player player) {
     if (players == null || !players.remove(player)) return null;
 
-    return lineHandler();
+    return sidebar;
   }
 
   @Override
@@ -47,36 +49,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected void forEachSidebar(Consumer<SidebarLineHandler> consumer) {
-    consumer.accept(lineHandler());
-  }
-
-  @Override
-  public void close() {
-    super.close();
-
-    if (closed) {
-      players = null;
-    }
-  }
-
-  private Set<Player> playerSet() {
-    if (players == null)
-      synchronized (lock) {
-        if (players == null) {
-          players = CollectionProvider.set(1);
-        }
-      }
-
-    return players;
-  }
-
-  private SidebarLineHandler lineHandler() {
-    if (sidebar == null)
-      synchronized (lock) {
-        if (sidebar == null) sidebar = new SidebarLineHandler(this, locale());
-      }
-
-    return sidebar;
+  protected void forEachSidebar(Consumer<LocaleLineHandler> consumer) {
+    consumer.accept(sidebar);
   }
 }

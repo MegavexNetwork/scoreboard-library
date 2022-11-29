@@ -13,7 +13,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,11 +38,11 @@ public abstract class AbstractSidebar implements Sidebar {
     this.lines = new GlobalLineInfo[maxLines];
   }
 
-  protected abstract void forEachSidebar(Consumer<SidebarLineHandler> consumer);
+  protected abstract void forEachSidebar(Consumer<LocaleLineHandler> consumer);
 
-  protected abstract SidebarLineHandler addPlayer0(Player player);
+  protected abstract LocaleLineHandler addPlayer0(Player player);
 
-  protected abstract SidebarLineHandler removePlayer0(Player player);
+  protected abstract LocaleLineHandler removePlayer0(Player player);
 
   protected void updateScores() {
     byte size = 0;
@@ -55,8 +55,8 @@ public abstract class AbstractSidebar implements Sidebar {
     byte i = 0;
     for (var line : lines) {
       if (line != null && line.value != null) {
-        byte oldScore = line.objectiveScore;
-        line.objectiveScore = (byte) (size - i - 1);
+        int oldScore = line.objectiveScore;
+        line.objectiveScore = size - i - 1;
         if (line.objectiveScore != oldScore) line.updateScore = true;
         i++;
       }
@@ -85,10 +85,10 @@ public abstract class AbstractSidebar implements Sidebar {
           if (visibilityChanged) {
             if (visible) {
               sidebarBridge().create(players);
-              forEachSidebar(SidebarLineHandler::show);
+              forEachSidebar(LocaleLineHandler::show);
               scoreboardLibrary.packetAdapter.displaySidebar(players);
             } else {
-              forEachSidebar(SidebarLineHandler::hide);
+              forEachSidebar(LocaleLineHandler::hide);
               scoreboardLibrary.packetAdapter.removeSidebar(players);
             }
 
@@ -126,7 +126,7 @@ public abstract class AbstractSidebar implements Sidebar {
         }
 
         if (updateTeams) {
-          forEachSidebar(SidebarLineHandler::update);
+          forEachSidebar(LocaleLineHandler::update);
 
           for (var line : lines) {
             if (line != null) line.updateTeams = false;
@@ -142,7 +142,7 @@ public abstract class AbstractSidebar implements Sidebar {
     checkPlayer(player);
 
     synchronized (lock) {
-      SidebarLineHandler sidebar = addPlayer0(player);
+      LocaleLineHandler sidebar = addPlayer0(player);
       if (sidebar == null) return false;
 
       LineType lineType = LineType.getType(this, player);
@@ -166,7 +166,7 @@ public abstract class AbstractSidebar implements Sidebar {
     checkClosed();
 
     synchronized (lock) {
-      SidebarLineHandler sidebar = removePlayer0(player);
+      LocaleLineHandler sidebar = removePlayer0(player);
       if (sidebar == null) return false;
 
       LineType lineType = LineType.getType(this, player);

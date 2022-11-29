@@ -26,7 +26,7 @@ public class TeamManagerImpl implements TeamManager {
   private final Set<Player> players = CollectionProvider.set(8);
   private final Map<String, ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
 
-  private boolean closed = false;
+  private boolean closed;
 
   private final Queue<TeamManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
 

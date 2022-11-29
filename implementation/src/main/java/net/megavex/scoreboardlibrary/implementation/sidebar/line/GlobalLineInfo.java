@@ -2,7 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
+import net.megavex.scoreboardlibrary.implementation.sidebar.BetterAbstractSidebar;
 import org.bukkit.ChatColor;
 
 public class GlobalLineInfo {
@@ -10,18 +10,18 @@ public class GlobalLineInfo {
 
   static {
     var values = ChatColor.values();
-    for (byte i = 0; i < lineColors.length; i++) {
+    for (int i = 0; i < lineColors.length; i++) {
       lineColors[i] = values[i].toString();
     }
   }
 
-  public final byte line;
+  public final int line;
   public final TeamsPacketAdapter<?, ?> bridge;
   public Component value;
-  public byte objectiveScore;
+  public int objectiveScore;
   public boolean update, updateTeams, updateScore;
 
-  public GlobalLineInfo(AbstractSidebar sidebar, byte line) {
+  public GlobalLineInfo(BetterAbstractSidebar sidebar, int line) {
     this.line = line;
     this.bridge = sidebar.scoreboardLibrary().packetAdapter.createTeamPacketAdapter("_l" + line);
   }

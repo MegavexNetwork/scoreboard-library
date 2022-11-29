@@ -5,7 +5,7 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,12 +15,12 @@ import static net.kyori.adventure.text.Component.empty;
 // Implementation for versions above 1.12.2
 class LocaleLineImpl implements LocaleLine<Component> {
   private final GlobalLineInfo info;
-  private final SidebarLineHandler handler;
+  private final LocaleLineHandler handler;
   private final Collection<String> entries;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<Component> bridge;
   private boolean update = false;
 
-  public LocaleLineImpl(GlobalLineInfo info, SidebarLineHandler handler) {
+  public LocaleLineImpl(GlobalLineInfo info, LocaleLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.entries = Set.of(info.player());
@@ -45,13 +45,13 @@ class LocaleLineImpl implements LocaleLine<Component> {
     }
 
     bridge.updateTeamPackets(entries);
-    if (handler.sidebar().visible()) bridge.updateTeam(handler.players(LineType.NEW));
+    bridge.updateTeam(handler.players(LineType.MODERN));
     update = false;
   }
 
   @Override
   public void sendScore(Collection<Player> players) {
-    handler.sidebar().sidebarBridge().score(players, info.objectiveScore, info.player());
+    handler.sidebar().packetAdapter().score(players, info.objectiveScore, info.player());
   }
 
   @Override
@@ -62,7 +62,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
 
   @Override
   public void hide(Collection<Player> players) {
-    handler.sidebar().sidebarBridge().removeLine(players, info.player());
+    handler.sidebar().packetAdapter().removeLine(players, info.player());
     info.bridge.removeTeam(players);
   }
 
