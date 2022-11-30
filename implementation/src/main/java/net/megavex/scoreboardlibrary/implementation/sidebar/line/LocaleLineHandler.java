@@ -3,8 +3,11 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class LocaleLineHandler {
   private final AbstractSidebar sidebar;
@@ -29,17 +32,21 @@ public class LocaleLineHandler {
     return (modernLineHandler != null && !modernLineHandler.players().isEmpty()) || (legacyLineHandler != null && !legacyLineHandler.players().isEmpty());
   }
 
-  public SidebarLineHandler lineHandler(LineType lineType) {
+  public @NotNull SidebarLineHandler lineHandler(@NotNull LineType lineType) {
+    return Objects.requireNonNull(lineHandler(lineType, true));
+  }
+
+  public @Nullable SidebarLineHandler lineHandler(@NotNull LineType lineType, boolean create) {
     switch (lineType) {
       case MODERN -> {
-        if (modernLineHandler == null) {
+        if (modernLineHandler == null && create) {
           modernLineHandler = new SidebarLineHandler(LineType.MODERN, this);
         }
 
         return modernLineHandler;
       }
       case LEGACY -> {
-        if (legacyLineHandler == null) {
+        if (legacyLineHandler == null && create) {
           legacyLineHandler = new SidebarLineHandler(LineType.LEGACY, this);
         }
 

@@ -1,10 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import net.kyori.adventure.text.Component;
@@ -14,6 +10,7 @@ import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -162,13 +159,34 @@ public abstract class AbstractSidebar implements Sidebar {
       }
 
       if (task instanceof SidebarTask.Close) {
+        forEachSidebar(LocaleLineHandler::hide);
         // TODO
         return;
       } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
+        var lineHandler = Objects.requireNonNull(addPlayer0(addPlayerTask.player()));
+//        lineHandler.lineHandler()
+
 
 
       } else if (task instanceof SidebarTask.RemovePlayer removePlayerTask) {
 
+      } else if (task instanceof SidebarTask.UpdateLine updateLineTask) {
+
+      } else if (task instanceof SidebarTask.UpdateTitle updateTitleTask) {
+        List<Player> toSend = CollectionProvider.list(players.size());
+        forEachSidebar(sidebar -> {
+          var modernLineHandler = sidebar.lineHandler(LineType.MODERN, false);
+          if (modernLineHandler != null) {
+            toSend.addAll(modernLineHandler.players());
+          }
+
+          var legacyLineHandler = sidebar.lineHandler(LineType.MODERN, false);
+          if (legacyLineHandler != null) {
+            toSend.addAll(legacyLineHandler.players());
+          }
+        });
+        packetAdapter.updateTitle(title);
+        packetAdapter.update(toSend);
       }
     }
   }
