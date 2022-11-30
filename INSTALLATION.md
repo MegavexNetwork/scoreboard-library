@@ -16,7 +16,7 @@ dependencies:
 ```kotlin
 dependencies {
     val libraryVersion = "..."
-    implementation("com.github.MegavexNetwork.scoreboard-library:implementation:$libraryVersion") // Includes the API and the implementation
+    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:implementation:$libraryVersion") // Includes the API and the implementation
 
     // Add version implementations you want:
     runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$libraryVersion")
