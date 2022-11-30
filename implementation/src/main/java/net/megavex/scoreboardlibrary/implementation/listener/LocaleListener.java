@@ -29,11 +29,7 @@ public record LocaleListener(ScoreboardLibraryImpl scoreboardLibrary) implements
           }
         }
 
-        var sidebar = scoreboardLibrary.sidebarMap.get(player);
-        if (sidebar instanceof PlayerDependantLocaleSidebar) {
-          sidebar.removePlayer(player);
-          sidebar.addPlayer(player);
-        }
+        // TODO: do same thing for sidebars
       }
     }.runTaskLater(scoreboardLibrary.plugin, 1);
   }

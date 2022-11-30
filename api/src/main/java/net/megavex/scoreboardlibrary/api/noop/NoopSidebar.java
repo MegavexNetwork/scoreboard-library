@@ -77,16 +77,6 @@ class NoopSidebar implements Sidebar {
   }
 
   @Override
-  public boolean visible() {
-    return visible;
-  }
-
-  @Override
-  public void visible(boolean visible) {
-    this.visible = visible;
-  }
-
-  @Override
   public void line(int line, @Nullable Component value) {
     SidebarUtilities.checkLineBounds(maxLines, line);
     lines[line] = value;

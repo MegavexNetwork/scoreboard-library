@@ -2,17 +2,11 @@ package net.megavex.scoreboardlibrary.implementation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.listener.LocaleListener;
-import net.megavex.scoreboardlibrary.implementation.listener.PlayerListener;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
@@ -21,20 +15,23 @@ import net.megavex.scoreboardlibrary.implementation.sidebar.SingleLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.team.TeamManagerImpl;
 import net.megavex.scoreboardlibrary.implementation.team.TeamUpdaterTask;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   public final Plugin plugin;
   public final ScoreboardLibraryPacketAdapter<?> packetAdapter;
   public final LocaleProvider localeProvider;
-  public final PlayerListener playerListener = new PlayerListener(this);
 
   private final Map<Player, ScoreboardLibraryPlayer> playerMap = new MapMaker().weakKeys().makeMap();
 
-  public final Map<Player, AbstractSidebar> sidebarMap = new ConcurrentHashMap<>();
   public volatile Set<TeamManagerImpl> teamManagers;
   public volatile Set<AbstractSidebar> sidebars;
 
@@ -57,8 +54,6 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     this.plugin = plugin;
     this.packetAdapter = PacketAdapterLoader.loadPacketAdapter();
     this.localeProvider = this.packetAdapter.localeProvider;
-
-    plugin.getServer().getPluginManager().registerEvents(this.playerListener, plugin);
 
     try {
       Class.forName("org.bukkit.event.player.PlayerLocaleChangeEvent");
@@ -107,8 +102,6 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
       return;
 
     closed = true;
-
-    HandlerList.unregisterAll(playerListener);
 
     if (teamManagers != null) {
       teamTask.cancel();

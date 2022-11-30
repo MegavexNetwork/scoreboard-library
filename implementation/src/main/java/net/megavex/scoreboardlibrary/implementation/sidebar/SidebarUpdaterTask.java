@@ -23,9 +23,9 @@ public class SidebarUpdaterTask extends BukkitRunnable {
   public void run() {
     for (var sidebar : sidebars) {
       try {
-        sidebar.update();
+        sidebar.tick();
       } catch (Exception e) {
-        logger.log(Level.WARNING, "Exception caught when updating Sidebar", e);
+        logger.log(Level.WARNING, "an error occured while updating Sidebar", e);
       }
     }
   }

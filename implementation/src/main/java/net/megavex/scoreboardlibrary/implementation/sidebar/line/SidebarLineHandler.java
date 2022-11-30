@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import java.util.Set;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -27,6 +28,10 @@ public class SidebarLineHandler {
     }
   }
 
+  public @NotNull LocaleLineHandler localeLineHandler() {
+    return localeLineHandler;
+  }
+
   public @NotNull Set<Player> players() {
     return players;
   }
@@ -49,7 +54,12 @@ public class SidebarLineHandler {
     }
   }
 
-  public void setLine(int line, Component renderedLine, boolean sendPackets) {
+
+  public void setLine(int line, Component renderedLine) {
+    setLine(line, renderedLine, true);
+  }
+
+  private void setLine(int line, Component renderedLine, boolean sendPackets) {
     var localeLine = lines[line];
     if (renderedLine == null && localeLine == null) {
       return;
@@ -57,7 +67,7 @@ public class SidebarLineHandler {
 
     var newlyCreated = false;
     if (localeLine == null) {
-      lines[line] = localeLine = lineType.create(localeLineHandler.sidebar().getLineInfo(line), localeLineHandler);
+      lines[line] = localeLine = lineType.create(localeLineHandler.sidebar().getLineInfo(line), this);
       newlyCreated = true;
     }
 
@@ -67,12 +77,22 @@ public class SidebarLineHandler {
       localeLine.value(renderedLine);
     }
 
-    if (!sendPackets) return;
-
     if (renderedLine == null) {
       localeLine.hide(players);
     } else if (newlyCreated) {
       localeLine.show(players);
+    }
+  }
+
+  public void show() {
+    for (var line : lines) {
+      line.show(players);
+    }
+  }
+
+  public void hide() {
+    for (var line : lines) {
+      line.hide(players);
     }
   }
 }

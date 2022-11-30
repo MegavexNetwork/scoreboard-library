@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SingleLocaleSidebar extends BetterAbstractSidebar {
+public class SingleLocaleSidebar extends AbstractSidebar {
   private final Locale locale;
   private final LocaleLineHandler sidebar;
   private final Set<Player> players;

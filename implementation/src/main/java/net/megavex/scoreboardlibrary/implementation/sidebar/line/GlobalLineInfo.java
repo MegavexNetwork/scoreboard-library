@@ -2,8 +2,9 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.sidebar.BetterAbstractSidebar;
+import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 public class GlobalLineInfo {
   private static final String[] lineColors = new String[15];
@@ -21,7 +22,7 @@ public class GlobalLineInfo {
   public int objectiveScore;
   public boolean update, updateTeams, updateScore;
 
-  public GlobalLineInfo(BetterAbstractSidebar sidebar, int line) {
+  public GlobalLineInfo(@NotNull AbstractSidebar sidebar, int line) {
     this.line = line;
     this.bridge = sidebar.scoreboardLibrary().packetAdapter.createTeamPacketAdapter("_l" + line);
   }

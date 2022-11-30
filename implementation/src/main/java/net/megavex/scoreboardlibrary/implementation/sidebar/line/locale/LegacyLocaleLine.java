@@ -1,26 +1,27 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
-import java.util.Collection;
-import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Set;
+
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
-  private final LocaleLineHandler handler;
+  private final SidebarLineHandler handler;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<String> bridge;
   private String player, oldPlayer;
   private String prefix, suffix;
   private String currentValue;
   private boolean update = false;
 
-  public LegacyLocaleLine(GlobalLineInfo info, LocaleLineHandler handler) {
+  public LegacyLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.player = info.player();
@@ -110,10 +111,10 @@ class LegacyLocaleLine implements LocaleLine<String> {
       return;
     }
 
-    var players = handler.players(LineType.LEGACY);
+    var players = handler.players();
     if (oldPlayer != null) {
       bridge.removeEntries(players, Set.of(oldPlayer));
-      handler.sidebar().sidebarBridge().removeLine(players, oldPlayer);
+      handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
       oldPlayer = null;
     }
 
@@ -128,10 +129,10 @@ class LegacyLocaleLine implements LocaleLine<String> {
   @Override
   public void sendScore(Collection<Player> players) {
     if (oldPlayer != null) {
-      handler.sidebar().sidebarBridge().removeLine(players, oldPlayer);
+      handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
     }
 
-    handler.sidebar().sidebarBridge().score(players, info.objectiveScore, player);
+    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore, player);
   }
 
   @Override
@@ -143,10 +144,10 @@ class LegacyLocaleLine implements LocaleLine<String> {
   @Override
   public void hide(Collection<Player> players) {
     if (oldPlayer != null) {
-      handler.sidebar().sidebarBridge().removeLine(players, oldPlayer);
+      handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
     }
 
-    handler.sidebar().sidebarBridge().removeLine(players, player);
+    handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, player);
     info.bridge.removeTeam(players);
   }
 }

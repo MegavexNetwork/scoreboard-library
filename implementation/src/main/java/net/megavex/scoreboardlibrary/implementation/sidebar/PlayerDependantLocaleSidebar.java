@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PlayerDependantLocaleSidebar extends BetterAbstractSidebar {
+public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   private final Map<Player, LocaleLineHandler> playerMap = new HashMap<>();
   private final Map<Locale, LocaleLineHandler> localeMap = new HashMap<>();
 
