@@ -11,6 +11,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePac
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.IScoreboardCriteria;
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player;
 
 import static net.kyori.adventure.text.Component.empty;
 
-public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<?>, PacketAdapterImpl> {
+public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<PacketListenerPlayOut>, PacketAdapterImpl> {
   private static final Field objectiveNameField,
     objectiveDisplayNameField,
     objectiveHealthDisplayField,

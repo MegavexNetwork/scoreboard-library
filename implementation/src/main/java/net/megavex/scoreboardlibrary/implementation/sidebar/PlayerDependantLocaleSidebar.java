@@ -26,7 +26,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected void forEachSidebar(Consumer<LocaleLineHandler> consumer) {
+  protected void forEachSidebar(@NotNull Consumer<LocaleLineHandler> consumer) {
     if (localeMap != null) {
       for (var value : localeMap.values()) {
         consumer.accept(value);
@@ -40,7 +40,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected LocaleLineHandler addPlayer0(Player player) {
+  protected @Nullable LocaleLineHandler addPlayer0(@NotNull Player player) {
     var sidebar = playerMap.get(player);
     if (sidebar != null) {
       return null;
@@ -57,14 +57,13 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
     sidebar = new LocaleLineHandler(this, locale);
 
     localeMap.put(locale, sidebar);
-
     playerMap.put(player, sidebar);
 
     return sidebar;
   }
 
   @Override
-  protected LocaleLineHandler removePlayer0(Player player) {
+  protected @Nullable LocaleLineHandler removePlayer0(@NotNull Player player) {
     if (playerMap == null) return null;
 
     var lineHandler = playerMap.remove(player);

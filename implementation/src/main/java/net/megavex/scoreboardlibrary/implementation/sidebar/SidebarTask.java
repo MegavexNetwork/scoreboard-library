@@ -47,10 +47,18 @@ public sealed class SidebarTask {
     }
   }
 
-  public static final class UpdateTitle extends SidebarTask {
-    public static final UpdateTitle INSTANCE = new UpdateTitle();
+  public static final class UpdateScores extends SidebarTask {
+    public static final UpdateScores INSTANCE = new UpdateScores();
 
+    private UpdateScores() {
+    }
+  }
+
+  public static final class UpdateTitle extends SidebarTask {
+
+    public static final UpdateScores INSTANCE = new UpdateScores();
     private UpdateTitle() {
     }
+
   }
 }

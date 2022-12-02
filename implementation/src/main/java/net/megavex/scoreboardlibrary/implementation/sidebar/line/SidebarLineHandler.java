@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
+import java.util.Collection;
 import java.util.Set;
-
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -23,7 +23,7 @@ public class SidebarLineHandler {
 
     for (var line : localeLineHandler.sidebar().lines()) {
       if (line != null) {
-        setLine(line.line, GlobalTranslator.render(line.value, localeLineHandler.locale()), false);
+        setLine(line.line(), GlobalTranslator.render(line.value(), localeLineHandler.locale()), false);
       }
     }
   }
@@ -36,24 +36,21 @@ public class SidebarLineHandler {
     return players;
   }
 
-  public @NotNull LocaleLine<?>[] lines() {
-    return lines;
-  }
-
-  public void update() {
-    for (var line : lines) {
-      if (line != null) {
-        if (line.info().updateTeams) {
-          line.updateTeam();
-        }
-
-        if (line.info().updateScore) {
-          line.sendScore(players);
-        }
-      }
+  public void updateLine(int lineIndex) {
+    var line = lines[lineIndex];
+    if (line != null) {
+      line.updateTeam();
     }
   }
 
+  public void updateScores() {
+    for (var line : lines) {
+      if (line != null && line.info().updateScore()) {
+        line.sendScore(players);
+        line.info().updateScore(false);
+      }
+    }
+  }
 
   public void setLine(int line, Component renderedLine) {
     setLine(line, renderedLine, true);
@@ -67,7 +64,7 @@ public class SidebarLineHandler {
 
     var newlyCreated = false;
     if (localeLine == null) {
-      lines[line] = localeLine = lineType.create(localeLineHandler.sidebar().getLineInfo(line), this);
+      lines[line] = localeLine = lineType.create(localeLineHandler.sidebar().lines()[line], this);
       newlyCreated = true;
     }
 
@@ -77,20 +74,22 @@ public class SidebarLineHandler {
       localeLine.value(renderedLine);
     }
 
-    if (renderedLine == null) {
-      localeLine.hide(players);
-    } else if (newlyCreated) {
-      localeLine.show(players);
+    if (sendPackets) {
+      if (renderedLine == null) {
+        localeLine.hide(players);
+      } else if (newlyCreated) {
+        localeLine.show(players);
+      }
     }
   }
 
-  public void show() {
+  public void show(Collection<Player> players) {
     for (var line : lines) {
       line.show(players);
     }
   }
 
-  public void hide() {
+  public void hide(Collection<Player> players) {
     for (var line : lines) {
       line.hide(players);
     }

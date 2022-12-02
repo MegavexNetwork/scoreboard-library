@@ -25,7 +25,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
     this.info = info;
     this.handler = handler;
     this.player = info.player();
-    this.bridge = info.bridge.createLegacyTeamInfoAdapter(this);
+    this.bridge = info.bridge().createLegacyTeamInfoAdapter(this);
     bridge.updateTeamPackets(entries());
   }
 
@@ -132,7 +132,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
       handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
     }
 
-    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore, player);
+    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), player);
   }
 
   @Override
@@ -148,7 +148,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
     }
 
     handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, player);
-    info.bridge.removeTeam(players);
+    info.bridge().removeTeam(players);
   }
 }
 

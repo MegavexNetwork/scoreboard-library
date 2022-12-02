@@ -13,18 +13,18 @@ import org.jetbrains.annotations.NotNull;
 import static net.kyori.adventure.text.Component.empty;
 
 // Implementation for versions above 1.12.2
-class LocaleLineImpl implements LocaleLine<Component> {
+class ModernLocaleLine implements LocaleLine<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<Component> bridge;
   private boolean update = false;
 
-  public LocaleLineImpl(GlobalLineInfo info, SidebarLineHandler handler) {
+  public ModernLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.entries = Set.of(info.player());
-    this.bridge = info.bridge.createTeamInfoAdapter(this);
+    this.bridge = info.bridge().createTeamInfoAdapter(this);
     bridge.updateTeamPackets(entries);
   }
 
@@ -51,7 +51,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
 
   @Override
   public void sendScore(Collection<Player> players) {
-    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore, info.player());
+    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), info.player());
   }
 
   @Override
@@ -63,7 +63,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
   @Override
   public void hide(Collection<Player> players) {
     handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, info.player());
-    info.bridge.removeTeam(players);
+    info.bridge().removeTeam(players);
   }
 
   @Override
@@ -78,7 +78,7 @@ class LocaleLineImpl implements LocaleLine<Component> {
 
   @Override
   public @NotNull Component prefix() {
-    return info.value;
+    return info.value();
   }
 
   @Override

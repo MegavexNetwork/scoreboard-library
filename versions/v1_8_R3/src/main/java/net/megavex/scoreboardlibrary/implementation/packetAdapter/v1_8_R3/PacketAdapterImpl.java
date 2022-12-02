@@ -7,13 +7,14 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketA
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
+public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<PacketListenerPlayOut>> {
   static final Field objectiveModeField;
 
   static {
@@ -41,7 +42,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
   }
 
   @Override
-  public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
+  public @NotNull SidebarPacketAdapter<Packet<PacketListenerPlayOut>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
     return new SidebarPacketAdapterImpl(this, sidebar);
   }
 
@@ -66,7 +67,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
   }
 
   @Override
-  public void sendPacket(@NotNull Player player, @NotNull Packet<?> packet) {
+  public void sendPacket(@NotNull Player player, @NotNull Packet<PacketListenerPlayOut> packet) {
     ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
   }
 }

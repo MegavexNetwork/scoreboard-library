@@ -30,14 +30,14 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected LocaleLineHandler addPlayer0(Player player) {
+  protected @Nullable LocaleLineHandler addPlayer0(@NotNull Player player) {
     if (!players.add(player)) return null;
 
     return sidebar;
   }
 
   @Override
-  protected LocaleLineHandler removePlayer0(Player player) {
+  protected @Nullable LocaleLineHandler removePlayer0(@NotNull Player player) {
     if (players == null || !players.remove(player)) return null;
 
     return sidebar;
@@ -49,7 +49,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected void forEachSidebar(Consumer<LocaleLineHandler> consumer) {
+  protected void forEachSidebar(@NotNull Consumer<LocaleLineHandler> consumer) {
     consumer.accept(sidebar);
   }
 }
