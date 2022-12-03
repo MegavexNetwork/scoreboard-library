@@ -56,17 +56,24 @@ public abstract class AbstractSidebar implements Sidebar {
       }
     }
 
+    boolean changed = false;
+
     int i = 0;
     for (var line : lines) {
       if (line != null && line.value() != null) {
         var newScore = size - i - 1;
         if (line.objectiveScore() != newScore) {
+          changed = true;
           line.updateScore(true);
           line.objectiveScore(newScore);
         }
 
         i++;
       }
+    }
+
+    if (changed) {
+      taskQueue.add(SidebarTask.UpdateScores.INSTANCE);
     }
   }
 
@@ -127,8 +134,11 @@ public abstract class AbstractSidebar implements Sidebar {
     checkClosed();
 
     var globalLineInfo = getLineInfo(line);
-    globalLineInfo.value(value);
-    taskQueue.add(new SidebarTask.UpdateLine(line));
+    if (!Objects.equals(globalLineInfo.value(), value)) {
+      globalLineInfo.value(value);
+      taskQueue.add(new SidebarTask.UpdateLine(line));
+      updateScores();
+    }
   }
 
   @Override
@@ -166,9 +176,7 @@ public abstract class AbstractSidebar implements Sidebar {
     var globalLineInfo = lines[line];
     if (globalLineInfo == null) {
       globalLineInfo = lines[line] = new GlobalLineInfo(this, line);
-
       updateScores();
-      taskQueue.add(SidebarTask.UpdateScores.INSTANCE);
     }
 
     return globalLineInfo;
@@ -187,10 +195,13 @@ public abstract class AbstractSidebar implements Sidebar {
       } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
         var lineHandler = Objects.requireNonNull(addPlayer0(addPlayerTask.player()));
         lineHandler.addPlayer(addPlayerTask.player());
+        packetAdapter.create(Set.of(addPlayerTask.player()));
         lineHandler.show(addPlayerTask.player());
+        scoreboardLibrary.packetAdapter.displaySidebar(Set.of(addPlayerTask.player()));
       } else if (task instanceof SidebarTask.RemovePlayer removePlayerTask) {
         var lineHandler = Objects.requireNonNull(removePlayer0(removePlayerTask.player()));
         lineHandler.removePlayer(removePlayerTask.player());
+        scoreboardLibrary.packetAdapter.removeSidebar(Set.of(removePlayerTask.player()));
         lineHandler.hide(removePlayerTask.player());
       } else if (task instanceof SidebarTask.UpdateLine updateLineTask) {
         forEachSidebar(sidebar -> {

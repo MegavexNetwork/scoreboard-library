@@ -85,13 +85,17 @@ public class SidebarLineHandler {
 
   public void show(Collection<Player> players) {
     for (var line : lines) {
-      line.show(players);
+      if (line != null) {
+        line.show(players);
+      }
     }
   }
 
   public void hide(Collection<Player> players) {
     for (var line : lines) {
-      line.hide(players);
+      if (line != null) {
+        line.hide(players);
+      }
     }
   }
 }
