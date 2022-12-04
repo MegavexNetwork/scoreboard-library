@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
@@ -105,7 +106,7 @@ public abstract class AbstractSidebar implements Sidebar {
     checkClosed();
 
     if (players.add(player)) {
-      taskQueue.add(new SidebarTask.AddPlayer(player));
+      taskQueue.add(new SidebarTask.AddPlayers(Set.of(player)));
       return true;
     }
 
@@ -113,15 +114,43 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   @Override
+  public void addPlayers(@NotNull Collection<Player> players) {
+    checkClosed();
+
+    List<Player> added = CollectionProvider.list(players.size());
+    for (var player : players) {
+      if (this.players.add(player)) {
+        added.add(player);
+      }
+    }
+
+    taskQueue.add(new SidebarTask.AddPlayers(added));
+  }
+
+  @Override
   public boolean removePlayer(@NotNull Player player) {
     checkClosed();
 
     if (players.remove(player)) {
-      taskQueue.add(new SidebarTask.RemovePlayer(player));
+      taskQueue.add(new SidebarTask.RemovePlayers(Set.of(player)));
       return true;
     }
 
     return false;
+  }
+
+  @Override
+  public void removePlayers(@NotNull Collection<Player> players) {
+    checkClosed();
+
+    List<Player> removed = CollectionProvider.list(players.size());
+    for (var player : players) {
+      if (this.players.remove(player)) {
+        removed.add(player);
+      }
+    }
+
+    taskQueue.add(new SidebarTask.RemovePlayers(removed));
   }
 
   @Override
@@ -192,17 +221,24 @@ public abstract class AbstractSidebar implements Sidebar {
       if (task instanceof SidebarTask.Close) {
         forEachSidebar(LocaleLineHandler::hide);
         return;
-      } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
-        var lineHandler = Objects.requireNonNull(addPlayer0(addPlayerTask.player()));
-        lineHandler.addPlayer(addPlayerTask.player());
-        packetAdapter.sendObjectivePacket(Set.of(addPlayerTask.player()), SidebarPacketAdapter.ObjectivePacket.CREATE);
-        lineHandler.show(addPlayerTask.player());
-        scoreboardLibrary.packetAdapter().displaySidebar(Set.of(addPlayerTask.player()));
-      } else if (task instanceof SidebarTask.RemovePlayer removePlayerTask) {
-        var lineHandler = Objects.requireNonNull(removePlayer0(removePlayerTask.player()));
-        lineHandler.removePlayer(removePlayerTask.player());
-        scoreboardLibrary.packetAdapter().removeSidebar(Set.of(removePlayerTask.player()));
-        lineHandler.hide(removePlayerTask.player());
+      } else if (task instanceof SidebarTask.AddPlayers addPlayersTask) {
+        packetAdapter.sendObjectivePacket(addPlayersTask.players(), SidebarPacketAdapter.ObjectivePacket.CREATE);
+
+        for (var player : addPlayersTask.players()) {
+          var lineHandler = Objects.requireNonNull(addPlayer0(player));
+          lineHandler.addPlayer(player);
+          lineHandler.show(player);
+        }
+
+        scoreboardLibrary.packetAdapter().displaySidebar(addPlayersTask.players());
+      } else if (task instanceof SidebarTask.RemovePlayers removePlayersTask) {
+        for (var player : removePlayersTask.players()) {
+          var lineHandler = Objects.requireNonNull(removePlayer0(player));
+          lineHandler.removePlayer(player);
+          lineHandler.hide(player);
+        }
+
+        scoreboardLibrary.packetAdapter().removeSidebar(removePlayersTask.players());
       } else if (task instanceof SidebarTask.UpdateLine updateLineTask) {
         forEachSidebar(sidebar -> {
           var value = lines[updateLineTask.line()].value();

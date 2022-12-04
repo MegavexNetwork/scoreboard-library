@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.implementation.team;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
@@ -100,8 +99,6 @@ public class TeamManagerImpl implements TeamManager {
   public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
     checkClosed();
 
-    System.out.println("Players " + players);
-
     if (!players.add(player)) {
       return false;
     }
@@ -112,7 +109,7 @@ public class TeamManagerImpl implements TeamManager {
       team.teamInfoMap().put(player, (TeamInfoImpl) teamInfo);
     }
 
-    taskQueue.addAll(List.of(new TeamManagerTask.AddPlayer(player), new TeamManagerTask.ShowToPlayer(player)));
+    taskQueue.addAll(Set.of(new TeamManagerTask.AddPlayer(player), new TeamManagerTask.ShowToPlayer(player)));
     return true;
   }
 
