@@ -5,7 +5,6 @@ import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisplayScoreboard;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
-import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
@@ -19,9 +18,11 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
   private final WrapperPlayServerScoreboardObjective removePacket;
 
   public PacketAdapterImpl() {
-    Preconditions.checkState(PacketEvents.getAPI() != null, "PacketEvents isn't loaded");
+    if (PacketEvents.getAPI() == null) {
+      throw new IllegalStateException("PacketEvents isn't loaded");
+    }
 
-    this.displayPacket = new WrapperPlayServerDisplayScoreboard(1, this.objectiveName);
+    this.displayPacket = new WrapperPlayServerDisplayScoreboard(POSITION_SIDEBAR, this.objectiveName);
     this.removePacket = new WrapperPlayServerScoreboardObjective(
       this.objectiveName,
       WrapperPlayServerScoreboardObjective.ObjectiveMode.REMOVE,

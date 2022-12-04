@@ -29,7 +29,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<Pac
     UnsafeUtilities.UNSAFE.putInt(
       displayPacket,
       UnsafeUtilities.UNSAFE.objectFieldOffset(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "a")),
-      1
+      POSITION_SIDEBAR
     );
     UnsafeUtilities.setField(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "b"), displayPacket, objectiveName);
 
@@ -37,7 +37,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<Pac
     UnsafeUtilities.UNSAFE.putInt(
       removePacket,
       UnsafeUtilities.UNSAFE.objectFieldOffset(objectiveModeField),
-      1
+      OBJECTIVE_MODE_REMOVE
     );
   }
 

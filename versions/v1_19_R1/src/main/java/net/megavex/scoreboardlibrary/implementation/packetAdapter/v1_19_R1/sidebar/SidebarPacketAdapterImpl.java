@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUti
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   private final ClientboundSetObjectivePacket createPacket;
@@ -20,11 +21,11 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
     var locale = sidebar.locale();
     if (locale != null) {
       createPacket = objectivePacketConstructor.invoke();
-      createObjectivePacket(createPacket, 0);
+      createObjectivePacket(createPacket, MODE_CREATE);
       updateDisplayName(createPacket, sidebar.title(), locale);
 
       updatePacket = objectivePacketConstructor.invoke();
-      createObjectivePacket(updatePacket, 2);
+      createObjectivePacket(updatePacket, MODE_UPDATE);
       updateDisplayName(updatePacket, sidebar.title(), locale);
     } else {
       createPacket = null;
@@ -33,13 +34,13 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
-    var vanilla = impl.fromAdventure(displayName, locale);
+    var vanilla = packetAdapter().fromAdventure(displayName, locale);
     UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
   }
 
   @Override
-  public void updateTitle(Component displayName) {
-    var locale = sidebar.locale();
+  public void updateTitle(@NotNull Component displayName) {
+    var locale = sidebar().locale();
     if (locale != null) {
       updateDisplayName(createPacket, displayName, locale);
       updateDisplayName(updatePacket, displayName, locale);
@@ -47,14 +48,14 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   @Override
-  protected void sendObjectivePacket(Collection<Player> players, boolean create) {
-    if (sidebar.locale() != null) {
-      impl.sendPacket(players, create ? createPacket : updatePacket);
+  public void sendObjectivePacket(@NotNull Collection<Player> players, @NotNull ObjectivePacket type) {
+    if (sidebar().locale() != null) {
+      packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
-      LocalePacketUtilities.sendLocalePackets(impl.localeProvider, sidebar.locale(), impl, players, locale -> {
+      LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
         var packet = objectivePacketConstructor.invoke();
-        createObjectivePacket(packet, create ? 0 : 2);
-        updateDisplayName(packet, sidebar.title(), locale);
+        createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE);
+        updateDisplayName(packet, sidebar().title(), locale);
         return packet;
       });
     }

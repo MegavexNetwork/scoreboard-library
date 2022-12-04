@@ -23,7 +23,10 @@ public class SidebarLineHandler {
 
     for (var line : localeLineHandler.sidebar().lines()) {
       if (line != null) {
-        setLine(line.line(), GlobalTranslator.render(line.value(), localeLineHandler.locale()), false);
+        var value = line.value();
+        if (value != null) {
+          setLine(line.line(), GlobalTranslator.render(value, localeLineHandler.locale()), false);
+        }
       }
     }
   }

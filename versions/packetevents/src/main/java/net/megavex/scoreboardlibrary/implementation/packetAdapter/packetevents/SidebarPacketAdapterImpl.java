@@ -13,6 +13,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 import static net.kyori.adventure.text.Component.empty;
@@ -34,8 +35,8 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
   }
 
   @Override
-  public void updateTitle(Component displayName) {
-    var locale = sidebar.locale();
+  public void updateTitle(@NotNull Component displayName) {
+    var locale = sidebar().locale();
     if (locale != null) {
       var translatedDisplayName = GlobalTranslator.render(displayName, locale);
       createPacket.setDisplayName(translatedDisplayName);
@@ -44,18 +45,18 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
   }
 
   @Override
-  protected void sendObjectivePacket(Collection<Player> players, boolean create) {
-    if (sidebar.locale() != null) {
-      impl.sendPacket(players, create ? createPacket : updatePacket);
+  public void sendObjectivePacket(@NotNull Collection<Player> players, @NotNull ObjectivePacket type) {
+    if (sidebar().locale() != null) {
+      packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
       LocalePacketUtilities.sendLocalePackets(
-        impl.localeProvider,
-        sidebar.locale(),
-        impl,
+        packetAdapter().localeProvider,
+        sidebar().locale(),
+        packetAdapter(),
         players,
         locale -> createObjectivePacket(
-          create ? ObjectiveMode.CREATE : ObjectiveMode.UPDATE,
-          sidebar.title(),
+          type == ObjectivePacket.CREATE ? ObjectiveMode.CREATE : ObjectiveMode.UPDATE,
+          sidebar().title(),
           locale
         )
       );
@@ -63,26 +64,26 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
   }
 
   @Override
-  public void removeLine(Collection<Player> players, String line) {
-    impl.sendPacket(
+  public void removeLine(@NotNull Collection<Player> players, @NotNull String line) {
+    packetAdapter().sendPacket(
       players,
       new WrapperPlayServerUpdateScore(
         line,
         WrapperPlayServerUpdateScore.Action.REMOVE_ITEM,
-        impl.objectiveName,
+        packetAdapter().objectiveName,
         Optional.empty()
       )
     );
   }
 
   @Override
-  public void score(Collection<Player> players, int score, String line) {
-    impl.sendPacket(
+  public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
+    packetAdapter().sendPacket(
       players,
       new WrapperPlayServerUpdateScore(
         line,
         WrapperPlayServerUpdateScore.Action.CREATE_OR_UPDATE_ITEM,
-        impl.objectiveName,
+        packetAdapter().objectiveName,
         Optional.of(score)
       )
     );
@@ -90,7 +91,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
 
   private WrapperPlayServerScoreboardObjective createObjectivePacket(ObjectiveMode mode, Component displayName, Locale locale) {
     return new WrapperPlayServerScoreboardObjective(
-      impl.objectiveName,
+      packetAdapter().objectiveName,
       mode,
       GlobalTranslator.render(displayName, locale),
       WrapperPlayServerScoreboardObjective.RenderType.INTEGER

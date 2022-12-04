@@ -1,7 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
+import java.util.Collection;
+import java.util.Set;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
@@ -9,27 +10,26 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Set;
+
+import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
 
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
-  private final TeamsPacketAdapter.TeamInfoPacketAdapter<String> bridge;
+  private final TeamsPacketAdapter.TeamInfoPacketAdapter<String> packetAdapter;
   private String player, oldPlayer;
   private String prefix, suffix;
   private String currentValue;
-  private boolean update = false;
 
   public LegacyLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.player = info.player();
-    this.bridge = info.bridge().createLegacyTeamInfoAdapter(this);
-    bridge.updateTeamPackets(entries());
+    this.packetAdapter = info.packetAdapter().createLegacyTeamInfoAdapter(this);
+    packetAdapter.updateTeamPackets(entries());
   }
 
-  public GlobalLineInfo info() {
+  public @NotNull GlobalLineInfo info() {
     return info;
   }
 
@@ -49,13 +49,13 @@ class LegacyLocaleLine implements LocaleLine<String> {
   }
 
   @Override
-  public Collection<String> entries() {
+  public @NotNull Collection<String> entries() {
     return Set.of(player);
   }
 
   @Override
-  public void value(Component renderedComponent) {
-    var legacyValue = LegacyComponentSerializer.legacySection().serialize(renderedComponent);
+  public void value(@NotNull Component renderedComponent) {
+    var legacyValue = legacySection().serialize(renderedComponent);
 
     oldPlayer = player;
 
@@ -98,7 +98,6 @@ class LegacyLocaleLine implements LocaleLine<String> {
     }
 
     currentValue = legacyValue;
-    update = true;
 
     if (oldPlayer.equals(player)) {
       oldPlayer = null;
@@ -107,27 +106,23 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
   @Override
   public void updateTeam() {
-    if (!update) {
-      return;
-    }
-
     var players = handler.players();
     if (oldPlayer != null) {
-      bridge.removeEntries(players, Set.of(oldPlayer));
+      packetAdapter.removeEntries(players, Set.of(oldPlayer));
       handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
       oldPlayer = null;
+
+      var entries = entries();
+      packetAdapter.updateTeamPackets(entries);
+      packetAdapter.addEntries(players, entries);
+      handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), player);
     }
 
-    var entries = entries();
-    bridge.updateTeamPackets(entries);
-    bridge.addEntries(players, entries);
-    bridge.updateTeam(players);
-
-    update = false;
+    packetAdapter.updateTeam(players);
   }
 
   @Override
-  public void sendScore(Collection<Player> players) {
+  public void sendScore(@NotNull Collection<Player> players) {
     if (oldPlayer != null) {
       handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
     }
@@ -136,19 +131,19 @@ class LegacyLocaleLine implements LocaleLine<String> {
   }
 
   @Override
-  public void show(Collection<Player> players) {
+  public void show(@NotNull Collection<Player> players) {
     sendScore(players);
-    bridge.createTeam(players);
+    packetAdapter.createTeam(players);
   }
 
   @Override
-  public void hide(Collection<Player> players) {
+  public void hide(@NotNull Collection<Player> players) {
     if (oldPlayer != null) {
       handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
     }
 
     handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, player);
-    info.bridge().removeTeam(players);
+    info.packetAdapter().removeTeam(players);
   }
 }
 

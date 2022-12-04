@@ -31,7 +31,7 @@ public class LocaleLineHandler {
   }
 
   public void addPlayer(@NotNull Player player) {
-    var isLegacy = sidebar.scoreboardLibrary().packetAdapter.isLegacy(player);
+    var isLegacy = sidebar.scoreboardLibrary().packetAdapter().isLegacy(player);
     var lineType = isLegacy ? LineType.LEGACY : LineType.MODERN;
     lineHandler(lineType).players().add(player);
   }

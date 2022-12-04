@@ -17,57 +17,50 @@ class ModernLocaleLine implements LocaleLine<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;
-  private final TeamsPacketAdapter.TeamInfoPacketAdapter<Component> bridge;
-  private boolean update = false;
+  private final TeamsPacketAdapter.TeamInfoPacketAdapter<Component> packetAdapter;
 
   public ModernLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.entries = Set.of(info.player());
-    this.bridge = info.bridge().createTeamInfoAdapter(this);
-    bridge.updateTeamPackets(entries);
+    this.packetAdapter = info.packetAdapter().createTeamInfoAdapter(this);
+    packetAdapter.updateTeamPackets(entries);
   }
 
   @Override
-  public GlobalLineInfo info() {
+  public @NotNull GlobalLineInfo info() {
     return info;
   }
 
   @Override
-  public void value(Component renderedComponent) {
-    update = true;
+  public void value(@NotNull Component renderedComponent) {
   }
 
   @Override
   public void updateTeam() {
-    if (!update) {
-      return;
-    }
-
-    bridge.updateTeamPackets(entries);
-    bridge.updateTeam(handler.players());
-    update = false;
+    packetAdapter.updateTeamPackets(entries);
+    packetAdapter.updateTeam(handler.players());
   }
 
   @Override
-  public void sendScore(Collection<Player> players) {
+  public void sendScore(@NotNull Collection<Player> players) {
     handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), info.player());
   }
 
   @Override
-  public void show(Collection<Player> players) {
+  public void show(@NotNull Collection<Player> players) {
     sendScore(players);
-    bridge.createTeam(players);
+    packetAdapter.createTeam(players);
   }
 
   @Override
-  public void hide(Collection<Player> players) {
+  public void hide(@NotNull Collection<Player> players) {
     handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, info.player());
-    info.bridge().removeTeam(players);
+    info.packetAdapter().removeTeam(players);
   }
 
   @Override
-  public Collection<String> entries() {
+  public @NotNull Collection<String> entries() {
     return entries;
   }
 
@@ -78,7 +71,8 @@ class ModernLocaleLine implements LocaleLine<Component> {
 
   @Override
   public @NotNull Component prefix() {
-    return info.value();
+    var value = info.value();
+    return value == null ? empty() : value;
   }
 
   @Override

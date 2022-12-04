@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.Packe
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
   public PaperTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
@@ -16,14 +17,14 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
     return new TeamInfoPacketAdapterImpl(properties);
   }
 
   private class TeamInfoPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamInfoPacketAdapterImpl {
     final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
-    protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(MODE_CREATE, teamName, parameters, null);
-    protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(MODE_UPDATE, teamName, parameters, null);
+    protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(MODE_CREATE, teamName(), parameters, null);
+    protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(MODE_UPDATE, teamName(), parameters, null);
     private Component displayName, prefix, suffix;
 
     public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
@@ -31,20 +32,20 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
     }
 
     @Override
-    public void updateTeamPackets(Collection<String> entries) {
+    public void updateTeamPackets(@NotNull Collection<String> entries) {
       fillParameters(parameters, null);
       fillTeamPacket(createPacket, entries);
       fillTeamPacket(updatePacket, entries);
     }
 
     @Override
-    public void createTeam(Collection<Player> players) {
-      impl.sendPacket(players, createPacket);
+    public void createTeam(@NotNull Collection<Player> players) {
+      packetAdapter().sendPacket(players, createPacket);
     }
 
     @Override
-    public void updateTeam(Collection<Player> players) {
-      impl.sendPacket(players, updatePacket);
+    public void updateTeam(@NotNull Collection<Player> players) {
+      packetAdapter().sendPacket(players, updatePacket);
     }
 
     @Override

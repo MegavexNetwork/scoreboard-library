@@ -1,31 +1,25 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import com.google.common.base.Preconditions;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 public class SidebarUpdaterTask extends BukkitRunnable {
-  private final Logger logger;
-  private final Set<AbstractSidebar> sidebars;
+  private final ScoreboardLibraryImpl scoreboardLibrary;
 
-  public SidebarUpdaterTask(ScoreboardLibraryImpl manager) {
-    Preconditions.checkNotNull(manager);
-    this.logger = manager.plugin().getLogger();
-    this.sidebars = manager.sidebars;
-
-    runTaskTimerAsynchronously(manager.plugin(), 1, 1);
+  public SidebarUpdaterTask(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
+    this.scoreboardLibrary = scoreboardLibrary;
+    runTaskTimerAsynchronously(scoreboardLibrary.plugin(), 1, 1);
   }
 
   @Override
   public void run() {
-    for (var sidebar : sidebars) {
+    for (var sidebar : scoreboardLibrary.mutableSidebars()) {
       try {
         sidebar.tick();
       } catch (Exception e) {
-        logger.log(Level.WARNING, "an error occured while updating Sidebar", e);
+        scoreboardLibrary.plugin().getLogger().log(Level.WARNING, "an error occurred while updating a Sidebar", e);
       }
     }
   }

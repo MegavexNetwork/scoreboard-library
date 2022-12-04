@@ -13,6 +13,7 @@ import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
@@ -34,23 +35,23 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
   }
 
   @Override
-  public void removeTeam(Iterable<Player> players) {
+  public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
       removePacket = new PacketPlayOutScoreboardTeam();
-      UnsafeUtilities.setField(teamNameField, removePacket, teamName);
+      UnsafeUtilities.setField(teamNameField, removePacket, teamName());
       UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), MODE_REMOVE);
     }
 
-    impl.sendPacket(players, removePacket);
+    packetAdapter().sendPacket(players, removePacket);
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
     return new AdventureTeamInfoPacketAdapter(properties);
   }
 
   @Override
-  public TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(ImmutableTeamProperties<String> properties) {
+  public @NotNull TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(@NotNull ImmutableTeamProperties<String> properties) {
     return new LegacyTeamInfoPacketAdapter(properties);
   }
 
@@ -60,41 +61,41 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
     }
 
     @Override
-    public void addEntries(Collection<Player> players, Collection<String> entries) {
+    public void addEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries) {
       sendTeamEntryPacket(players, entries, MODE_ADD_ENTRIES);
     }
 
     @Override
-    public void removeEntries(Collection<Player> players, Collection<String> entries) {
+    public void removeEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries) {
       sendTeamEntryPacket(players, entries, MODE_REMOVE_ENTRIES);
     }
 
     @Override
-    public void createTeam(Collection<Player> players) {
+    public void createTeam(@NotNull Collection<Player> players) {
       sendTeamPacket(players, false);
     }
 
     @Override
-    public void updateTeam(Collection<Player> players) {
+    public void updateTeam(@NotNull Collection<Player> players) {
       sendTeamPacket(players, true);
     }
 
     private void sendTeamEntryPacket(Collection<Player> players, Collection<String> entries, int action) {
       var packet = new PacketPlayOutScoreboardTeam();
-      UnsafeUtilities.setField(teamNameField, packet, teamName);
+      UnsafeUtilities.setField(teamNameField, packet, teamName());
       UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), action);
       UnsafeUtilities.setField(teamEntriesField, packet, entries);
-      impl.sendPacket(players, packet);
+      packetAdapter().sendPacket(players, packet);
     }
 
     private void sendTeamPacket(Collection<Player> players, boolean update) {
-      LocalePacketUtilities.sendLocalePackets(impl.localeProvider, null, impl, players, locale -> {
+      LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
         var displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
         var prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
         var suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
 
         var packet = new PacketPlayOutScoreboardTeam();
-        UnsafeUtilities.setField(teamNameField, packet, teamName);
+        UnsafeUtilities.setField(teamNameField, packet, teamName());
         UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE : MODE_CREATE);
         UnsafeUtilities.setField(teamDisplayNameField, packet, displayName);
         UnsafeUtilities.setField(teamPrefixField, packet, prefix);

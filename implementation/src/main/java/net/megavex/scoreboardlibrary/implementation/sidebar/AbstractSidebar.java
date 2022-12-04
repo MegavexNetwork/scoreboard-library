@@ -38,7 +38,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
   public AbstractSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     this.scoreboardLibrary = scoreboardLibrary;
-    this.packetAdapter = scoreboardLibrary.packetAdapter.createSidebarPacketAdapter(this);
+    this.packetAdapter = scoreboardLibrary.packetAdapter().createSidebarPacketAdapter(this);
     this.lines = new GlobalLineInfo[maxLines];
   }
 
@@ -160,7 +160,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
     if (!Objects.equals(this.title, title)) {
       this.title = title;
-      taskQueue.add(SidebarTask.UpdateScores.INSTANCE);
+      taskQueue.add(SidebarTask.UpdateTitle.INSTANCE);
     }
   }
 
@@ -195,13 +195,13 @@ public abstract class AbstractSidebar implements Sidebar {
       } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
         var lineHandler = Objects.requireNonNull(addPlayer0(addPlayerTask.player()));
         lineHandler.addPlayer(addPlayerTask.player());
-        packetAdapter.create(Set.of(addPlayerTask.player()));
+        packetAdapter.sendObjectivePacket(Set.of(addPlayerTask.player()), SidebarPacketAdapter.ObjectivePacket.CREATE);
         lineHandler.show(addPlayerTask.player());
-        scoreboardLibrary.packetAdapter.displaySidebar(Set.of(addPlayerTask.player()));
+        scoreboardLibrary.packetAdapter().displaySidebar(Set.of(addPlayerTask.player()));
       } else if (task instanceof SidebarTask.RemovePlayer removePlayerTask) {
         var lineHandler = Objects.requireNonNull(removePlayer0(removePlayerTask.player()));
         lineHandler.removePlayer(removePlayerTask.player());
-        scoreboardLibrary.packetAdapter.removeSidebar(Set.of(removePlayerTask.player()));
+        scoreboardLibrary.packetAdapter().removeSidebar(Set.of(removePlayerTask.player()));
         lineHandler.hide(removePlayerTask.player());
       } else if (task instanceof SidebarTask.UpdateLine updateLineTask) {
         forEachSidebar(sidebar -> {
@@ -213,7 +213,7 @@ public abstract class AbstractSidebar implements Sidebar {
         forEachSidebar(LocaleLineHandler::updateScores);
       } else if (task instanceof SidebarTask.UpdateTitle) {
         packetAdapter.updateTitle(title);
-        packetAdapter.update(players);
+        packetAdapter.sendObjectivePacket(players, SidebarPacketAdapter.ObjectivePacket.UPDATE);
       }
     }
   }

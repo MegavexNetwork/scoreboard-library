@@ -5,17 +5,18 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public interface LocaleLine<C> extends ImmutableTeamProperties<C> {
-  GlobalLineInfo info();
+  @NotNull GlobalLineInfo info();
 
-  void value(Component renderedComponent);
+  void value(@NotNull Component renderedComponent);
 
   void updateTeam();
 
-  void sendScore(Collection<Player> players);
+  void sendScore(@NotNull Collection<Player> players);
 
-  void show(Collection<Player> players);
+  void show(@NotNull Collection<Player> players);
 
-  void hide(Collection<Player> players);
+  void hide(@NotNull Collection<Player> players);
 }

@@ -19,6 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
@@ -63,11 +64,11 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   }
 
   @Override
-  public void removeTeam(Iterable<Player> players) {
+  public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
-      removePacket = createTeamsPacket(MODE_REMOVE, teamName, null, null);
+      removePacket = createTeamsPacket(MODE_REMOVE, teamName(), null, null);
     }
-    impl.sendPacket(players, removePacket);
+    packetAdapter().sendPacket(players, removePacket);
   }
 
   abstract class TeamInfoPacketAdapterImpl extends TeamInfoPacketAdapter<Component> {
@@ -80,17 +81,17 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     }
 
     @Override
-    public void addEntries(Collection<Player> players, Collection<String> entries) {
+    public void addEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries) {
       teamEntry(players, entries, MODE_ADD_ENTRIES);
     }
 
     @Override
-    public void removeEntries(Collection<Player> players, Collection<String> entries) {
+    public void removeEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries) {
       teamEntry(players, entries, MODE_REMOVE_ENTRIES);
     }
 
     private void teamEntry(Collection<Player> players, Collection<String> entries, int action) {
-      impl.sendPacket(players, createTeamsPacket(action, teamName, null, entries));
+      packetAdapter().sendPacket(players, createTeamsPacket(action, teamName(), null, entries));
     }
 
     protected void fillTeamPacket(ClientboundSetPlayerTeamPacket packet, Collection<String> entries) {

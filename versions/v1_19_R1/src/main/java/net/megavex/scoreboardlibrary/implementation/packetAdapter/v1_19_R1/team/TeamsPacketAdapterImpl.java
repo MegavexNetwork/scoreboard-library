@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUti
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
   public TeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
@@ -16,7 +17,7 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
     return new TeamInfoPacketAdapterImpl(properties);
   }
 
@@ -26,20 +27,20 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
     }
 
     @Override
-    public void createTeam(Collection<Player> players) {
+    public void createTeam(@NotNull Collection<Player> players) {
       sendTeamPacket(players, true);
     }
 
     @Override
-    public void updateTeam(Collection<Player> players) {
+    public void updateTeam(@NotNull Collection<Player> players) {
       sendTeamPacket(players, false);
     }
 
     private void sendTeamPacket(Collection<Player> players, boolean create) {
-      LocalePacketUtilities.sendLocalePackets(impl.localeProvider, null, impl, players, locale -> {
+      LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
         var parameters = parametersConstructor.invoke();
         fillParameters(parameters, locale);
-        return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName, parameters, properties.entries());
+        return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName(), parameters, properties.entries());
       });
     }
 
@@ -47,13 +48,13 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
       super.fillParameters(parameters, locale);
 
-      var vanilla = impl.fromAdventure(properties.displayName(), locale);
+      var vanilla = packetAdapter().fromAdventure(properties.displayName(), locale);
       UnsafeUtilities.setField(displayNameField, parameters, vanilla);
 
-      vanilla = impl.fromAdventure(properties.prefix(), locale);
+      vanilla = packetAdapter().fromAdventure(properties.prefix(), locale);
       UnsafeUtilities.setField(prefixField, parameters, vanilla);
 
-      vanilla = impl.fromAdventure(properties.suffix(), locale);
+      vanilla = packetAdapter().fromAdventure(properties.suffix(), locale);
       UnsafeUtilities.setField(suffixField, parameters, vanilla);
     }
   }

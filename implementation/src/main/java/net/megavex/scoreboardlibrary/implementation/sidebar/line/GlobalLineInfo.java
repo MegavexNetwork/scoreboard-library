@@ -25,7 +25,7 @@ public class GlobalLineInfo {
 
   public GlobalLineInfo(@NotNull AbstractSidebar sidebar, int line) {
     this.line = line;
-    this.packetAdapter = sidebar.scoreboardLibrary().packetAdapter.createTeamPacketAdapter("_l" + line);
+    this.packetAdapter = sidebar.scoreboardLibrary().packetAdapter().createTeamPacketAdapter("sidebar_line_" + line);
   }
 
   public @NotNull String player() {
@@ -36,7 +36,7 @@ public class GlobalLineInfo {
     return line;
   }
 
-  public @NotNull TeamsPacketAdapter<?, ?> bridge() {
+  public @NotNull TeamsPacketAdapter<?, ?> packetAdapter() {
     return packetAdapter;
   }
 

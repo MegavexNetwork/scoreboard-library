@@ -141,7 +141,7 @@ public class TeamManagerImpl implements TeamManager {
       }
 
       if (task instanceof TeamManagerTask.Close) {
-        scoreboardLibrary.teamManagers.remove(this);
+        scoreboardLibrary.mutableTeamManagers().remove(this);
 
         for (var team : teams.values()) {
           Set<Player> removePlayers = CollectionProvider.set(players.size());

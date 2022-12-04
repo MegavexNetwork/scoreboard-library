@@ -17,7 +17,7 @@ public enum LineType {
   }
 
   public static LineType getType(AbstractSidebar sidebar, Player player) {
-    return sidebar.scoreboardLibrary().packetAdapter.isLegacy(player) ? LEGACY : MODERN;
+    return sidebar.scoreboardLibrary().packetAdapter().isLegacy(player) ? LEGACY : MODERN;
   }
 
   public LocaleLine<?> create(GlobalLineInfo line, SidebarLineHandler localeLineHandler) {

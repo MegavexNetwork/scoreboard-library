@@ -28,14 +28,14 @@ import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.Un
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.setField;
 
 public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
-  private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(1, null);
+  private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(POSITION_SIDEBAR, null);
   private final ClientboundSetObjectivePacket removePacket = UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
   private boolean nativeAdventure;
 
   public PacketAdapterImpl() {
     setField(getField(ClientboundSetDisplayObjectivePacket.class, "b"), displayPacket, objectiveName);
     setField(getField(ClientboundSetObjectivePacket.class, "d"), removePacket, objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetObjectivePacket.class, "g")), 1);
+    UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetObjectivePacket.class, "g")), OBJECTIVE_MODE_REMOVE);
 
     try {
       Class.forName("io.papermc.paper.adventure.PaperAdventure");

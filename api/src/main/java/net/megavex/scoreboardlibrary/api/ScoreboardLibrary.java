@@ -42,9 +42,7 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   }
 
   /**
-   * Gets the Plugin owner of this ScoreboardManager
-   *
-   * @return Plugin owner
+   * @return Plugin of this {@link ScoreboardLibrary}
    */
   @NotNull Plugin plugin();
 

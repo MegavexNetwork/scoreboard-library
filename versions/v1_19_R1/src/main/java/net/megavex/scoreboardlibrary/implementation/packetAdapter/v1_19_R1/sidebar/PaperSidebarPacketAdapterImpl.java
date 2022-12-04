@@ -8,6 +8,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.Packe
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Sidebar implementation for PaperMC, using its native Adventure support to make performance better
@@ -22,15 +23,11 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
 
   private void initialisePackets() {
     if (createPacket == null || updatePacket == null) {
-      synchronized (this) {
-        if (createPacket == null || updatePacket == null) {
-          createPacket = objectivePacketConstructor.invoke();
-          updatePacket = objectivePacketConstructor.invoke();
-          createObjectivePacket(createPacket, 0);
-          createObjectivePacket(updatePacket, 2);
-          updateTitle(sidebar.title());
-        }
-      }
+      createPacket = objectivePacketConstructor.invoke();
+      updatePacket = objectivePacketConstructor.invoke();
+      createObjectivePacket(createPacket, MODE_CREATE);
+      createObjectivePacket(updatePacket, MODE_UPDATE);
+      updateTitle(sidebar().title());
     }
   }
 
@@ -39,7 +36,7 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   @Override
-  public void updateTitle(Component displayName) {
+  public void updateTitle(@NotNull Component displayName) {
     if (createPacket != null && updatePacket != null) {
       var vanilla = NativeAdventureUtil.fromAdventureComponent(displayName);
       updateDisplayName(createPacket, vanilla);
@@ -48,8 +45,8 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   @Override
-  protected void sendObjectivePacket(Collection<Player> players, boolean create) {
+  public void sendObjectivePacket(@NotNull Collection<Player> players, @NotNull ObjectivePacket type) {
     initialisePackets();
-    impl.sendPacket(players, create ? createPacket : updatePacket);
+    packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
   }
 }

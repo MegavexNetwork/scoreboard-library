@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ImmutableTeamProperties<T> {
-  default Collection<String> entries() {
+  default @NotNull Collection<String> entries() {
     return Set.of();
   }
 
@@ -41,6 +41,7 @@ public interface ImmutableTeamProperties<T> {
 
   default int packOptions() {
     int options = 0;
+
     if (this.friendlyFire()) {
       options |= 1;
     }

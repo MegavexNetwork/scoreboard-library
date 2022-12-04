@@ -23,7 +23,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   public ScoreboardTeamImpl(@NotNull TeamManagerImpl teamManager, @NotNull String name) {
     this.teamManager = teamManager;
     this.name = name;
-    this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter.createTeamPacketAdapter(name);
+    this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter().createTeamPacketAdapter(name);
     this.globalInfo = new TeamInfoImpl(this);
   }
 

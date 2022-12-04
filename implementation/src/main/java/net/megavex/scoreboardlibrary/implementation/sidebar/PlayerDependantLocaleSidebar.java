@@ -46,7 +46,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
       return null;
     }
 
-    var locale = scoreboardLibrary().localeProvider.locale(player);
+    var locale = scoreboardLibrary().localeProvider().locale(player);
 
     sidebar = localeMap.get(locale);
     if (sidebar != null) {

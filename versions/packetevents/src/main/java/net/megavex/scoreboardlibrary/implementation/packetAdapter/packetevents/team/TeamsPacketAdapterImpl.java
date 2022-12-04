@@ -8,6 +8,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamP
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> {
   private WrapperPlayServerTeams removePacket;
@@ -17,25 +18,25 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<PacketWrapper<?>,
   }
 
   @Override
-  public void removeTeam(Iterable<Player> players) {
+  public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
       removePacket = new WrapperPlayServerTeams(
-        teamName,
+        teamName(),
         WrapperPlayServerTeams.TeamMode.REMOVE,
         Optional.empty()
       );
     }
 
-    impl.sendPacket(players, removePacket);
+    packetAdapter().sendPacket(players, removePacket);
   }
 
   @Override
-  public TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties) {
+  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
     return new AdventureTeamInfoPacketAdapter(this, properties);
   }
 
   @Override
-  public TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(ImmutableTeamProperties<String> properties) {
+  public @NotNull TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(@NotNull ImmutableTeamProperties<String> properties) {
     return new LegacyTeamInfoPacketAdapter(this, properties);
   }
 }

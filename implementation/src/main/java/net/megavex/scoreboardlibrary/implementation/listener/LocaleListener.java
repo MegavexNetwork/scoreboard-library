@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.implementation.listener;
 
 import java.util.Set;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.team.TeamInfoImpl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,6 +30,6 @@ public record LocaleListener(ScoreboardLibraryImpl scoreboardLibrary) implements
 
         // TODO: do same thing for sidebars
       }
-    }.runTaskLater(scoreboardLibrary.plugin, 1);
+    }.runTaskLater(scoreboardLibrary.plugin(), 1);
   }
 }

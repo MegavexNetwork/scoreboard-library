@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
@@ -30,19 +31,19 @@ public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>
   }
 
   protected void createObjectivePacket(ClientboundSetObjectivePacket packet, int mode) {
-    UnsafeUtilities.setField(objectiveNameField, packet, impl.objectiveName);
+    UnsafeUtilities.setField(objectiveNameField, packet, packetAdapter().objectiveName);
     UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(objectiveModeField), mode);
     UnsafeUtilities.setField(objectiveRenderTypeField, packet, ObjectiveCriteria.RenderType.INTEGER);
   }
 
   @Override
-  public void removeLine(Collection<Player> players, String line) {
-    impl.sendPacket(players, new ClientboundSetScorePacket(ServerScoreboard.Method.REMOVE, impl.objectiveName, line, 0));
+  public void removeLine(@NotNull Collection<Player> players, @NotNull String line) {
+    packetAdapter().sendPacket(players, new ClientboundSetScorePacket(ServerScoreboard.Method.REMOVE, packetAdapter().objectiveName, line, 0));
   }
 
   @Override
-  public void score(Collection<Player> players, int score, String line) {
-    var packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, impl.objectiveName, line, score);
-    impl.sendPacket(players, packet);
+  public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
+    var packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, packetAdapter().objectiveName, line, score);
+    packetAdapter().sendPacket(players, packet);
   }
 }

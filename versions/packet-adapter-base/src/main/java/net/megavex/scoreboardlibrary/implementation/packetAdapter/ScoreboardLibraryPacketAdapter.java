@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import static net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider.localeProvider;
 
 public abstract class ScoreboardLibraryPacketAdapter<P> {
+  protected static final int POSITION_SIDEBAR = 1;
+  protected static final int OBJECTIVE_MODE_REMOVE = 1;
+
   public final String objectiveName;
   public final LocaleProvider localeProvider;
 

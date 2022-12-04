@@ -3,48 +3,57 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class TeamsPacketAdapter<P, T extends ScoreboardLibraryPacketAdapter<P>> {
-  public static final int LEGACY_CHARACTER_LIMIT = 16;
+  protected static final int LEGACY_CHARACTER_LIMIT = 16;
 
-  public static final int MODE_CREATE = 0,
+  protected static final int MODE_CREATE = 0,
     MODE_REMOVE = 1,
     MODE_UPDATE = 2,
     MODE_ADD_ENTRIES = 3,
     MODE_REMOVE_ENTRIES = 4;
 
-  public final T impl;
-  public final String teamName;
+  private final T packetAdapter;
+  private final String teamName;
 
-  public TeamsPacketAdapter(T impl, String teamName) {
-    this.impl = impl;
+  public TeamsPacketAdapter(@NotNull T packetAdapter, @NotNull String teamName) {
+    this.packetAdapter = packetAdapter;
     this.teamName = teamName;
   }
 
-  public abstract void removeTeam(Iterable<Player> players);
+  public @NotNull T packetAdapter() {
+    return packetAdapter;
+  }
 
-  public abstract TeamInfoPacketAdapter<Component> createTeamInfoAdapter(ImmutableTeamProperties<Component> properties);
+  public @NotNull String teamName() {
+    return teamName;
+  }
 
-  public TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(ImmutableTeamProperties<String> properties) {
+  public abstract void removeTeam(@NotNull Iterable<Player> players);
+
+  public abstract @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties);
+
+  public @NotNull TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(@NotNull ImmutableTeamProperties<String> properties) {
     throw new UnsupportedOperationException();
   }
 
   public abstract static class TeamInfoPacketAdapter<C> {
     protected final ImmutableTeamProperties<C> properties;
 
-    protected TeamInfoPacketAdapter(ImmutableTeamProperties<C> properties) {
+    protected TeamInfoPacketAdapter(@NotNull ImmutableTeamProperties<C> properties) {
       this.properties = properties;
     }
 
-    public void updateTeamPackets(Collection<String> entries) {
+    public void updateTeamPackets(@NotNull Collection<String> entries) {
     }
 
-    public abstract void addEntries(Collection<Player> players, Collection<String> entries);
+    public abstract void addEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries);
 
-    public abstract void removeEntries(Collection<Player> players, Collection<String> entries);
+    public abstract void removeEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries);
 
-    public abstract void createTeam(Collection<Player> players);
+    public abstract void createTeam(@NotNull Collection<Player> players);
 
-    public abstract void updateTeam(Collection<Player> players);
+    public abstract void updateTeam(@NotNull Collection<Player> players);
   }
 }

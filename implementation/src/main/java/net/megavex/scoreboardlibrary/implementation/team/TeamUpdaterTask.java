@@ -1,30 +1,25 @@
 package net.megavex.scoreboardlibrary.implementation.team;
 
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 public class TeamUpdaterTask extends BukkitRunnable {
-  private final Logger logger;
-  private final Set<TeamManagerImpl> teamManagers;
+  private final ScoreboardLibraryImpl scoreboardLibrary;
 
-  public TeamUpdaterTask(@NotNull ScoreboardLibraryImpl manager) {
-    this.logger = manager.plugin().getLogger();
-    this.teamManagers = manager.teamManagers;
-
-    runTaskTimerAsynchronously(manager.plugin(), 1, 1);
+  public TeamUpdaterTask(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
+    this.scoreboardLibrary = scoreboardLibrary;
+    runTaskTimerAsynchronously(scoreboardLibrary.plugin(), 1, 1);
   }
 
   @Override
   public void run() {
-    for (var teamManager : teamManagers) {
+    for (var teamManager : scoreboardLibrary.mutableTeamManagers()) {
       try {
         teamManager.tick();
       } catch (Exception e) {
-        logger.log(Level.WARNING, "an error occurred while updating TeamManager", e);
+        scoreboardLibrary.plugin().getLogger().log(Level.SEVERE, "an error occurred while updating a TeamManager", e);
       }
     }
   }
