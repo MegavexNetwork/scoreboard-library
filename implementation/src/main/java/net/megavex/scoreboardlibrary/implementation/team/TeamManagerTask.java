@@ -24,18 +24,6 @@ public sealed class TeamManagerTask {
     }
   }
 
-  public static final class ShowToPlayer extends TeamManagerTask {
-    private final Player player;
-
-    public ShowToPlayer(@NotNull Player player) {
-      this.player = player;
-    }
-
-    public @NotNull Player player() {
-      return player;
-    }
-  }
-
   public static final class RemovePlayer extends TeamManagerTask {
     private final Player player;
 

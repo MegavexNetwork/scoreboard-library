@@ -58,6 +58,7 @@ public sealed class SidebarTask {
   public static final class UpdateTitle extends SidebarTask {
 
     public static final UpdateScores INSTANCE = new UpdateScores();
+
     private UpdateTitle() {
     }
 

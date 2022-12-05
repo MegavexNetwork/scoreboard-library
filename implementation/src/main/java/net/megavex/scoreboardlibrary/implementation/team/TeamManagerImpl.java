@@ -109,7 +109,7 @@ public class TeamManagerImpl implements TeamManager {
       team.teamInfoMap().put(player, (TeamInfoImpl) teamInfo);
     }
 
-    taskQueue.addAll(Set.of(new TeamManagerTask.AddPlayer(player), new TeamManagerTask.ShowToPlayer(player)));
+    taskQueue.add(new TeamManagerTask.AddPlayer(player));
     return true;
   }
 
@@ -128,6 +128,12 @@ public class TeamManagerImpl implements TeamManager {
 
   public @NotNull Queue<TeamManagerTask> taskQueue() {
     return taskQueue;
+  }
+
+  public void show(@NotNull Player player) {
+    for (var team : teams.values()) {
+      team.addPlayer(player);
+    }
   }
 
   public void tick() {
@@ -155,13 +161,6 @@ public class TeamManagerImpl implements TeamManager {
       } else if (task instanceof TeamManagerTask.AddPlayer addPlayerTask) {
         var slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
         slPlayer.addTeamManager(this);
-      } else if (task instanceof TeamManagerTask.ShowToPlayer showToPlayerTask) {
-        var slPlayer = Objects.requireNonNull(scoreboardLibrary.getPlayer(showToPlayerTask.player()));
-        if (slPlayer.isMain(this)) {
-          for (var team : teams.values()) {
-            team.addPlayer(showToPlayerTask.player());
-          }
-        }
       } else if (task instanceof TeamManagerTask.RemovePlayer removePlayerTask) {
         for (var team : teams.values()) {
           team.removePlayer(removePlayerTask.player());
@@ -172,7 +171,7 @@ public class TeamManagerImpl implements TeamManager {
       } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
         var team = addTeamTask.team();
         for (var player : team.teamInfoMap().keySet()) {
-          if (Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).isMain(this)) {
+          if (Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).teamManager() == this) {
             team.addPlayer(player);
           }
         }

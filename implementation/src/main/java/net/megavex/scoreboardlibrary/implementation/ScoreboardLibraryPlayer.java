@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.team.TeamManagerImpl;
-import net.megavex.scoreboardlibrary.implementation.team.TeamManagerTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -26,16 +25,19 @@ public class ScoreboardLibraryPlayer {
     }
   }
 
-  public boolean isMain(@NotNull TeamManagerImpl teamManager) {
-    return teamManager() == teamManager;
-  }
-
   public void addTeamManager(@NotNull TeamManagerImpl teamManager) {
     if (teamManagers.contains(teamManager)) {
       throw new RuntimeException("TeamManager already registered");
     }
 
     teamManagers.add(teamManager);
+
+    if (teamManager() == teamManager) {
+      var player = Bukkit.getPlayer(playerUuid);
+      if (player != null) {
+        teamManager.show(player);
+      }
+    }
   }
 
   public void removeTeamManager(@NotNull TeamManagerImpl teamManager) {
@@ -47,7 +49,7 @@ public class ScoreboardLibraryPlayer {
     if (newTeamManager != null) {
       var player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
-        newTeamManager.taskQueue().add(new TeamManagerTask.ShowToPlayer(player));
+        newTeamManager.show(player);
       }
     }
   }
