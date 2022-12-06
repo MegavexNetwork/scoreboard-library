@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,27 +11,27 @@ public sealed class SidebarTask {
     }
   }
 
-  public static final class AddPlayers extends SidebarTask {
-    private final Collection<Player> players;
+  public static final class AddPlayer extends SidebarTask {
+    private final Player player;
 
-    public AddPlayers(@NotNull Collection<Player> players) {
-      this.players = players;
+    public AddPlayer(@NotNull Player player) {
+      this.player = player;
     }
 
-    public @NotNull Collection<Player> players() {
-      return players;
+    public @NotNull Player player() {
+      return player;
     }
   }
 
-  public static final class RemovePlayers extends SidebarTask {
-    private final Collection<Player> players;
+  public static final class RemovePlayer extends SidebarTask {
+    private final Player player;
 
-    public RemovePlayers(@NotNull Collection<Player> players) {
-      this.players = players;
+    public RemovePlayer(@NotNull Player players) {
+      this.player = players;
     }
 
-    public @NotNull Collection<Player> players() {
-      return players;
+    public @NotNull Player player() {
+      return player;
     }
   }
 

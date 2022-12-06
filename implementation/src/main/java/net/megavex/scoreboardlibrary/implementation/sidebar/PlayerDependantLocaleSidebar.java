@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,17 +25,17 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
+  protected @NotNull Set<Player> internalPlayers() {
+    return playerMap.keySet();
+  }
+
+  @Override
   protected void forEachSidebar(@NotNull Consumer<LocaleLineHandler> consumer) {
     if (localeMap != null) {
       for (var value : localeMap.values()) {
         consumer.accept(value);
       }
     }
-  }
-
-  @Override
-  public @NotNull Collection<Player> players() {
-    return playerMap == null ? Set.of() : playerMap.keySet();
   }
 
   @Override
