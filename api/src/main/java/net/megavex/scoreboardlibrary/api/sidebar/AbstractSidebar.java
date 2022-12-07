@@ -13,8 +13,11 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 import static net.kyori.adventure.text.Component.empty;
 
+@NotThreadSafe
 public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
   protected final Sidebar sidebar;
   private final SidebarLine[] lines;

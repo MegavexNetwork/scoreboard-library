@@ -13,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 @ApiStatus.NonExtendable
+@ThreadSafe
 public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
     Class<?> clazz;

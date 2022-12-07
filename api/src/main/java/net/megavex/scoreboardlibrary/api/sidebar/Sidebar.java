@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-/**
- * Represents an in-game Sidebar
- */
+import javax.annotation.concurrent.NotThreadSafe;
+
 @ApiStatus.NonExtendable
+@NotThreadSafe
 public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
   // Constants
 

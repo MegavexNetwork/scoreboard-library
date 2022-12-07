@@ -9,7 +9,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 @ApiStatus.NonExtendable
+@NotThreadSafe
 public interface TeamInfo {
   /**
    * @return Team which is assigned to this {@link TeamInfo}

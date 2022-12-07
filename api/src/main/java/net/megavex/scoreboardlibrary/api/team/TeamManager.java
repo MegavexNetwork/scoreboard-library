@@ -11,7 +11,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
 @ApiStatus.NonExtendable
+@NotThreadSafe
 public interface TeamManager extends Closeable, HasScoreboardLibrary, Players {
   // Teams
 
