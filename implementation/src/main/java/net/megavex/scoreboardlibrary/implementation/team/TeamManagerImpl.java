@@ -166,8 +166,14 @@ public class TeamManagerImpl implements TeamManager {
           team.removePlayer(removePlayerTask.player());
         }
 
-        var slPlayer = Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player()));
-        slPlayer.removeTeamManager(this);
+        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeTeamManager(this);
+      } else if (task instanceof TeamManagerTask.ReloadPlayer reloadPlayerTask) {
+        for (var team : teams.values()) {
+          var teamInfo = team.teamInfoMap().get(reloadPlayerTask.player());
+          if (teamInfo != null) {
+            teamInfo.packetAdapter().updateTeam(Set.of(reloadPlayerTask.player()));
+          }
+        }
       } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
         var team = addTeamTask.team();
         for (var player : team.teamInfoMap().keySet()) {

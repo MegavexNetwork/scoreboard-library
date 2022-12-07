@@ -36,6 +36,19 @@ public sealed class TeamManagerTask {
     }
   }
 
+  public static final class ReloadPlayer extends TeamManagerTask {
+    private final Player player;
+
+    public ReloadPlayer(@NotNull Player player) {
+      this.player = player;
+    }
+
+    public @NotNull Player player() {
+      return player;
+    }
+  }
+
+
   public static final class AddTeam extends TeamManagerTask {
     private final ScoreboardTeamImpl team;
 

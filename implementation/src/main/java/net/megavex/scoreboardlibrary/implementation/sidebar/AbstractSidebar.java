@@ -1,12 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -20,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -49,35 +45,6 @@ public abstract class AbstractSidebar implements Sidebar {
   protected abstract @Nullable LocaleLineHandler addPlayer0(@NotNull Player player);
 
   protected abstract @Nullable LocaleLineHandler removePlayer0(@NotNull Player player);
-
-  private void updateScores() {
-    int size = 0;
-    for (var line : lines) {
-      if (line != null && line.value() != null) {
-        size++;
-      }
-    }
-
-    boolean changed = false;
-
-    int i = 0;
-    for (var line : lines) {
-      if (line != null && line.value() != null) {
-        var newScore = size - i - 1;
-        if (line.objectiveScore() != newScore) {
-          changed = true;
-          line.updateScore(true);
-          line.objectiveScore(newScore);
-        }
-
-        i++;
-      }
-    }
-
-    if (changed) {
-      taskQueue.add(SidebarTask.UpdateScores.INSTANCE);
-    }
-  }
 
   @Override
   public final void close() {
@@ -174,6 +141,10 @@ public abstract class AbstractSidebar implements Sidebar {
     return lines;
   }
 
+  public final @NotNull Queue<SidebarTask> taskQueue() {
+    return taskQueue;
+  }
+
   public final void show(@NotNull Player player) {
     packetAdapter.sendObjectivePacket(Set.of(player), SidebarPacketAdapter.ObjectivePacket.CREATE);
 
@@ -205,8 +176,19 @@ public abstract class AbstractSidebar implements Sidebar {
 
         lineHandler.removePlayer(removePlayerTask.player());
         lineHandler.hide(removePlayerTask.player());
-
         scoreboardLibrary.packetAdapter().removeSidebar(Set.of(removePlayerTask.player()));
+
+        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeSidebar(this);
+      } else if (task instanceof SidebarTask.ReloadPlayer reloadPlayerTask) {
+        var lineHandler = removePlayer0(reloadPlayerTask.player());
+        if (lineHandler == null) {
+          continue;
+        }
+
+        lineHandler.removePlayer(reloadPlayerTask.player());
+        lineHandler.hide(reloadPlayerTask.player());
+
+        show(reloadPlayerTask.player());
       } else if (task instanceof SidebarTask.UpdateLine updateLineTask) {
         forEachSidebar(sidebar -> {
           var value = lines[updateLineTask.line()].value();
@@ -219,6 +201,35 @@ public abstract class AbstractSidebar implements Sidebar {
         packetAdapter.updateTitle(title);
         packetAdapter.sendObjectivePacket(internalPlayers(), SidebarPacketAdapter.ObjectivePacket.UPDATE);
       }
+    }
+  }
+
+  private void updateScores() {
+    int size = 0;
+    for (var line : lines) {
+      if (line != null && line.value() != null) {
+        size++;
+      }
+    }
+
+    boolean changed = false;
+
+    int i = 0;
+    for (var line : lines) {
+      if (line != null && line.value() != null) {
+        var newScore = size - i - 1;
+        if (line.objectiveScore() != newScore) {
+          changed = true;
+          line.updateScore(true);
+          line.objectiveScore(newScore);
+        }
+
+        i++;
+      }
+    }
+
+    if (changed) {
+      taskQueue.add(SidebarTask.UpdateScores.INSTANCE);
     }
   }
 

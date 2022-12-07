@@ -35,6 +35,18 @@ public sealed class SidebarTask {
     }
   }
 
+  public static final class ReloadPlayer extends SidebarTask {
+    private final Player player;
+
+    public ReloadPlayer(@NotNull Player players) {
+      this.player = players;
+    }
+
+    public @NotNull Player player() {
+      return player;
+    }
+  }
+
   public static final class UpdateLine extends SidebarTask {
     private final int line;
 

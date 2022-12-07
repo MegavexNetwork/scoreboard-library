@@ -1,8 +1,8 @@
-package net.megavex.scoreboardlibrary.implementation.listener;
+package net.megavex.scoreboardlibrary.implementation;
 
-import java.util.Set;
-import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.team.TeamInfoImpl;
+import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
+import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarTask;
+import net.megavex.scoreboardlibrary.implementation.team.TeamManagerTask;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,15 +21,15 @@ public record LocaleListener(ScoreboardLibraryImpl scoreboardLibrary) implements
         if (slPlayer != null) {
           var teamManager = slPlayer.teamManager();
           if (teamManager != null) {
-            for (var team : teamManager.teams()) {
-              var teamInfo = (TeamInfoImpl) team.teamInfo(player);
-              teamInfo.packetAdapter().updateTeam(Set.of(player));
-            }
+            teamManager.taskQueue().add(new TeamManagerTask.ReloadPlayer(player));
+          }
+
+          var sidebar = slPlayer.sidebar();
+          if (sidebar instanceof PlayerDependantLocaleSidebar) {
+            sidebar.taskQueue().add(new SidebarTask.ReloadPlayer(player));
           }
         }
-
-        // TODO: do same thing for sidebars
       }
-    }.runTaskLater(scoreboardLibrary.plugin(), 1);
+    }.runTaskLaterAsynchronously(scoreboardLibrary.plugin(), 1);
   }
 }

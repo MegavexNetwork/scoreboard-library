@@ -19,7 +19,7 @@ public class ScoreboardLibraryPlayer {
     this.playerUuid = player.getUniqueId();
   }
 
-  public @Nullable TeamManagerImpl teamManager() {
+  public synchronized @Nullable TeamManagerImpl teamManager() {
     if (teamManagers.isEmpty()) {
       return null;
     } else {
@@ -27,7 +27,7 @@ public class ScoreboardLibraryPlayer {
     }
   }
 
-  public void addTeamManager(@NotNull TeamManagerImpl teamManager) {
+  public synchronized void addTeamManager(@NotNull TeamManagerImpl teamManager) {
     if (teamManagers.contains(teamManager)) {
       throw new RuntimeException("TeamManager already registered");
     }
@@ -42,7 +42,7 @@ public class ScoreboardLibraryPlayer {
     }
   }
 
-  public void removeTeamManager(@NotNull TeamManagerImpl teamManager) {
+  public synchronized void removeTeamManager(@NotNull TeamManagerImpl teamManager) {
     if (!teamManagers.remove(teamManager)) {
       throw new RuntimeException("TeamManager not registered");
     }
@@ -64,7 +64,7 @@ public class ScoreboardLibraryPlayer {
     }
   }
 
-  public void addSidebar(@NotNull AbstractSidebar sidebar) {
+  public synchronized void addSidebar(@NotNull AbstractSidebar sidebar) {
     if (sidebars.contains(sidebar)) {
       throw new RuntimeException("Sidebar already registered");
     }
@@ -79,7 +79,7 @@ public class ScoreboardLibraryPlayer {
     }
   }
 
-  public void removeSidebar(@NotNull AbstractSidebar sidebar) {
+  public synchronized void removeSidebar(@NotNull AbstractSidebar sidebar) {
     if (!sidebars.remove(sidebar)) {
       throw new RuntimeException("Sidebar not registered");
     }
