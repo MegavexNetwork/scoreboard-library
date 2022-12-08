@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
 import java.util.Locale;
+import javax.annotation.concurrent.NotThreadSafe;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
 import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
@@ -9,8 +10,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 @ApiStatus.NonExtendable
 @NotThreadSafe
@@ -38,6 +37,14 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
   // Lines
 
   /**
+   * Gets a line's value
+   *
+   * @param line Line
+   * @return Value of line
+   */
+  @Nullable Component line(@Range(from = 0, to = MAX_LINES - 1) int line);
+
+  /**
    * Sets a line's value
    *
    * @param line  Line
@@ -46,12 +53,15 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
   void line(@Range(from = 0, to = MAX_LINES - 1) int line, @Nullable Component value);
 
   /**
-   * Gets a line's value
-   *
-   * @param line Line
-   * @return Value of line
+   * Clears all lines
    */
-  @Nullable Component line(@Range(from = 0, to = MAX_LINES - 1) int line);
+  default void clearLines() {
+    for (int i = 0; i < maxLines(); i++) {
+      line(i, null);
+    }
+  }
+
+  // Title
 
   /**
    * @return Current title of this Sidebar
