@@ -31,20 +31,16 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 ### Getting started
 
 ```java
+ScoreboardLibrary scoreboardLibrary;
 try {
-  ScoreboardLibraryImplementation.init();
-} catch (ScoreboardLibraryLoadException e) {
-  // Couldn't load the library.
-  // Probably because the servers version is unsupported.
-  e.printStackTrace();
-  return;
+  scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
+} catch (NoPacketAdapterAvailableException e) {
+  // If no packet adapter was found, you can fallback to the no-op implementation
+  scoreboardLibrary = new NoopScoreboardLibrary();
 }
 
-ScoreboardManager scoreboardManager = ScoreboardManager.scoreboardManager(plugin);
-
 // On plugin shutdown:
-scoreboardManager.close();
-ScoreboardLibraryImplementation.close();
+scoreboardLibrary.close();
 ```
 
 ### Sidebar
