@@ -1,11 +1,11 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.sidebar;
 
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.PacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

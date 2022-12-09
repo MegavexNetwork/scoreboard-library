@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
@@ -10,15 +10,15 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibr
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar.PaperSidebarPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.sidebar.SidebarPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team.PaperTeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.team.TeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R1.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.sidebar.PaperSidebarPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.sidebar.SidebarPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.team.PaperTeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.team.TeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

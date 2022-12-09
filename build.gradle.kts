@@ -18,9 +18,9 @@ subprojects {
   apply(plugin = "java-library")
 
   dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
 
-    val adventureVersion = "4.11.0"
+    val adventureVersion = "4.12.0"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")

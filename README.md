@@ -10,14 +10,14 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Sidebars
 - Teams
 - Packet-level, meaning it works with other scoreboard plugins
-- Fully async. All packet work is done asynchronously so you can (but don't have to!) use the library from the main
+- Fully async. All packet work is done asynchronously so you can (but don't have to) use the library from the main
   thread without sacrificing any performance
 - Works with `TranslatableComponent`s, meaning all components are automatically translated using `GlobalTranslator` for
   each players client locale (and automatically update whenever the player changes it)
 
 ## Packet Adapters
 
-- **1.19.\*.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
+- **1.19.3** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
   scoreboard-library can take advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to
   improve performance
 - **1.8.8.** Note that you'll still need to use Java 17

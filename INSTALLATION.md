@@ -22,7 +22,7 @@ dependencies {
 
     // Add version implementations you want:
     runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$scoreboardLibraryVersion")
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_19_R1:$scoreboardLibraryVersion")
+    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_19_R2:$scoreboardLibraryVersion")
     runtimeOnly("com.github.MegavexNetwork.scoreboard-library:packetevents:$scoreboardLibraryVersion")
 
     // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
