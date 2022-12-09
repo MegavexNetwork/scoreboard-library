@@ -54,7 +54,7 @@ sidebar.line(0, Component.empty());
 sidebar.line(1, Component.text("Line 1"));
 sidebar.line(2, Component.text("Line 2"));
 sidebar.line(2, Component.empty());
-sidebar.line(3, Component.text("coolserver.net"));
+sidebar.line(3, Component.text("yourserver.net"));
 
 sidebar.addPlayer(player); // Add the player to the sidebar
 ```
@@ -77,7 +77,7 @@ public class TimerSidebar extends AbstractSidebar {
     registerEmptyLine(0);
     timerLine = registerDynamicLine(1, () -> text("Timer: " + timer));
     registerEmptyLine(2);
-    registerStaticLine(3, text("epicserver.net", NamedTextColor.AQUA));
+    registerStaticLine(3, text("yourserver.net", NamedTextColor.AQUA));
 
     task = new BukkitRunnable() {
       @Override
