@@ -174,8 +174,8 @@ public abstract class AbstractSidebar implements Sidebar {
           continue;
         }
 
-        lineHandler.removePlayer(removePlayerTask.player());
         lineHandler.hide(removePlayerTask.player());
+        lineHandler.removePlayer(removePlayerTask.player());
         scoreboardLibrary.packetAdapter().removeSidebar(Set.of(removePlayerTask.player()));
 
         Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeSidebar(this);
