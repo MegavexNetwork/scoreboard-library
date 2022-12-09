@@ -96,6 +96,14 @@ class NoopTeamManager implements TeamManager {
   }
 
   @Override
+  public void removeTeam(@NotNull ScoreboardTeam team) {
+    Preconditions.checkNotNull(team);
+    Preconditions.checkArgument(team.teamManager() == this);
+
+    teams.remove(team.name(), (NoopScoreboardTeam) team);
+  }
+
+  @Override
   public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
     Preconditions.checkNotNull(player);
 

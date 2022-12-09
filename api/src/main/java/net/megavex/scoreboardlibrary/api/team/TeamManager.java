@@ -64,6 +64,14 @@ public interface TeamManager {
    */
   boolean removeTeam(@NotNull String name);
 
+  /**
+   * Removes a team
+   *
+   * @param team Team
+   * @throws IllegalArgumentException If the provided team is not owned by this TeamManager
+   */
+  void removeTeam(@NotNull ScoreboardTeam team);
+
   // Players
 
   /**

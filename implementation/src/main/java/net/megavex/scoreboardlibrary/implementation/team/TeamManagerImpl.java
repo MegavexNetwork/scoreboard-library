@@ -108,6 +108,17 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
+  public void removeTeam(@NotNull ScoreboardTeam team) {
+    Preconditions.checkNotNull(team);
+    Preconditions.checkArgument(team.teamManager() == this);
+    checkClosed();
+
+    if (teams.remove(team.name(), (ScoreboardTeamImpl) team)) {
+      taskQueue.add(new TeamManagerTask.RemoveTeam((ScoreboardTeamImpl) team));
+    }
+  }
+
+  @Override
   public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
     Preconditions.checkNotNull(player);
     checkClosed();
