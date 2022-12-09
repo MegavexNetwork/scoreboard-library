@@ -17,11 +17,13 @@ public final class NoopScoreboardLibrary implements ScoreboardLibrary {
 
   @Override
   public @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale) {
+    checkClosed();
     return new NoopSidebar(maxLines, locale);
   }
 
   @Override
   public @NotNull TeamManager createTeamManager() {
+    checkClosed();
     return new NoopTeamManager();
   }
 
@@ -33,5 +35,11 @@ public final class NoopScoreboardLibrary implements ScoreboardLibrary {
   @Override
   public boolean closed() {
     return closed;
+  }
+
+  private void checkClosed() {
+    if (closed) {
+      throw new IllegalStateException("NoopScoreboardLibrary is closed");
+    }
   }
 }

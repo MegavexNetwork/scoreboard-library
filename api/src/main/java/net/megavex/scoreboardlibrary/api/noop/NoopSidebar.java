@@ -49,12 +49,14 @@ class NoopSidebar implements Sidebar {
   @Override
   public boolean addPlayer(@NotNull Player player) {
     Preconditions.checkNotNull(player);
+    checkClosed();
     return players.add(player);
   }
 
   @Override
   public boolean removePlayer(@NotNull Player player) {
     Preconditions.checkNotNull(player);
+    checkClosed();
     return players.remove(player);
   }
 
@@ -71,12 +73,14 @@ class NoopSidebar implements Sidebar {
   @Override
   public void line(int line, @Nullable Component value) {
     SidebarUtilities.checkLineBounds(maxLines, line);
+    checkClosed();
     lines[line] = value;
   }
 
   @Override
   public @Nullable Component line(int line) {
     SidebarUtilities.checkLineBounds(maxLines, line);
+    checkClosed();
     return lines[line];
   }
 
@@ -88,6 +92,13 @@ class NoopSidebar implements Sidebar {
   @Override
   public void title(@NotNull Component title) {
     Preconditions.checkNotNull(title);
+    checkClosed();
     this.title = title;
+  }
+
+  private void checkClosed() {
+    if (closed) {
+      throw new IllegalStateException("NoopSidebar is closed");
+    }
   }
 }

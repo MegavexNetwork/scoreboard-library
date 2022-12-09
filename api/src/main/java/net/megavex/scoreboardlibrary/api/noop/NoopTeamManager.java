@@ -39,6 +39,7 @@ class NoopTeamManager implements TeamManager {
   @Override
   public boolean removePlayer(@NotNull Player player) {
     Preconditions.checkNotNull(player);
+    checkClosed();
 
     if (!players.remove(player)) {
       return false;
@@ -58,19 +59,18 @@ class NoopTeamManager implements TeamManager {
 
   @Override
   public @Nullable ScoreboardTeam team(@NotNull String name) {
-    Preconditions.checkNotNull(name);
     return teams.get(name.toLowerCase());
   }
 
   @Override
   public boolean teamExists(@NotNull String name) {
-    Preconditions.checkNotNull(name);
     return teams.containsKey(name.toLowerCase());
   }
 
   @Override
   public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
     Preconditions.checkNotNull(name);
+    checkClosed();
 
     name = name.toLowerCase();
     var team = teams.get(name);
@@ -91,6 +91,7 @@ class NoopTeamManager implements TeamManager {
   @Override
   public boolean removeTeam(@NotNull String name) {
     Preconditions.checkNotNull(name);
+    checkClosed();
 
     return teams.remove(name.toLowerCase()) != null;
   }
@@ -99,6 +100,7 @@ class NoopTeamManager implements TeamManager {
   public void removeTeam(@NotNull ScoreboardTeam team) {
     Preconditions.checkNotNull(team);
     Preconditions.checkArgument(team.teamManager() == this);
+    checkClosed();
 
     teams.remove(team.name(), (NoopScoreboardTeam) team);
   }
@@ -106,6 +108,7 @@ class NoopTeamManager implements TeamManager {
   @Override
   public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
     Preconditions.checkNotNull(player);
+    checkClosed();
 
     if (!players.add(player)) {
       return false;
@@ -127,6 +130,12 @@ class NoopTeamManager implements TeamManager {
 
     if (!(teamInfo instanceof NoopTeamInfo)) {
       throw new IllegalArgumentException("must be TeamInfoImpl");
+    }
+  }
+
+  private void checkClosed() {
+    if (closed) {
+      throw new IllegalStateException("NoopTeamManager is closed");
     }
   }
 }
