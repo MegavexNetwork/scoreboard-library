@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.implementation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -152,24 +153,24 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   public Set<TeamManagerImpl> teamManagers() {
-    if (this.teamManagers == null) {
-      synchronized (this.lock) {
-        if (this.teamManagers == null) {
-          this.teamManagers = ConcurrentHashMap.newKeySet(4);
-          this.teamTask = new TeamUpdaterTask(this);
+    if (teamManagers == null) {
+      synchronized (lock) {
+        if (teamManagers == null) {
+          teamManagers = Collections.newSetFromMap(new ConcurrentHashMap<>(4, 0.75f, 2));
+          teamTask = new TeamUpdaterTask(this);
         }
       }
     }
 
-    return this.teamManagers;
+    return teamManagers;
   }
 
   public Set<AbstractSidebar> sidebars() {
-    if (this.sidebars == null) {
-      synchronized (this.lock) {
-        if (this.sidebars == null) {
-          this.sidebars = ConcurrentHashMap.newKeySet(4);
-          this.sidebarTask = new SidebarUpdaterTask(this);
+    if (sidebars == null) {
+      synchronized (lock) {
+        if (sidebars == null) {
+          sidebars = Collections.newSetFromMap(new ConcurrentHashMap<>(4, 0.75f, 2));
+          sidebarTask = new SidebarUpdaterTask(this);
         }
       }
     }

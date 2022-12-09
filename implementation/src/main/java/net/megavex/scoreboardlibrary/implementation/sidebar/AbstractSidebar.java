@@ -180,7 +180,6 @@ public abstract class AbstractSidebar implements Sidebar {
       } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
         var slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
         slPlayer.addSidebar(this);
-
       } else if (task instanceof SidebarTask.RemovePlayer removePlayerTask) {
         var lineHandler = removePlayer0(removePlayerTask.player());
         if (lineHandler == null) {
