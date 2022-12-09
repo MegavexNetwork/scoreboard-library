@@ -10,28 +10,27 @@ repositories {
 }
 ```
 
-Then go [here](https://jitpack.io/#MegavexNetwork/scoreboard-library) and find the latest version. Now, you can add the
-dependencies:
+Then add the dependencies:
 
 ```kotlin
 dependencies {
-    val scoreboardLibraryVersion = "..."
-    implementation("com.github.MegavexNetwork.scoreboard-library:api:$scoreboardLibraryVersion")
-    implementation("com.github.MegavexNetwork.scoreboard-library:extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:implementation:$scoreboardLibraryVersion")
+  val scoreboardLibraryVersion = "2.0.0-RC1"
+  implementation("com.github.MegavexNetwork.scoreboard-library:api:$scoreboardLibraryVersion")
+  implementation("com.github.MegavexNetwork.scoreboard-library:extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
+  runtimeOnly("com.github.MegavexNetwork.scoreboard-library:implementation:$scoreboardLibraryVersion")
 
-    // Add version implementations you want:
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$scoreboardLibraryVersion")
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_19_R2:$scoreboardLibraryVersion")
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:packetevents:$scoreboardLibraryVersion")
+  // Add version implementations you want:
+  runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$scoreboardLibraryVersion")
+  runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_19_R2:$scoreboardLibraryVersion")
+  runtimeOnly("com.github.MegavexNetwork.scoreboard-library:packetevents:$scoreboardLibraryVersion")
 
-    // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
-    // Follow either of:
-    // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
-    // - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
-  
-    // If using the 1.8 version implementation, add Adventure as well:
-    implementation("net.kyori:adventure-platform-bukkit:4.0.1")
+  // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
+  // Follow either of:
+  // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
+  // - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
+
+  // If using the 1.8 version implementation, add Adventure as well:
+  implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 }
 ```
 

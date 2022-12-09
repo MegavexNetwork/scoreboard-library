@@ -57,6 +57,9 @@ sidebar.line(2, Component.empty());
 sidebar.line(3, Component.text("yourserver.net"));
 
 sidebar.addPlayer(player); // Add the player to the sidebar
+
+// After you've finished using the Sidebar, make sure to close it to prevent a memory leak
+sidebar.close();
 ```
 
 ### Sidebar (Kotlin)
@@ -143,6 +146,10 @@ teamManager.addPlayer(player); // Player will be added to the global TeamInfo
 // You can change the TeamInfo like this:
 TeamInfo newTeamInfo = team.createTeamInfo();
 team.teamInfo(player, newTeamInfo);
+
+
+// After you've finished using the TeamManager, make sure to close it to prevent a memory leak
+teamManager.close();
 ```
 
 For more examples, check out the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example)
