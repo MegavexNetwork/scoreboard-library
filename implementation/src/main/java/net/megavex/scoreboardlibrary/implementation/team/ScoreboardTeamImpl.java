@@ -75,7 +75,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   @Override
-  public TeamInfo createTeamInfo() {
+  public @NotNull TeamInfo createTeamInfo() {
     return new TeamInfoImpl(this);
   }
 

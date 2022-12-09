@@ -64,7 +64,7 @@ class NoopScoreboardTeam implements ScoreboardTeam {
   }
 
   @Override
-  public TeamInfo createTeamInfo() {
+  public @NotNull TeamInfo createTeamInfo() {
     return new NoopTeamInfo(this);
   }
 

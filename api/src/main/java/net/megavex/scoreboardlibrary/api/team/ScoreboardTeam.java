@@ -41,5 +41,5 @@ public interface ScoreboardTeam {
   /**
    * @return New {@link TeamInfo} which is assigned to this team
    */
-  TeamInfo createTeamInfo();
+  @NotNull TeamInfo createTeamInfo();
 }
