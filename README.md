@@ -17,7 +17,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Packet Adapters
 
-- **1.19.3** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
+- **1.19.3.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
   scoreboard-library can take advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to
   improve performance
 - **1.8.8.** Note that you'll still need to use Java 17
