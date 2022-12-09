@@ -50,7 +50,7 @@ public class LinesBuilder internal constructor(private val sidebar: Sidebar, pro
   private var iterator = progression.iterator()
 
   public fun line(value: Component) {
-    sidebar.line(nextFree(), value)
+    sidebar.line(nextLine(), value)
   }
 
   public fun emptyLine() {
@@ -58,7 +58,7 @@ public class LinesBuilder internal constructor(private val sidebar: Sidebar, pro
   }
 
   public fun dynamicLine(valueProvider: () -> Component): DynamicLine {
-    val lineIndex = nextFree()
+    val lineIndex = nextLine()
     val dynamicLine = {
       sidebar.line(lineIndex, valueProvider())
     }
@@ -76,7 +76,7 @@ public class LinesBuilder internal constructor(private val sidebar: Sidebar, pro
     }
   }
 
-  private fun nextFree(): Int {
+  public fun nextLine(): Int {
     while (iterator.hasNext()) {
       val line = iterator.nextInt()
       if (sidebar.line(line) == null) {
