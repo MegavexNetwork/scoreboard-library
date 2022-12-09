@@ -41,7 +41,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   private final Object lock = new Object();
   private volatile boolean closed;
 
-  public ScoreboardLibraryImpl(Plugin plugin) throws NoPacketAdapterAvailableException {
+  public ScoreboardLibraryImpl(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
     Preconditions.checkNotNull(plugin, "plugin");
 
     try {
@@ -96,7 +96,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
       sidebar = new SingleLocaleSidebar(this, maxLines, locale);
     }
 
-    mutableSidebars().add(sidebar);
+    sidebars().add(sidebar);
     return sidebar;
   }
 
@@ -105,7 +105,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     checkClosed();
 
     var teamManager = new TeamManagerImpl(this);
-    mutableTeamManagers().add(teamManager);
+    teamManagers().add(teamManager);
     return teamManager;
   }
 
@@ -127,15 +127,21 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
     if (teamManagers != null) {
       teamTask.cancel();
-      for (var teamManager : teamManagers) {
-        teamManager.close();
+      synchronized (teamTask.lock()) {
+        for (var teamManager : teamManagers) {
+          teamManager.close();
+          teamManager.tick();
+        }
       }
     }
 
     if (sidebars != null) {
       sidebarTask.cancel();
-      for (var sidebar : List.copyOf(sidebars)) {
-        sidebar.close();
+      synchronized (sidebarTask.lock()) {
+        for (var sidebar : sidebars) {
+          sidebar.close();
+          sidebar.tick();
+        }
       }
     }
   }
@@ -145,7 +151,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     return closed;
   }
 
-  public Set<TeamManagerImpl> mutableTeamManagers() {
+  public Set<TeamManagerImpl> teamManagers() {
     if (this.teamManagers == null) {
       synchronized (this.lock) {
         if (this.teamManagers == null) {
@@ -158,7 +164,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     return this.teamManagers;
   }
 
-  public Set<AbstractSidebar> mutableSidebars() {
+  public Set<AbstractSidebar> sidebars() {
     if (this.sidebars == null) {
       synchronized (this.lock) {
         if (this.sidebars == null) {

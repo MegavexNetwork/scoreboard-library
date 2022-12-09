@@ -2,9 +2,8 @@ package net.megavex.scoreboardlibrary.api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
+import javax.annotation.concurrent.ThreadSafe;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
-import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
-import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.bukkit.plugin.Plugin;
@@ -13,11 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import javax.annotation.concurrent.ThreadSafe;
-
 @ApiStatus.NonExtendable
 @ThreadSafe
-public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
+public interface ScoreboardLibrary {
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
     Class<?> clazz;
     try {
@@ -37,11 +34,6 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
 
       throw new RuntimeException("failed to load scoreboard-library implementation", e);
     }
-  }
-
-  @Override
-  default @NotNull ScoreboardLibrary scoreboardLibrary() {
-    return this;
   }
 
   /**
@@ -79,4 +71,15 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
    * @return TeamManager
    */
   @NotNull TeamManager createTeamManager();
+
+  /**
+   * Closes this ScoreboardLibrary instance.
+   * Should always be called when the plugin is disabled
+   */
+  void close();
+
+  /**
+   * @return Whether this ScoreboardLibrary instance is closed
+   */
+  boolean closed();
 }

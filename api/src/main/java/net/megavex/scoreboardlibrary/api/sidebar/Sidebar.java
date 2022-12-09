@@ -1,11 +1,10 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
+import java.util.Collection;
 import java.util.Locale;
 import javax.annotation.concurrent.NotThreadSafe;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
-import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.interfaces.Players;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Range;
 
 @ApiStatus.NonExtendable
 @NotThreadSafe
-public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
+public interface Sidebar {
   // Constants
 
   int MAX_LINES = 15;
@@ -21,16 +20,12 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
   // Main
 
   /**
-   * Gets the max amount of lines this sidebar can have
-   *
-   * @return Max line amount
+   * @return Max amount of lines this sidebar can have
    */
   @Range(from = 1, to = MAX_LINES) int maxLines();
 
   /**
-   * Gets the {@link Locale} which is used to translate {@link net.kyori.adventure.text.TranslatableComponent}s
-   *
-   * @return Locale
+   * @return {@link Locale} which is used to translate {@link net.kyori.adventure.text.TranslatableComponent}s
    */
   @Nullable Locale locale();
 
@@ -74,4 +69,36 @@ public interface Sidebar extends HasScoreboardLibrary, Closeable, Players {
    * @param title Title
    */
   void title(@NotNull Component title);
+
+  // Players
+
+  @NotNull Collection<Player> players();
+
+  boolean addPlayer(@NotNull Player player);
+
+  boolean removePlayer(@NotNull Player player);
+
+  default void addPlayers(@NotNull Collection<Player> players) {
+    for (var player : players) {
+      addPlayer(player);
+    }
+  }
+
+  default void removePlayers(@NotNull Collection<Player> players) {
+    for (var player : players) {
+      removePlayer(player);
+    }
+  }
+
+  // Close
+
+  /**
+   * Closes this Sidebar
+   */
+  void close();
+
+  /**
+   * @return Whether this Sidebar is closed
+   */
+  boolean closed();
 }

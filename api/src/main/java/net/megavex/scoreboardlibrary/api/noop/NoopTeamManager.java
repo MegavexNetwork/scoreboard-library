@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamInfo;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -18,14 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 class NoopTeamManager implements TeamManager {
-  private final NoopScoreboardLibrary scoreboardLibrary;
   private final Set<Player> players = new HashSet<>();
   private final Map<String, NoopScoreboardTeam> teams = new HashMap<>();
   private boolean closed;
-
-  NoopTeamManager(@NotNull NoopScoreboardLibrary scoreboardLibrary) {
-    this.scoreboardLibrary = scoreboardLibrary;
-  }
 
   @Override
   public void close() {
@@ -35,11 +29,6 @@ class NoopTeamManager implements TeamManager {
   @Override
   public boolean closed() {
     return closed;
-  }
-
-  @Override
-  public @NotNull ScoreboardLibrary scoreboardLibrary() {
-    return scoreboardLibrary;
   }
 
   @Override
@@ -97,6 +86,13 @@ class NoopTeamManager implements TeamManager {
     }
 
     return team;
+  }
+
+  @Override
+  public boolean removeTeam(@NotNull String name) {
+    Preconditions.checkNotNull(name);
+
+    return teams.remove(name.toLowerCase()) != null;
   }
 
   @Override

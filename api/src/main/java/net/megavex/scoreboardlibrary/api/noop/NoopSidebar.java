@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import org.bukkit.entity.Player;
@@ -19,16 +18,14 @@ import org.jetbrains.annotations.Range;
 import static net.kyori.adventure.text.Component.empty;
 
 class NoopSidebar implements Sidebar {
-  private final NoopScoreboardLibrary scoreboardLibrary;
   private final Set<Player> players = new HashSet<>();
   private final int maxLines;
   private final Locale locale;
   private final Component[] lines;
   private Component title = empty();
-  private boolean visible, closed;
+  private boolean closed;
 
-  NoopSidebar(@NotNull NoopScoreboardLibrary scoreboardLibrary, int maxLines, @Nullable Locale locale) {
-    this.scoreboardLibrary = scoreboardLibrary;
+  NoopSidebar(int maxLines, @Nullable Locale locale) {
     this.maxLines = maxLines;
     this.locale = locale;
     this.lines = new Component[maxLines];
@@ -42,11 +39,6 @@ class NoopSidebar implements Sidebar {
   @Override
   public boolean closed() {
     return closed;
-  }
-
-  @Override
-  public @NotNull ScoreboardLibrary scoreboardLibrary() {
-    return scoreboardLibrary;
   }
 
   @Override

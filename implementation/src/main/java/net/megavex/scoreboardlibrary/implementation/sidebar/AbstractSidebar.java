@@ -1,5 +1,13 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
+import com.google.common.base.Preconditions;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -13,9 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -60,17 +65,13 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   @Override
-  public final @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
-    return scoreboardLibrary;
-  }
-
-  @Override
   public final @NotNull Collection<Player> players() {
     return closed ? Set.of() : Collections.unmodifiableSet(players);
   }
 
   @Override
   public final boolean addPlayer(@NotNull Player player) {
+    Preconditions.checkNotNull(player);
     checkClosed();
 
     if (players.add(player)) {
@@ -83,6 +84,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
   @Override
   public final boolean removePlayer(@NotNull Player player) {
+    Preconditions.checkNotNull(player);
     checkClosed();
 
     if (players.remove(player)) {
@@ -125,12 +127,17 @@ public abstract class AbstractSidebar implements Sidebar {
 
   @Override
   public final void title(@NotNull Component title) {
+    Preconditions.checkNotNull(title);
     checkClosed();
 
     if (!Objects.equals(this.title, title)) {
       this.title = title;
       taskQueue.add(SidebarTask.UpdateTitle.INSTANCE);
     }
+  }
+
+  public final @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
+    return scoreboardLibrary;
   }
 
   public final @NotNull SidebarPacketAdapter<?, ?> packetAdapter() {
@@ -163,6 +170,12 @@ public abstract class AbstractSidebar implements Sidebar {
 
       if (task instanceof SidebarTask.Close) {
         forEachSidebar(LocaleLineHandler::hide);
+        scoreboardLibrary.packetAdapter().removeSidebar(internalPlayers());
+
+        for (var player : internalPlayers()) {
+          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).removeSidebar(this);
+        }
+
         return;
       } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
         var slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());

@@ -1,7 +1,9 @@
 package net.megavex.scoreboardlibrary.implementation.team;
 
+import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
@@ -47,11 +49,6 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
-  public @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
-    return scoreboardLibrary;
-  }
-
-  @Override
   public @NotNull Collection<Player> players() {
     return closed ? Collections.emptySet() : Collections.unmodifiableSet(players);
   }
@@ -73,6 +70,7 @@ public class TeamManagerImpl implements TeamManager {
 
   @Override
   public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    Preconditions.checkNotNull(name);
     checkClosed();
     name = name.toLowerCase();
 
@@ -96,7 +94,22 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
+  public boolean removeTeam(@NotNull String name) {
+    Preconditions.checkNotNull(name);
+    checkClosed();
+
+    var team = teams.remove(name.toLowerCase());
+    if (team != null) {
+      taskQueue.add(new TeamManagerTask.RemoveTeam(team));
+      return true;
+    }
+
+    return false;
+  }
+
+  @Override
   public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+    Preconditions.checkNotNull(player);
     checkClosed();
 
     if (!players.add(player)) {
@@ -115,6 +128,7 @@ public class TeamManagerImpl implements TeamManager {
 
   @Override
   public boolean removePlayer(@NotNull Player player) {
+    Preconditions.checkNotNull(player);
     checkClosed();
 
     if (!players.remove(player)) {
@@ -124,6 +138,10 @@ public class TeamManagerImpl implements TeamManager {
     var task = new TeamManagerTask.RemovePlayer(player);
     taskQueue.add(task);
     return true;
+  }
+
+  public @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
+    return scoreboardLibrary;
   }
 
   public @NotNull Queue<TeamManagerTask> taskQueue() {
@@ -144,7 +162,7 @@ public class TeamManagerImpl implements TeamManager {
       }
 
       if (task instanceof TeamManagerTask.Close) {
-        scoreboardLibrary.mutableTeamManagers().remove(this);
+        scoreboardLibrary.teamManagers().remove(this);
 
         for (var team : teams.values()) {
           Set<Player> removePlayers = CollectionProvider.set(players.size());
@@ -181,6 +199,17 @@ public class TeamManagerImpl implements TeamManager {
             team.addPlayer(player);
           }
         }
+      } else if (task instanceof TeamManagerTask.RemoveTeam removeTeamTask) {
+        List<Player> playersInTeam = CollectionProvider.list(removeTeamTask.team().teamInfoMap().size());
+        for (var entry : removeTeamTask.team().teamInfoMap().entrySet()) {
+          var player = entry.getKey();
+          var teamInfo = entry.getValue();
+          if (teamInfo.players().contains(player)) {
+            playersInTeam.add(player);
+          }
+        }
+
+        removeTeamTask.team().packetAdapter().removeTeam(playersInTeam);
       } else if (task instanceof TeamManagerTask.UpdateTeamInfo updateTeamInfoTask) {
         var teamInfo = updateTeamInfoTask.teamInfo();
         teamInfo.updateTeamPackets();

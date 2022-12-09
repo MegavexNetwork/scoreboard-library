@@ -61,6 +61,18 @@ public sealed class TeamManagerTask {
     }
   }
 
+  public static final class RemoveTeam extends TeamManagerTask {
+    private final ScoreboardTeamImpl team;
+
+    public RemoveTeam(@NotNull ScoreboardTeamImpl team) {
+      this.team = team;
+    }
+
+    public @NotNull ScoreboardTeamImpl team() {
+      return team;
+    }
+  }
+
   public static final class UpdateTeamInfo extends TeamManagerTask {
     private final TeamInfoImpl teamInfo;
 

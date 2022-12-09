@@ -2,10 +2,8 @@ package net.megavex.scoreboardlibrary.api.sidebar;
 
 import com.google.common.base.Preconditions;
 import java.util.function.Supplier;
+import javax.annotation.concurrent.NotThreadSafe;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.interfaces.Closeable;
-import net.megavex.scoreboardlibrary.api.interfaces.HasScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -13,12 +11,10 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 
-import javax.annotation.concurrent.NotThreadSafe;
-
 import static net.kyori.adventure.text.Component.empty;
 
 @NotThreadSafe
-public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
+public class AbstractSidebar {
   protected final Sidebar sidebar;
   private final Line[] lines;
   private boolean closed;
@@ -105,17 +101,16 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
     return lines[line];
   }
 
-  @Override
-  public final @NotNull ScoreboardLibrary scoreboardLibrary() {
-    return sidebar.scoreboardLibrary();
-  }
-
-  @Override
+  /**
+   * Closes this AbstractSidebar
+   */
   public final void close() {
     close(true);
   }
 
   /**
+   * Closes this AbstractSidebar
+   *
    * @param closeWrappedSidebar Whether to close the wrapped {@link Sidebar} or just clear all lines from it
    */
   public final void close(boolean closeWrappedSidebar) {
@@ -135,7 +130,9 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
     onClosed();
   }
 
-  @Override
+  /**
+   * @return Whether this AbstractSidebar is closed
+   */
   public final boolean closed() {
     return closed;
   }
