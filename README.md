@@ -47,7 +47,7 @@ scoreboardLibrary.close();
 
 
 ```java
-Sidebar sidebar = scoreboardManager.createSidebar();
+Sidebar sidebar = scoreboardLibrary.createSidebar();
 
 sidebar.title(Component.text("Sidebar Title"));
 sidebar.line(0, Component.empty());
@@ -59,6 +59,34 @@ sidebar.line(3, Component.text("yourserver.net"));
 sidebar.addPlayer(player); // Add the player to the sidebar
 ```
 
+### Sidebar (Kotlin)
+
+```kotlin
+val sidebar = scoreboardLibrary.createSidebar()
+
+val updateTimerLine: DynamicLine
+var timer = 0
+
+sidebar.title(Component.text("Timer Example", NamedTextColor.AQUA))
+sidebar.lines {
+  emptyLine()
+  updateTimerLine = dynamicLine { Component.text("Timer: $timer") }
+  emptyLine()
+  line(Component.text("yourserver.net", NamedTextColor.AQUA))
+}
+
+plugin.server.scheduler.runTaskTimerAsynchronously(
+  plugin,
+  Runnable {
+    timer++
+    updateTimerLine()
+  },
+  20,
+  20
+)
+
+sidebar.addPlayer(player)
+```
 
 ### AbstractSidebar
 
@@ -72,12 +100,12 @@ public class TimerSidebar extends AbstractSidebar {
   public TimerSidebar(@NotNull Plugin plugin, @NotNull ScoreboardLibrary scoreboardLibrary, @NotNull Player player) {
     super(scoreboardLibrary.createSidebar(4));
 
-    sidebar.title(text("Timer Example", NamedTextColor.AQUA));
+    sidebar.title(Component.text("Timer Example", NamedTextColor.AQUA));
 
     registerEmptyLine(0);
-    timerLine = registerDynamicLine(1, () -> text("Timer: " + timer));
+    timerLine = registerDynamicLine(1, () -> Component.text("Timer: " + timer));
     registerEmptyLine(2);
-    registerStaticLine(3, text("yourserver.net", NamedTextColor.AQUA));
+    registerStaticLine(3, Component.text("yourserver.net", NamedTextColor.AQUA));
 
     task = new BukkitRunnable() {
       @Override
@@ -100,7 +128,7 @@ public class TimerSidebar extends AbstractSidebar {
 ### TeamManager
 
 ```java
-TeamManager teamManager = scoreboardManager.createTeamManager();
+TeamManager teamManager = scoreboardLibrary.createTeamManager();
 ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
 // A TeamInfo holds all the properties that a team can have (except the name).
