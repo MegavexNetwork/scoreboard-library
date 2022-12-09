@@ -2,7 +2,7 @@
 
 I'm only going to show the installation for Gradle, however everything can be applied to Maven too.
 
-First, add the repository:
+First, add the Jitpack repository:
 
 ```kotlin
 repositories {
@@ -16,7 +16,9 @@ dependencies:
 ```kotlin
 dependencies {
     val libraryVersion = "..."
-    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:implementation:$libraryVersion") // Includes the API and the implementation
+    implementation("com.github.MegavexNetwork.scoreboard-library:api:$libraryVersion")
+    implementation("com.github.MegavexNetwork.scoreboard-library:extra-kotlin:$libraryVersion") // If using Kotlin
+    runtimeOnly("com.github.MegavexNetwork.scoreboard-library:implementation:$libraryVersion")
 
     // Add version implementations you want:
     runtimeOnly("com.github.MegavexNetwork.scoreboard-library:v1_8_R3:$libraryVersion")

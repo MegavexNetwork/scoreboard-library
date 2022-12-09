@@ -24,6 +24,10 @@ subprojects {
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+
+    testImplementation("net.kyori:adventure-api:$adventureVersion")
+    testImplementation("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
+    testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
   }
 
   tasks.withType<JavaCompile>().configureEach {
