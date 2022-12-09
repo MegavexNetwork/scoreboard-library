@@ -59,6 +59,44 @@ sidebar.line(3, Component.text("coolserver.net"));
 sidebar.addPlayer(player); // Add the player to the sidebar
 ```
 
+
+### AbstractSidebar
+
+```java
+public class TimerSidebar extends AbstractSidebar {
+  private final DynamicLine timerLine;
+  private int timer;
+
+  private final BukkitTask task;
+
+  public TimerSidebar(@NotNull Plugin plugin, @NotNull ScoreboardLibrary scoreboardLibrary, @NotNull Player player) {
+    super(scoreboardLibrary.createSidebar(4));
+
+    sidebar.title(text("Timer Example", NamedTextColor.AQUA));
+
+    registerEmptyLine(0);
+    timerLine = registerDynamicLine(1, () -> text("Timer: " + timer));
+    registerEmptyLine(2);
+    registerStaticLine(3, text("epicserver.net", NamedTextColor.AQUA));
+
+    task = new BukkitRunnable() {
+      @Override
+      public void run() {
+        timer++;
+        timerLine.update();
+      }
+    }.runTaskTimerAsynchronously(plugin, 20, 20);
+
+    sidebar.addPlayer(player);
+  }
+
+  @Override
+  protected void onClosed() {
+    task.cancel();
+  }
+}
+```
+
 ### TeamManager
 
 ```java
