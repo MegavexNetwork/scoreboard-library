@@ -30,8 +30,8 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
       return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class).newInstance(plugin);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
       if (e instanceof InvocationTargetException invocationTargetException) {
-        if (invocationTargetException.getTargetException() instanceof NoPacketAdapterAvailableException adapterNotFoundException) {
-          throw adapterNotFoundException;
+        if (invocationTargetException.getTargetException() instanceof NoPacketAdapterAvailableException noPacketAdapterAvailableException) {
+          throw noPacketAdapterAvailableException;
         }
       }
 
@@ -43,11 +43,6 @@ public interface ScoreboardLibrary extends Closeable, HasScoreboardLibrary {
   default @NotNull ScoreboardLibrary scoreboardLibrary() {
     return this;
   }
-
-  /**
-   * @return Plugin of this {@link ScoreboardLibrary}
-   */
-  @NotNull Plugin plugin();
 
   /**
    * Creates a {@link Sidebar}

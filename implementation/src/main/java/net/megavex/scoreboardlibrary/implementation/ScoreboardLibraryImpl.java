@@ -69,17 +69,16 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
   }
 
+  public @NotNull Plugin plugin() {
+    return plugin;
+  }
+
   public @NotNull ScoreboardLibraryPacketAdapter<?> packetAdapter() {
     return packetAdapter;
   }
 
   public @NotNull LocaleProvider localeProvider() {
     return localeProvider;
-  }
-
-  @Override
-  public @NotNull Plugin plugin() {
-    return plugin;
   }
 
   @Override
