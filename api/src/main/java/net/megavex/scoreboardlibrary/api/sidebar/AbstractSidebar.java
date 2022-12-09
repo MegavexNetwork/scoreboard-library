@@ -20,12 +20,12 @@ import static net.kyori.adventure.text.Component.empty;
 @NotThreadSafe
 public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
   protected final Sidebar sidebar;
-  private final SidebarLine[] lines;
+  private final Line[] lines;
   private boolean closed;
 
   public AbstractSidebar(@NotNull Sidebar sidebar) {
     this.sidebar = sidebar;
-    this.lines = new SidebarLine[sidebar.maxLines()];
+    this.lines = new Line[sidebar.maxLines()];
   }
 
   public final @NotNull Sidebar sidebar() {
@@ -48,7 +48,7 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
     Preconditions.checkNotNull(value);
     checkClosed();
 
-    lines[line] = new SidebarLine(line);
+    lines[line] = new Line(line);
     sidebar.line(line, value);
   }
 
@@ -59,13 +59,13 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
    * @param lineSupplier Line value supplier
    * @return The created LineSupplier
    */
-  protected final @NotNull DynamicSidebarLine registerDynamicLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line, @NotNull Supplier<@Nullable Component> lineSupplier) {
+  protected final @NotNull AbstractSidebar.DynamicLine registerDynamicLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line, @NotNull Supplier<@Nullable Component> lineSupplier) {
     SidebarUtilities.checkLineBounds(sidebar.maxLines(), line);
     checkLineAvailable(line);
     Preconditions.checkNotNull(lineSupplier);
     checkClosed();
 
-    var sidebarLine = new DynamicSidebarLine(line, lineSupplier);
+    var sidebarLine = new DynamicLine(line, lineSupplier);
     lines[line] = sidebarLine;
     sidebar.line(line, lineSupplier.get());
     return sidebarLine;
@@ -85,7 +85,7 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
    *
    * @param line Line to unregister
    */
-  protected final void unregisterLine(@NotNull SidebarLine line) {
+  protected final void unregisterLine(@NotNull AbstractSidebar.Line line) {
     Preconditions.checkNotNull(line);
     checkClosed();
 
@@ -94,12 +94,12 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
   }
 
   /**
-   * Gets the {@link SidebarLine} of an index
+   * Gets the {@link Line} of an index
    *
    * @param line Line
    * @return Supplier of line
    */
-  protected @Nullable SidebarLine getLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line) {
+  protected @Nullable AbstractSidebar.Line getLine(@Range(from = 0, to = Sidebar.MAX_LINES - 1) int line) {
     SidebarUtilities.checkLineBounds(sidebar.maxLines(), line);
     checkClosed();
     return lines[line];
@@ -155,18 +155,18 @@ public class AbstractSidebar implements HasScoreboardLibrary, Closeable {
     }
   }
 
-  public sealed class SidebarLine permits DynamicSidebarLine {
+  public sealed class Line permits DynamicLine {
     protected final int line;
 
-    private SidebarLine(int line) {
+    private Line(int line) {
       this.line = line;
     }
   }
 
-  public final class DynamicSidebarLine extends SidebarLine {
+  public final class DynamicLine extends Line {
     private final Supplier<Component> function;
 
-    private DynamicSidebarLine(int line, @NotNull Supplier<Component> function) {
+    private DynamicLine(int line, @NotNull Supplier<Component> function) {
       super(line);
       this.function = function;
     }
