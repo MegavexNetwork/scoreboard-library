@@ -122,7 +122,7 @@ internal class SidebarDslTest {
   fun `dynamic line`() {
     val sidebar = scoreboardLibrary.createSidebar()
     var test = 0
-    var dynamicLine: DynamicLine
+    var dynamicLine: LinesBuilder.DynamicLine
 
     sidebar.lines {
       dynamicLine = dynamicLine { text(test) }
@@ -130,7 +130,7 @@ internal class SidebarDslTest {
 
     assertEquals(text(test), sidebar.line(0))
     test++
-    dynamicLine()
+    dynamicLine.update()
     assertEquals(text(test), sidebar.line(0))
   }
 }

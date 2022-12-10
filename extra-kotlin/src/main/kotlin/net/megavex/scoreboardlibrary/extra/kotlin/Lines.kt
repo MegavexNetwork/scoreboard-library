@@ -39,12 +39,14 @@ public fun Sidebar.lines(
   block(LinesBuilder(this, progression))
 }
 
-public typealias DynamicLine = () -> Unit
-
 public class LinesBuilder internal constructor(private val sidebar: Sidebar, progression: IntProgression) {
   public enum class Direction {
     TOP_TO_BOTTOM,
     BOTTOM_TO_TOP
+  }
+
+  public interface DynamicLine {
+    public fun update()
   }
 
   private var iterator = progression.iterator()
@@ -59,10 +61,12 @@ public class LinesBuilder internal constructor(private val sidebar: Sidebar, pro
 
   public fun dynamicLine(valueProvider: () -> Component): DynamicLine {
     val lineIndex = nextLine()
-    val dynamicLine = {
-      sidebar.line(lineIndex, valueProvider())
+    val dynamicLine = object : DynamicLine {
+      override fun update() {
+        sidebar.line(lineIndex, valueProvider())
+      }
     }
-    dynamicLine()
+    dynamicLine.update()
     return dynamicLine
   }
 

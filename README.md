@@ -67,13 +67,13 @@ sidebar.close();
 ```kotlin
 val sidebar = scoreboardLibrary.createSidebar(4)
 
-val updateTimerLine: DynamicLine
+val timerLine: DynamicLine
 var timer = 0
 
 sidebar.title(Component.text("Timer Example", NamedTextColor.AQUA))
 sidebar.lines {
   emptyLine()
-  updateTimerLine = dynamicLine { Component.text("Timer: $timer") }
+  timerLine = dynamicLine { Component.text("Timer: $timer") }
   emptyLine()
   line(Component.text("yourserver.net", NamedTextColor.AQUA))
 }
@@ -82,7 +82,7 @@ plugin.server.scheduler.runTaskTimerAsynchronously(
   plugin,
   Runnable {
     timer++
-    updateTimerLine()
+    timerLine.update()
   },
   20,
   20
