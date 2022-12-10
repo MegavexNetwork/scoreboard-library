@@ -67,7 +67,7 @@ sidebar.close();
 ```kotlin
 val sidebar = scoreboardLibrary.createSidebar(4)
 
-val timerLine: DynamicLine
+val timerLine: LinesBuilder.DynamicLine
 var timer = 0
 
 sidebar.title(Component.text("Timer Example", NamedTextColor.AQUA))
