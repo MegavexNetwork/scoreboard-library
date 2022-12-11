@@ -26,7 +26,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Installation
 
-See installation instructions [here](https://github.com/MegavexNetwork/scoreboard-library/blob/master/INSTALLATION.md)
+See installation instructions [here](https://github.com/MegavexNetwork/scoreboard-library/blob/dev/2.0/INSTALLATION.md)
 
 ### Getting started
 
