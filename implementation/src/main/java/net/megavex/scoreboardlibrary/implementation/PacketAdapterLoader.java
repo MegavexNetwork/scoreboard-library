@@ -24,7 +24,7 @@ public final class PacketAdapterLoader {
       try {
         Class.forName("com.github.retrooper.packetevents.PacketEvents");
       } catch (ClassNotFoundException ignored) {
-        throw new RuntimeException("packetevents is not in the classpath");
+        throw new NoPacketAdapterAvailableException();
       }
     }
 
