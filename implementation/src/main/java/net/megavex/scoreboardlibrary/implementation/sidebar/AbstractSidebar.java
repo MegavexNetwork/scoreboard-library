@@ -225,8 +225,8 @@ public abstract class AbstractSidebar implements Sidebar {
     }
 
     boolean changed = false;
-
     int i = 0;
+
     for (var line : lines) {
       if (line != null && line.value() != null) {
         var newScore = size - i - 1;
