@@ -24,9 +24,7 @@ import static net.kyori.adventure.text.Component.empty;
 public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component> {
   private final ScoreboardTeamImpl team;
   private final TeamsPacketAdapter.TeamInfoPacketAdapter<?> packetAdapter;
-
   private final Set<Player> players = CollectionProvider.set(4);
-
   private final Set<String> entries = CollectionProvider.set(4);
   private Component displayName = empty(),
     prefix = empty(),
@@ -39,6 +37,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   public TeamInfoImpl(ScoreboardTeamImpl team) {
     this.team = team;
     this.packetAdapter = team.packetAdapter().createTeamInfoAdapter(this);
+    updateTeamPackets();
   }
 
   @Override
