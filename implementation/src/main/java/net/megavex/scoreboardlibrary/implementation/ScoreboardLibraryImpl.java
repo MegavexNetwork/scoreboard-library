@@ -3,7 +3,6 @@ package net.megavex.scoreboardlibrary.implementation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;

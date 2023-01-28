@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class SidebarPacketAdapter<P, T extends ScoreboardLibraryPacketAdapter<P>> {
-  protected static int MODE_CREATE = 0,
+  protected static final int MODE_CREATE = 0,
     MODE_UPDATE = 2;
 
   private final T packetAdapter;

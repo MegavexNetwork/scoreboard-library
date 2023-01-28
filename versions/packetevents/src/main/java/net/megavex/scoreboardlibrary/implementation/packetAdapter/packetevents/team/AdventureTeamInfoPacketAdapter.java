@@ -3,7 +3,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import java.util.Collection;
-import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
@@ -28,7 +27,7 @@ public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoP
       new WrapperPlayServerTeams(
         packetAdapter.teamName(),
         WrapperPlayServerTeams.TeamMode.ADD_ENTITIES,
-        Optional.empty(),
+        (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
         entries
       )
     );
@@ -41,7 +40,7 @@ public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoP
       new WrapperPlayServerTeams(
         packetAdapter.teamName(),
         WrapperPlayServerTeams.TeamMode.REMOVE_ENTITIES,
-        Optional.empty(),
+        (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
         entries
       )
     );
@@ -80,7 +79,7 @@ public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoP
       return new WrapperPlayServerTeams(
         packetAdapter.teamName(),
         update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE,
-        Optional.of(info),
+        info,
         properties.entries()
       );
     });

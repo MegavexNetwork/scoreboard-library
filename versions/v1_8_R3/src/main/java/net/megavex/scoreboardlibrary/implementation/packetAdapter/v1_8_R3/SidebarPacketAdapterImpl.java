@@ -21,23 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<PacketListenerPlayOut>, PacketAdapterImpl> {
-  private static final Field objectiveNameField,
-    objectiveDisplayNameField,
-    objectiveHealthDisplayField,
-    scoreNameField,
-    scoreObjectiveNameField,
-    scoreScoreField,
-    scoreActionField;
-
-  static {
-    objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a");
-    objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "b");
-    objectiveHealthDisplayField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "c");
-    scoreNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "a");
-    scoreObjectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "b");
-    scoreScoreField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "c");
+  private static final Field objectiveNameField =  UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a"),
+    objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "b"),
+    objectiveHealthDisplayField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "c"),
+    scoreNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "a"),
+    scoreObjectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "b"),
+    scoreScoreField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "c"),
     scoreActionField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "d");
-  }
 
   private final PacketPlayOutScoreboardObjective createPacket, updatePacket;
 

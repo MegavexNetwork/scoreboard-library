@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.
 
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
-import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
@@ -23,7 +22,7 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<PacketWrapper<?>,
       removePacket = new WrapperPlayServerTeams(
         teamName(),
         WrapperPlayServerTeams.TeamMode.REMOVE,
-        Optional.empty()
+        (WrapperPlayServerTeams.ScoreBoardTeamInfo) null
       );
     }
 

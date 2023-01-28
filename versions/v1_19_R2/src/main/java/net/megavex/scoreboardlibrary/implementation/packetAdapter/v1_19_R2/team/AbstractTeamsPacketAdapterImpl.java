@@ -28,11 +28,11 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   protected static final Field displayNameField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "a"),
     prefixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "b"),
     suffixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "c"),
-    entriesField = getField(ClientboundSetPlayerTeamPacket.class, "j"),
     nameTagVisibilityField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "d"),
     collisionRuleField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "e"),
     colorField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "f"),
-    optionsField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "g");
+    optionsField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "g"),
+    entriesField = getField(ClientboundSetPlayerTeamPacket.class, "j");
   private static final Constructor<ClientboundSetPlayerTeamPacket> teamPacketConstructor;
 
   static {
@@ -72,7 +72,6 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   }
 
   abstract class TeamInfoPacketAdapterImpl extends TeamInfoPacketAdapter<Component> {
-
     static final UnsafeUtilities.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
       UnsafeUtilities.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
 
@@ -101,14 +100,14 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     }
 
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
-      var key = properties.nameTagVisibility().key();
-      if (!Objects.equals(parameters.getNametagVisibility(), key)) {
-        UnsafeUtilities.setField(nameTagVisibilityField, parameters, key);
+      var nameTagVisibilityKey = properties.nameTagVisibility().key();
+      if (!Objects.equals(parameters.getNametagVisibility(), nameTagVisibilityKey)) {
+        UnsafeUtilities.setField(nameTagVisibilityField, parameters, nameTagVisibilityKey);
       }
 
-      key = properties.collisionRule().key();
-      if (!Objects.equals(parameters.getCollisionRule(), key)) {
-        UnsafeUtilities.setField(collisionRuleField, parameters, key);
+      var collisionRuleKey = properties.collisionRule().key();
+      if (!Objects.equals(parameters.getCollisionRule(), collisionRuleKey)) {
+        UnsafeUtilities.setField(collisionRuleField, parameters, collisionRuleKey);
       }
 
       var c = LegacyFormatUtil.getChar(properties.playerColor());
@@ -117,8 +116,9 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
       }
 
       var options = properties.packOptions();
-      if (parameters.getOptions() != options)
+      if (parameters.getOptions() != options) {
         UnsafeUtilities.UNSAFE.putInt(parameters, UnsafeUtilities.UNSAFE.objectFieldOffset(optionsField), options);
+      }
     }
   }
 }

@@ -41,7 +41,7 @@ public interface TeamManager {
    * Returns team based on its name. If it doesn't already exist, creates it
    *
    * @param name Name of team
-   * @return Team with this name, null if not found
+   * @return Existing or newly created team with the name
    */
   default @NotNull ScoreboardTeam createIfAbsent(@NotNull String name) {
     return createIfAbsent(name, null);
