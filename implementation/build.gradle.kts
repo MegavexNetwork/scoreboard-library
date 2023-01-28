@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-  api(project(":api"))
-  implementation(project(":packet-adapter-base"))
+  api(project(":scoreboard-library-api"))
+  implementation(project(":scoreboard-library-packet-adapter-base"))
 }

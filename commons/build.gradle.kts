@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-  api(project(":api"))
+  api(project(":scoreboard-library-api"))
 }

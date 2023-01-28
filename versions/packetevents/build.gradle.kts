@@ -8,6 +8,6 @@ repositories {
 }
 
 dependencies {
-  compileOnly(project(":packet-adapter-base"))
+  compileOnly(project(":scoreboard-library-packet-adapter-base"))
   compileOnly("com.github.retrooper.packetevents:spigot:2.0.0-SNAPSHOT")
 }

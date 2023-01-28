@@ -8,7 +8,7 @@ kotlin {
 }
 
 dependencies {
-  api(project(":api"))
+  api(project(":scoreboard-library-api"))
   testImplementation(kotlin("test"))
 }
 

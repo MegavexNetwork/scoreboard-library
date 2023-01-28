@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-  api(project(":api"))
-  api(project(":commons"))
+  api(project(":scoreboard-library-api"))
+  api(project(":scoreboard-library-commons"))
 }

@@ -7,6 +7,6 @@ repositories {
 }
 
 dependencies {
-  compileOnly(project(":packet-adapter-base"))
+  compileOnly(project(":scoreboard-library-packet-adapter-base"))
   compileOnly("org.github.spigot:1.8.8:1.8.8")
 }
