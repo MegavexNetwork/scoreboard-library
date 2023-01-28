@@ -54,11 +54,11 @@ sidebar.line(0, Component.empty());
 sidebar.line(1, Component.text("Line 1"));
 sidebar.line(2, Component.text("Line 2"));
 sidebar.line(2, Component.empty());
-sidebar.line(3, Component.text("yourserver.net"));
+sidebar.line(3, Component.text("epicserver.net"));
 
 sidebar.addPlayer(player); // Add the player to the sidebar
 
-// After you've finished using the Sidebar, make sure to close it to prevent a memory leak
+// After you've finished using the Sidebar, make sure to close it to prevent a memory leak:
 sidebar.close();
 ```
 
@@ -148,7 +148,7 @@ TeamInfo newTeamInfo = team.createTeamInfo();
 team.teamInfo(player, newTeamInfo);
 
 
-// After you've finished using the TeamManager, make sure to close it to prevent a memory leak
+// After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();
 ```
 
