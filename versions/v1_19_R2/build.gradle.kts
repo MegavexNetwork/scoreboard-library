@@ -1,11 +1,11 @@
 plugins {
-  id("io.papermc.paperweight.userdev") version "1.3.5"
+  id("io.papermc.paperweight.userdev") version "1.5.1"
   `maven-publish`
 }
 
 dependencies {
   compileOnly(project(":scoreboard-library-packet-adapter-base"))
-  paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+  paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
 }
 
 tasks {
