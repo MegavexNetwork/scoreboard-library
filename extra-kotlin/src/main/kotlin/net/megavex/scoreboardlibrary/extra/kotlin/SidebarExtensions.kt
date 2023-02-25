@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.extra.kotlin
 
 import net.kyori.adventure.text.Component
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar
+import org.bukkit.entity.Player
 import java.util.*
 
 public inline val Sidebar.maxLines: Int get() = maxLines()
@@ -13,3 +14,4 @@ public inline var Sidebar.title: Component
   set(value) {
     title(value)
   }
+public inline val Sidebar.players: Collection<Player> get() = players()
