@@ -18,9 +18,9 @@ public interface ScoreboardTeam {
   @NotNull String name();
 
   /**
-   * @return Global {@link TeamDisplay} of this team
+   * @return Default {@link TeamDisplay} of this team
    */
-  @NotNull TeamDisplay globalInfo();
+  @NotNull TeamDisplay defaultDisplay();
 
   /**
    * Gets the {@link TeamDisplay} of a player
@@ -41,5 +41,5 @@ public interface ScoreboardTeam {
   /**
    * @return Newly created {@link TeamDisplay} which is assigned to this team
    */
-  @NotNull TeamDisplay createTeamDisplay();
+  @NotNull TeamDisplay createDisplay();
 }

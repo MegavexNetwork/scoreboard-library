@@ -46,7 +46,7 @@ class NoopTeamManager implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      team.teamDisplayMap().remove(player);
+      team.displayMap().remove(player);
     }
 
     return true;
@@ -80,9 +80,9 @@ class NoopTeamManager implements TeamManager {
 
     team = new NoopScoreboardTeam(this, name);
     for (var player : players) {
-      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(player, team);
+      var teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(player, team);
       validateTeamDisplay(team, teamDisplay);
-      team.teamDisplayMap().put(player, teamDisplay);
+      team.displayMap().put(player, teamDisplay);
     }
 
     return team;
@@ -115,9 +115,9 @@ class NoopTeamManager implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(team);
+      var teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(team);
       validateTeamDisplay(team, teamDisplay);
-      team.teamDisplayMap().put(player, teamDisplay);
+      team.displayMap().put(player, teamDisplay);
     }
 
     return true;

@@ -35,7 +35,7 @@ ScoreboardLibrary scoreboardLibrary;
 try {
   scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
 } catch (NoPacketAdapterAvailableException e) {
-  // If no packet adapter was found, you can fallback to the no-op implementation
+  // If no packet adapter was found, you can fallback to the no-op implementation:
   scoreboardLibrary = new NoopScoreboardLibrary();
 }
 
@@ -131,22 +131,24 @@ public class TimerSidebar extends AbstractSidebar {
 TeamManager teamManager = scoreboardLibrary.createTeamManager();
 ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
-// A TeamDisplay holds all the properties that a team can have (except the name).
-// The global TeamDisplay is the default one that will be applied to players,
-// however you can give each player a different TeamDisplay
-TeamDisplay teamDisplay = team.globalInfo();
-
-teamDisplay.displayName(Component.text("Team Name"));
+// A TeamDisplay holds all the display properties that a team can have (prefix, suffix etc.).
+// You can apply different TeamDisplays for each player so different players can see
+// different properties on a single ScoreboardTeam. However if you don't need that you can
+// use the default TeamDisplay that is created in every ScoreboardTeam.
+TeamDisplay teamDisplay = team.defaultDisplay();
+teamDisplay.displayName(Component.text("Team Display Name"));
 teamDisplay.prefix(Component.text("[Prefix] "));
 teamDisplay.suffix(Component.text(" [Suffix]"));
 teamDisplay.playerColor(NamedTextColor.RED);
 
-teamManager.addPlayer(player); // Player will be added to the global TeamDisplay
+teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
 
-// You can change the TeamDisplay a player sees like this:
-TeamDisplay newTeamDisplay = team.createTeamDisplay();
-team.teamDisplay(player, newTeamDisplay);
+// Create a new TeamDisplay like this:
+TeamDisplay newTeamDisplay = team.createDisplay();
+newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 
+// Change the TeamDisplay a player sees like this:
+team.display(player, newTeamDisplay);
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();

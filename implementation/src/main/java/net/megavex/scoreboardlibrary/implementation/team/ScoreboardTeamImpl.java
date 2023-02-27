@@ -17,14 +17,14 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   private final String name;
   private final TeamsPacketAdapter<?, ?> packetAdapter;
 
-  private final TeamDisplayImpl globalInfo;
-  private final Map<Player, TeamDisplayImpl> teamDisplayMap = new ConcurrentHashMap<>();
+  private final TeamDisplayImpl defaultDisplay;
+  private final Map<Player, TeamDisplayImpl> displayMap = new ConcurrentHashMap<>();
 
   public ScoreboardTeamImpl(@NotNull TeamManagerImpl teamManager, @NotNull String name) {
     this.teamManager = teamManager;
     this.name = name;
     this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter().createTeamPacketAdapter(name);
-    this.globalInfo = new TeamDisplayImpl(this);
+    this.defaultDisplay = new TeamDisplayImpl(this);
   }
 
   @Override
@@ -38,8 +38,8 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   @Override
-  public @NotNull TeamDisplayImpl globalInfo() {
-    return globalInfo;
+  public @NotNull TeamDisplayImpl defaultDisplay() {
+    return defaultDisplay;
   }
 
   @Override
@@ -50,7 +50,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
       throw new IllegalArgumentException("player not in TeamManager");
     }
 
-    return Objects.requireNonNull(teamDisplayMap.get(player));
+    return Objects.requireNonNull(displayMap.get(player));
   }
 
   @Override
@@ -66,7 +66,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
       throw new IllegalArgumentException("invalid TeamDisplay");
     }
 
-    var oldTeamDisplay = Objects.requireNonNull(teamDisplayMap.put(player, (TeamDisplayImpl) teamDisplay));
+    var oldTeamDisplay = Objects.requireNonNull(displayMap.put(player, (TeamDisplayImpl) teamDisplay));
     if (oldTeamDisplay == teamDisplay) {
       return;
     }
@@ -75,7 +75,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   @Override
-  public @NotNull TeamDisplay createTeamDisplay() {
+  public @NotNull TeamDisplay createDisplay() {
     return new TeamDisplayImpl(this);
   }
 
@@ -83,19 +83,19 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     return packetAdapter;
   }
 
-  public @NotNull Map<Player, TeamDisplayImpl> teamDisplayMap() {
-    return teamDisplayMap;
+  public @NotNull Map<Player, TeamDisplayImpl> displayMap() {
+    return displayMap;
   }
 
   public void addPlayer(@NotNull Player player) {
-    var teamDisplay = Objects.requireNonNull(teamDisplayMap.get(player));
+    var teamDisplay = Objects.requireNonNull(displayMap.get(player));
     if (teamDisplay.players().add(player)) {
       teamDisplay.packetAdapter().createTeam(Set.of(player));
     }
   }
 
   public void removePlayer(@NotNull Player player) {
-    var teamDisplay = Objects.requireNonNull(teamDisplayMap.remove(player));
+    var teamDisplay = Objects.requireNonNull(displayMap.remove(player));
     if (teamDisplay.players().remove(player)) {
       packetAdapter.removeTeam(Set.of(player));
     }

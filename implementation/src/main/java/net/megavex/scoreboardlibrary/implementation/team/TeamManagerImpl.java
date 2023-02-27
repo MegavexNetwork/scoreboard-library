@@ -83,9 +83,9 @@ public class TeamManagerImpl implements TeamManager {
     teams.put(name, team);
 
     for (var player : players) {
-      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(player, team);
+      var teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(player, team);
       validateTeamDisplay(team, teamDisplay);
-      team.teamDisplayMap().put(player, (TeamDisplayImpl) teamDisplay);
+      team.displayMap().put(player, (TeamDisplayImpl) teamDisplay);
     }
 
     var task = new TeamManagerTask.AddTeam(team);
@@ -128,9 +128,9 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(team);
+      var teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(team);
       validateTeamDisplay(team, teamDisplay);
-      team.teamDisplayMap().put(player, (TeamDisplayImpl) teamDisplay);
+      team.displayMap().put(player, (TeamDisplayImpl) teamDisplay);
     }
 
     taskQueue.add(new TeamManagerTask.AddPlayer(player));
@@ -177,7 +177,7 @@ public class TeamManagerImpl implements TeamManager {
 
         for (var team : teams.values()) {
           Set<Player> removePlayers = CollectionProvider.set(players.size());
-          for (TeamDisplayImpl value : team.teamDisplayMap().values()) {
+          for (TeamDisplayImpl value : team.displayMap().values()) {
             removePlayers.addAll(value.players());
           }
           team.packetAdapter().removeTeam(removePlayers);
@@ -198,22 +198,22 @@ public class TeamManagerImpl implements TeamManager {
         Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeTeamManager(this);
       } else if (task instanceof TeamManagerTask.ReloadPlayer reloadPlayerTask) {
         for (var team : teams.values()) {
-          var teamDisplay = team.teamDisplayMap().get(reloadPlayerTask.player());
+          var teamDisplay = team.displayMap().get(reloadPlayerTask.player());
           if (teamDisplay != null) {
             teamDisplay.packetAdapter().updateTeam(Set.of(reloadPlayerTask.player()));
           }
         }
       } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
         var team = addTeamTask.team();
-        for (var player : team.teamDisplayMap().keySet()) {
+        for (var player : team.displayMap().keySet()) {
           var slPlayer = scoreboardLibrary.getPlayer(player);
           if (slPlayer != null && slPlayer.teamManager() == this) {
             team.addPlayer(player);
           }
         }
       } else if (task instanceof TeamManagerTask.RemoveTeam removeTeamTask) {
-        List<Player> playersInTeam = CollectionProvider.list(removeTeamTask.team().teamDisplayMap().size());
-        for (var entry : removeTeamTask.team().teamDisplayMap().entrySet()) {
+        List<Player> playersInTeam = CollectionProvider.list(removeTeamTask.team().displayMap().size());
+        for (var entry : removeTeamTask.team().displayMap().entrySet()) {
           var player = entry.getKey();
           var teamDisplay = entry.getValue();
           if (teamDisplay.players().contains(player)) {

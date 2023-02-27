@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 class NoopScoreboardTeam implements ScoreboardTeam {
   private final NoopTeamManager teamManager;
   private final String name;
-  private final Map<Player, TeamDisplay> teamDisplayMap = new HashMap<>();
-  private final NoopTeamDisplay globalInfo = new NoopTeamDisplay(this);
+  private final Map<Player, TeamDisplay> displayMap = new HashMap<>();
+  private final NoopTeamDisplay defaultDisplay = new NoopTeamDisplay(this);
 
   NoopScoreboardTeam(@NotNull NoopTeamManager teamManager, String name) {
     this.teamManager = teamManager;
@@ -32,8 +32,8 @@ class NoopScoreboardTeam implements ScoreboardTeam {
   }
 
   @Override
-  public @NotNull NoopTeamDisplay globalInfo() {
-    return globalInfo;
+  public @NotNull NoopTeamDisplay defaultDisplay() {
+    return defaultDisplay;
   }
 
   @Override
@@ -44,7 +44,7 @@ class NoopScoreboardTeam implements ScoreboardTeam {
       throw new IllegalArgumentException("player not in TeamManager");
     }
 
-    return Objects.requireNonNull(teamDisplayMap.get(player));
+    return Objects.requireNonNull(displayMap.get(player));
   }
 
   @Override
@@ -60,15 +60,15 @@ class NoopScoreboardTeam implements ScoreboardTeam {
       throw new IllegalArgumentException("invalid TeamDisplay");
     }
 
-    teamDisplayMap.put(player, teamDisplay);
+    displayMap.put(player, teamDisplay);
   }
 
   @Override
-  public @NotNull TeamDisplay createTeamDisplay() {
+  public @NotNull TeamDisplay createDisplay() {
     return new NoopTeamDisplay(this);
   }
 
-  Map<Player, TeamDisplay> teamDisplayMap() {
-    return teamDisplayMap;
+  @NotNull Map<Player, TeamDisplay> displayMap() {
+    return displayMap;
   }
 }

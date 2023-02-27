@@ -110,9 +110,9 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
         UnsafeUtilities.setField(collisionRuleField, parameters, collisionRuleKey);
       }
 
-      var c = LegacyFormatUtil.getChar(properties.playerColor());
-      if (parameters.getColor() == null || parameters.getColor().code != c) {
-        UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(c));
+      var legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
+      if (parameters.getColor() == null || parameters.getColor().code != legacyChar) {
+        UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(legacyChar));
       }
 
       var options = properties.packOptions();

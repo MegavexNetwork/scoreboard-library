@@ -7,6 +7,6 @@ import org.bukkit.entity.Player
 
 public inline val ScoreboardTeam.teamManager: TeamManager get() = teamManager()
 public inline val ScoreboardTeam.name: String get() = name()
-public inline val ScoreboardTeam.globalInfo: TeamDisplay get() = globalInfo()
+public inline val ScoreboardTeam.globalInfo: TeamDisplay get() = defaultDisplay()
 public operator fun ScoreboardTeam.get(player: Player): TeamDisplay = display(player)
 public operator fun ScoreboardTeam.set(player: Player, teamDisplay: TeamDisplay): Unit = display(player, teamDisplay)
