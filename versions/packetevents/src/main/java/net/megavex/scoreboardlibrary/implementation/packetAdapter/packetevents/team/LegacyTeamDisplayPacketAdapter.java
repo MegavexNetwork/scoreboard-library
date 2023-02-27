@@ -3,8 +3,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import java.util.Collection;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
@@ -12,10 +10,10 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePac
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoPacketAdapter<Component> {
+public class LegacyTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDisplayPacketAdapter<String> {
   private final TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter;
 
-  public AdventureTeamInfoPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<Component> properties) {
+  public LegacyTeamDisplayPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<String> properties) {
     super(properties);
     this.packetAdapter = packetAdapter;
   }
@@ -57,32 +55,14 @@ public class AdventureTeamInfoPacketAdapter extends TeamsPacketAdapter.TeamInfoP
   }
 
   private void sendTeamPacket(Collection<Player> players, boolean update) {
-    LocalePacketUtilities.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null, packetAdapter.packetAdapter(), players, locale -> {
-      var displayName = GlobalTranslator.render(properties.displayName(), locale);
-      var prefix = GlobalTranslator.render(properties.prefix(), locale);
-      var suffix = GlobalTranslator.render(properties.suffix(), locale);
-      var nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
-      var collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
-      var color = properties.playerColor();
-      var optionData = WrapperPlayServerTeams.OptionData.fromValue((byte) properties.packOptions());
-
-      var info = new WrapperPlayServerTeams.ScoreBoardTeamInfo(
-        displayName,
-        prefix,
-        suffix,
-        nameTagVisibility,
-        collisionRule,
-        color,
-        optionData
-      );
-
-      return new WrapperPlayServerTeams(
+    LocalePacketUtilities.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null,
+      packetAdapter.packetAdapter(),
+      players,
+      locale -> new WrapperPlayServerTeamsLegacy(
         packetAdapter.teamName(),
-        update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE,
-        info,
-        properties.entries()
-      );
-    });
+        properties,
+        update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE
+      ));
   }
 }
 

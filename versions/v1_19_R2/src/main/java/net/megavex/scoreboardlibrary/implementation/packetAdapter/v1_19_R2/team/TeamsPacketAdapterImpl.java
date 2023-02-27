@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.PacketAdapterImpl;
@@ -17,12 +18,12 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
   }
 
   @Override
-  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
-    return new TeamInfoPacketAdapterImpl(properties);
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> createTeamDisplayAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
+    return new TeamDisplayPacketAdapterImpl(properties);
   }
 
-  private class TeamInfoPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamInfoPacketAdapterImpl {
-    public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
+  private class TeamDisplayPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamDisplayPacketAdapterImpl {
+    public TeamDisplayPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
     }
 

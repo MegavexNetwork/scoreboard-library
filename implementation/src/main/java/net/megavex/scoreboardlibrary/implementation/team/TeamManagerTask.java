@@ -73,29 +73,29 @@ public sealed class TeamManagerTask {
     }
   }
 
-  public static final class UpdateTeamInfo extends TeamManagerTask {
-    private final TeamInfoImpl teamInfo;
+  public static final class UpdateTeamDisplay extends TeamManagerTask {
+    private final TeamDisplayImpl teamDisplay;
 
-    public UpdateTeamInfo(@NotNull TeamInfoImpl teamInfo) {
-      this.teamInfo = teamInfo;
+    public UpdateTeamDisplay(@NotNull TeamDisplayImpl teamDisplay) {
+      this.teamDisplay = teamDisplay;
     }
 
-    public @NotNull TeamInfoImpl teamInfo() {
-      return teamInfo;
+    public @NotNull TeamDisplayImpl teamDisplay() {
+      return teamDisplay;
     }
   }
 
   public static final class AddEntries extends TeamManagerTask {
-    private final TeamInfoImpl teamInfo;
+    private final TeamDisplayImpl teamDisplay;
     private final Collection<String> entry;
 
-    public AddEntries(@NotNull TeamInfoImpl teamInfo, @NotNull Collection<String> entries) {
-      this.teamInfo = teamInfo;
+    public AddEntries(@NotNull TeamDisplayImpl teamDisplay, @NotNull Collection<String> entries) {
+      this.teamDisplay = teamDisplay;
       this.entry = entries;
     }
 
-    public @NotNull TeamInfoImpl teamInfo() {
-      return teamInfo;
+    public @NotNull TeamDisplayImpl teamDisplay() {
+      return teamDisplay;
     }
 
     public @NotNull Collection<String> entries() {
@@ -104,16 +104,16 @@ public sealed class TeamManagerTask {
   }
 
   public static final class RemoveEntries extends TeamManagerTask {
-    private final TeamInfoImpl teamInfo;
+    private final TeamDisplayImpl teamDisplay;
     private final Collection<String> entry;
 
-    public RemoveEntries(@NotNull TeamInfoImpl teamInfo, @NotNull Collection<String> entries) {
-      this.teamInfo = teamInfo;
+    public RemoveEntries(@NotNull TeamDisplayImpl teamDisplay, @NotNull Collection<String> entries) {
+      this.teamDisplay = teamDisplay;
       this.entry = entries;
     }
 
-    public @NotNull TeamInfoImpl teamInfo() {
-      return teamInfo;
+    public @NotNull TeamDisplayImpl teamDisplay() {
+      return teamDisplay;
     }
 
     public @NotNull Collection<String> entries() {
@@ -121,17 +121,17 @@ public sealed class TeamManagerTask {
     }
   }
 
-  public static final class ChangeTeamInfo extends TeamManagerTask {
+  public static final class ChangeTeamDisplayTask extends TeamManagerTask {
     private final Player player;
     private final ScoreboardTeamImpl team;
-    private final TeamInfoImpl oldTeamInfo;
-    private final TeamInfoImpl newTeamInfo;
+    private final TeamDisplayImpl oldTeamDisplay;
+    private final TeamDisplayImpl newTeamDisplay;
 
-    public ChangeTeamInfo(@NotNull Player player, @NotNull ScoreboardTeamImpl team, @NotNull TeamInfoImpl oldTeamInfo, @NotNull TeamInfoImpl newTeamInfo) {
+    public ChangeTeamDisplayTask(@NotNull Player player, @NotNull ScoreboardTeamImpl team, @NotNull TeamDisplayImpl oldTeamDisplay, @NotNull TeamDisplayImpl newTeamDisplay) {
       this.player = player;
       this.team = team;
-      this.oldTeamInfo = oldTeamInfo;
-      this.newTeamInfo = newTeamInfo;
+      this.oldTeamDisplay = oldTeamDisplay;
+      this.newTeamDisplay = newTeamDisplay;
     }
 
     public @NotNull Player player() {
@@ -142,12 +142,12 @@ public sealed class TeamManagerTask {
       return team;
     }
 
-    public @NotNull TeamInfoImpl oldTeamInfo() {
-      return oldTeamInfo;
+    public @NotNull TeamDisplayImpl oldTeamDisplay() {
+      return oldTeamDisplay;
     }
 
-    public @NotNull TeamInfoImpl newTeamInfo() {
-      return newTeamInfo;
+    public @NotNull TeamDisplayImpl newTeamDisplay() {
+      return newTeamDisplay;
     }
   }
 }

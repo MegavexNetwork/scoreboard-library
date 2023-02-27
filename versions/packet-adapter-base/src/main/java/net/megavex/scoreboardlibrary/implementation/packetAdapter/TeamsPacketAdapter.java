@@ -32,16 +32,16 @@ public abstract class TeamsPacketAdapter<P, T extends ScoreboardLibraryPacketAda
 
   public abstract void removeTeam(@NotNull Iterable<Player> players);
 
-  public abstract @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties);
+  public abstract @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> createTeamDisplayAdapter(@NotNull ImmutableTeamProperties<Component> properties);
 
-  public @NotNull TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(@NotNull ImmutableTeamProperties<String> properties) {
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<String> createLegacyTeamDisplayAdapter(@NotNull ImmutableTeamProperties<String> properties) {
     throw new UnsupportedOperationException();
   }
 
-  public abstract static class TeamInfoPacketAdapter<C> {
+  public abstract static class TeamDisplayPacketAdapter<C> {
     protected final ImmutableTeamProperties<C> properties;
 
-    protected TeamInfoPacketAdapter(@NotNull ImmutableTeamProperties<C> properties) {
+    protected TeamDisplayPacketAdapter(@NotNull ImmutableTeamProperties<C> properties) {
       this.properties = properties;
     }
 

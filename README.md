@@ -75,7 +75,7 @@ sidebar.lines {
   emptyLine()
   timerLine = dynamicLine { Component.text("Timer: $timer") }
   emptyLine()
-  line(Component.text("yourserver.net", NamedTextColor.AQUA))
+  line(Component.text("epicserver.net", NamedTextColor.AQUA))
 }
 
 plugin.server.scheduler.runTaskTimerAsynchronously(
@@ -131,21 +131,21 @@ public class TimerSidebar extends AbstractSidebar {
 TeamManager teamManager = scoreboardLibrary.createTeamManager();
 ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
-// A TeamInfo holds all the properties that a team can have (except the name).
-// The global TeamInfo is the default one that will be applied to players,
-// however you can give each player a different TeamInfo
-TeamInfo teamInfo = team.globalInfo();
+// A TeamDisplay holds all the properties that a team can have (except the name).
+// The global TeamDisplay is the default one that will be applied to players,
+// however you can give each player a different TeamDisplay
+TeamDisplay teamDisplay = team.globalInfo();
 
-teamInfo.displayName(Component.text("Team Name"));
-teamInfo.prefix(Component.text("[Prefix] "));
-teamInfo.suffix(Component.text(" [Suffix]"));
-teamInfo.playerColor(NamedTextColor.RED);
+teamDisplay.displayName(Component.text("Team Name"));
+teamDisplay.prefix(Component.text("[Prefix] "));
+teamDisplay.suffix(Component.text(" [Suffix]"));
+teamDisplay.playerColor(NamedTextColor.RED);
 
-teamManager.addPlayer(player); // Player will be added to the global TeamInfo
+teamManager.addPlayer(player); // Player will be added to the global TeamDisplay
 
-// You can change the TeamInfo like this:
-TeamInfo newTeamInfo = team.createTeamInfo();
-team.teamInfo(player, newTeamInfo);
+// You can change the TeamDisplay a player sees like this:
+TeamDisplay newTeamDisplay = team.createTeamDisplay();
+team.teamDisplay(player, newTeamDisplay);
 
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:

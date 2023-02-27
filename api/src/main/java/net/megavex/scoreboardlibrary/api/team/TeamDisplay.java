@@ -13,9 +13,9 @@ import javax.annotation.concurrent.NotThreadSafe;
 
 @ApiStatus.NonExtendable
 @NotThreadSafe
-public interface TeamInfo {
+public interface TeamDisplay {
   /**
-   * @return Team which is assigned to this {@link TeamInfo}
+   * @return Team which is assigned to this {@link TeamDisplay}
    */
   @NotNull ScoreboardTeam team();
 
@@ -51,7 +51,7 @@ public interface TeamInfo {
    *
    * @param displayName Display name
    */
-  @NotNull TeamInfo displayName(@NotNull Component displayName);
+  @NotNull TeamDisplay displayName(@NotNull Component displayName);
 
   /**
    * @return Prefix
@@ -63,7 +63,7 @@ public interface TeamInfo {
    *
    * @param prefix Prefix
    */
-  @NotNull TeamInfo prefix(@NotNull Component prefix);
+  @NotNull TeamDisplay prefix(@NotNull Component prefix);
 
   /**
    * @return Suffix
@@ -75,7 +75,7 @@ public interface TeamInfo {
    *
    * @param suffix Suffix
    */
-  @NotNull TeamInfo suffix(@NotNull Component suffix);
+  @NotNull TeamDisplay suffix(@NotNull Component suffix);
 
   /**
    * @return Friendly fire rule
@@ -87,7 +87,7 @@ public interface TeamInfo {
    *
    * @param friendlyFire whether friendly fire is allowed
    */
-  @NotNull TeamInfo friendlyFire(boolean friendlyFire);
+  @NotNull TeamDisplay friendlyFire(boolean friendlyFire);
 
   /**
    * @return Can see friendly invisibles rule
@@ -99,7 +99,7 @@ public interface TeamInfo {
    *
    * @param canSeeFriendlyInvisibles whether players can see friendly invisibles
    */
-  @NotNull TeamInfo canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles);
+  @NotNull TeamDisplay canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles);
 
   /**
    * @return Name tag visibility rule
@@ -111,7 +111,7 @@ public interface TeamInfo {
    *
    * @param nameTagVisibility Name tag visibility rule
    */
-  @NotNull TeamInfo nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
+  @NotNull TeamDisplay nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
 
   /**
    * @return Collision rule
@@ -123,7 +123,7 @@ public interface TeamInfo {
    *
    * @param collisionRule Collision rule
    */
-  @NotNull TeamInfo collisionRule(@NotNull CollisionRule collisionRule);
+  @NotNull TeamDisplay collisionRule(@NotNull CollisionRule collisionRule);
 
   /**
    * @return Player color
@@ -135,5 +135,5 @@ public interface TeamInfo {
    *
    * @param playerColor Player color
    */
-  @NotNull TeamInfo playerColor(@Nullable NamedTextColor playerColor);
+  @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor);
 }

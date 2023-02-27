@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
-import net.megavex.scoreboardlibrary.api.team.TeamInfo;
+import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ class NoopTeamManager implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      team.teamInfoMap().remove(player);
+      team.teamDisplayMap().remove(player);
     }
 
     return true;
@@ -68,7 +68,7 @@ class NoopTeamManager implements TeamManager {
   }
 
   @Override
-  public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
+  public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
     Preconditions.checkNotNull(name);
     checkClosed();
 
@@ -80,9 +80,9 @@ class NoopTeamManager implements TeamManager {
 
     team = new NoopScoreboardTeam(this, name);
     for (var player : players) {
-      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(player, team);
-      validateTeamInfo(team, teamInfo);
-      team.teamInfoMap().put(player, teamInfo);
+      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(player, team);
+      validateTeamDisplay(team, teamDisplay);
+      team.teamDisplayMap().put(player, teamDisplay);
     }
 
     return team;
@@ -106,7 +106,7 @@ class NoopTeamManager implements TeamManager {
   }
 
   @Override
-  public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+  public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
     Preconditions.checkNotNull(player);
     checkClosed();
 
@@ -115,21 +115,21 @@ class NoopTeamManager implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(team);
-      validateTeamInfo(team, teamInfo);
-      team.teamInfoMap().put(player, teamInfo);
+      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(team);
+      validateTeamDisplay(team, teamDisplay);
+      team.teamDisplayMap().put(player, teamDisplay);
     }
 
     return true;
   }
 
-  private void validateTeamInfo(@NotNull ScoreboardTeam team, @Nullable TeamInfo teamInfo) {
-    if (teamInfo == null || teamInfo.team() != team) {
-      throw new IllegalArgumentException("invalid TeamInfo");
+  private void validateTeamDisplay(@NotNull ScoreboardTeam team, @Nullable TeamDisplay teamDisplay) {
+    if (teamDisplay == null || teamDisplay.team() != team) {
+      throw new IllegalArgumentException("invalid TeamDisplay");
     }
 
-    if (!(teamInfo instanceof NoopTeamInfo)) {
-      throw new IllegalArgumentException("must be TeamInfoImpl");
+    if (!(teamDisplay instanceof NoopTeamDisplay)) {
+      throw new IllegalArgumentException("must be TeamDisplayImpl");
     }
   }
 

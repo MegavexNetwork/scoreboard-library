@@ -46,17 +46,17 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
   }
 
   @Override
-  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
-    return new AdventureTeamInfoPacketAdapter(properties);
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> createTeamDisplayAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
+    return new AdventureTeamDisplayPacketAdapter(properties);
   }
 
   @Override
-  public @NotNull TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(@NotNull ImmutableTeamProperties<String> properties) {
-    return new LegacyTeamInfoPacketAdapter(properties);
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<String> createLegacyTeamDisplayAdapter(@NotNull ImmutableTeamProperties<String> properties) {
+    return new LegacyTeamDisplayPacketAdapter(properties);
   }
 
-  private abstract class AbstractTeamInfoPacketAdapter<C> extends TeamInfoPacketAdapter<C> {
-    public AbstractTeamInfoPacketAdapter(ImmutableTeamProperties<C> properties) {
+  private abstract class AbstractTeamDisplayPacketAdapter<C> extends TeamDisplayPacketAdapter<C> {
+    public AbstractTeamDisplayPacketAdapter(ImmutableTeamProperties<C> properties) {
       super(properties);
     }
 
@@ -113,8 +113,8 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
     protected abstract String toLegacy(C component, Locale locale);
   }
 
-  private class AdventureTeamInfoPacketAdapter extends AbstractTeamInfoPacketAdapter<Component> {
-    public AdventureTeamInfoPacketAdapter(ImmutableTeamProperties<Component> properties) {
+  private class AdventureTeamDisplayPacketAdapter extends AbstractTeamDisplayPacketAdapter<Component> {
+    public AdventureTeamDisplayPacketAdapter(ImmutableTeamProperties<Component> properties) {
       super(properties);
     }
 
@@ -124,9 +124,9 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
     }
   }
 
-  private class LegacyTeamInfoPacketAdapter extends AbstractTeamInfoPacketAdapter<String> {
+  private class LegacyTeamDisplayPacketAdapter extends AbstractTeamDisplayPacketAdapter<String> {
 
-    public LegacyTeamInfoPacketAdapter(ImmutableTeamProperties<String> properties) {
+    public LegacyTeamDisplayPacketAdapter(ImmutableTeamProperties<String> properties) {
       super(properties);
     }
 

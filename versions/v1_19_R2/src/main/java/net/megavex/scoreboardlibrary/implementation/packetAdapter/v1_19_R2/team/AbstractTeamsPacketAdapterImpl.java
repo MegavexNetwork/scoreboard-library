@@ -71,11 +71,11 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     packetAdapter().sendPacket(players, removePacket);
   }
 
-  abstract class TeamInfoPacketAdapterImpl extends TeamInfoPacketAdapter<Component> {
+  abstract class TeamDisplayPacketAdapterImpl extends TeamDisplayPacketAdapter<Component> {
     static final UnsafeUtilities.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
       UnsafeUtilities.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
 
-    public TeamInfoPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
+    public TeamDisplayPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
     }
 

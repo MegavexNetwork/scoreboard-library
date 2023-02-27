@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
-import net.megavex.scoreboardlibrary.api.team.TeamInfo;
+import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -69,7 +69,7 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
-  public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction) {
+  public @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
     Preconditions.checkNotNull(name);
     checkClosed();
     name = name.toLowerCase();
@@ -83,9 +83,9 @@ public class TeamManagerImpl implements TeamManager {
     teams.put(name, team);
 
     for (var player : players) {
-      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(player, team);
-      validateTeamInfo(team, teamInfo);
-      team.teamInfoMap().put(player, (TeamInfoImpl) teamInfo);
+      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(player, team);
+      validateTeamDisplay(team, teamDisplay);
+      team.teamDisplayMap().put(player, (TeamDisplayImpl) teamDisplay);
     }
 
     var task = new TeamManagerTask.AddTeam(team);
@@ -119,7 +119,7 @@ public class TeamManagerImpl implements TeamManager {
   }
 
   @Override
-  public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+  public boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
     Preconditions.checkNotNull(player);
     checkClosed();
 
@@ -128,9 +128,9 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     for (var team : teams.values()) {
-      var teamInfo = teamInfoFunction == null ? team.globalInfo() : teamInfoFunction.apply(team);
-      validateTeamInfo(team, teamInfo);
-      team.teamInfoMap().put(player, (TeamInfoImpl) teamInfo);
+      var teamDisplay = teamDisplayFunction == null ? team.globalInfo() : teamDisplayFunction.apply(team);
+      validateTeamDisplay(team, teamDisplay);
+      team.teamDisplayMap().put(player, (TeamDisplayImpl) teamDisplay);
     }
 
     taskQueue.add(new TeamManagerTask.AddPlayer(player));
@@ -177,7 +177,7 @@ public class TeamManagerImpl implements TeamManager {
 
         for (var team : teams.values()) {
           Set<Player> removePlayers = CollectionProvider.set(players.size());
-          for (TeamInfoImpl value : team.teamInfoMap().values()) {
+          for (TeamDisplayImpl value : team.teamDisplayMap().values()) {
             removePlayers.addAll(value.players());
           }
           team.packetAdapter().removeTeam(removePlayers);
@@ -198,42 +198,42 @@ public class TeamManagerImpl implements TeamManager {
         Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeTeamManager(this);
       } else if (task instanceof TeamManagerTask.ReloadPlayer reloadPlayerTask) {
         for (var team : teams.values()) {
-          var teamInfo = team.teamInfoMap().get(reloadPlayerTask.player());
-          if (teamInfo != null) {
-            teamInfo.packetAdapter().updateTeam(Set.of(reloadPlayerTask.player()));
+          var teamDisplay = team.teamDisplayMap().get(reloadPlayerTask.player());
+          if (teamDisplay != null) {
+            teamDisplay.packetAdapter().updateTeam(Set.of(reloadPlayerTask.player()));
           }
         }
       } else if (task instanceof TeamManagerTask.AddTeam addTeamTask) {
         var team = addTeamTask.team();
-        for (var player : team.teamInfoMap().keySet()) {
+        for (var player : team.teamDisplayMap().keySet()) {
           var slPlayer = scoreboardLibrary.getPlayer(player);
           if (slPlayer != null && slPlayer.teamManager() == this) {
             team.addPlayer(player);
           }
         }
       } else if (task instanceof TeamManagerTask.RemoveTeam removeTeamTask) {
-        List<Player> playersInTeam = CollectionProvider.list(removeTeamTask.team().teamInfoMap().size());
-        for (var entry : removeTeamTask.team().teamInfoMap().entrySet()) {
+        List<Player> playersInTeam = CollectionProvider.list(removeTeamTask.team().teamDisplayMap().size());
+        for (var entry : removeTeamTask.team().teamDisplayMap().entrySet()) {
           var player = entry.getKey();
-          var teamInfo = entry.getValue();
-          if (teamInfo.players().contains(player)) {
+          var teamDisplay = entry.getValue();
+          if (teamDisplay.players().contains(player)) {
             playersInTeam.add(player);
           }
         }
 
         removeTeamTask.team().packetAdapter().removeTeam(playersInTeam);
-      } else if (task instanceof TeamManagerTask.UpdateTeamInfo updateTeamInfoTask) {
-        var teamInfo = updateTeamInfoTask.teamInfo();
-        teamInfo.updateTeamPackets();
-        teamInfo.packetAdapter().updateTeam(teamInfo.players());
+      } else if (task instanceof TeamManagerTask.UpdateTeamDisplay updateTeamDisplayTask) {
+        var teamDisplay = updateTeamDisplayTask.teamDisplay();
+        teamDisplay.updateTeamPackets();
+        teamDisplay.packetAdapter().updateTeam(teamDisplay.players());
       } else if (task instanceof TeamManagerTask.AddEntries addEntriesTask) {
-        var teamInfo = addEntriesTask.teamInfo();
-        teamInfo.packetAdapter().addEntries(teamInfo.players(), addEntriesTask.entries());
+        var teamDisplay = addEntriesTask.teamDisplay();
+        teamDisplay.packetAdapter().addEntries(teamDisplay.players(), addEntriesTask.entries());
       } else if (task instanceof TeamManagerTask.RemoveEntries removeEntriesTask) {
-        var teamInfo = removeEntriesTask.teamInfo();
-        teamInfo.packetAdapter().removeEntries(teamInfo.players(), removeEntriesTask.entries());
-      } else if (task instanceof TeamManagerTask.ChangeTeamInfo changeTeamInfoTask) {
-        changeTeamInfoTask.team().changeTeamInfo(changeTeamInfoTask.player(), changeTeamInfoTask.oldTeamInfo(), changeTeamInfoTask.newTeamInfo());
+        var teamDisplay = removeEntriesTask.teamDisplay();
+        teamDisplay.packetAdapter().removeEntries(teamDisplay.players(), removeEntriesTask.entries());
+      } else if (task instanceof TeamManagerTask.ChangeTeamDisplayTask changeTeamDisplayTaskTask) {
+        changeTeamDisplayTaskTask.team().changeTeamDisplay(changeTeamDisplayTaskTask.player(), changeTeamDisplayTaskTask.oldTeamDisplay(), changeTeamDisplayTaskTask.newTeamDisplay());
       }
     }
   }
@@ -244,13 +244,13 @@ public class TeamManagerImpl implements TeamManager {
     }
   }
 
-  private void validateTeamInfo(@NotNull ScoreboardTeam team, @Nullable TeamInfo teamInfo) {
-    if (teamInfo == null || teamInfo.team() != team) {
-      throw new IllegalArgumentException("invalid TeamInfo");
+  private void validateTeamDisplay(@NotNull ScoreboardTeam team, @Nullable TeamDisplay teamDisplay) {
+    if (teamDisplay == null || teamDisplay.team() != team) {
+      throw new IllegalArgumentException("invalid TeamDisplay");
     }
 
-    if (!(teamInfo instanceof TeamInfoImpl)) {
-      throw new IllegalArgumentException("must be TeamInfoImpl");
+    if (!(teamDisplay instanceof TeamDisplayImpl)) {
+      throw new IllegalArgumentException("must be TeamDisplayImpl");
     }
   }
 }

@@ -50,11 +50,11 @@ public interface TeamManager {
   /**
    * Returns a team based on its name. If it doesn't already exist, it creates it
    *
-   * @param name             Name of team
-   * @param teamInfoFunction A function that provides team info's for each player
+   * @param name                Name of team
+   * @param teamDisplayFunction A function that provides the team display to set for each player
    * @return Team with this name
    */
-  @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamInfo> teamInfoFunction);
+  @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamDisplay> teamDisplayFunction);
 
   /**
    * Removes a team
@@ -92,11 +92,11 @@ public interface TeamManager {
   /**
    * Adds a player to this TeamManager
    *
-   * @param player           Player to add
-   * @param teamInfoFunction A function that returns the {@link TeamInfo} that the player should have
+   * @param player              Player to add
+   * @param teamDisplayFunction A function that provides the team display to set for each team
    * @return Whether the player was added
    */
-  boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction);
+  boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction);
 
   /**
    * Adds a player to this TeamManager
@@ -110,12 +110,12 @@ public interface TeamManager {
   /**
    * Adds a collection of players to this TeamManager
    *
-   * @param players          Players to add
-   * @param teamInfoFunction Function that returns the {@link TeamInfo} that the player should have
+   * @param players             Players to add
+   * @param teamDisplayFunction A function that provides the team display to set for each team
    */
-  default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamInfo> teamInfoFunction) {
+  default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
     for (var player : players) {
-      addPlayer(player, teamInfoFunction);
+      addPlayer(player, teamDisplayFunction);
     }
   }
 

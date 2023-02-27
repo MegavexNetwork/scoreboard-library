@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
-import net.megavex.scoreboardlibrary.api.team.TeamInfo;
+import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -17,14 +17,14 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   private final String name;
   private final TeamsPacketAdapter<?, ?> packetAdapter;
 
-  private final TeamInfoImpl globalInfo;
-  private final Map<Player, TeamInfoImpl> teamInfoMap = new ConcurrentHashMap<>();
+  private final TeamDisplayImpl globalInfo;
+  private final Map<Player, TeamDisplayImpl> teamDisplayMap = new ConcurrentHashMap<>();
 
   public ScoreboardTeamImpl(@NotNull TeamManagerImpl teamManager, @NotNull String name) {
     this.teamManager = teamManager;
     this.name = name;
     this.packetAdapter = teamManager.scoreboardLibrary().packetAdapter().createTeamPacketAdapter(name);
-    this.globalInfo = new TeamInfoImpl(this);
+    this.globalInfo = new TeamDisplayImpl(this);
   }
 
   @Override
@@ -38,97 +38,97 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   @Override
-  public @NotNull TeamInfoImpl globalInfo() {
+  public @NotNull TeamDisplayImpl globalInfo() {
     return globalInfo;
   }
 
   @Override
-  public @NotNull TeamInfo teamInfo(@NotNull Player player) {
+  public @NotNull TeamDisplay display(@NotNull Player player) {
     Preconditions.checkNotNull(player);
 
     if (!teamManager.players().contains(player)) {
       throw new IllegalArgumentException("player not in TeamManager");
     }
 
-    return Objects.requireNonNull(teamInfoMap.get(player));
+    return Objects.requireNonNull(teamDisplayMap.get(player));
   }
 
   @Override
-  public void teamInfo(@NotNull Player player, @NotNull TeamInfo teamInfo) {
+  public void display(@NotNull Player player, @NotNull TeamDisplay teamDisplay) {
     Preconditions.checkNotNull(player);
-    Preconditions.checkNotNull(teamInfo);
+    Preconditions.checkNotNull(teamDisplay);
 
     if (!teamManager.players().contains(player)) {
       throw new IllegalArgumentException("player not in TeamManager");
     }
 
-    if (teamInfo.team() != this || !(teamInfo instanceof TeamInfoImpl)) {
-      throw new IllegalArgumentException("invalid TeamInfo");
+    if (teamDisplay.team() != this || !(teamDisplay instanceof TeamDisplayImpl)) {
+      throw new IllegalArgumentException("invalid TeamDisplay");
     }
 
-    var oldTeamInfo = Objects.requireNonNull(teamInfoMap.put(player, (TeamInfoImpl) teamInfo));
-    if (oldTeamInfo == teamInfo) {
+    var oldTeamDisplay = Objects.requireNonNull(teamDisplayMap.put(player, (TeamDisplayImpl) teamDisplay));
+    if (oldTeamDisplay == teamDisplay) {
       return;
     }
 
-    teamManager.taskQueue().add(new TeamManagerTask.ChangeTeamInfo(player, this, oldTeamInfo, (TeamInfoImpl) teamInfo));
+    teamManager.taskQueue().add(new TeamManagerTask.ChangeTeamDisplayTask(player, this, oldTeamDisplay, (TeamDisplayImpl) teamDisplay));
   }
 
   @Override
-  public @NotNull TeamInfo createTeamInfo() {
-    return new TeamInfoImpl(this);
+  public @NotNull TeamDisplay createTeamDisplay() {
+    return new TeamDisplayImpl(this);
   }
 
   public @NotNull TeamsPacketAdapter<?, ?> packetAdapter() {
     return packetAdapter;
   }
 
-  public @NotNull Map<Player, TeamInfoImpl> teamInfoMap() {
-    return teamInfoMap;
+  public @NotNull Map<Player, TeamDisplayImpl> teamDisplayMap() {
+    return teamDisplayMap;
   }
 
   public void addPlayer(@NotNull Player player) {
-    var teamInfo = Objects.requireNonNull(teamInfoMap.get(player));
-    if (teamInfo.players().add(player)) {
-      teamInfo.packetAdapter().createTeam(Set.of(player));
+    var teamDisplay = Objects.requireNonNull(teamDisplayMap.get(player));
+    if (teamDisplay.players().add(player)) {
+      teamDisplay.packetAdapter().createTeam(Set.of(player));
     }
   }
 
   public void removePlayer(@NotNull Player player) {
-    var teamInfo = Objects.requireNonNull(teamInfoMap.remove(player));
-    if (teamInfo.players().remove(player)) {
+    var teamDisplay = Objects.requireNonNull(teamDisplayMap.remove(player));
+    if (teamDisplay.players().remove(player)) {
       packetAdapter.removeTeam(Set.of(player));
     }
   }
 
-  public void changeTeamInfo(@NotNull Player player, @NotNull TeamInfoImpl oldTeamInfo, @NotNull TeamInfoImpl newTeamInfo) {
-    if (!oldTeamInfo.players().remove(player)) {
+  public void changeTeamDisplay(@NotNull Player player, @NotNull TeamDisplayImpl oldTeamDisplay, @NotNull TeamDisplayImpl newTeamDisplay) {
+    if (!oldTeamDisplay.players().remove(player)) {
       return;
     }
 
-    newTeamInfo.players().add(player);
+    newTeamDisplay.players().add(player);
 
     var singleton = Set.of(player);
-    newTeamInfo.packetAdapter().updateTeam(singleton);
+    newTeamDisplay.packetAdapter().updateTeam(singleton);
 
-    var oldEntries = oldTeamInfo.entries();
-    var newEntries = newTeamInfo.entries();
+    var oldEntries = oldTeamDisplay.entries();
+    var newEntries = newTeamDisplay.entries();
 
     if (oldEntries.isEmpty()) {
-      newTeamInfo.packetAdapter().addEntries(singleton, newEntries);
+      newTeamDisplay.packetAdapter().addEntries(singleton, newEntries);
       return;
     }
 
     var entries = new ArrayList<>(oldEntries);
     entries.removeAll(newEntries);
     if (!entries.isEmpty()) {
-      newTeamInfo.packetAdapter().removeEntries(singleton, entries);
+      newTeamDisplay.packetAdapter().removeEntries(singleton, entries);
     }
 
     entries = new ArrayList<>(newEntries);
     entries.removeAll(oldEntries);
     if (!entries.isEmpty()) {
-      newTeamInfo.packetAdapter().addEntries(singleton, entries);
+      newTeamDisplay.packetAdapter().addEntries(singleton, entries);
     }
   }
 }

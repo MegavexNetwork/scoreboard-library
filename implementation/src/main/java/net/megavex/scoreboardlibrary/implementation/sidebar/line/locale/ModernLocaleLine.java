@@ -17,13 +17,13 @@ class ModernLocaleLine implements LocaleLine<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;
-  private final TeamsPacketAdapter.TeamInfoPacketAdapter<Component> packetAdapter;
+  private final TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> packetAdapter;
 
   public ModernLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
     this.entries = Set.of(info.player());
-    this.packetAdapter = info.packetAdapter().createTeamInfoAdapter(this);
+    this.packetAdapter = info.packetAdapter().createTeamDisplayAdapter(this);
     packetAdapter.updateTeamPackets(entries);
   }
 

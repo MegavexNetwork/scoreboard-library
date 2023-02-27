@@ -18,28 +18,28 @@ public interface ScoreboardTeam {
   @NotNull String name();
 
   /**
-   * @return Global {@link TeamInfo} of this team
+   * @return Global {@link TeamDisplay} of this team
    */
-  @NotNull TeamInfo globalInfo();
+  @NotNull TeamDisplay globalInfo();
 
   /**
-   * Gets the {@link TeamInfo} of a player
+   * Gets the {@link TeamDisplay} of a player
    *
    * @param player Player
-   * @return {@link TeamInfo} of this player
+   * @return {@link TeamDisplay} of this player
    */
-  @NotNull TeamInfo teamInfo(@NotNull Player player);
+  @NotNull TeamDisplay display(@NotNull Player player);
 
   /**
-   * Changes a player's visible {@link TeamInfo}
+   * Changes a player's visible {@link TeamDisplay}
    *
    * @param player   Player
-   * @param teamInfo New {@link TeamInfo} of Player
+   * @param teamDisplay New {@link TeamDisplay} of Player
    */
-  void teamInfo(@NotNull Player player, @NotNull TeamInfo teamInfo);
+  void display(@NotNull Player player, @NotNull TeamDisplay teamDisplay);
 
   /**
-   * @return New {@link TeamInfo} which is assigned to this team
+   * @return Newly created {@link TeamDisplay} which is assigned to this team
    */
-  @NotNull TeamInfo createTeamInfo();
+  @NotNull TeamDisplay createTeamDisplay();
 }

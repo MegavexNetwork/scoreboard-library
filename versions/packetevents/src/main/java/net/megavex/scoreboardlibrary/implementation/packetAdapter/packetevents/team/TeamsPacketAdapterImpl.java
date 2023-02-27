@@ -30,12 +30,12 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<PacketWrapper<?>,
   }
 
   @Override
-  public @NotNull TeamInfoPacketAdapter<Component> createTeamInfoAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
-    return new AdventureTeamInfoPacketAdapter(this, properties);
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> createTeamDisplayAdapter(@NotNull ImmutableTeamProperties<Component> properties) {
+    return new AdventureTeamDisplayPacketAdapter(this, properties);
   }
 
   @Override
-  public @NotNull TeamInfoPacketAdapter<String> createLegacyTeamInfoAdapter(@NotNull ImmutableTeamProperties<String> properties) {
-    return new LegacyTeamInfoPacketAdapter(this, properties);
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<String> createLegacyTeamDisplayAdapter(@NotNull ImmutableTeamProperties<String> properties) {
+    return new LegacyTeamDisplayPacketAdapter(this, properties);
   }
 }

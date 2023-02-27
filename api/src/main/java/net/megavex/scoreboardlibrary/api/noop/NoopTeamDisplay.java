@@ -7,7 +7,7 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
-import net.megavex.scoreboardlibrary.api.team.TeamInfo;
+import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.kyori.adventure.text.Component.empty;
 
-class NoopTeamInfo implements TeamInfo {
+class NoopTeamDisplay implements TeamDisplay {
   private final NoopScoreboardTeam team;
 
   private final Set<String> entries = new HashSet<>();
@@ -28,7 +28,7 @@ class NoopTeamInfo implements TeamInfo {
   private CollisionRule collisionRule = CollisionRule.ALWAYS;
   private NamedTextColor playerColor = null;
 
-  NoopTeamInfo(@NotNull NoopScoreboardTeam team) {
+  NoopTeamDisplay(@NotNull NoopScoreboardTeam team) {
     this.team = team;
   }
 
@@ -58,7 +58,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo displayName(@NotNull Component displayName) {
+  public @NotNull TeamDisplay displayName(@NotNull Component displayName) {
     this.displayName = displayName;
     return this;
   }
@@ -69,7 +69,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo prefix(@NotNull Component prefix) {
+  public @NotNull TeamDisplay prefix(@NotNull Component prefix) {
     this.prefix = prefix;
     return this;
   }
@@ -80,7 +80,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo suffix(@NotNull Component suffix) {
+  public @NotNull TeamDisplay suffix(@NotNull Component suffix) {
     this.suffix = suffix;
     return this;
   }
@@ -91,7 +91,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo friendlyFire(boolean friendlyFire) {
+  public @NotNull TeamDisplay friendlyFire(boolean friendlyFire) {
     this.friendlyFire = friendlyFire;
     return this;
   }
@@ -102,7 +102,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
+  public @NotNull TeamDisplay canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
     this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
     return this;
   }
@@ -113,7 +113,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
+  public @NotNull TeamDisplay nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
     this.nameTagVisibility = nameTagVisibility;
     return this;
   }
@@ -124,7 +124,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo collisionRule(@NotNull CollisionRule collisionRule) {
+  public @NotNull TeamDisplay collisionRule(@NotNull CollisionRule collisionRule) {
     this.collisionRule = collisionRule;
     return this;
   }
@@ -135,7 +135,7 @@ class NoopTeamInfo implements TeamInfo {
   }
 
   @Override
-  public @NotNull TeamInfo playerColor(@Nullable NamedTextColor playerColor) {
+  public @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor) {
     this.playerColor = playerColor;
     return this;
   }

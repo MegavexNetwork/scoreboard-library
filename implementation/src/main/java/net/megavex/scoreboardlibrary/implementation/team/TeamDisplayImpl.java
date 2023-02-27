@@ -8,7 +8,7 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
-import net.megavex.scoreboardlibrary.api.team.TeamInfo;
+import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.kyori.adventure.text.Component.empty;
 
-public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component> {
+public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Component> {
   private final ScoreboardTeamImpl team;
-  private final TeamsPacketAdapter.TeamInfoPacketAdapter<?> packetAdapter;
+  private final TeamsPacketAdapter.TeamDisplayPacketAdapter<?> packetAdapter;
   private final Set<Player> players = CollectionProvider.set(4);
   private final Set<String> entries = CollectionProvider.set(4);
   private Component displayName = empty(),
@@ -34,9 +34,9 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   private CollisionRule collisionRule = CollisionRule.ALWAYS;
   private NamedTextColor playerColor = null;
 
-  public TeamInfoImpl(ScoreboardTeamImpl team) {
+  public TeamDisplayImpl(ScoreboardTeamImpl team) {
     this.team = team;
-    this.packetAdapter = team.packetAdapter().createTeamInfoAdapter(this);
+    this.packetAdapter = team.packetAdapter().createTeamDisplayAdapter(this);
     updateTeamPackets();
   }
 
@@ -76,7 +76,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo displayName(@NotNull Component displayName) {
+  public @NotNull TeamDisplay displayName(@NotNull Component displayName) {
     Preconditions.checkNotNull(displayName);
 
     if (!Objects.equals(this.displayName, displayName)) {
@@ -93,7 +93,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo prefix(@NotNull Component prefix) {
+  public @NotNull TeamDisplay prefix(@NotNull Component prefix) {
     Preconditions.checkNotNull(prefix);
 
     if (!Objects.equals(this.prefix, prefix)) {
@@ -110,7 +110,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo suffix(@NotNull Component suffix) {
+  public @NotNull TeamDisplay suffix(@NotNull Component suffix) {
     Preconditions.checkNotNull(suffix);
 
     if (!Objects.equals(this.suffix, suffix)) {
@@ -127,7 +127,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo friendlyFire(boolean friendlyFire) {
+  public @NotNull TeamDisplay friendlyFire(boolean friendlyFire) {
     if (this.friendlyFire != friendlyFire) {
       this.friendlyFire = friendlyFire;
       scheduleUpdate();
@@ -142,7 +142,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
+  public @NotNull TeamDisplay canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles) {
     if (this.canSeeFriendlyInvisibles != canSeeFriendlyInvisibles) {
       this.canSeeFriendlyInvisibles = canSeeFriendlyInvisibles;
       scheduleUpdate();
@@ -157,7 +157,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
+  public @NotNull TeamDisplay nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility) {
     Preconditions.checkNotNull(nameTagVisibility);
 
     if (!Objects.equals(this.nameTagVisibility, nameTagVisibility)) {
@@ -174,7 +174,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo collisionRule(@NotNull CollisionRule collisionRule) {
+  public @NotNull TeamDisplay collisionRule(@NotNull CollisionRule collisionRule) {
     Preconditions.checkNotNull(collisionRule);
 
     if (!Objects.equals(this.collisionRule, collisionRule)) {
@@ -191,7 +191,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
   }
 
   @Override
-  public @NotNull TeamInfo playerColor(@Nullable NamedTextColor playerColor) {
+  public @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor) {
     if (!Objects.equals(this.playerColor, playerColor)) {
       this.playerColor = playerColor;
       scheduleUpdate();
@@ -200,7 +200,7 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
     return this;
   }
 
-  public @NotNull TeamsPacketAdapter.TeamInfoPacketAdapter<?> packetAdapter() {
+  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<?> packetAdapter() {
     return packetAdapter;
   }
 
@@ -214,10 +214,10 @@ public class TeamInfoImpl implements TeamInfo, ImmutableTeamProperties<Component
 
   private void scheduleUpdate() {
     var taskQueue = team.teamManager().taskQueue();
-    if (taskQueue.peek() instanceof TeamManagerTask.UpdateTeamInfo updateTeamTask && updateTeamTask.teamInfo() == this) {
+    if (taskQueue.peek() instanceof TeamManagerTask.UpdateTeamDisplay updateTeamTask && updateTeamTask.teamDisplay() == this) {
       return;
     }
 
-    taskQueue.add(new TeamManagerTask.UpdateTeamInfo(this));
+    taskQueue.add(new TeamManagerTask.UpdateTeamDisplay(this));
   }
 }

@@ -16,7 +16,7 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
-  private final TeamsPacketAdapter.TeamInfoPacketAdapter<String> packetAdapter;
+  private final TeamsPacketAdapter.TeamDisplayPacketAdapter<String> packetAdapter;
   private String player, oldPlayer;
   private String prefix, suffix;
   private String currentValue;
@@ -25,7 +25,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
     this.info = info;
     this.handler = handler;
     this.player = info.player();
-    this.packetAdapter = info.packetAdapter().createLegacyTeamInfoAdapter(this);
+    this.packetAdapter = info.packetAdapter().createLegacyTeamDisplayAdapter(this);
     packetAdapter.updateTeamPackets(entries());
   }
 
