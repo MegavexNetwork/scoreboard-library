@@ -14,7 +14,7 @@ Then add the dependencies:
 
 ```kotlin
 dependencies {
-  val scoreboardLibraryVersion = "2.0.0-RC4"
+  val scoreboardLibraryVersion = "2.0.0-RC5"
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-api:$scoreboardLibraryVersion")
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")

@@ -3,7 +3,7 @@ plugins {
 }
 
 allprojects {
-  version = "2.0.0-RC4"
+  version = "2.0.0-RC5"
   group = "net.megavex"
   description = "Powerful packet-level Scoreboard library for Paper/Spigot servers"
 
