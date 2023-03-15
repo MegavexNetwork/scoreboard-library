@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
   compileOnly(project(":scoreboard-library-packet-adapter-base"))
-  paperweight.paperDevBundle("1.19.3-R0.1-SNAPSHOT")
+  paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 }
 
 tasks {

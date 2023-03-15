@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.team;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -14,7 +14,7 @@ import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.PacketAdapterImpl;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;

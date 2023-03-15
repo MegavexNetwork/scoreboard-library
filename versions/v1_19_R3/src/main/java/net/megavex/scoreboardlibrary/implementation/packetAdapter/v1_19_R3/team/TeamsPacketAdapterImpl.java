@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.team;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -7,7 +7,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamP
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R2.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.PacketAdapterImpl;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
