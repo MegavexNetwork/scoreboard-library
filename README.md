@@ -1,25 +1,25 @@
 # scoreboard-library
 
-Powerful Scoreboard library for Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure)
+Powerful scoreboard library for Minecraft Paper/Spigot servers using the [adventure](https://github.com/KyoriPowered/adventure)
 component library
 
 Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Features
 
-- Sidebars
-- Teams
-- Packet-level, meaning it works with other scoreboard plugins
+- Sidebars. Up to 42 characters (depends on the formatting) for 1.12.2 and below, no limit for newer versions
+- Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different players
+- Doesn't require extra dependencies (assuming you're targetting the latest version of Paper)
+- Packet-level, meaning it works with other scoreboard plugins (and is faster)
 - Fully async. All packet work is done asynchronously so you can (but don't have to) use the library from the main
   thread without sacrificing any performance
 - Works with `TranslatableComponent`s, meaning all components are automatically translated using `GlobalTranslator` for
-  each players client locale (and automatically update whenever the player changes it)
+  each players client locale (and automatically update whenever the player changes it in their settings)
 
 ## Packet Adapters
 
-- **1.19.4.** [Spigot](https://www.spigotmc.org/) does work, but [Paper](https://papermc.io/) is recommended because
-  scoreboard-library can take advantage of the native [Adventure](https://github.com/KyoriPowered/adventure) feature to
-  improve performance
+- **1.19.4.** Takes advantage of [Paper](https://papermc.io)s native adventure support to improve performance.
+  [Spigot](https://www.spigotmc.org/) is also supported, but will have worse performance
 - **1.8.8.** Note that you'll still need to use Java 17
 - **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
   classpath. Should work on all versions 1.8+
