@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public final class LegacyFormatUtil {
     }
 
     var lastNotColorCharIndex = limit - 1;
-    while (text.charAt(lastNotColorCharIndex) == ChatColor.COLOR_CHAR) {
+    while (text.charAt(lastNotColorCharIndex) == LegacyComponentSerializer.SECTION_CHAR) {
       lastNotColorCharIndex--;
     }
 

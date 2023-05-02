@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 import java.util.Collection;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
@@ -67,14 +68,14 @@ class LegacyLocaleLine implements LocaleLine<String> {
         this.player = info.player();
       }
     } else {
-      var color = legacyValue.charAt(15) == ChatColor.COLOR_CHAR;
+      var color = legacyValue.charAt(15) == LegacyComponentSerializer.SECTION_CHAR;
 
       var prefixEnd = color ? 15 : 16;
       this.prefix = legacyValue.substring(0, prefixEnd);
 
       this.player = info.player() + ChatColor.RESET
         + ChatColor.getLastColors(prefix +
-        ChatColor.COLOR_CHAR + (color ? legacyValue.charAt(16) : ""));
+        LegacyComponentSerializer.SECTION_CHAR + (color ? legacyValue.charAt(16) : ""));
 
       var playerEnd = prefixEnd;
       if (legacyValue.length() > 32) {
@@ -88,7 +89,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
       this.suffix = legacyValue.substring(playerEnd + (color ? 2 : 0));
       if (suffix.length() > 16) {
         var newSuffix = suffix.substring(0, 16);
-        if (newSuffix.endsWith(String.valueOf(ChatColor.COLOR_CHAR)) &&
+        if (newSuffix.endsWith(String.valueOf(LegacyComponentSerializer.SECTION_CHAR)) &&
           ChatColor.getByChar(suffix.charAt(16)) != null) {
           newSuffix = newSuffix.substring(0, 15);
         }
