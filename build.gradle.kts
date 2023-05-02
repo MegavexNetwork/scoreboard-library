@@ -3,7 +3,7 @@ plugins {
 }
 
 allprojects {
-    version = "2.0.0-RC7"
+  version = "2.0.0-RC7"
   group = "net.megavex"
   description = "Powerful packet-level Scoreboard library for Paper/Spigot servers"
 
@@ -20,7 +20,7 @@ subprojects {
   dependencies {
     compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 
-    val adventureVersion = "4.13.0"
+    val adventureVersion = "4.13.1"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")

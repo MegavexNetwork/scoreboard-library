@@ -1,5 +1,5 @@
 plugins {
-  kotlin("jvm") version "1.7.21"
+  kotlin("jvm") version "1.8.21"
   id("net.megavex.scoreboardlibrary.publish-conventions")
 }
 
