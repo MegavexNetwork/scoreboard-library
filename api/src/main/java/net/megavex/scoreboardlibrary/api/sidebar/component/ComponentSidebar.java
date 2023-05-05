@@ -34,7 +34,7 @@ public class ComponentSidebar {
     components.add(component);
   }
 
-  public void updateLines() {
+  public void update() {
     titleComponent.draw(new SidebarTitleDrawable());
 
     var lines = new SidebarLineDrawable();
@@ -45,7 +45,7 @@ public class ComponentSidebar {
   }
 
   private class SidebarTitleDrawable implements LineDrawable {
-    private boolean isFirst = false;
+    private boolean isFirst = true;
 
     @Override
     public void drawLine(@NotNull Component line) {
