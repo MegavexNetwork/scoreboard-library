@@ -13,7 +13,12 @@ import org.jetbrains.annotations.Range;
 
 import static net.kyori.adventure.text.Component.empty;
 
+/**
+ * @deprecated Use {@link net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebar} instead
+ */
 @NotThreadSafe
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "2.0.0")
 public class AbstractSidebar {
   protected final Sidebar sidebar;
   private final Line[] lines;
