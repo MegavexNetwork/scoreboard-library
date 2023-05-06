@@ -2,8 +2,7 @@ package net.megavex.scoreboardlibrary.api.sidebar.component;
 
 import java.util.List;
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.animation.Animation;
+import net.megavex.scoreboardlibrary.api.animation.CollectionAnimation;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.junit.jupiter.api.Test;
@@ -15,61 +14,61 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ComponentSidebarTest {
-  private final ScoreboardLibrary scoreboardLibrary = new NoopScoreboardLibrary();
+  private final Sidebar sidebar = new NoopScoreboardLibrary().createSidebar();
 
   @Test
   void maxLines() {
-    var sidebar = new ComponentSidebar(scoreboardLibrary.createSidebar());
+    var componentSidebar = new ComponentSidebar();
     for (int i = 0; i < Sidebar.MAX_LINES + 1; i++) {
-      sidebar.addComponent(SidebarComponent.staticLine(text(i)));
+      componentSidebar.addComponent(SidebarComponent.staticLine(text(i)));
     }
 
-    sidebar.update();
+    componentSidebar.update(sidebar);
 
     for (int i = 0; i < Sidebar.MAX_LINES; i++) {
-      assertNotNull(sidebar.sidebar().line(i));
+      assertNotNull(sidebar.line(i));
     }
   }
 
   @Test
   void titleComponent() {
-    var sidebar = new ComponentSidebar(scoreboardLibrary.createSidebar());
+    var componentSidebar = new ComponentSidebar();
     var title = text("title");
-    sidebar.titleComponent(SidebarComponent.staticLine(title));
-    sidebar.update();
-    assertEquals(title, sidebar.sidebar().title());
+    componentSidebar.titleComponent(SidebarComponent.staticLine(title));
+    componentSidebar.update(sidebar);
+    assertEquals(title, sidebar.title());
   }
 
   @Test
   void staticLines() {
-    var sidebar = new ComponentSidebar(scoreboardLibrary.createSidebar());
+    var componentSidebar = new ComponentSidebar();
     var line1 = text("line 1");
-    sidebar.addComponent(SidebarComponent.staticLine(line1));
-    sidebar.update();
-    assertEquals(line1, sidebar.sidebar().line(0));
-    assertNull(sidebar.sidebar().line(1));
+    componentSidebar.addComponent(SidebarComponent.staticLine(line1));
+    componentSidebar.update(sidebar);
+    assertEquals(line1, sidebar.line(0));
+    assertNull(sidebar.line(1));
 
     var line2 = text("line 2");
-    sidebar.addComponent(SidebarComponent.staticLine(line2));
-    sidebar.update();
-    assertEquals(line2, sidebar.sidebar().line(1));
+    componentSidebar.addComponent(SidebarComponent.staticLine(line2));
+    componentSidebar.update(sidebar);
+    assertEquals(line2, sidebar.line(1));
   }
 
   @Test
   void animatedLines() {
-    var sidebar = new ComponentSidebar(scoreboardLibrary.createSidebar());
-    var animation = Animation.<Component>animation(List.of(text("frame 1"), text("frame 2")));
-    sidebar.addComponent(SidebarComponent.animatedLine(animation));
-    sidebar.update();
-    assertEquals(animation.currentFrame(), sidebar.sidebar().line(0));
+    var componentSidebar = new ComponentSidebar();
+    var animation = new CollectionAnimation<Component>(List.of(text("frame 1"), text("frame 2")));
+    componentSidebar.addComponent(SidebarComponent.animatedLine(animation));
+    componentSidebar.update(sidebar);
+    assertEquals(animation.currentFrame(), sidebar.line(0));
     animation.nextFrame();
-    sidebar.update();
-    assertEquals(animation.currentFrame(), sidebar.sidebar().line(0));
+    componentSidebar.update(sidebar);
+    assertEquals(animation.currentFrame(), sidebar.line(0));
   }
 
   @Test
   void animatedComponents() {
-    var sidebar = new ComponentSidebar(scoreboardLibrary.createSidebar());
+    var componentSidebar = new ComponentSidebar();
 
     var frame1Line = text("frame with one line");
     var frame2Line1 = text("frame with");
@@ -81,21 +80,21 @@ class ComponentSidebarTest {
       drawable.drawLine(frame2Line2);
     };
 
-    var animation = Animation.animation(List.of(frame1, frame2));
-    sidebar.addComponent(SidebarComponent.animatedComponent(animation));
+    var animation = new CollectionAnimation<>(List.of(frame1, frame2));
+    componentSidebar.addComponent(SidebarComponent.animatedComponent(animation));
 
-    sidebar.update();
-    assertEquals(frame1Line, sidebar.sidebar().line(0));
-    assertNull(sidebar.sidebar().line(1));
-
-    animation.nextFrame();
-    sidebar.update();
-    assertEquals(frame2Line1, sidebar.sidebar().line(0));
-    assertEquals(frame2Line2, sidebar.sidebar().line(1));
+    componentSidebar.update(sidebar);
+    assertEquals(frame1Line, sidebar.line(0));
+    assertNull(sidebar.line(1));
 
     animation.nextFrame();
-    sidebar.update();
-    assertEquals(frame1Line, sidebar.sidebar().line(0));
-    assertNull(sidebar.sidebar().line(1));
+    componentSidebar.update(sidebar);
+    assertEquals(frame2Line1, sidebar.line(0));
+    assertEquals(frame2Line2, sidebar.line(1));
+
+    animation.nextFrame();
+    componentSidebar.update(sidebar);
+    assertEquals(frame1Line, sidebar.line(0));
+    assertNull(sidebar.line(1));
   }
 }
