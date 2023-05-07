@@ -9,7 +9,7 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 @OptIn(ExperimentalContracts::class)
-@Deprecated(message = "use ComponentSidebar instead")
+@Deprecated(message = "use ComponentSidebarLayout instead")
 @ApiStatus.ScheduledForRemoval(inVersion = "2.0.0")
 public fun Sidebar.lines(
   direction: LinesBuilder.Direction = LinesBuilder.Direction.TOP_TO_BOTTOM,
@@ -28,7 +28,7 @@ public fun Sidebar.lines(
 }
 
 @OptIn(ExperimentalContracts::class)
-@Deprecated(message = "use ComponentSidebar instead")
+@Deprecated(message = "use ComponentSidebarLayout instead")
 @ApiStatus.ScheduledForRemoval(inVersion = "2.0.0")
 public fun Sidebar.lines(
   progression: IntProgression,
