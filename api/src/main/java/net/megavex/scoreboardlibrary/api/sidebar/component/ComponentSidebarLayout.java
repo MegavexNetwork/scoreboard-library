@@ -8,31 +8,26 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.kyori.adventure.text.Component.empty;
 
-public final class ComponentBasedSidebar {
-  private SidebarComponent titleComponent = drawable -> {
-  };
-  private SidebarComponent rootComponent = drawable -> {
-  };
+public final class ComponentSidebarLayout {
+  private final SidebarComponent titleComponent;
+  private final SidebarComponent linesComponent;
+
+  public ComponentSidebarLayout(@NotNull SidebarComponent titleComponent, @NotNull SidebarComponent linesComponent) {
+    Preconditions.checkNotNull(titleComponent);
+    Preconditions.checkNotNull(linesComponent);
+    this.titleComponent = titleComponent;
+    this.linesComponent = linesComponent;
+  }
 
   public @NotNull SidebarComponent titleComponent() {
     return titleComponent;
   }
 
-  public void titleComponent(@NotNull SidebarComponent titleComponent) {
-    Preconditions.checkNotNull(titleComponent);
-    this.titleComponent = titleComponent;
+  public @NotNull SidebarComponent linesComponent() {
+    return linesComponent;
   }
 
-  public @NotNull SidebarComponent rootComponent() {
-    return rootComponent;
-  }
-
-  public void rootComponent(@NotNull SidebarComponent rootComponent) {
-    Preconditions.checkNotNull(rootComponent);
-    this.rootComponent = rootComponent;
-  }
-
-  public void update(@NotNull Sidebar sidebar) {
+  public void apply(@NotNull Sidebar sidebar) {
     Preconditions.checkNotNull(sidebar);
 
     var titleDrawable = new SidebarTitleDrawable();
@@ -40,7 +35,7 @@ public final class ComponentBasedSidebar {
     sidebar.title(titleDrawable.title == null ? empty() : titleDrawable.title);
 
     var linesDrawable = new SidebarLineDrawable(sidebar);
-    rootComponent.draw(linesDrawable);
+    linesComponent.draw(linesDrawable);
 
     for (int i = linesDrawable.index; i < Sidebar.MAX_LINES; i++) {
       sidebar.line(i, null);

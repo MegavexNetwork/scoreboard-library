@@ -1,10 +1,10 @@
 package net.megavex.scoreboardlibrary.api.sidebar.component.animation;
 
-import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentBasedSidebar;
+import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * An animation that can be used with {@link ComponentBasedSidebar}s
+ * An animation that can be used with {@link ComponentSidebarLayout}s
  *
  * @param <T> Frame type
  */
