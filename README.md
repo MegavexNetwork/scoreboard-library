@@ -44,7 +44,7 @@ try {
 scoreboardLibrary.close();
 ```
 
-### Folia warning
+### Thread safety warning (Folia)
 
 `Sidebar`s and `TeamManager`s are not thread safe, so you will need to add some
 synchronisation to make sure you're using them from only one thread at a time.
