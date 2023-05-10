@@ -70,7 +70,8 @@ sidebar.close();
 
 ### Component sidebars
 
-You can use `SidebarComponent`s to declaratively design sidebars. Here's how you create a `SidebarComponent` with a static line:
+Component sidebars are an abstraction over the low-level `Sidebar`. They allow you to design sidebars in a clean way.
+Here's how you create a `SidebarComponent` with a static line:
 ```java
 SidebarComponent staticLine = SidebarComponent.staticLine(Component.text("A static line"));
 ```
