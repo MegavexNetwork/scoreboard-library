@@ -71,7 +71,8 @@ class ComponentSidebarLayoutTest {
 
     var animation = new CollectionSidebarAnimation<>(List.of(frame1, frame2));
     var lines = SidebarComponent.builder().addAnimatedComponent(animation).build();
-    var componentSidebar = new ComponentSidebarLayout(drawable -> {}, lines);
+    var componentSidebar = new ComponentSidebarLayout(drawable -> {
+    }, lines);
 
     componentSidebar.apply(sidebar);
     assertEquals(frame1Line, sidebar.line(0));
