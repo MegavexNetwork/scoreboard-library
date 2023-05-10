@@ -68,7 +68,7 @@ You can use `SidebarComponent`s to declaratively design sidebars. Here's how you
 ```java
 SidebarComponent staticLine = SidebarComponent.staticLine(Component.text("A static line"));
 ```
-You can chain nultiple `SidebarComponent`s together using `SidebarComponent.builder()`:
+You can chain multiple `SidebarComponent`s together using `SidebarComponent.builder()`:
 ```java
 SidebarComponent lines = SidebarComponent.builder()
   .addComponent(SidebarComponent.staticLine(Component.text("A static line")))
@@ -139,10 +139,10 @@ public class KeyValueSidebarComponent implements SidebarComponent {
   @Override
   public void draw(@NotNull LineDrawable drawable) {
     var value = valueSupplier.get();
-    var line = text()
+    var line = Component.text()
       .append(key)
-      .append(text(": "))
-      .append(value.colorIfAbsent(AQUA))
+      .append(Component.text(": "))
+      .append(value.colorIfAbsent(NamedTextColor.AQUA))
       .build();
 
     drawable.drawLine(line);
@@ -159,27 +159,27 @@ public class ExampleComponentSidebar {
   public ExampleComponentSidebar(@NotNull Plugin plugin, @NotNull Sidebar sidebar) {
     this.sidebar = sidebar;
 
-    this.titleAnimation = createGradientAnimation(text("Sidebar Example", style(BOLD)));
+    this.titleAnimation = createGradientAnimation(Component.text("Sidebar Example", Style.style(TextDecoration.BOLD)));
     var title = SidebarComponent.animatedLine(titleAnimation);
 
     SimpleDateFormat dtf = new SimpleDateFormat("HH:mm:ss");
 
     // Custom SidebarComponent, see below for how an implementation might look like
     SidebarComponent onlinePlayers = new KeyValueSidebarComponent(
-      text("Online players"),
-      () -> text(plugin.getServer().getOnlinePlayers().size())
+      Component.text("Online players"),
+      () -> Component.text(plugin.getServer().getOnlinePlayers().size())
     );
 
     SidebarComponent lines = SidebarComponent.builder()
       .addDynamicLine(() -> {
         var time = dtf.format(new Date());
-        return text(time, NamedTextColor.GRAY);
+        return Component.text(time, NamedTextColor.GRAY);
       })
       .addBlankLine()
-      .addStaticLine(text("A static line"))
+      .addStaticLine(Component.text("A static line"))
       .addComponent(onlinePlayers)
       .addBlankLine()
-      .addStaticLine(text("epicserver.net", AQUA))
+      .addStaticLine(Component.text("epicserver.net", NamedTextColor.AQUA))
       .build();
 
 
@@ -199,11 +199,11 @@ public class ExampleComponentSidebar {
     float step = 1f / 8f;
 
     TagResolver.Single textPlaceholder = Placeholder.component("text", text);
-    ArrayList<Component> frames = new ArrayList<Component>((int) (2f / step));
+    List<Component> frames = new ArrayList<>((int) (2f / step));
 
     float phase = -1f;
     while (phase < 1) {
-      frames.add(miniMessage().deserialize("<gradient:yellow:gold:" + phase + "><text>", textPlaceholder));
+      frames.add(MiniMessage.miniMessage().deserialize("<gradient:yellow:gold:" + phase + "><text>", textPlaceholder));
       phase += step;
     }
 
