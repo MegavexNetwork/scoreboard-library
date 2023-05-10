@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<PacketListenerPlayOut>, PacketAdapterImpl> {
-  private static final Field objectiveNameField =  UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a"),
+  private static final Field objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a"),
     objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "b"),
     objectiveHealthDisplayField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "c"),
     scoreNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "a"),

@@ -1,9 +1,8 @@
 package net.megavex.scoreboardlibrary.api.team;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 @NotThreadSafe
 public interface ScoreboardTeam {
@@ -33,7 +32,7 @@ public interface ScoreboardTeam {
   /**
    * Changes a player's visible {@link TeamDisplay}
    *
-   * @param player   Player
+   * @param player      Player
    * @param teamDisplay New {@link TeamDisplay} of Player
    */
   void display(@NotNull Player player, @NotNull TeamDisplay teamDisplay);

@@ -25,9 +25,7 @@ subprojects {
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
 
-    testImplementation("net.kyori:adventure-api:$adventureVersion")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-    testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+    testImplementation("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
   }
 
   tasks.withType<JavaCompile>().configureEach {
@@ -36,5 +34,9 @@ subprojects {
     options.encoding = "UTF-8"
     options.isIncremental = true
     options.compilerArgs = mutableListOf("-Xlint:-deprecation,-unchecked")
+  }
+
+  tasks.test {
+    useJUnitPlatform()
   }
 }

@@ -11,7 +11,3 @@ dependencies {
   api(project(":scoreboard-library-api"))
   testImplementation(kotlin("test"))
 }
-
-tasks.test {
-  useJUnitPlatform()
-}

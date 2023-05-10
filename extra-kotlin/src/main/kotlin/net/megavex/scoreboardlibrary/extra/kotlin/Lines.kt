@@ -3,11 +3,14 @@ package net.megavex.scoreboardlibrary.extra.kotlin
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.empty
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar
+import org.jetbrains.annotations.ApiStatus
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 @OptIn(ExperimentalContracts::class)
+@Deprecated(message = "use ComponentSidebarLayout instead")
+@ApiStatus.ScheduledForRemoval(inVersion = "2.0.0")
 public fun Sidebar.lines(
   direction: LinesBuilder.Direction = LinesBuilder.Direction.TOP_TO_BOTTOM,
   block: LinesBuilder.() -> Unit
@@ -25,6 +28,8 @@ public fun Sidebar.lines(
 }
 
 @OptIn(ExperimentalContracts::class)
+@Deprecated(message = "use ComponentSidebarLayout instead")
+@ApiStatus.ScheduledForRemoval(inVersion = "2.0.0")
 public fun Sidebar.lines(
   progression: IntProgression,
   block: LinesBuilder.() -> Unit
