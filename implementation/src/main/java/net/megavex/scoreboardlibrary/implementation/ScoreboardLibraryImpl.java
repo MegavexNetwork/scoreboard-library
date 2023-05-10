@@ -126,7 +126,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     HandlerList.unregisterAll(localeListener);
 
     if (teamManagers != null) {
-      teamTask.cancel();
+      teamTask.task().cancel();
       synchronized (teamTask.lock()) {
         for (var teamManager : teamManagers) {
           teamManager.close();
@@ -136,7 +136,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
 
     if (sidebars != null) {
-      sidebarTask.cancel();
+      sidebarTask.task().cancel();
       synchronized (sidebarTask.lock()) {
         for (var sidebar : sidebars) {
           sidebar.close();

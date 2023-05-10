@@ -18,14 +18,13 @@ subprojects {
   apply(plugin = "java-library")
 
   dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
+    testImplementation("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
 
     val adventureVersion = "4.13.1"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
-
-    testImplementation("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
   }
 
   tasks.withType<JavaCompile>().configureEach {

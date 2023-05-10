@@ -2,16 +2,21 @@ package net.megavex.scoreboardlibrary.implementation.sidebar;
 
 import java.util.logging.Level;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import org.bukkit.scheduler.BukkitRunnable;
+import net.megavex.scoreboardlibrary.implementation.util.DispatchUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class SidebarUpdaterTask extends BukkitRunnable {
+public class SidebarUpdaterTask implements Runnable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
+  private final DispatchUtil.RunningTask task;
   private final Object lock = new Object();
 
   public SidebarUpdaterTask(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
     this.scoreboardLibrary = scoreboardLibrary;
-    runTaskTimerAsynchronously(scoreboardLibrary.plugin(), 1, 1);
+    this.task = DispatchUtil.runEveryTick(scoreboardLibrary.plugin(), this);
+  }
+
+  public @NotNull DispatchUtil.RunningTask task() {
+    return task;
   }
 
   public @NotNull Object lock() {

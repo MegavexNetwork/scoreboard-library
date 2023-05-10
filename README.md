@@ -11,6 +11,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different players
 - Doesn't require extra dependencies (assuming you're targetting the latest version of Paper)
 - Packet-level, meaning it works with other scoreboard plugins (and is faster)
+- Supports [Folia](https://github.com/PaperMC/Folia)
 - Fully async. All packet work is done asynchronously so you can (but don't have to) use the library from the main
   thread without sacrificing any performance
 - Works with `TranslatableComponent`s, meaning all components are automatically translated using `GlobalTranslator` for
@@ -42,6 +43,11 @@ try {
 // On plugin shutdown:
 scoreboardLibrary.close();
 ```
+
+### Folia warning
+
+`Sidebar`s and `TeamManager`s are not thread safe, so you will need to add some
+synchronisation to make sure you're using them from only one thread at a time.
 
 ### Sidebar (low-level)
 
@@ -241,5 +247,3 @@ team.display(player, newTeamDisplay);
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();
 ```
-
-For more examples, check out the [example plugin](https://github.com/MegavexNetwork/scoreboard-library-example)
