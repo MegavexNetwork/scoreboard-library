@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.team;
 
 import java.util.Collection;
+import javax.annotation.concurrent.NotThreadSafe;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
@@ -8,8 +9,6 @@ import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.concurrent.NotThreadSafe;
 
 @ApiStatus.NonExtendable
 @NotThreadSafe

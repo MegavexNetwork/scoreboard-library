@@ -3,7 +3,7 @@ plugins {
 }
 
 allprojects {
-  version = "2.0.0-RC7"
+  version = "2.0.0-RC8"
   group = "net.megavex"
   description = "Powerful packet-level Scoreboard library for Paper/Spigot servers"
 
@@ -18,16 +18,13 @@ subprojects {
   apply(plugin = "java-library")
 
   dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
+    testImplementation("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
 
     val adventureVersion = "4.13.1"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
-
-    testImplementation("net.kyori:adventure-api:$adventureVersion")
-    testImplementation("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-    testImplementation("net.kyori:adventure-text-serializer-gson:$adventureVersion")
   }
 
   tasks.withType<JavaCompile>().configureEach {
@@ -36,5 +33,9 @@ subprojects {
     options.encoding = "UTF-8"
     options.isIncremental = true
     options.compilerArgs = mutableListOf("-Xlint:-deprecation,-unchecked")
+  }
+
+  tasks.test {
+    useJUnitPlatform()
   }
 }
