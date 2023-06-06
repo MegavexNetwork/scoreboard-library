@@ -235,6 +235,7 @@ teamDisplay.displayName(Component.text("Team Display Name"));
 teamDisplay.prefix(Component.text("[Prefix] "));
 teamDisplay.suffix(Component.text(" [Suffix]"));
 teamDisplay.playerColor(NamedTextColor.RED);
+teamDisplay.addEntry(player.getName());
 
 teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
 
