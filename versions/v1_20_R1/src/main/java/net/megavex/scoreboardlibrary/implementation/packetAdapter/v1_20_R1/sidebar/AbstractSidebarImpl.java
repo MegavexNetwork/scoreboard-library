@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.sidebar;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.sidebar;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
@@ -6,7 +6,7 @@ import java.util.Collection;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.PacketAdapterImpl;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;

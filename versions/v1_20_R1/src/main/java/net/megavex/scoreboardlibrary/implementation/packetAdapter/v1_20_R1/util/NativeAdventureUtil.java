@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_19_R3.util;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.util;
 
 import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;

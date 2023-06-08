@@ -19,7 +19,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Packet Adapters
 
-- **1.19.4.** Takes advantage of [Paper](https://papermc.io)s native adventure support to improve performance.
+- **1.20.** Takes advantage of [Paper](https://papermc.io)s native adventure support to improve performance.
   [Spigot](https://www.spigotmc.org/) is also supported, but will have worse performance
 - **1.8.8.** Note that you'll still need to use Java 17
 - **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
