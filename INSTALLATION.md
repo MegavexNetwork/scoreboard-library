@@ -14,14 +14,14 @@ Then add the dependencies:
 
 ```kotlin
 dependencies {
-  val scoreboardLibraryVersion = "2.0.0-RC8"
+  val scoreboardLibraryVersion = "2.0.0-RC9"
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-api:$scoreboardLibraryVersion")
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")
 
   // Add packet adapter implementations you want:
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion")
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_19_R3:$scoreboardLibraryVersion")
+  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_20_R1:$scoreboardLibraryVersion")
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-packetevents:$scoreboardLibraryVersion")
 
   // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
