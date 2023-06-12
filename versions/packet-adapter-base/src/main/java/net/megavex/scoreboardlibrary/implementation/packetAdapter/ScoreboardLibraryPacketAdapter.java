@@ -17,7 +17,7 @@ public abstract class ScoreboardLibraryPacketAdapter<P> {
   public final LocaleProvider localeProvider;
 
   public ScoreboardLibraryPacketAdapter() {
-    var random = UUID.randomUUID().toString().substring(0, 5);
+    String random = UUID.randomUUID().toString().substring(0, 5);
     this.objectiveName = "_s" + random;
     this.localeProvider = localeProvider();
   }
@@ -38,7 +38,7 @@ public abstract class ScoreboardLibraryPacketAdapter<P> {
   public abstract void sendPacket(@NotNull Player player, @NotNull P packet);
 
   public final void sendPacket(@NotNull Iterable<Player> players, @NotNull P packet) {
-    for (var player : players) {
+    for (Player player : players) {
       sendPacket(player, packet);
     }
   }

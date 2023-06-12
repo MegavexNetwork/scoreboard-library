@@ -4,7 +4,10 @@ import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public sealed class TeamManagerTask {
+public class TeamManagerTask {
+  private TeamManagerTask() {
+  }
+
   public static final class Close extends TeamManagerTask {
     public static final Close INSTANCE = new Close();
 
@@ -121,13 +124,13 @@ public sealed class TeamManagerTask {
     }
   }
 
-  public static final class ChangeTeamDisplayTask extends TeamManagerTask {
+  public static final class ChangeTeamDisplay extends TeamManagerTask {
     private final Player player;
     private final ScoreboardTeamImpl team;
     private final TeamDisplayImpl oldTeamDisplay;
     private final TeamDisplayImpl newTeamDisplay;
 
-    public ChangeTeamDisplayTask(@NotNull Player player, @NotNull ScoreboardTeamImpl team, @NotNull TeamDisplayImpl oldTeamDisplay, @NotNull TeamDisplayImpl newTeamDisplay) {
+    public ChangeTeamDisplay(@NotNull Player player, @NotNull ScoreboardTeamImpl team, @NotNull TeamDisplayImpl oldTeamDisplay, @NotNull TeamDisplayImpl newTeamDisplay) {
       this.player = player;
       this.team = team;
       this.oldTeamDisplay = oldTeamDisplay;

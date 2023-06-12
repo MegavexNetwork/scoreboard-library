@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -53,7 +54,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   @Override
   public boolean addEntry(@NotNull String entry) {
     if (entries.add(entry)) {
-      team.teamManager().taskQueue().add(new TeamManagerTask.AddEntries(this, Set.of(entry)));
+      team.teamManager().taskQueue().add(new TeamManagerTask.AddEntries(this, Collections.singleton(entry)));
       return true;
     }
 
@@ -63,7 +64,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   @Override
   public boolean removeEntry(@NotNull String entry) {
     if (entries.remove(entry)) {
-      team.teamManager().taskQueue().add(new TeamManagerTask.RemoveEntries(this, Set.of(entry)));
+      team.teamManager().taskQueue().add(new TeamManagerTask.RemoveEntries(this, Collections.singleton(entry)));
       return true;
     }
 
@@ -213,8 +214,9 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   }
 
   private void scheduleUpdate() {
-    var taskQueue = team.teamManager().taskQueue();
-    if (taskQueue.peek() instanceof TeamManagerTask.UpdateTeamDisplay updateTeamTask && updateTeamTask.teamDisplay() == this) {
+    Queue<TeamManagerTask> taskQueue = team.teamManager().taskQueue();
+    TeamManagerTask lastTask = taskQueue.peek();
+    if (lastTask instanceof TeamManagerTask.UpdateTeamDisplay && ((TeamManagerTask.UpdateTeamDisplay) lastTask).teamDisplay() == this) {
       return;
     }
 

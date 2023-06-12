@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
+import java.util.Collections;
 import java.util.Locale;
-import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
@@ -31,8 +31,8 @@ public class LocaleLineHandler {
   }
 
   public void addPlayer(@NotNull Player player) {
-    var isLegacy = sidebar.scoreboardLibrary().packetAdapter().isLegacy(player);
-    var lineType = isLegacy ? LineType.LEGACY : LineType.MODERN;
+    boolean isLegacy = sidebar.scoreboardLibrary().packetAdapter().isLegacy(player);
+    LineType lineType = isLegacy ? LineType.LEGACY : LineType.MODERN;
     lineHandler(lineType).players().add(player);
   }
 
@@ -48,14 +48,14 @@ public class LocaleLineHandler {
 
   public @NotNull SidebarLineHandler lineHandler(@NotNull LineType lineType) {
     switch (lineType) {
-      case MODERN -> {
+      case MODERN: {
         if (modernLineHandler == null) {
           modernLineHandler = new SidebarLineHandler(LineType.MODERN, this);
         }
 
         return modernLineHandler;
       }
-      case LEGACY -> {
+      case LEGACY: {
         if (legacyLineHandler == null) {
           legacyLineHandler = new SidebarLineHandler(LineType.LEGACY, this);
         }
@@ -91,17 +91,17 @@ public class LocaleLineHandler {
 
   public void show(Player player) {
     if (modernLineHandler != null && modernLineHandler.players().contains(player)) {
-      modernLineHandler.show(Set.of(player));
+      modernLineHandler.show(Collections.singleton(player));
     } else if (legacyLineHandler != null && legacyLineHandler.players().contains(player)) {
-      legacyLineHandler.show(Set.of(player));
+      legacyLineHandler.show(Collections.singleton(player));
     }
   }
 
   public void hide(Player player) {
     if (modernLineHandler != null && modernLineHandler.players().contains(player)) {
-      modernLineHandler.hide(Set.of(player));
+      modernLineHandler.hide(Collections.singleton(player));
     } else if (legacyLineHandler != null && legacyLineHandler.players().contains(player)) {
-      legacyLineHandler.hide(Set.of(player));
+      legacyLineHandler.hide(Collections.singleton(player));
     }
   }
 

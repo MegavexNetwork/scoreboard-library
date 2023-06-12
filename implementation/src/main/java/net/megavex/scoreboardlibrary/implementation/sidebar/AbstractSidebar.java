@@ -12,6 +12,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
+import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -66,7 +67,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
   @Override
   public final @NotNull Collection<Player> players() {
-    return closed ? Set.of() : Collections.unmodifiableSet(players);
+    return closed ? Collections.emptySet() : Collections.unmodifiableSet(players);
   }
 
   @Override
@@ -104,7 +105,7 @@ public abstract class AbstractSidebar implements Sidebar {
   public final void line(@Range(from = 0, to = MAX_LINES - 1) int line, @Nullable Component value) {
     checkClosed();
 
-    var globalLineInfo = getLineInfo(line);
+    GlobalLineInfo globalLineInfo = getLineInfo(line);
     if (!Objects.equals(globalLineInfo.value(), value)) {
       globalLineInfo.value(value);
       taskQueue.add(new SidebarTask.UpdateLine(line));
@@ -116,7 +117,7 @@ public abstract class AbstractSidebar implements Sidebar {
   public final @Nullable Component line(@Range(from = 0, to = MAX_LINES - 1) int line) {
     checkClosed();
 
-    var globalLineInfo = lines[line];
+    GlobalLineInfo globalLineInfo = lines[line];
     return globalLineInfo == null ? null : globalLineInfo.value();
   }
 
@@ -153,17 +154,17 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   public final void show(@NotNull Player player) {
-    packetAdapter.sendObjectivePacket(Set.of(player), SidebarPacketAdapter.ObjectivePacket.CREATE);
+    packetAdapter.sendObjectivePacket(Collections.singleton(player), SidebarPacketAdapter.ObjectivePacket.CREATE);
 
-    var lineHandler = Objects.requireNonNull(addPlayer0(player));
+    LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
     lineHandler.addPlayer(player);
     lineHandler.show(player);
-    scoreboardLibrary.packetAdapter().displaySidebar(Set.of(player));
+    scoreboardLibrary.packetAdapter().displaySidebar(Collections.singleton(player));
   }
 
   public final void tick() {
     while (true) {
-      var task = taskQueue.poll();
+      SidebarTask task = taskQueue.poll();
       if (task == null) {
         break;
       }
@@ -172,40 +173,44 @@ public abstract class AbstractSidebar implements Sidebar {
         forEachSidebar(LocaleLineHandler::hide);
         scoreboardLibrary.packetAdapter().removeSidebar(internalPlayers());
 
-        for (var player : internalPlayers()) {
+        for (Player player : internalPlayers()) {
           Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).removeSidebar(this);
         }
 
         return;
-      } else if (task instanceof SidebarTask.AddPlayer addPlayerTask) {
-        var slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
+      } else if (task instanceof SidebarTask.AddPlayer) {
+        SidebarTask.AddPlayer addPlayerTask = (SidebarTask.AddPlayer) task;
+        ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
         slPlayer.addSidebar(this);
-      } else if (task instanceof SidebarTask.RemovePlayer removePlayerTask) {
-        var lineHandler = removePlayer0(removePlayerTask.player());
+      } else if (task instanceof SidebarTask.RemovePlayer) {
+        SidebarTask.RemovePlayer removePlayerTask = (SidebarTask.RemovePlayer) task;
+        LocaleLineHandler lineHandler = removePlayer0(removePlayerTask.player());
         if (lineHandler == null) {
           continue;
         }
 
         lineHandler.hide(removePlayerTask.player());
         lineHandler.removePlayer(removePlayerTask.player());
-        scoreboardLibrary.packetAdapter().removeSidebar(Set.of(removePlayerTask.player()));
+        scoreboardLibrary.packetAdapter().removeSidebar(Collections.singleton(removePlayerTask.player()));
 
         Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeSidebar(this);
-      } else if (task instanceof SidebarTask.ReloadPlayer reloadPlayerTask) {
-        var lineHandler = removePlayer0(reloadPlayerTask.player());
+      } else if (task instanceof SidebarTask.ReloadPlayer) {
+        SidebarTask.ReloadPlayer reloadPlayerTask = (SidebarTask.ReloadPlayer) task;
+        @Nullable LocaleLineHandler lineHandler = removePlayer0(reloadPlayerTask.player());
         if (lineHandler == null) {
           continue;
         }
 
-        scoreboardLibrary.packetAdapter().removeSidebar(Set.of(reloadPlayerTask.player()));
+        scoreboardLibrary.packetAdapter().removeSidebar(Collections.singleton(reloadPlayerTask.player()));
         lineHandler.hide(reloadPlayerTask.player());
         lineHandler.removePlayer(reloadPlayerTask.player());
 
         show(reloadPlayerTask.player());
-      } else if (task instanceof SidebarTask.UpdateLine updateLineTask) {
+      } else if (task instanceof SidebarTask.UpdateLine) {
+        SidebarTask.UpdateLine updateLineTask = (SidebarTask.UpdateLine) task;
         forEachSidebar(sidebar -> {
-          var value = lines[updateLineTask.line()].value();
-          var renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
+          Component value = lines[updateLineTask.line()].value();
+          Component renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
           sidebar.updateLine(updateLineTask.line(), renderedValue);
         });
       } else if (task instanceof SidebarTask.UpdateScores) {
@@ -219,7 +224,7 @@ public abstract class AbstractSidebar implements Sidebar {
 
   private void updateScores() {
     int size = 0;
-    for (var line : lines) {
+    for (GlobalLineInfo line : lines) {
       if (line != null && line.value() != null) {
         size++;
       }
@@ -228,9 +233,9 @@ public abstract class AbstractSidebar implements Sidebar {
     boolean changed = false;
     int i = 0;
 
-    for (var line : lines) {
+    for (GlobalLineInfo line : lines) {
       if (line != null && line.value() != null) {
-        var newScore = size - i - 1;
+        int newScore = size - i - 1;
         if (line.objectiveScore() != newScore) {
           changed = true;
           line.updateScore(true);
@@ -247,7 +252,7 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   private @NotNull GlobalLineInfo getLineInfo(int line) {
-    var globalLineInfo = lines[line];
+    GlobalLineInfo globalLineInfo = lines[line];
     if (globalLineInfo == null) {
       globalLineInfo = lines[line] = new GlobalLineInfo(this, line);
       updateScores();

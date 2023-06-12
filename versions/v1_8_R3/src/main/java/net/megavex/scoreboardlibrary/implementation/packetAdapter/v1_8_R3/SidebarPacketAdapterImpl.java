@@ -34,7 +34,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
   SidebarPacketAdapterImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
-    var locale = sidebar.locale();
+    Locale locale = sidebar.locale();
     if (locale != null) {
       this.createPacket = new PacketPlayOutScoreboardObjective();
       this.updatePacket = new PacketPlayOutScoreboardObjective();
@@ -48,7 +48,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
 
   @Override
   public void updateTitle(@NotNull Component displayName) {
-    var locale = sidebar().locale();
+    Locale locale = sidebar().locale();
     if (locale != null) {
       updateDisplayName(createPacket, displayName, locale);
       updateDisplayName(updatePacket, displayName, locale);
@@ -61,7 +61,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
       LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
-        var packet = new PacketPlayOutScoreboardObjective();
+        PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
         createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE, sidebar().title(), locale);
         return packet;
       });
@@ -75,7 +75,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
 
   @Override
   public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
-    var packet = new PacketPlayOutScoreboardScore();
+    PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
     UnsafeUtilities.setField(scoreNameField, packet, line);
     UnsafeUtilities.setField(scoreObjectiveNameField, packet, packetAdapter().objectiveName);
     UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);
@@ -91,7 +91,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
   }
 
   private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-    var value = LegacyFormatUtil.serialize(displayName, locale);
+    String value = LegacyFormatUtil.serialize(displayName, locale);
     UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
   }
 }

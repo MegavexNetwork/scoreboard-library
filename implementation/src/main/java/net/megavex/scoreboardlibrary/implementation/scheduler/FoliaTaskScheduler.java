@@ -25,7 +25,7 @@ class FoliaTaskScheduler implements TaskScheduler {
       scheduledTaskClass = Class.forName("io.papermc.paper.threadedregions.scheduler.ScheduledTask");
       cancelledStateClass = Class.forName("io.papermc.paper.threadedregions.scheduler.ScheduledTask$CancelledState");
 
-      var lookup = MethodHandles.lookup();
+      MethodHandles.Lookup lookup = MethodHandles.lookup();
       getAsyncSchedulerMethod = lookup.findVirtual(
         Server.class,
         "getAsyncScheduler",

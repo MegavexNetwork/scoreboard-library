@@ -1,10 +1,11 @@
 package net.megavex.scoreboardlibrary.api.sidebar.component;
 
-import java.util.List;
+import java.util.Arrays;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.sidebar.component.animation.CollectionSidebarAnimation;
+import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnimation;
 import org.junit.jupiter.api.Test;
 
 
@@ -18,12 +19,12 @@ class ComponentSidebarLayoutTest {
 
   @Test
   void maxLines() {
-    var builder = SidebarComponent.builder();
+    SidebarComponent.Builder builder = SidebarComponent.builder();
     for (int i = 0; i < Sidebar.MAX_LINES + 1; i++) {
       builder.addComponent(SidebarComponent.staticLine(text(i)));
     }
 
-    var componentSidebar = new ComponentSidebarLayout(drawable -> {
+    ComponentSidebarLayout componentSidebar = new ComponentSidebarLayout(drawable -> {
     }, builder.build());
 
     componentSidebar.apply(sidebar);
@@ -35,8 +36,8 @@ class ComponentSidebarLayoutTest {
 
   @Test
   void titleComponent() {
-    var title = text("title");
-    var componentSidebar = new ComponentSidebarLayout(SidebarComponent.staticLine(title), drawable -> {
+    Component title = text("title");
+    ComponentSidebarLayout componentSidebar = new ComponentSidebarLayout(SidebarComponent.staticLine(title), drawable -> {
     });
     componentSidebar.apply(sidebar);
     assertEquals(title, sidebar.title());
@@ -44,9 +45,9 @@ class ComponentSidebarLayoutTest {
 
   @Test
   void animatedLines() {
-    var animation = new CollectionSidebarAnimation<Component>(List.of(text("frame 1"), text("frame 2")));
-    var lines = SidebarComponent.builder().addAnimatedLine(animation).build();
-    var componentSidebar = new ComponentSidebarLayout(drawable -> {
+    SidebarAnimation<Component> animation = new CollectionSidebarAnimation<>(Arrays.asList(text("frame 1"), text("frame 2")));
+    SidebarComponent lines = SidebarComponent.builder().addAnimatedLine(animation).build();
+    ComponentSidebarLayout componentSidebar = new ComponentSidebarLayout(drawable -> {
     }, lines);
 
     componentSidebar.apply(sidebar);
@@ -59,19 +60,19 @@ class ComponentSidebarLayoutTest {
 
   @Test
   void animatedComponents() {
-    var frame1Line = text("frame with one line");
-    var frame2Line1 = text("frame with");
-    var frame2Line2 = text("two lines");
+    Component frame1Line = text("frame with one line");
+    Component frame2Line1 = text("frame with");
+    Component frame2Line2 = text("two lines");
 
-    var frame1 = SidebarComponent.staticLine(frame1Line);
+    SidebarComponent frame1 = SidebarComponent.staticLine(frame1Line);
     SidebarComponent frame2 = drawable -> {
       drawable.drawLine(frame2Line1);
       drawable.drawLine(frame2Line2);
     };
 
-    var animation = new CollectionSidebarAnimation<>(List.of(frame1, frame2));
-    var lines = SidebarComponent.builder().addAnimatedComponent(animation).build();
-    var componentSidebar = new ComponentSidebarLayout(drawable -> {
+    SidebarAnimation<SidebarComponent> animation = new CollectionSidebarAnimation<>(Arrays.asList(frame1, frame2));
+    SidebarComponent lines = SidebarComponent.builder().addAnimatedComponent(animation).build();
+    ComponentSidebarLayout componentSidebar = new ComponentSidebarLayout(drawable -> {
     }, lines);
 
     componentSidebar.apply(sidebar);

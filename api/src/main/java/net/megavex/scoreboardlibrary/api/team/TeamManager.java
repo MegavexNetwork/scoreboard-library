@@ -116,7 +116,7 @@ public interface TeamManager {
    * @param teamDisplayFunction A function that provides the team display to set for each team
    */
   default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
-    for (var player : players) {
+    for (Player player : players) {
       addPlayer(player, teamDisplayFunction);
     }
   }
@@ -135,7 +135,7 @@ public interface TeamManager {
    * @param players Players to remove
    */
   default void removePlayers(@NotNull Collection<Player> players) {
-    for (var player : players) {
+    for (Player player : players) {
       removePlayer(player);
     }
   }

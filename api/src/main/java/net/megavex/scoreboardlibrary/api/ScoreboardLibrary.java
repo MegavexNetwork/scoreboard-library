@@ -36,9 +36,10 @@ public interface ScoreboardLibrary {
     try {
       return (ScoreboardLibrary) implClass.getDeclaredConstructor(Plugin.class).newInstance(plugin);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-      if (e instanceof InvocationTargetException invocationTargetException) {
-        if (invocationTargetException.getTargetException() instanceof NoPacketAdapterAvailableException noPacketAdapterAvailableException) {
-          throw noPacketAdapterAvailableException;
+      if (e instanceof InvocationTargetException) {
+        Throwable targetException = ((InvocationTargetException) e).getTargetException();
+        if (targetException instanceof NoPacketAdapterAvailableException) {
+          throw (NoPacketAdapterAvailableException) targetException;
         }
       }
 

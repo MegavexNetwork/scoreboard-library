@@ -2,9 +2,11 @@ package net.megavex.scoreboardlibrary.implementation.team;
 
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
@@ -66,12 +68,12 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
       throw new IllegalArgumentException("invalid TeamDisplay");
     }
 
-    var oldTeamDisplay = Objects.requireNonNull(displayMap.put(player, (TeamDisplayImpl) teamDisplay));
+    TeamDisplayImpl oldTeamDisplay = Objects.requireNonNull(displayMap.put(player, (TeamDisplayImpl) teamDisplay));
     if (oldTeamDisplay == teamDisplay) {
       return;
     }
 
-    teamManager.taskQueue().add(new TeamManagerTask.ChangeTeamDisplayTask(player, this, oldTeamDisplay, (TeamDisplayImpl) teamDisplay));
+    teamManager.taskQueue().add(new TeamManagerTask.ChangeTeamDisplay(player, this, oldTeamDisplay, (TeamDisplayImpl) teamDisplay));
   }
 
   @Override
@@ -88,16 +90,16 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   }
 
   public void addPlayer(@NotNull Player player) {
-    var teamDisplay = Objects.requireNonNull(displayMap.get(player));
+    TeamDisplayImpl teamDisplay = Objects.requireNonNull(displayMap.get(player));
     if (teamDisplay.players().add(player)) {
-      teamDisplay.packetAdapter().createTeam(Set.of(player));
+      teamDisplay.packetAdapter().createTeam(Collections.singleton(player));
     }
   }
 
   public void removePlayer(@NotNull Player player) {
-    var teamDisplay = Objects.requireNonNull(displayMap.remove(player));
+    TeamDisplayImpl teamDisplay = Objects.requireNonNull(displayMap.remove(player));
     if (teamDisplay.players().remove(player)) {
-      packetAdapter.removeTeam(Set.of(player));
+      packetAdapter.removeTeam(Collections.singleton(player));
     }
   }
 
@@ -108,18 +110,18 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
 
     newTeamDisplay.players().add(player);
 
-    var singleton = Set.of(player);
+    Collection<Player> singleton = Collections.singleton(player);
     newTeamDisplay.packetAdapter().updateTeam(singleton);
 
-    var oldEntries = oldTeamDisplay.entries();
-    var newEntries = newTeamDisplay.entries();
+    Collection<String> oldEntries = oldTeamDisplay.entries();
+    Collection<String> newEntries = newTeamDisplay.entries();
 
     if (oldEntries.isEmpty()) {
       newTeamDisplay.packetAdapter().addEntries(singleton, newEntries);
       return;
     }
 
-    var entries = new ArrayList<>(oldEntries);
+    List<String> entries = new ArrayList<>(oldEntries);
     entries.removeAll(newEntries);
     if (!entries.isEmpty()) {
       newTeamDisplay.packetAdapter().removeEntries(singleton, entries);

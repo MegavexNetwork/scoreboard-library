@@ -17,7 +17,7 @@ public final class CollectionProvider {
 
   static {
     Lookup lookup = MethodHandles.publicLookup();
-    var parameters = MethodType.methodType(void.class, int.class);
+    MethodType parameters = MethodType.methodType(void.class, int.class);
     mapConstructor = getConstructor(lookup, "it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap", HashMap.class, parameters);
     setConstructor = getConstructor(lookup, "it.unimi.dsi.fastutil.objects.ObjectOpenHashSet", HashSet.class, parameters);
     listConstructor = getConstructor(lookup, "it.unimi.dsi.fastutil.objects.ObjectArrayList", ArrayList.class, parameters);

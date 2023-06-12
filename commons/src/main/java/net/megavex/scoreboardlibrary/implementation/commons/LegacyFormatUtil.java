@@ -6,6 +6,7 @@ import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyFormat;
 import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
@@ -19,13 +20,13 @@ public final class LegacyFormatUtil {
   private static final Map<NamedTextColor, Character> legacyMap;
 
   static {
-    var values = ChatColor.values();
+    ChatColor[] values = ChatColor.values();
     legacyMap = CollectionProvider.map(values.length);
-    for (var value : values) {
+    for (ChatColor value : values) {
       if (!value.isColor()) continue;
 
       char c = value.getChar();
-      var format = Objects.requireNonNull(parseChar(c));
+      LegacyFormat format = Objects.requireNonNull(parseChar(c));
       legacyMap.put((NamedTextColor) format.color(), c);
     }
   }
@@ -38,7 +39,7 @@ public final class LegacyFormatUtil {
       return text;
     }
 
-    var lastNotColorCharIndex = limit - 1;
+    int lastNotColorCharIndex = limit - 1;
     while (text.charAt(lastNotColorCharIndex) == LegacyComponentSerializer.SECTION_CHAR) {
       lastNotColorCharIndex--;
     }

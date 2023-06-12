@@ -24,7 +24,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
   public SidebarPacketAdapterImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
-    var locale = sidebar.locale();
+    Locale locale = sidebar.locale();
     if (locale != null) {
       this.createPacket = createObjectivePacket(ObjectiveMode.CREATE, empty(), locale);
       this.updatePacket = createObjectivePacket(ObjectiveMode.UPDATE, empty(), locale);
@@ -36,9 +36,9 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
 
   @Override
   public void updateTitle(@NotNull Component displayName) {
-    var locale = sidebar().locale();
+    Locale locale = sidebar().locale();
     if (locale != null) {
-      var translatedDisplayName = GlobalTranslator.render(displayName, locale);
+      Component translatedDisplayName = GlobalTranslator.render(displayName, locale);
       createPacket.setDisplayName(translatedDisplayName);
       updatePacket.setDisplayName(translatedDisplayName);
     }

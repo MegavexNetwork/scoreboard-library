@@ -21,9 +21,9 @@ public class SidebarLineHandler {
     this.localeLineHandler = localeLineHandler;
     this.lines = new LocaleLine[localeLineHandler.sidebar().maxLines()];
 
-    for (var line : localeLineHandler.sidebar().lines()) {
+    for (GlobalLineInfo line : localeLineHandler.sidebar().lines()) {
       if (line != null) {
-        var value = line.value();
+        Component value = line.value();
         if (value != null) {
           setLine(line.line(), GlobalTranslator.render(value, localeLineHandler.locale()), false);
         }
@@ -40,14 +40,14 @@ public class SidebarLineHandler {
   }
 
   public void updateLine(int lineIndex) {
-    var line = lines[lineIndex];
+    LocaleLine<?> line = lines[lineIndex];
     if (line != null) {
       line.updateTeam();
     }
   }
 
   public void updateScores() {
-    for (var line : lines) {
+    for (LocaleLine<?> line : lines) {
       if (line != null && line.info().updateScore()) {
         line.sendScore(players);
         line.info().updateScore(false);
@@ -60,12 +60,12 @@ public class SidebarLineHandler {
   }
 
   private void setLine(int line, Component renderedLine, boolean sendPackets) {
-    var localeLine = lines[line];
+    LocaleLine<?> localeLine = lines[line];
     if (renderedLine == null && localeLine == null) {
       return;
     }
 
-    var newlyCreated = false;
+    boolean newlyCreated = false;
     if (localeLine == null) {
       lines[line] = localeLine = lineType.create(localeLineHandler.sidebar().lines()[line], this);
       newlyCreated = true;
@@ -87,7 +87,7 @@ public class SidebarLineHandler {
   }
 
   public void show(Collection<Player> players) {
-    for (var line : lines) {
+    for (LocaleLine<?> line : lines) {
       if (line != null) {
         line.show(players);
       }
@@ -95,7 +95,7 @@ public class SidebarLineHandler {
   }
 
   public void hide(Collection<Player> players) {
-    for (var line : lines) {
+    for (LocaleLine<?> line : lines) {
       if (line != null) {
         line.hide(players);
       }

@@ -80,9 +80,9 @@ public interface SidebarComponent {
     }
 
     public @NotNull SidebarComponent build() {
-      var children = ImmutableList.copyOf(this.children);
+      ImmutableList<SidebarComponent> children = ImmutableList.copyOf(this.children);
       return drawable -> {
-        for (var child : children) {
+        for (SidebarComponent child : children) {
           child.draw(drawable);
         }
       };

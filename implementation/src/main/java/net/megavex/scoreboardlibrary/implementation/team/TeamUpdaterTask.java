@@ -26,7 +26,7 @@ public class TeamUpdaterTask implements Runnable {
   @Override
   public void run() {
     synchronized (lock) {
-      for (var teamManager : scoreboardLibrary.teamManagers()) {
+      for (TeamManagerImpl teamManager : scoreboardLibrary.teamManagers()) {
         try {
           teamManager.tick();
         } catch (Exception e) {

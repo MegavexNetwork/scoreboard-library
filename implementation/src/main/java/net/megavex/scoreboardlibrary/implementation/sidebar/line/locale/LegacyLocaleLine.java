@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -51,12 +52,12 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
   @Override
   public @NotNull Collection<String> entries() {
-    return Set.of(player);
+    return Collections.singleton(player);
   }
 
   @Override
   public void value(@NotNull Component renderedComponent) {
-    var legacyValue = legacySection().serialize(renderedComponent);
+    @NotNull String legacyValue = legacySection().serialize(renderedComponent);
 
     oldPlayer = player;
 
@@ -68,18 +69,18 @@ class LegacyLocaleLine implements LocaleLine<String> {
         this.player = info.player();
       }
     } else {
-      var color = legacyValue.charAt(15) == LegacyComponentSerializer.SECTION_CHAR;
+      boolean color = legacyValue.charAt(15) == LegacyComponentSerializer.SECTION_CHAR;
 
-      var prefixEnd = color ? 15 : 16;
+      int prefixEnd = color ? 15 : 16;
       this.prefix = legacyValue.substring(0, prefixEnd);
 
       this.player = info.player() + ChatColor.RESET
         + ChatColor.getLastColors(prefix +
         LegacyComponentSerializer.SECTION_CHAR + (color ? legacyValue.charAt(16) : ""));
 
-      var playerEnd = prefixEnd;
+      int playerEnd = prefixEnd;
       if (legacyValue.length() > 32) {
-        var remaining = 16 - player.length();
+        int remaining = 16 - player.length();
         assert remaining > 0;
 
         playerEnd += remaining;
@@ -88,7 +89,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
       this.suffix = legacyValue.substring(playerEnd + (color ? 2 : 0));
       if (suffix.length() > 16) {
-        var newSuffix = suffix.substring(0, 16);
+        String newSuffix = suffix.substring(0, 16);
         if (newSuffix.endsWith(String.valueOf(LegacyComponentSerializer.SECTION_CHAR)) &&
           ChatColor.getByChar(suffix.charAt(16)) != null) {
           newSuffix = newSuffix.substring(0, 15);
@@ -107,13 +108,13 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
   @Override
   public void updateTeam() {
-    var players = handler.players();
+    Set<Player> players = handler.players();
     if (oldPlayer != null) {
-      packetAdapter.removeEntries(players, Set.of(oldPlayer));
+      packetAdapter.removeEntries(players, Collections.singleton(oldPlayer));
       handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
       oldPlayer = null;
 
-      var entries = entries();
+      Collection<String> entries = entries();
       packetAdapter.updateTeamPackets(entries);
       packetAdapter.addEntries(players, entries);
       handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), player);

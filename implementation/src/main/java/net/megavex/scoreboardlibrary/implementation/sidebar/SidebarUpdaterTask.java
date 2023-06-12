@@ -26,7 +26,7 @@ public class SidebarUpdaterTask implements Runnable {
   @Override
   public void run() {
     synchronized (lock) {
-      for (var sidebar : scoreboardLibrary.sidebars()) {
+      for (AbstractSidebar sidebar : scoreboardLibrary.sidebars()) {
         try {
           sidebar.tick();
         } catch (Exception e) {

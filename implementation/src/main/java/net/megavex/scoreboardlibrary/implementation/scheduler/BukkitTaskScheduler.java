@@ -12,7 +12,7 @@ class BukkitTaskScheduler implements TaskScheduler {
 
   @Override
   public @NotNull RunningTask runEveryTick(@NotNull Runnable runnable) {
-    var task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, runnable, 1, 1);
+    org.bukkit.scheduler.BukkitTask task = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, runnable, 1, 1);
     return task::cancel;
   }
 

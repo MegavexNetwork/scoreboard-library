@@ -81,7 +81,7 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
     }
 
     private void sendTeamEntryPacket(Collection<Player> players, Collection<String> entries, int action) {
-      var packet = new PacketPlayOutScoreboardTeam();
+      PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
       UnsafeUtilities.setField(teamNameField, packet, teamName());
       UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), action);
       UnsafeUtilities.setField(teamEntriesField, packet, entries);
@@ -90,11 +90,11 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
 
     private void sendTeamPacket(Collection<Player> players, boolean update) {
       LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
-        var displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
-        var prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
-        var suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
+        String displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
+        String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
+        String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
 
-        var packet = new PacketPlayOutScoreboardTeam();
+        PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
         UnsafeUtilities.setField(teamNameField, packet, teamName());
         UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE : MODE_CREATE);
         UnsafeUtilities.setField(teamDisplayNameField, packet, displayName);

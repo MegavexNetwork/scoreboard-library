@@ -49,7 +49,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     try {
       Class.forName("net.kyori.adventure.Adventure");
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException("Adventure is not in the classpath");
+      throw new IllegalStateException("Adventure is not in the classpath");
     }
 
     this.plugin = plugin;
@@ -111,7 +111,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   public @NotNull TeamManagerImpl createTeamManager() {
     checkClosed();
 
-    var teamManager = new TeamManagerImpl(this);
+    TeamManagerImpl teamManager = new TeamManagerImpl(this);
     teamManagers().add(teamManager);
     return teamManager;
   }
@@ -135,7 +135,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     if (teamManagers != null) {
       teamTask.task().cancel();
       synchronized (teamTask.lock()) {
-        for (var teamManager : teamManagers) {
+        for (TeamManagerImpl teamManager : teamManagers) {
           teamManager.close();
           teamManager.tick();
         }
@@ -145,7 +145,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     if (sidebars != null) {
       sidebarTask.task().cancel();
       synchronized (sidebarTask.lock()) {
-        for (var sidebar : sidebars) {
+        for (AbstractSidebar sidebar : sidebars) {
           sidebar.close();
           sidebar.tick();
         }

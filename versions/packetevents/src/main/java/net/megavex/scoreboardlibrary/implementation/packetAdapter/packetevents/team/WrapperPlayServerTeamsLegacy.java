@@ -48,7 +48,7 @@ public class WrapperPlayServerTeamsLegacy extends PacketWrapper<WrapperPlayServe
         writeVarInt(properties.entries().size());
       }
 
-      for (var entry : properties.entries()) {
+      for (String entry : properties.entries()) {
         writeString(entry);
       }
     }

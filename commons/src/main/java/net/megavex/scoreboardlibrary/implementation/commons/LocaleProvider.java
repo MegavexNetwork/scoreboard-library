@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.commons;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Locale;
@@ -11,9 +12,9 @@ public interface LocaleProvider {
   Locale DEFAULT_LOCALE = Locale.US;
 
   static @NotNull LocaleProvider localeProvider() {
-    var lookup = MethodHandles.publicLookup();
+    MethodHandles.Lookup lookup = MethodHandles.publicLookup();
     try {
-      var adventureMethod = lookup.findVirtual(Player.class, "locale", MethodType.methodType(Locale.class));
+      MethodHandle adventureMethod = lookup.findVirtual(Player.class, "locale", MethodType.methodType(Locale.class));
       return player -> {
         try {
           return (Locale) adventureMethod.invokeExact(player);
@@ -24,12 +25,12 @@ public interface LocaleProvider {
     } catch (IllegalAccessException | NoSuchMethodException ignored) {
     }
 
-    var methodType = MethodType.methodType(String.class);
+    MethodType methodType = MethodType.methodType(String.class);
     try {
-      var legacySpigotMethod = lookup.findVirtual(Player.Spigot.class, "getLocale", methodType);
+      MethodHandle legacySpigotMethod = lookup.findVirtual(Player.Spigot.class, "getLocale", methodType);
       return player -> {
         try {
-          var locale = Translator.parseLocale((String) legacySpigotMethod.invokeExact(player.spigot()));
+          Locale locale = Translator.parseLocale((String) legacySpigotMethod.invokeExact(player.spigot()));
           return locale == null ? DEFAULT_LOCALE : locale;
         } catch (Throwable e) {
           throw new RuntimeException(e);
@@ -39,10 +40,10 @@ public interface LocaleProvider {
     }
 
     try {
-      var legacyMethod = lookup.findVirtual(Player.class, "getLocale", methodType);
+      MethodHandle legacyMethod = lookup.findVirtual(Player.class, "getLocale", methodType);
       return player -> {
         try {
-          var locale = Translator.parseLocale((String) legacyMethod.invokeExact(player));
+          @org.jetbrains.annotations.Nullable Locale locale = Translator.parseLocale((String) legacyMethod.invokeExact(player));
           return locale == null ? DEFAULT_LOCALE : locale;
         } catch (Throwable e) {
           throw new RuntimeException(e);

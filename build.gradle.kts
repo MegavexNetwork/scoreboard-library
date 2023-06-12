@@ -30,8 +30,8 @@ subprojects {
   }
 
   tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = JavaVersion.VERSION_17.toString()
-    targetCompatibility = JavaVersion.VERSION_17.toString()
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
     options.encoding = "UTF-8"
     options.isIncremental = true
     options.compilerArgs = mutableListOf("-Xlint:-deprecation,-unchecked")

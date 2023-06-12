@@ -35,7 +35,7 @@ public class ScoreboardLibraryPlayer {
     teamManagers.add(teamManager);
 
     if (teamManager() == teamManager) {
-      var player = Bukkit.getPlayer(playerUuid);
+      Player player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
         teamManager.show(player);
       }
@@ -47,9 +47,9 @@ public class ScoreboardLibraryPlayer {
       throw new RuntimeException("TeamManager not registered");
     }
 
-    var newTeamManager = teamManager();
+    TeamManagerImpl newTeamManager = teamManager();
     if (newTeamManager != null) {
-      var player = Bukkit.getPlayer(playerUuid);
+      Player player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
         newTeamManager.show(player);
       }
@@ -72,7 +72,7 @@ public class ScoreboardLibraryPlayer {
     sidebars.add(sidebar);
 
     if (sidebar() == sidebar) {
-      var player = Bukkit.getPlayer(playerUuid);
+      Player player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
         sidebar.show(player);
       }
@@ -84,9 +84,9 @@ public class ScoreboardLibraryPlayer {
       throw new RuntimeException("Sidebar not registered");
     }
 
-    var newSidebar = sidebar();
+    @Nullable AbstractSidebar newSidebar = sidebar();
     if (newSidebar != null) {
-      var player = Bukkit.getPlayer(playerUuid);
+      Player player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
         newSidebar.show(player);
       }

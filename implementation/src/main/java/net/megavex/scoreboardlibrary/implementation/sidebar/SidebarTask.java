@@ -3,7 +3,10 @@ package net.megavex.scoreboardlibrary.implementation.sidebar;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public sealed class SidebarTask {
+public class SidebarTask {
+  private SidebarTask() {
+  }
+
   public static final class Close extends SidebarTask {
     public static final Close INSTANCE = new Close();
 

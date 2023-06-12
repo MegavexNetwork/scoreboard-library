@@ -102,7 +102,7 @@ public interface Sidebar {
    * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players) {
-    for (var player : players) {
+    for (Player player : players) {
       addPlayer(player);
     }
   }
@@ -114,7 +114,7 @@ public interface Sidebar {
    * @see #removePlayer
    */
   default void removePlayers(@NotNull Collection<Player> players) {
-    for (var player : players) {
+    for (Player player : players) {
       removePlayer(player);
     }
   }

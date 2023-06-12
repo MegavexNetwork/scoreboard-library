@@ -33,7 +33,7 @@ class NoopTeamManager implements TeamManager {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return closed ? Set.of() : Collections.unmodifiableSet(players);
+    return closed ? Collections.emptySet() : Collections.unmodifiableSet(players);
   }
 
   @Override
@@ -45,7 +45,7 @@ class NoopTeamManager implements TeamManager {
       return false;
     }
 
-    for (var team : teams.values()) {
+    for (NoopScoreboardTeam team : teams.values()) {
       team.displayMap().remove(player);
     }
 
@@ -54,7 +54,7 @@ class NoopTeamManager implements TeamManager {
 
   @Override
   public @NotNull Collection<ScoreboardTeam> teams() {
-    return closed ? Set.of() : Collections.unmodifiableCollection(teams.values());
+    return closed ? Collections.emptySet() : Collections.unmodifiableCollection(teams.values());
   }
 
   @Override
@@ -73,14 +73,14 @@ class NoopTeamManager implements TeamManager {
     checkClosed();
 
     name = name.toLowerCase();
-    var team = teams.get(name);
+    NoopScoreboardTeam team = teams.get(name);
     if (team != null) {
       return team;
     }
 
     team = new NoopScoreboardTeam(this, name);
-    for (var player : players) {
-      var teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(player, team);
+    for (Player player : players) {
+      TeamDisplay teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(player, team);
       validateTeamDisplay(team, teamDisplay);
       team.displayMap().put(player, teamDisplay);
     }
@@ -114,8 +114,8 @@ class NoopTeamManager implements TeamManager {
       return false;
     }
 
-    for (var team : teams.values()) {
-      var teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(team);
+    for (NoopScoreboardTeam team : teams.values()) {
+      TeamDisplay teamDisplay = teamDisplayFunction == null ? team.defaultDisplay() : teamDisplayFunction.apply(team);
       validateTeamDisplay(team, teamDisplay);
       team.displayMap().put(player, teamDisplay);
     }

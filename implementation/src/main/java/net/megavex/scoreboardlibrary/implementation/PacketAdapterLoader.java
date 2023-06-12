@@ -12,7 +12,7 @@ public final class PacketAdapterLoader {
   }
 
   public static @NotNull ScoreboardLibraryPacketAdapter<?> loadPacketAdapter() throws NoPacketAdapterAvailableException {
-    var versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    String versionName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     Class<?> nmsClass = tryLoadImplementationClass(versionName);
 
     if (nmsClass == null) {

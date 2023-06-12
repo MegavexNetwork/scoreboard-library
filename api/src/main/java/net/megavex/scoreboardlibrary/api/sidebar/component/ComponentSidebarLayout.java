@@ -30,11 +30,11 @@ public final class ComponentSidebarLayout {
   public void apply(@NotNull Sidebar sidebar) {
     Preconditions.checkNotNull(sidebar);
 
-    var titleDrawable = new SidebarTitleDrawable();
+    SidebarTitleDrawable titleDrawable = new SidebarTitleDrawable();
     titleComponent.draw(titleDrawable);
     sidebar.title(titleDrawable.title == null ? empty() : titleDrawable.title);
 
-    var linesDrawable = new SidebarLineDrawable(sidebar);
+    SidebarLineDrawable linesDrawable = new SidebarLineDrawable(sidebar);
     linesComponent.draw(linesDrawable);
 
     for (int i = linesDrawable.index; i < Sidebar.MAX_LINES; i++) {

@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.util;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
@@ -13,7 +14,7 @@ public class UnsafeUtilities {
 
   static {
     try {
-      var theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+      Field theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
       theUnsafeField.setAccessible(true);
       UNSAFE = Objects.requireNonNull((Unsafe) theUnsafeField.get(null));
     } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -50,7 +51,7 @@ public class UnsafeUtilities {
 
   public static <T> PacketConstructor<T> findPacketConstructor(Class<T> packetClass, MethodHandles.Lookup lookup) {
     try {
-      var constructor = lookup.findConstructor(packetClass, VOID_METHOD_TYPE);
+      MethodHandle constructor = lookup.findConstructor(packetClass, VOID_METHOD_TYPE);
       return () -> {
         try {
           // noinspection unchecked

@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
@@ -58,15 +59,15 @@ public class AdventureTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDi
 
   private void sendTeamPacket(Collection<Player> players, boolean update) {
     LocalePacketUtilities.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null, packetAdapter.packetAdapter(), players, locale -> {
-      var displayName = GlobalTranslator.render(properties.displayName(), locale);
-      var prefix = GlobalTranslator.render(properties.prefix(), locale);
-      var suffix = GlobalTranslator.render(properties.suffix(), locale);
-      var nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
-      var collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
-      var color = properties.playerColor();
-      var optionData = WrapperPlayServerTeams.OptionData.fromValue((byte) properties.packOptions());
+      Component displayName = GlobalTranslator.render(properties.displayName(), locale);
+      Component prefix = GlobalTranslator.render(properties.prefix(), locale);
+      Component suffix = GlobalTranslator.render(properties.suffix(), locale);
+      WrapperPlayServerTeams.NameTagVisibility nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
+      WrapperPlayServerTeams.CollisionRule collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
+      NamedTextColor color = properties.playerColor();
+      WrapperPlayServerTeams.OptionData optionData = WrapperPlayServerTeams.OptionData.fromValue((byte) properties.packOptions());
 
-      var info = new WrapperPlayServerTeams.ScoreBoardTeamInfo(
+      WrapperPlayServerTeams.ScoreBoardTeamInfo info = new WrapperPlayServerTeams.ScoreBoardTeamInfo(
         displayName,
         prefix,
         suffix,

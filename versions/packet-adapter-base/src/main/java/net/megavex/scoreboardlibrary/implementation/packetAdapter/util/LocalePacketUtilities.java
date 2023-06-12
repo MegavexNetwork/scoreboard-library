@@ -25,17 +25,17 @@ public final class LocalePacketUtilities {
     if (players.isEmpty()) return;
 
     if (specificLocale != null) {
-      var packet = packetFunction.apply(specificLocale);
+      P packet = packetFunction.apply(specificLocale);
       nms.sendPacket(players, packet);
     } else if (players.size() == 1) {
-      var player = players.iterator().next();
-      var packet = packetFunction.apply(localeProvider.locale(player));
+      Player player = players.iterator().next();
+      P packet = packetFunction.apply(localeProvider.locale(player));
       nms.sendPacket(player, packet);
     } else {
       Map<Locale, P> map = CollectionProvider.map(1);
-      for (var player : players) {
-        var locale = localeProvider.locale(player);
-        var packet = map.computeIfAbsent(locale, i -> packetFunction.apply(locale));
+      for (Player player : players) {
+        Locale locale = localeProvider.locale(player);
+        P packet = map.computeIfAbsent(locale, i -> packetFunction.apply(locale));
         nms.sendPacket(player, packet);
       }
     }
