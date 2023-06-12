@@ -9,6 +9,11 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents the display information of a {@link ScoreboardTeam}.
+ * This includes things like the entries, display name, prefix etc..
+ * Note: this class is not thread-safe.
+ */
 @ApiStatus.NonExtendable
 public interface TeamDisplay {
   /**
@@ -21,7 +26,7 @@ public interface TeamDisplay {
   @NotNull Collection<String> entries();
 
   /**
-   * Adds an entry
+   * Adds an entry.
    *
    * @param entry Entry to add
    * @return Whether the entry was added
@@ -29,7 +34,7 @@ public interface TeamDisplay {
   boolean addEntry(@NotNull String entry);
 
   /**
-   * Removes an entry
+   * Removes an entry.
    *
    * @param entry Entry to remove
    * @return Whether the entry was removed
@@ -44,7 +49,7 @@ public interface TeamDisplay {
   @NotNull Component displayName();
 
   /**
-   * Sets the display name
+   * Sets the display name.
    *
    * @param displayName Display name
    */
@@ -56,7 +61,7 @@ public interface TeamDisplay {
   @NotNull Component prefix();
 
   /**
-   * Sets the prefix
+   * Sets the prefix.
    *
    * @param prefix Prefix
    */
@@ -68,7 +73,7 @@ public interface TeamDisplay {
   @NotNull Component suffix();
 
   /**
-   * Sets the suffix
+   * Sets the suffix.
    *
    * @param suffix Suffix
    */
@@ -80,7 +85,7 @@ public interface TeamDisplay {
   boolean friendlyFire();
 
   /**
-   * Sets whether friendly fire is allowed
+   * Sets whether friendly fire is allowed.
    *
    * @param friendlyFire whether friendly fire is allowed
    */
@@ -92,7 +97,7 @@ public interface TeamDisplay {
   boolean canSeeFriendlyInvisibles();
 
   /**
-   * Sets whether players can see friendly invisibles
+   * Sets whether players can see friendly invisibles.
    *
    * @param canSeeFriendlyInvisibles whether players can see friendly invisibles
    */
@@ -104,7 +109,7 @@ public interface TeamDisplay {
   @NotNull NameTagVisibility nameTagVisibility();
 
   /**
-   * Sets the {@link NameTagVisibility}
+   * Sets the {@link NameTagVisibility}.
    *
    * @param nameTagVisibility Name tag visibility rule
    */
@@ -128,7 +133,7 @@ public interface TeamDisplay {
   @Nullable NamedTextColor playerColor();
 
   /**
-   * Sets the player color
+   * Sets the player color.
    *
    * @param playerColor Player color
    */

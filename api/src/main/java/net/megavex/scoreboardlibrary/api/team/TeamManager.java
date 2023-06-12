@@ -8,6 +8,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Manages a group of {@link ScoreboardTeam}s.
+ * Note: this class is not thread-safe.
+ */
 @ApiStatus.NonExtendable
 public interface TeamManager {
   // Teams

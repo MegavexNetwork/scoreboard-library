@@ -11,18 +11,30 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+/**
+ * Allows creating {@link Sidebar}s and {@link TeamManager}s.
+ * Each plugin should have it's own instance of this interface.
+ * Note: this class is thread-safe.
+ */
 @ApiStatus.NonExtendable
 public interface ScoreboardLibrary {
+  /**
+   * Creates an instance of {@link ScoreboardLibrary}.
+   *
+   * @param plugin The plugin that owns this instance
+   * @return A new instance of {@link ScoreboardLibrary}
+   * @throws NoPacketAdapterAvailableException if there is no packet adapter available in the classpath
+   */
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
-    Class<?> clazz;
+    Class<?> implClass;
     try {
-      clazz = Class.forName("net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl");
+      implClass = Class.forName("net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl");
     } catch (ClassNotFoundException e) {
-      throw new RuntimeException("scoreboard-library implementation is not shaded into the classpath");
+      throw new IllegalStateException("scoreboard-library implementation is not shaded into the classpath");
     }
 
     try {
-      return (ScoreboardLibrary) clazz.getDeclaredConstructor(Plugin.class).newInstance(plugin);
+      return (ScoreboardLibrary) implClass.getDeclaredConstructor(Plugin.class).newInstance(plugin);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
       if (e instanceof InvocationTargetException invocationTargetException) {
         if (invocationTargetException.getTargetException() instanceof NoPacketAdapterAvailableException noPacketAdapterAvailableException) {
@@ -35,7 +47,7 @@ public interface ScoreboardLibrary {
   }
 
   /**
-   * Creates a {@link Sidebar}
+   * Creates a {@link Sidebar}.
    *
    * @return Sidebar
    */
@@ -44,9 +56,9 @@ public interface ScoreboardLibrary {
   }
 
   /**
-   * Creates a {@link Sidebar}
+   * Creates a {@link Sidebar}.
    *
-   * @param maxLines Max sidebar lines
+   * @param maxLines Max amount of lines the sidebar will have
    * @return Sidebar
    */
   default @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines) {
@@ -54,9 +66,9 @@ public interface ScoreboardLibrary {
   }
 
   /**
-   * Creates a {@link Sidebar}
+   * Creates a {@link Sidebar}.
    *
-   * @param maxLines Max sidebar lines
+   * @param maxLines Max amount of lines the sidebar will have
    * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
    *                 or null if the locale should depend on the player
    * @return Sidebar
@@ -64,20 +76,20 @@ public interface ScoreboardLibrary {
   @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale);
 
   /**
-   * Creates a {@link TeamManager}
+   * Creates a {@link TeamManager}.
    *
    * @return TeamManager
    */
   @NotNull TeamManager createTeamManager();
 
   /**
-   * Closes this ScoreboardLibrary instance.
+   * Closes this scoreboard-library instance.
    * Should always be called when the plugin is disabled
    */
   void close();
 
   /**
-   * @return Whether this ScoreboardLibrary instance is closed
+   * @return Whether this scoreboard-library instance is closed
    */
   boolean closed();
 }

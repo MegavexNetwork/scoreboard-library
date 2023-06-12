@@ -3,6 +3,10 @@ package net.megavex.scoreboardlibrary.api.team;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents a scoreboard team.
+ * Note: this class is not thread-safe.
+ */
 public interface ScoreboardTeam {
   /**
    * @return {@link TeamManager} of this team
