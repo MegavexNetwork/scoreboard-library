@@ -5,7 +5,7 @@ plugins {
 allprojects {
   version = "2.0.0-RC9"
   group = "net.megavex"
-  description = "Powerful packet-level Scoreboard library for Paper/Spigot servers"
+  description = "Powerful packet-level sidebar/teams library for Paper/Spigot servers"
 
   repositories {
     mavenCentral()
