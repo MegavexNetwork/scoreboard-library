@@ -3,7 +3,6 @@ package net.megavex.scoreboardlibrary.implementation;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarTask;
 import net.megavex.scoreboardlibrary.implementation.team.TeamManagerTask;
-import net.megavex.scoreboardlibrary.implementation.util.DispatchUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,7 +13,7 @@ public record LocaleListener(ScoreboardLibraryImpl scoreboardLibrary) implements
   public void onPlayerLocaleChanged(PlayerLocaleChangeEvent event) {
     var player = event.getPlayer();
     // Need to wait a tick because the locale didn't update yet
-    DispatchUtil.runNextTick(scoreboardLibrary.plugin(), () -> {
+    scoreboardLibrary.taskScheduler().runNextTick(() -> {
       var slPlayer = scoreboardLibrary.getPlayer(player);
       if (slPlayer != null) {
         var teamManager = slPlayer.teamManager();

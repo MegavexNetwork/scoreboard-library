@@ -2,20 +2,20 @@ package net.megavex.scoreboardlibrary.implementation.team;
 
 import java.util.logging.Level;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.util.DispatchUtil;
+import net.megavex.scoreboardlibrary.implementation.scheduler.RunningTask;
 import org.jetbrains.annotations.NotNull;
 
 public class TeamUpdaterTask implements Runnable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
-  private final DispatchUtil.RunningTask task;
+  private final RunningTask task;
   private final Object lock = new Object();
 
   public TeamUpdaterTask(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
     this.scoreboardLibrary = scoreboardLibrary;
-    this.task = DispatchUtil.runEveryTick(scoreboardLibrary.plugin(), this);
+    this.task = scoreboardLibrary.taskScheduler().runEveryTick(this);
   }
 
-  public @NotNull DispatchUtil.RunningTask task() {
+  public @NotNull RunningTask task() {
     return task;
   }
 

@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.api.sidebar;
 
 import com.google.common.base.Preconditions;
 import java.util.function.Supplier;
-import javax.annotation.concurrent.NotThreadSafe;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
 import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
@@ -17,7 +16,6 @@ import static net.kyori.adventure.text.Component.empty;
 /**
  * @deprecated Use {@link ComponentSidebarLayout} instead
  */
-@NotThreadSafe
 @Deprecated
 @ApiStatus.ScheduledForRemoval(inVersion = "2.0.0")
 public class AbstractSidebar {

@@ -18,13 +18,15 @@ subprojects {
   apply(plugin = "java-library")
 
   dependencies {
-    compileOnly("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
-    testImplementation("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
 
     val adventureVersion = "4.14.0"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+
+    testImplementation("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
+    testImplementation("net.kyori:adventure-api:$adventureVersion")
   }
 
   tasks.withType<JavaCompile>().configureEach {

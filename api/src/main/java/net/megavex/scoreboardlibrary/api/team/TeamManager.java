@@ -3,14 +3,12 @@ package net.megavex.scoreboardlibrary.api.team;
 import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import javax.annotation.concurrent.NotThreadSafe;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.NonExtendable
-@NotThreadSafe
 public interface TeamManager {
   // Teams
 

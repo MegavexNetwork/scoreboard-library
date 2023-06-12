@@ -1,7 +1,6 @@
 package net.megavex.scoreboardlibrary.api.team;
 
 import java.util.Collection;
-import javax.annotation.concurrent.NotThreadSafe;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.NonExtendable
-@NotThreadSafe
 public interface TeamDisplay {
   /**
    * @return Team which is assigned to this {@link TeamDisplay}

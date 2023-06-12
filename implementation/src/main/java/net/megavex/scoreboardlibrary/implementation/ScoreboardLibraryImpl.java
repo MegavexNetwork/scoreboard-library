@@ -12,6 +12,7 @@ import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableExcep
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.scheduler.TaskScheduler;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarUpdaterTask;
@@ -28,6 +29,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   private final Plugin plugin;
   private final ScoreboardLibraryPacketAdapter<?> packetAdapter;
   private final LocaleProvider localeProvider;
+  private final TaskScheduler taskScheduler;
 
   private final Map<Player, ScoreboardLibraryPlayer> playerMap = new MapMaker().weakKeys().makeMap();
 
@@ -53,6 +55,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     this.plugin = plugin;
     this.packetAdapter = PacketAdapterLoader.loadPacketAdapter();
     this.localeProvider = this.packetAdapter.localeProvider;
+    this.taskScheduler = TaskScheduler.create(plugin);
 
     boolean localeEventExists = false;
     try {
@@ -79,6 +82,10 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
   public @NotNull LocaleProvider localeProvider() {
     return localeProvider;
+  }
+
+  public @NotNull TaskScheduler taskScheduler() {
+    return taskScheduler;
   }
 
   @Override

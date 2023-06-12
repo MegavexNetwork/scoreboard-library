@@ -1,10 +1,8 @@
 package net.megavex.scoreboardlibrary.api.team;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@NotThreadSafe
 public interface ScoreboardTeam {
   /**
    * @return {@link TeamManager} of this team

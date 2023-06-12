@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.api;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
-import javax.annotation.concurrent.ThreadSafe;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -13,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 @ApiStatus.NonExtendable
-@ThreadSafe
 public interface ScoreboardLibrary {
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
     Class<?> clazz;
