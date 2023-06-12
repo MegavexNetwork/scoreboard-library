@@ -1,8 +1,10 @@
 # Installation
 
-I'm only going to show the installation for Gradle, however everything can be applied to Maven too.
+Latest version: `2.0.0-RC9`
 
-First, add the Jitpack repository:
+## Gradle
+
+Make sure you have the Jitpack repository:
 
 ```kotlin
 repositories {
@@ -14,10 +16,10 @@ Then add the dependencies:
 
 ```kotlin
 dependencies {
-  val scoreboardLibraryVersion = "2.0.0-RC9"
+  val scoreboardLibraryVersion = "{VERSION HERE}"
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-api:$scoreboardLibraryVersion")
-  implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")
+  implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
 
   // Add packet adapter implementations you want:
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion")
@@ -36,3 +38,74 @@ dependencies {
 
 You will need to shade these dependencies and relocate them with something
 like [Shadow](https://imperceptiblethoughts.com/shadow/).
+
+## Maven
+
+Make sure you have the Jitpack repository:
+```xml
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io/</url>
+  </repository>
+</repositories>
+```
+
+Then add the dependencies:
+```xml
+<dependencies>
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-api</artifactId>
+    <version>{VERSION HERE}</version>
+  </dependency>
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-implementation</artifactId>
+    <version>{VERSION HERE}</version>
+    <scope>runtime</scope>
+  </dependency>
+  <!-- If using Kotlin: -->
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-extra-kotlin</artifactId>
+    <version>{VERSION HERE}</version>
+  </dependency>
+
+  <!-- Add packet adapter implementations you want: -->
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-v1_8_R3</artifactId>
+    <version>{VERSION HERE}</version>
+    <scope>runtime</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-v1_20_R1</artifactId>
+    <version>{VERSION HERE}</version>
+    <scope>runtime</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-packetevents</artifactId>
+    <version>{VERSION HERE}</version>
+    <scope>runtime</scope>
+  </dependency>
+
+  <!--
+    If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
+    Follow either of:
+    - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
+    - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents -->
+
+  <!-- If using the 1.8 version implementation, add Adventure as well: -->
+  <dependency>
+    <groupId>net.kyori</groupId>
+    <artifactId>adventure-platform-bukkit</artifactId>
+    <version>4.0.1</version>
+  </dependency>
+</dependencies>
+```
+
+You will need to shade these dependencies and relocate them with something
+like [maven-shade-plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
