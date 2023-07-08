@@ -91,7 +91,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
   }
 
   private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
-    String value = LegacyFormatUtil.serialize(displayName, locale);
+    String value = LegacyFormatUtil.limitLegacyText(LegacyFormatUtil.serialize(displayName, locale), LEGACY_TITLE_CHARACTER_LIMIT);
     UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
   }
 }
