@@ -3,7 +3,7 @@ plugins {
 }
 
 allprojects {
-  version = "2.0.0-RC9"
+  version = "2.0.0-RC10"
   group = "net.megavex"
   description = "Powerful packet-level sidebar/teams library for Paper/Spigot servers"
 
