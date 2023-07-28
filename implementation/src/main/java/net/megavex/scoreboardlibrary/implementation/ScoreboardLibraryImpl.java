@@ -72,6 +72,36 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
   }
 
+  public ScoreboardLibraryImpl(@NotNull Plugin plugin, @NotNull ScoreboardLibraryPacketAdapter<?> packetAdapter) {
+    Preconditions.checkNotNull(plugin, "plugin");
+    Preconditions.checkNotNull(packetAdapter, "packetAdapter");
+
+    try {
+      Class.forName("net.kyori.adventure.Adventure");
+    } catch (ClassNotFoundException e) {
+      throw new IllegalStateException("Adventure is not in the classpath");
+    }
+
+    this.plugin = plugin;
+    this.packetAdapter = packetAdapter;
+    this.localeProvider = this.packetAdapter.localeProvider;
+    this.taskScheduler = TaskScheduler.create(plugin);
+
+    boolean localeEventExists = false;
+    try {
+      Class.forName("org.bukkit.event.player.PlayerLocaleChangeEvent");
+      localeEventExists = true;
+    } catch (ClassNotFoundException ignored) {
+    }
+
+    if (localeEventExists) {
+      localeListener = new LocaleListener(this);
+      plugin.getServer().getPluginManager().registerEvents(localeListener, plugin);
+    } else {
+      localeListener = null;
+    }
+  }
+
   public @NotNull Plugin plugin() {
     return plugin;
   }
