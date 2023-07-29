@@ -11,7 +11,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Sidebars. Up to 42 characters (depends on the formatting) for 1.12.2 and below, no limit for newer versions
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
-- Doesn't require extra dependencies (assuming you're targetting the latest version of Paper)
+- Doesn't require extra dependencies (assuming you're targeting the latest version of Paper)
 - Packet-level, meaning it works with other scoreboard plugins (and is faster)
 - Supports [Folia](https://github.com/PaperMC/Folia)
 - Fully async. All packet work is done asynchronously so you can (but don't have to) use the library from the main
@@ -21,7 +21,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Packet Adapters
 
-- **modern.** Supports 1.17-1.20.1. Takes advantage of [Paper](https://papermc.io)s native adventure support to improve
+- **modern.** Supports 1.17-1.20.1. Takes advantage of [Paper](https://papermc.io)'s native adventure support to improve
   performance. [Spigot](https://www.spigotmc.org/) is also supported, but will have worse performance
 - **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
   classpath. Should work on all versions 1.8+
