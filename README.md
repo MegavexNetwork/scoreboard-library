@@ -136,7 +136,7 @@ SidebarComponent secondPage = SidebarComponent.builder()
   .addDynamicLine(() -> Component.text("Health: " + player.getHealth()))
   .build();
 
-List<SidebarComponent> pages = List.of(firstPage, secondPage);
+List<SidebarComponent> pages = Arrays.asList(firstPage, secondPage);
 SidebarAnimation<SidebarComponent> pageAnimation = new CollectionSidebarAnimation<>(pages);
 SidebarComponent paginatedComponent = SidebarComponent.animatedComponent(pageAnimation);
 

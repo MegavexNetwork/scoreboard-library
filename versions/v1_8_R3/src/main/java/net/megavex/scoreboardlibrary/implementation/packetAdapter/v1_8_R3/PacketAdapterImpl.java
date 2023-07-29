@@ -5,7 +5,7 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
@@ -18,7 +18,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<Pac
   static final Field objectiveModeField;
 
   static {
-    objectiveModeField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "d");
+    objectiveModeField = UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "d");
   }
 
   private final PacketPlayOutScoreboardDisplayObjective displayPacket = new PacketPlayOutScoreboardDisplayObjective();
@@ -26,17 +26,17 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<Pac
 
   public PacketAdapterImpl() {
     // Setup static packets
-    UnsafeUtilities.UNSAFE.putInt(
+    UnsafeUtil.UNSAFE.putInt(
       displayPacket,
-      UnsafeUtilities.UNSAFE.objectFieldOffset(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "a")),
+      UnsafeUtil.UNSAFE.objectFieldOffset(UnsafeUtil.getField(PacketPlayOutScoreboardDisplayObjective.class, "a")),
       POSITION_SIDEBAR
     );
-    UnsafeUtilities.setField(UnsafeUtilities.getField(PacketPlayOutScoreboardDisplayObjective.class, "b"), displayPacket, objectiveName);
+    UnsafeUtil.setField(UnsafeUtil.getField(PacketPlayOutScoreboardDisplayObjective.class, "b"), displayPacket, objectiveName);
 
-    UnsafeUtilities.setField(UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a"), removePacket, objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(
+    UnsafeUtil.setField(UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "a"), removePacket, objectiveName);
+    UnsafeUtil.UNSAFE.putInt(
       removePacket,
-      UnsafeUtilities.UNSAFE.objectFieldOffset(objectiveModeField),
+      UnsafeUtil.UNSAFE.objectFieldOffset(objectiveModeField),
       OBJECTIVE_MODE_REMOVE
     );
   }

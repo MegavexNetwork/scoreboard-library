@@ -5,7 +5,7 @@ import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -55,19 +55,19 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
 
       if (properties.displayName() != displayName) {
         var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.displayName());
-        UnsafeUtilities.setField(displayNameField, parameters, vanilla);
+        UnsafeUtil.setField(displayNameField, parameters, vanilla);
         displayName = properties.displayName();
       }
 
       if (properties.prefix() != prefix) {
         var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.prefix());
-        UnsafeUtilities.setField(prefixField, parameters, vanilla);
+        UnsafeUtil.setField(prefixField, parameters, vanilla);
         prefix = properties.prefix();
       }
 
       if (properties.suffix() != suffix) {
         var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.suffix());
-        UnsafeUtilities.setField(suffixField, parameters, vanilla);
+        UnsafeUtil.setField(suffixField, parameters, vanilla);
         suffix = properties.suffix();
       }
     }

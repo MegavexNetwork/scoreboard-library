@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.util.SidebarUtilities;
+import net.megavex.scoreboardlibrary.api.util.SidebarUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +43,7 @@ class NoopSidebar implements Sidebar {
 
   @Override
   public @NotNull Collection<Player> players() {
-    return closed ? Set.of() : Collections.unmodifiableSet(players);
+    return closed ? Collections.emptySet() : Collections.unmodifiableSet(players);
   }
 
   @Override
@@ -72,14 +72,14 @@ class NoopSidebar implements Sidebar {
 
   @Override
   public void line(int line, @Nullable Component value) {
-    SidebarUtilities.checkLineBounds(maxLines, line);
+    SidebarUtil.checkLineBounds(maxLines, line);
     checkClosed();
     lines[line] = value;
   }
 
   @Override
   public @Nullable Component line(int line) {
-    SidebarUtilities.checkLineBounds(maxLines, line);
+    SidebarUtil.checkLineBounds(maxLines, line);
     checkClosed();
     return lines[line];
   }

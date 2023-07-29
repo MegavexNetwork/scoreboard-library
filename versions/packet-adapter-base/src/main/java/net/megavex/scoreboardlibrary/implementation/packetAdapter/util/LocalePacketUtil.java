@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class LocalePacketUtilities {
-  private LocalePacketUtilities() {
+public final class LocalePacketUtil {
+  private LocalePacketUtil() {
   }
 
   public static <P> void sendLocalePackets(

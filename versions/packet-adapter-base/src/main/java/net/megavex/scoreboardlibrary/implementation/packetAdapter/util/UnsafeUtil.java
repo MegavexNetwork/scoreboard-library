@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.Objects;
 import sun.misc.Unsafe;
 
-public class UnsafeUtilities {
+public class UnsafeUtil {
   public static final Unsafe UNSAFE;
   private static final MethodType VOID_METHOD_TYPE = MethodType.methodType(void.class);
 
@@ -22,7 +22,7 @@ public class UnsafeUtilities {
     }
   }
 
-  private UnsafeUtilities() {
+  private UnsafeUtil() {
   }
 
   public static Field getField(Class<?> clazz, String name) {

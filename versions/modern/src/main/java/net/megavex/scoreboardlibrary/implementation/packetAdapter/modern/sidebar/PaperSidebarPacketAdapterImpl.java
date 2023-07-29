@@ -3,7 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sideba
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
@@ -32,7 +32,7 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {
-    UnsafeUtilities.setField(objectiveDisplayNameField, packet, displayName);
+    UnsafeUtil.setField(objectiveDisplayNameField, packet, displayName);
   }
 
   @Override

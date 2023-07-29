@@ -15,7 +15,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.Pa
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.TeamsPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.PacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
@@ -24,18 +24,18 @@ import org.jetbrains.annotations.NotNull;
 
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.setField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil.setField;
 
 public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
   private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(POSITION_SIDEBAR, null);
-  private final ClientboundSetObjectivePacket removePacket = UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
+  private final ClientboundSetObjectivePacket removePacket = UnsafeUtil.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup()).invoke();
   private boolean nativeAdventure;
 
   public PacketAdapterImpl() {
     setField(getField(ClientboundSetDisplayObjectivePacket.class, "b"), displayPacket, objectiveName);
     setField(getField(ClientboundSetObjectivePacket.class, "d"), removePacket, objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(removePacket, UnsafeUtilities.UNSAFE.objectFieldOffset(getField(ClientboundSetObjectivePacket.class, "g")), OBJECTIVE_MODE_REMOVE);
+    UnsafeUtil.UNSAFE.putInt(removePacket, UnsafeUtil.UNSAFE.objectFieldOffset(getField(ClientboundSetObjectivePacket.class, "g")), OBJECTIVE_MODE_REMOVE);
 
     try {
       Class.forName("io.papermc.paper.adventure.PaperAdventure");

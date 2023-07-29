@@ -5,8 +5,8 @@ import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
@@ -38,7 +38,7 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
     }
 
     private void sendTeamPacket(Collection<Player> players, boolean create) {
-      LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
+      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
         var parameters = parametersConstructor.invoke();
         fillParameters(parameters, locale);
         return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName(), parameters, properties.entries());
@@ -50,13 +50,13 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
       super.fillParameters(parameters, locale);
 
       var vanilla = packetAdapter().fromAdventure(properties.displayName(), locale);
-      UnsafeUtilities.setField(displayNameField, parameters, vanilla);
+      UnsafeUtil.setField(displayNameField, parameters, vanilla);
 
       vanilla = packetAdapter().fromAdventure(properties.prefix(), locale);
-      UnsafeUtilities.setField(prefixField, parameters, vanilla);
+      UnsafeUtil.setField(prefixField, parameters, vanilla);
 
       vanilla = packetAdapter().fromAdventure(properties.suffix(), locale);
-      UnsafeUtilities.setField(suffixField, parameters, vanilla);
+      UnsafeUtil.setField(suffixField, parameters, vanilla);
     }
   }
 }

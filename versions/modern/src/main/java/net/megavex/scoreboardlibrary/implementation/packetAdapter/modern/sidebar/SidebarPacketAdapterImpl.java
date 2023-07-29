@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
@@ -35,7 +35,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
     var vanilla = packetAdapter().fromAdventure(displayName, locale);
-    UnsafeUtilities.setField(objectiveDisplayNameField, packet, vanilla);
+    UnsafeUtil.setField(objectiveDisplayNameField, packet, vanilla);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
     if (sidebar().locale() != null) {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
-      LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
+      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
         var packet = objectivePacketConstructor.invoke();
         createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE);
         updateDisplayName(packet, sidebar().title(), locale);

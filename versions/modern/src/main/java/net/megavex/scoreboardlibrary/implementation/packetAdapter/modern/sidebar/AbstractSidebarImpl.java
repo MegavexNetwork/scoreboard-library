@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
@@ -16,14 +16,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil.getField;
 
 public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>, PacketAdapterImpl> {
-  static final UnsafeUtilities.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor =
-    UnsafeUtilities.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
-  static final Field objectiveNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "d"),
-    objectiveDisplayNameField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "e"),
-    objectiveRenderTypeField = UnsafeUtilities.getField(ClientboundSetObjectivePacket.class, "f");
+  static final UnsafeUtil.PacketConstructor<ClientboundSetObjectivePacket> objectivePacketConstructor =
+    UnsafeUtil.findPacketConstructor(ClientboundSetObjectivePacket.class, MethodHandles.lookup());
+  static final Field objectiveNameField = UnsafeUtil.getField(ClientboundSetObjectivePacket.class, "d"),
+    objectiveDisplayNameField = UnsafeUtil.getField(ClientboundSetObjectivePacket.class, "e"),
+    objectiveRenderTypeField = UnsafeUtil.getField(ClientboundSetObjectivePacket.class, "f");
   private static final Field objectiveModeField = getField(ClientboundSetObjectivePacket.class, "g");
 
   public AbstractSidebarImpl(PacketAdapterImpl impl, Sidebar sidebar) {
@@ -31,9 +31,9 @@ public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>
   }
 
   protected void createObjectivePacket(ClientboundSetObjectivePacket packet, int mode) {
-    UnsafeUtilities.setField(objectiveNameField, packet, packetAdapter().objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(objectiveModeField), mode);
-    UnsafeUtilities.setField(objectiveRenderTypeField, packet, ObjectiveCriteria.RenderType.INTEGER);
+    UnsafeUtil.setField(objectiveNameField, packet, packetAdapter().objectiveName);
+    UnsafeUtil.UNSAFE.putInt(packet, UnsafeUtil.UNSAFE.objectFieldOffset(objectiveModeField), mode);
+    UnsafeUtil.setField(objectiveRenderTypeField, packet, ObjectiveCriteria.RenderType.INTEGER);
   }
 
   @Override

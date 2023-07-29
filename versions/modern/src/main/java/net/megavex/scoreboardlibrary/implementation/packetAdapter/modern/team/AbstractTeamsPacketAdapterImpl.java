@@ -14,7 +14,7 @@ import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities.getField;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil.getField;
 
 public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, PacketAdapterImpl> {
   protected static final Field displayNameField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "a"),
@@ -72,8 +72,8 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   }
 
   abstract class TeamDisplayPacketAdapterImpl extends TeamDisplayPacketAdapter<Component> {
-    static final UnsafeUtilities.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
-      UnsafeUtilities.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
+    static final UnsafeUtil.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
+      UnsafeUtil.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
 
     public TeamDisplayPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
@@ -95,29 +95,29 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
 
     protected void fillTeamPacket(ClientboundSetPlayerTeamPacket packet, Collection<String> entries) {
       if (packet.getPlayers() != entries) {
-        UnsafeUtilities.setField(entriesField, packet, entries);
+        UnsafeUtil.setField(entriesField, packet, entries);
       }
     }
 
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
       var nameTagVisibilityKey = properties.nameTagVisibility().key();
       if (!Objects.equals(parameters.getNametagVisibility(), nameTagVisibilityKey)) {
-        UnsafeUtilities.setField(nameTagVisibilityField, parameters, nameTagVisibilityKey);
+        UnsafeUtil.setField(nameTagVisibilityField, parameters, nameTagVisibilityKey);
       }
 
       var collisionRuleKey = properties.collisionRule().key();
       if (!Objects.equals(parameters.getCollisionRule(), collisionRuleKey)) {
-        UnsafeUtilities.setField(collisionRuleField, parameters, collisionRuleKey);
+        UnsafeUtil.setField(collisionRuleField, parameters, collisionRuleKey);
       }
 
       var legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
       if (parameters.getColor() == null || parameters.getColor().getChar() != legacyChar) {
-        UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(legacyChar));
+        UnsafeUtil.setField(colorField, parameters, ChatFormatting.getByCode(legacyChar));
       }
 
       var options = properties.packOptions();
       if (parameters.getOptions() != options) {
-        UnsafeUtilities.UNSAFE.putInt(parameters, UnsafeUtilities.UNSAFE.objectFieldOffset(optionsField), options);
+        UnsafeUtil.UNSAFE.putInt(parameters, UnsafeUtil.UNSAFE.objectFieldOffset(optionsField), options);
       }
     }
   }

@@ -6,7 +6,7 @@ import java.util.Collection;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +55,7 @@ public class LegacyTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDispl
   }
 
   private void sendTeamPacket(Collection<Player> players, boolean update) {
-    LocalePacketUtilities.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null,
+    LocalePacketUtil.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null,
       packetAdapter.packetAdapter(),
       players,
       locale -> new WrapperPlayServerTeamsLegacy(

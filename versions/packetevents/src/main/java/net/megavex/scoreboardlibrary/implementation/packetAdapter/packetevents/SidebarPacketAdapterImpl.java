@@ -11,7 +11,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,7 +49,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
     if (sidebar().locale() != null) {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
-      LocalePacketUtilities.sendLocalePackets(
+      LocalePacketUtil.sendLocalePackets(
         packetAdapter().localeProvider,
         sidebar().locale(),
         packetAdapter(),

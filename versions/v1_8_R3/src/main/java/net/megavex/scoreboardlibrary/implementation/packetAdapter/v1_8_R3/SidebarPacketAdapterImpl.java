@@ -7,8 +7,8 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.minecraft.server.v1_8_R3.IScoreboardCriteria;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
@@ -21,13 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import static net.kyori.adventure.text.Component.empty;
 
 public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<PacketListenerPlayOut>, PacketAdapterImpl> {
-  private static final Field objectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "a"),
-    objectiveDisplayNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "b"),
-    objectiveHealthDisplayField = UnsafeUtilities.getField(PacketPlayOutScoreboardObjective.class, "c"),
-    scoreNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "a"),
-    scoreObjectiveNameField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "b"),
-    scoreScoreField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "c"),
-    scoreActionField = UnsafeUtilities.getField(PacketPlayOutScoreboardScore.class, "d");
+  private static final Field objectiveNameField = UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "a"),
+    objectiveDisplayNameField = UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "b"),
+    objectiveHealthDisplayField = UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "c"),
+    scoreNameField = UnsafeUtil.getField(PacketPlayOutScoreboardScore.class, "a"),
+    scoreObjectiveNameField = UnsafeUtil.getField(PacketPlayOutScoreboardScore.class, "b"),
+    scoreScoreField = UnsafeUtil.getField(PacketPlayOutScoreboardScore.class, "c"),
+    scoreActionField = UnsafeUtil.getField(PacketPlayOutScoreboardScore.class, "d");
 
   private final PacketPlayOutScoreboardObjective createPacket, updatePacket;
 
@@ -60,7 +60,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
     if (sidebar().locale() != null) {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
-      LocalePacketUtilities.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
+      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
         PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
         createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE, sidebar().title(), locale);
         return packet;
@@ -76,22 +76,22 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
   @Override
   public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
     PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
-    UnsafeUtilities.setField(scoreNameField, packet, line);
-    UnsafeUtilities.setField(scoreObjectiveNameField, packet, packetAdapter().objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(scoreScoreField), score);
-    UnsafeUtilities.setField(scoreActionField, packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
+    UnsafeUtil.setField(scoreNameField, packet, line);
+    UnsafeUtil.setField(scoreObjectiveNameField, packet, packetAdapter().objectiveName);
+    UnsafeUtil.UNSAFE.putInt(packet, UnsafeUtil.UNSAFE.objectFieldOffset(scoreScoreField), score);
+    UnsafeUtil.setField(scoreActionField, packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
     packetAdapter().sendPacket(players, packet);
   }
 
   private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
-    UnsafeUtilities.setField(objectiveNameField, packet, packetAdapter().objectiveName);
-    UnsafeUtilities.UNSAFE.putInt(packet, UnsafeUtilities.UNSAFE.objectFieldOffset(PacketAdapterImpl.objectiveModeField), mode);
-    UnsafeUtilities.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
+    UnsafeUtil.setField(objectiveNameField, packet, packetAdapter().objectiveName);
+    UnsafeUtil.UNSAFE.putInt(packet, UnsafeUtil.UNSAFE.objectFieldOffset(PacketAdapterImpl.objectiveModeField), mode);
+    UnsafeUtil.setField(objectiveHealthDisplayField, packet, IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER);
     updateDisplayName(packet, displayName, locale);
   }
 
   private void updateDisplayName(PacketPlayOutScoreboardObjective packet, Component displayName, Locale locale) {
     String value = LegacyFormatUtil.limitLegacyText(LegacyFormatUtil.serialize(displayName, locale), LEGACY_TITLE_CHARACTER_LIMIT);
-    UnsafeUtilities.setField(objectiveDisplayNameField, packet, value);
+    UnsafeUtil.setField(objectiveDisplayNameField, packet, value);
   }
 }
