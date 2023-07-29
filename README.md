@@ -108,7 +108,7 @@ You can make animations with `SidebarAnimation`:
 Component lineComponent = Component.text("Line that changes colors");
 Set<NamedTextColor> colors = NamedTextColor.NAMES.values();
 List<Component> frames = new ArrayList<>(colors.size());
-for (NamedTextColor color : colors){
+for (NamedTextColor color : colors) {
   frames.add(lineComponent.color(color));
 }
 
@@ -128,15 +128,15 @@ Player player = ...;
 
 SidebarComponent firstPage = SidebarComponent.builder()
   .addStaticLine(Component.text("First page"))
-  .addDynamicLine(() -> Component.text("Level: "+player.getLevel()))
+  .addDynamicLine(() -> Component.text("Level: " + player.getLevel()))
   .build();
 
 SidebarComponent secondPage = SidebarComponent.builder()
   .addStaticLine(Component.text("Second page"))
-  .addDynamicLine(() -> Component.text("Health: "+player.getHealth()))
+  .addDynamicLine(() -> Component.text("Health: " + player.getHealth()))
   .build();
 
-List<SidebarComponent> pages = List.of(firstPage,secondPage);
+List<SidebarComponent> pages = List.of(firstPage, secondPage);
 SidebarAnimation<SidebarComponent> pageAnimation = new CollectionSidebarAnimation<>(pages);
 SidebarComponent paginatedComponent = SidebarComponent.animatedComponent(pageAnimation);
 
@@ -259,7 +259,7 @@ TeamDisplay newTeamDisplay = team.createDisplay();
 newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 
 // Change the TeamDisplay a player sees like this:
-team.display(player,newTeamDisplay);
+team.display(player, newTeamDisplay);
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();
