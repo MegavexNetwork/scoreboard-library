@@ -1,6 +1,6 @@
 # Installation
 
-Latest version: `2.0.0-RC9`
+Latest version: `2.0.0-RC11`
 
 ## Gradle
 
