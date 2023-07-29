@@ -35,15 +35,15 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 
 ```java
 ScoreboardLibrary scoreboardLibrary;
-  try{
-  scoreboardLibrary=ScoreboardLibrary.loadScoreboardLibrary(plugin);
-  }catch(NoPacketAdapterAvailableException e){
+try {
+  scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
+} catch (NoPacketAdapterAvailableException e) {
   // If no packet adapter was found, you can fallback to the no-op implementation:
-  scoreboardLibrary=new NoopScoreboardLibrary();
-  }
+  scoreboardLibrary = new NoopScoreboardLibrary();
+}
 
 // On plugin shutdown:
-  scoreboardLibrary.close();
+scoreboardLibrary.close();
 ```
 
 ### Thread safety warning (Folia)
@@ -54,19 +54,19 @@ synchronisation to make sure you're using them from only one thread at a time.
 ### Sidebar (low-level)
 
 ```java
-Sidebar sidebar=scoreboardLibrary.createSidebar();
+Sidebar sidebar = scoreboardLibrary.createSidebar();
 
-  sidebar.title(Component.text("Sidebar Title"));
-  sidebar.line(0,Component.empty());
-  sidebar.line(1,Component.text("Line 1"));
-  sidebar.line(2,Component.text("Line 2"));
-  sidebar.line(2,Component.empty());
-  sidebar.line(3,Component.text("epicserver.net"));
+sidebar.title(Component.text("Sidebar Title"));
+sidebar.line(0, Component.empty());
+sidebar.line(1, Component.text("Line 1"));
+sidebar.line(2, Component.text("Line 2"));
+sidebar.line(2, Component.empty());
+sidebar.line(3, Component.text("epicserver.net"));
 
-  sidebar.addPlayer(player); // Add the player to the sidebar
+sidebar.addPlayer(player); // Add the player to the sidebar
 
 // After you've finished using the Sidebar, make sure to close it to prevent a memory leak:
-  sidebar.close();
+sidebar.close();
 ```
 
 ### Component sidebars
@@ -75,13 +75,13 @@ Component sidebars are an abstraction over the low-level `Sidebar`. They allow y
 Here's how you create a `SidebarComponent` with a static line:
 
 ```java
-SidebarComponent staticLine=SidebarComponent.staticLine(Component.text("A static line"));
+SidebarComponent staticLine = SidebarComponent.staticLine(Component.text("A static line"));
 ```
 
 You can chain multiple `SidebarComponent`s together using `SidebarComponent.builder()`:
 
 ```java
-SidebarComponent lines=SidebarComponent.builder()
+SidebarComponent lines = SidebarComponent.builder()
   .addComponent(SidebarComponent.staticLine(Component.text("A static line")))
   .addStaticLine(Component.text("Another static line")) // Shorthand for line above
   .build();
@@ -90,55 +90,55 @@ SidebarComponent lines=SidebarComponent.builder()
 To use these components, create a `ComponentSidebarLayout`:
 
 ```java
-ComponentSidebarLayout layout=new ComponentSidebarLayout(
+ComponentSidebarLayout layout = new ComponentSidebarLayout(
   SidebarComponent.staticLine(Component.text("Sidebar Title")),
   lines
-  );
+);
 
-  Sidebar sidebar=scoreboardLibrary.createSidebar();
+Sidebar sidebar = scoreboardLibrary.createSidebar();
 
 // Apply the title & lines components to the Sidebar
 // Do this every time the title or any line needs to be updated
-  layout.apply(sidebar);
+layout.apply(sidebar);
 ```
 
 You can make animations with `SidebarAnimation`:
 
 ```java
-Component lineComponent=Component.text("Line that changes colors");
-  Set<NamedTextColor> colors=NamedTextColor.NAMES.values();
-  List<Component> frames=new ArrayList<>(colors.size());
-  for(NamedTextColor color:colors){
+Component lineComponent = Component.text("Line that changes colors");
+Set<NamedTextColor> colors = NamedTextColor.NAMES.values();
+List<Component> frames = new ArrayList<>(colors.size());
+for (NamedTextColor color : colors){
   frames.add(lineComponent.color(color));
-  }
+}
 
-  SidebarAnimation<Component> animation=new CollectionSidebarAnimation<>(frames);
+SidebarAnimation<Component> animation = new CollectionSidebarAnimation<>(frames);
 // You can also implement SidebarAnimation yourself
 
-  SidebarComponent line=SidebarComponent.animatedLine(animation);
+SidebarComponent line = SidebarComponent.animatedLine(animation);
 
 // Advance to the next frame of the animation
-  animation.nextFrame();
+animation.nextFrame();
 ```
 
 Animations can be used for pagination:
 
 ```java
-Player player=...;
+Player player = ...;
 
-  SidebarComponent firstPage=SidebarComponent.builder()
+SidebarComponent firstPage = SidebarComponent.builder()
   .addStaticLine(Component.text("First page"))
-  .addDynamicLine(()->Component.text("Level: "+player.getLevel()))
+  .addDynamicLine(() -> Component.text("Level: "+player.getLevel()))
   .build();
 
-  SidebarComponent secondPage=SidebarComponent.builder()
+SidebarComponent secondPage = SidebarComponent.builder()
   .addStaticLine(Component.text("Second page"))
-  .addDynamicLine(()->Component.text("Health: "+player.getHealth()))
+  .addDynamicLine(() -> Component.text("Health: "+player.getHealth()))
   .build();
 
-  List<SidebarComponent> pages=List.of(firstPage,secondPage);
-  SidebarAnimation<SidebarComponent> pageAnimation=new CollectionSidebarAnimation<>(pages);
-  SidebarComponent paginatedComponent=SidebarComponent.animatedComponent(pageAnimation);
+List<SidebarComponent> pages = List.of(firstPage,secondPage);
+SidebarAnimation<SidebarComponent> pageAnimation = new CollectionSidebarAnimation<>(pages);
+SidebarComponent paginatedComponent = SidebarComponent.animatedComponent(pageAnimation);
 
 // ...
 ```
@@ -238,29 +238,29 @@ public class ExampleComponentSidebar {
 ### TeamManager
 
 ```java
-TeamManager teamManager=scoreboardLibrary.createTeamManager();
-  ScoreboardTeam team=teamManager.createIfAbsent("team_name");
+TeamManager teamManager = scoreboardLibrary.createTeamManager();
+ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 
 // A TeamDisplay holds all the display properties that a team can have (prefix, suffix etc.).
 // You can apply different TeamDisplays for each player so different players can see
 // different properties on a single ScoreboardTeam. However if you don't need that you can
 // use the default TeamDisplay that is created in every ScoreboardTeam.
-  TeamDisplay teamDisplay=team.defaultDisplay();
-  teamDisplay.displayName(Component.text("Team Display Name"));
-  teamDisplay.prefix(Component.text("[Prefix] "));
-  teamDisplay.suffix(Component.text(" [Suffix]"));
-  teamDisplay.playerColor(NamedTextColor.RED);
-  teamDisplay.addEntry(player.getName());
+TeamDisplay teamDisplay = team.defaultDisplay();
+teamDisplay.displayName(Component.text("Team Display Name"));
+teamDisplay.prefix(Component.text("[Prefix] "));
+teamDisplay.suffix(Component.text(" [Suffix]"));
+teamDisplay.playerColor(NamedTextColor.RED);
+teamDisplay.addEntry(player.getName());
 
-  teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
+teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
 
 // Create a new TeamDisplay like this:
-  TeamDisplay newTeamDisplay=team.createDisplay();
-  newTeamDisplay.displayName(Component.text("Other Team Display Name"));
+TeamDisplay newTeamDisplay = team.createDisplay();
+newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 
 // Change the TeamDisplay a player sees like this:
-  team.display(player,newTeamDisplay);
+team.display(player,newTeamDisplay);
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
-  teamManager.close();
+teamManager.close();
 ```
