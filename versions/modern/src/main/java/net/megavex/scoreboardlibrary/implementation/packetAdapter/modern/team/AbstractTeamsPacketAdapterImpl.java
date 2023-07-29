@@ -1,11 +1,11 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.team;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -13,8 +13,8 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.PacketAdapterImpl;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -57,7 +57,7 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     Collection<String> entries
   ) {
     try {
-      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? List.of() : entries);
+      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? Collections.emptyList() : entries);
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
@@ -111,7 +111,7 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
       }
 
       var legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
-      if (parameters.getColor() == null || parameters.getColor().code != legacyChar) {
+      if (parameters.getColor() == null || parameters.getColor().getChar() != legacyChar) {
         UnsafeUtilities.setField(colorField, parameters, ChatFormatting.getByCode(legacyChar));
       }
 

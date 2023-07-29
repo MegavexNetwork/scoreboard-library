@@ -22,9 +22,9 @@ dependencies {
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
 
   // Add packet adapter implementations you want:
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion")
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_20_R1:$scoreboardLibraryVersion")
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-packetevents:$scoreboardLibraryVersion")
+  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-modern:$scoreboardLibraryVersion") // 1.17+
+  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
+  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
 
   // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
   // Follow either of:
@@ -75,19 +75,19 @@ Then add the dependencies:
   <!-- Add packet adapter implementations you want: -->
   <dependency>
     <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
-    <artifactId>scoreboard-library-v1_8_R3</artifactId>
-    <version>{VERSION HERE}</version>
-    <scope>runtime</scope>
-  </dependency>
-  <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
-    <artifactId>scoreboard-library-v1_20_R1</artifactId>
+    <artifactId>scoreboard-library-modern</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
   <dependency>
     <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
     <artifactId>scoreboard-library-packetevents</artifactId>
+    <version>{VERSION HERE}</version>
+    <scope>runtime</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-v1_8_R3</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>

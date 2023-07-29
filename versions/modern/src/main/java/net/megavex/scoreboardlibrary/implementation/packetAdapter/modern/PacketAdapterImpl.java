@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
@@ -9,16 +9,16 @@ import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sidebar.PaperSidebarPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sidebar.SidebarPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.PaperTeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.TeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.PacketUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtilities;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.sidebar.PaperSidebarPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.sidebar.SidebarPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.team.PaperTeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.team.TeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_20_R1.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,6 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
     } catch (ClassNotFoundException ignored) {
     }
   }
-
 
   @Override
   public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
@@ -72,7 +71,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
 
   @Override
   public void sendPacket(@NotNull Player player, @NotNull Packet<?> packet) {
-    ((CraftPlayer) player).getHandle().connection.send(packet);
+    PacketUtil.sendPacket(player, packet);
   }
 
   public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
