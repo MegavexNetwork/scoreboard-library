@@ -1,11 +1,9 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
-import java.lang.reflect.Field;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
@@ -15,30 +13,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<PacketListenerPlayOut>> {
-  static final Field objectiveModeField;
-
-  static {
-    objectiveModeField = UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "d");
-  }
-
   private final PacketPlayOutScoreboardDisplayObjective displayPacket = new PacketPlayOutScoreboardDisplayObjective();
   private final PacketPlayOutScoreboardObjective removePacket = new PacketPlayOutScoreboardObjective();
 
   public PacketAdapterImpl() {
-    // Setup static packets
-    UnsafeUtil.UNSAFE.putInt(
-      displayPacket,
-      UnsafeUtil.UNSAFE.objectFieldOffset(UnsafeUtil.getField(PacketPlayOutScoreboardDisplayObjective.class, "a")),
-      POSITION_SIDEBAR
-    );
-    UnsafeUtil.setField(UnsafeUtil.getField(PacketPlayOutScoreboardDisplayObjective.class, "b"), displayPacket, objectiveName);
+    PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(displayPacket, POSITION_SIDEBAR);
+    PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(displayPacket, objectiveName);
 
-    UnsafeUtil.setField(UnsafeUtil.getField(PacketPlayOutScoreboardObjective.class, "a"), removePacket, objectiveName);
-    UnsafeUtil.UNSAFE.putInt(
-      removePacket,
-      UnsafeUtil.UNSAFE.objectFieldOffset(objectiveModeField),
-      OBJECTIVE_MODE_REMOVE
-    );
+    PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
+    PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, OBJECTIVE_MODE_REMOVE);
   }
 
   @Override

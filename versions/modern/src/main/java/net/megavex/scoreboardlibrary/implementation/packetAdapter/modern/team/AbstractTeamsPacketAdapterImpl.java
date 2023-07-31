@@ -1,9 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
@@ -13,37 +9,18 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.PacketConstructor;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket.Parameters;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil.getField;
-
 public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, PacketAdapterImpl> {
-  protected static final Field displayNameField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "a"),
-    prefixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "b"),
-    suffixField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "c"),
-    nameTagVisibilityField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "d"),
-    collisionRuleField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "e"),
-    colorField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "f"),
-    optionsField = getField(ClientboundSetPlayerTeamPacket.Parameters.class, "g"),
-    entriesField = getField(ClientboundSetPlayerTeamPacket.class, "j");
-  private static final Constructor<ClientboundSetPlayerTeamPacket> teamPacketConstructor;
-
-  static {
-    try {
-      teamPacketConstructor = ClientboundSetPlayerTeamPacket.class.getDeclaredConstructor(String.class, int.class, Optional.class, Collection.class);
-      teamPacketConstructor.setAccessible(true);
-    } catch (NoSuchMethodException e) {
-      throw new ExceptionInInitializerError(e);
-    }
-  }
-
   protected ClientboundSetPlayerTeamPacket removePacket;
 
   AbstractTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
@@ -53,14 +30,10 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   public static ClientboundSetPlayerTeamPacket createTeamsPacket(
     int method,
     String name,
-    ClientboundSetPlayerTeamPacket.Parameters parameters,
+    Parameters parameters,
     Collection<String> entries
   ) {
-    try {
-      return teamPacketConstructor.newInstance(name, method, Optional.ofNullable(parameters), entries == null ? Collections.emptyList() : entries);
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      throw new RuntimeException(e);
-    }
+    return PacketAccessors.TEAM_PACKET_CONSTRUCTOR.invoke(name, method, Optional.ofNullable(parameters), entries == null ? Collections.emptyList() : entries);
   }
 
   @Override
@@ -72,8 +45,8 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   }
 
   abstract class TeamDisplayPacketAdapterImpl extends TeamDisplayPacketAdapter<Component> {
-    static final UnsafeUtil.PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> parametersConstructor =
-      UnsafeUtil.findPacketConstructor(ClientboundSetPlayerTeamPacket.Parameters.class, MethodHandles.lookup());
+    static final PacketConstructor<Parameters> parametersConstructor =
+      ReflectUtil.findPacketConstructor(Parameters.class);
 
     public TeamDisplayPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
@@ -95,29 +68,29 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
 
     protected void fillTeamPacket(ClientboundSetPlayerTeamPacket packet, Collection<String> entries) {
       if (packet.getPlayers() != entries) {
-        UnsafeUtil.setField(entriesField, packet, entries);
+        PacketAccessors.ENTRIES_FIELD.set(packet, entries);
       }
     }
 
-    protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
+    protected void fillParameters(Parameters parameters, Locale locale) {
       var nameTagVisibilityKey = properties.nameTagVisibility().key();
       if (!Objects.equals(parameters.getNametagVisibility(), nameTagVisibilityKey)) {
-        UnsafeUtil.setField(nameTagVisibilityField, parameters, nameTagVisibilityKey);
+        PacketAccessors.NAME_TAG_VISIBILITY_FIELD.set(parameters, nameTagVisibilityKey);
       }
 
       var collisionRuleKey = properties.collisionRule().key();
       if (!Objects.equals(parameters.getCollisionRule(), collisionRuleKey)) {
-        UnsafeUtil.setField(collisionRuleField, parameters, collisionRuleKey);
+        PacketAccessors.COLLISION_RULE_FIELD.set(parameters, collisionRuleKey);
       }
 
       var legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
       if (parameters.getColor() == null || parameters.getColor().getChar() != legacyChar) {
-        UnsafeUtil.setField(colorField, parameters, ChatFormatting.getByCode(legacyChar));
+        PacketAccessors.COLOR_FIELD.set(parameters, ChatFormatting.getByCode(legacyChar));
       }
 
       var options = properties.packOptions();
       if (parameters.getOptions() != options) {
-        UnsafeUtil.UNSAFE.putInt(parameters, UnsafeUtil.UNSAFE.objectFieldOffset(optionsField), options);
+        PacketAccessors.OPTIONS_FIELD.set(parameters, options);
       }
     }
   }

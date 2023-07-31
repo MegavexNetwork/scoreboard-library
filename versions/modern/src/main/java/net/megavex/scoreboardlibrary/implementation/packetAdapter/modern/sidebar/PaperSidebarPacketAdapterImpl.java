@@ -3,8 +3,8 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sideba
 import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
@@ -23,8 +23,8 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
 
   private void initialisePackets() {
     if (createPacket == null || updatePacket == null) {
-      createPacket = objectivePacketConstructor.invoke();
-      updatePacket = objectivePacketConstructor.invoke();
+      createPacket = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
+      updatePacket = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
       createObjectivePacket(createPacket, MODE_CREATE);
       createObjectivePacket(updatePacket, MODE_UPDATE);
       updateTitle(sidebar().title());
@@ -32,7 +32,7 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {
-    UnsafeUtil.setField(objectiveDisplayNameField, packet, displayName);
+    PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, displayName);
   }
 
   @Override

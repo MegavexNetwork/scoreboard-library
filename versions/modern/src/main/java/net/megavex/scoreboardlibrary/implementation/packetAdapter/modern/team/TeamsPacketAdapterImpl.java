@@ -5,9 +5,9 @@ import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -49,14 +49,14 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
     protected void fillParameters(ClientboundSetPlayerTeamPacket.Parameters parameters, Locale locale) {
       super.fillParameters(parameters, locale);
 
-      var vanilla = packetAdapter().fromAdventure(properties.displayName(), locale);
-      UnsafeUtil.setField(displayNameField, parameters, vanilla);
+      net.minecraft.network.chat.Component vanilla = packetAdapter().fromAdventure(properties.displayName(), locale);
+      PacketAccessors.DISPLAY_NAME_FIELD.set(parameters, vanilla);
 
       vanilla = packetAdapter().fromAdventure(properties.prefix(), locale);
-      UnsafeUtil.setField(prefixField, parameters, vanilla);
+      PacketAccessors.PREFIX_FIELD.set(parameters, vanilla);
 
       vanilla = packetAdapter().fromAdventure(properties.suffix(), locale);
-      UnsafeUtil.setField(suffixField, parameters, vanilla);
+      PacketAccessors.SUFFIX_FIELD.set(parameters, vanilla);
     }
   }
 }

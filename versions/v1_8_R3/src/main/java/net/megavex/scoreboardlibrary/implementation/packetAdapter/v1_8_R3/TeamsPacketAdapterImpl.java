@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
@@ -8,7 +7,6 @@ import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketListenerPlayOut;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
@@ -19,15 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
 
 public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketListenerPlayOut>, PacketAdapterImpl> {
-  private static final Field teamNameField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "a"),
-    teamDisplayNameField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "b"),
-    teamPrefixField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "c"),
-    teamSuffixField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "d"),
-    teamNameTagVisibilityField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "e"),
-    teamEntriesField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "g"),
-    teamModeField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "h"),
-    teamRulesField = UnsafeUtil.getField(PacketPlayOutScoreboardTeam.class, "i");
-
   private PacketPlayOutScoreboardTeam removePacket;
 
   public TeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
@@ -38,8 +27,8 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
   public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
       removePacket = new PacketPlayOutScoreboardTeam();
-      UnsafeUtil.setField(teamNameField, removePacket, teamName());
-      UnsafeUtil.UNSAFE.putInt(removePacket, UnsafeUtil.UNSAFE.objectFieldOffset(teamModeField), MODE_REMOVE);
+      PacketAccessors.TEAM_NAME_FIELD.set(removePacket, teamName());
+      PacketAccessors.TEAM_MODE_FIELD.set(removePacket, MODE_REMOVE);
     }
 
     packetAdapter().sendPacket(players, removePacket);
@@ -82,9 +71,9 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
 
     private void sendTeamEntryPacket(Collection<Player> players, Collection<String> entries, int action) {
       PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
-      UnsafeUtil.setField(teamNameField, packet, teamName());
-      UnsafeUtil.UNSAFE.putInt(packet, UnsafeUtil.UNSAFE.objectFieldOffset(teamModeField), action);
-      UnsafeUtil.setField(teamEntriesField, packet, entries);
+      PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName());
+      PacketAccessors.TEAM_MODE_FIELD.set(packet, action);
+      PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, entries);
       packetAdapter().sendPacket(players, packet);
     }
 
@@ -95,15 +84,15 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
         String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
 
         PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
-        UnsafeUtil.setField(teamNameField, packet, teamName());
-        UnsafeUtil.UNSAFE.putInt(packet, UnsafeUtil.UNSAFE.objectFieldOffset(teamModeField), update ? MODE_UPDATE : MODE_CREATE);
-        UnsafeUtil.setField(teamDisplayNameField, packet, displayName);
-        UnsafeUtil.setField(teamPrefixField, packet, prefix);
-        UnsafeUtil.setField(teamSuffixField, packet, suffix);
-        UnsafeUtil.setField(teamNameTagVisibilityField, packet, properties.nameTagVisibility().key());
-        UnsafeUtil.UNSAFE.putInt(packet, UnsafeUtil.UNSAFE.objectFieldOffset(teamRulesField), properties.packOptions());
+        PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName());
+        PacketAccessors.TEAM_MODE_FIELD.set(packet, update ? MODE_UPDATE : MODE_CREATE);
+        PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
+        PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
+        PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
+        PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
+        PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
         if (!update) {
-          UnsafeUtil.setField(teamEntriesField, packet, properties.entries());
+          PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.entries());
         }
 
         return packet;

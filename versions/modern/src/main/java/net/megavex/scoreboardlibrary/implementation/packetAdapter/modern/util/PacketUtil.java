@@ -71,7 +71,7 @@ public final class PacketUtil {
       ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) PLAYER_CONNECTION.invoke(handle);
       SEND_PACKET.invoke(connection, packet);
     } catch (Throwable e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException("couldn't send packet to player", e);
     }
   }
 }

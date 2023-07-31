@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.UnsafeUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +20,11 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
 
     var locale = sidebar.locale();
     if (locale != null) {
-      createPacket = objectivePacketConstructor.invoke();
+      createPacket = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
       createObjectivePacket(createPacket, MODE_CREATE);
       updateDisplayName(createPacket, sidebar.title(), locale);
 
-      updatePacket = objectivePacketConstructor.invoke();
+      updatePacket = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
       createObjectivePacket(updatePacket, MODE_UPDATE);
       updateDisplayName(updatePacket, sidebar.title(), locale);
     } else {
@@ -35,7 +35,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
     var vanilla = packetAdapter().fromAdventure(displayName, locale);
-    UnsafeUtil.setField(objectiveDisplayNameField, packet, vanilla);
+    PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, vanilla);
   }
 
   @Override
@@ -53,7 +53,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
       LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
-        var packet = objectivePacketConstructor.invoke();
+        var packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
         createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE);
         updateDisplayName(packet, sidebar().title(), locale);
         return packet;
