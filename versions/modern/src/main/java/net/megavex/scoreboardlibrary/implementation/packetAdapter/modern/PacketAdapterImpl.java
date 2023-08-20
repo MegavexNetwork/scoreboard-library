@@ -2,6 +2,8 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
 import java.util.Locale;
 import java.util.Objects;
+
+import net.kyori.adventure.Adventure;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -36,7 +38,14 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
 
     try {
       Class.forName("io.papermc.paper.adventure.PaperAdventure");
-      nativeAdventure = true;
+
+      // Hide from relocation checkers
+      String notRelocatedPackage = "net.ky".concat("ori.adventure.text");
+
+      // The native adventure optimisations only work when the adventure library isn't relocated
+      if (Component.class.getPackage().getName().equals(notRelocatedPackage)) {
+        nativeAdventure = true;
+      }
     } catch (ClassNotFoundException ignored) {
     }
   }
