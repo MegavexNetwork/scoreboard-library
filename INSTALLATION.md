@@ -30,6 +30,8 @@ dependencies {
   // Follow either of:
   // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
   // - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
+  // Example how to load PacketEvents in your plugin:
+  // https://github.com/retrooper/packetevents-example/blob/aa20c0cee117c06d5f86e61d52f9ad4b22df97c0/shading-packetevents/src/main/java/main/Main.java
 
   // If using the 1.8 version implementation, add Adventure as well:
   implementation("net.kyori:adventure-platform-bukkit:4.0.1")
@@ -96,7 +98,10 @@ Then add the dependencies:
     If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
     Follow either of:
     - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
-    - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents -->
+    - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
+    Example how to load PacketEvents in your plugin:
+    https://github.com/retrooper/packetevents-example/blob/aa20c0cee117c06d5f86e61d52f9ad4b22df97c0/shading-packetevents/src/main/java/main/Main.java 
+    -->
 
   <!-- If using the 1.8 version implementation, add Adventure as well: -->
   <dependency>
