@@ -21,6 +21,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<?>, PacketAdapterImpl> {
+  static final PacketConstructor<Parameters> parametersConstructor =
+    ReflectUtil.findPacketConstructor(Parameters.class);
+
   protected ClientboundSetPlayerTeamPacket removePacket;
 
   AbstractTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
@@ -45,9 +48,6 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   }
 
   abstract class TeamDisplayPacketAdapterImpl extends TeamDisplayPacketAdapter<Component> {
-    static final PacketConstructor<Parameters> parametersConstructor =
-      ReflectUtil.findPacketConstructor(Parameters.class);
-
     public TeamDisplayPacketAdapterImpl(ImmutableTeamProperties<Component> properties) {
       super(properties);
     }
@@ -73,22 +73,22 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
     }
 
     protected void fillParameters(Parameters parameters, Locale locale) {
-      var nameTagVisibilityKey = properties.nameTagVisibility().key();
+      String nameTagVisibilityKey = properties.nameTagVisibility().key();
       if (!Objects.equals(parameters.getNametagVisibility(), nameTagVisibilityKey)) {
         PacketAccessors.NAME_TAG_VISIBILITY_FIELD.set(parameters, nameTagVisibilityKey);
       }
 
-      var collisionRuleKey = properties.collisionRule().key();
+      String collisionRuleKey = properties.collisionRule().key();
       if (!Objects.equals(parameters.getCollisionRule(), collisionRuleKey)) {
         PacketAccessors.COLLISION_RULE_FIELD.set(parameters, collisionRuleKey);
       }
 
-      var legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
+      char legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
       if (parameters.getColor() == null || parameters.getColor().getChar() != legacyChar) {
         PacketAccessors.COLOR_FIELD.set(parameters, ChatFormatting.getByCode(legacyChar));
       }
 
-      var options = properties.packOptions();
+      int options = properties.packOptions();
       if (parameters.getOptions() != options) {
         PacketAccessors.OPTIONS_FIELD.set(parameters, options);
       }

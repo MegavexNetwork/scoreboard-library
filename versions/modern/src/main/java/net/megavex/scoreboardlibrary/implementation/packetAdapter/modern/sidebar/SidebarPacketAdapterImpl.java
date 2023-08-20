@@ -18,7 +18,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   public SidebarPacketAdapterImpl(PacketAdapterImpl impl, Sidebar sidebar) {
     super(impl, sidebar);
 
-    var locale = sidebar.locale();
+    Locale locale = sidebar.locale();
     if (locale != null) {
       createPacket = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
       createObjectivePacket(createPacket, MODE_CREATE);
@@ -34,13 +34,13 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
-    var vanilla = packetAdapter().fromAdventure(displayName, locale);
+    net.minecraft.network.chat.Component vanilla = packetAdapter().fromAdventure(displayName, locale);
     PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, vanilla);
   }
 
   @Override
   public void updateTitle(@NotNull Component displayName) {
-    var locale = sidebar().locale();
+    Locale locale = sidebar().locale();
     if (locale != null) {
       updateDisplayName(createPacket, displayName, locale);
       updateDisplayName(updatePacket, displayName, locale);
@@ -53,7 +53,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
       LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
-        var packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
+        ClientboundSetObjectivePacket packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
         createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE);
         updateDisplayName(packet, sidebar().title(), locale);
         return packet;

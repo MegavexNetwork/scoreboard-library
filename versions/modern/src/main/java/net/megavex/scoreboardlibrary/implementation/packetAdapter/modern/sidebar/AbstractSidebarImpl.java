@@ -31,7 +31,7 @@ public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>
 
   @Override
   public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
-    var packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, packetAdapter().objectiveName, line, score);
+    ClientboundSetScorePacket packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, packetAdapter().objectiveName, line, score);
     packetAdapter().sendPacket(players, packet);
   }
 }

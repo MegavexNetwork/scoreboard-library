@@ -23,7 +23,7 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
   }
 
   private class TeamDisplayPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamDisplayPacketAdapterImpl {
-    final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
+    protected final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
     protected final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(MODE_CREATE, teamName(), parameters, null);
     protected final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(MODE_UPDATE, teamName(), parameters, null);
     private Component displayName, prefix, suffix;
@@ -54,19 +54,19 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
       super.fillParameters(parameters, locale);
 
       if (properties.displayName() != displayName) {
-        var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.displayName());
+        net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(properties.displayName());
         PacketAccessors.DISPLAY_NAME_FIELD.set(parameters, vanilla);
         displayName = properties.displayName();
       }
 
       if (properties.prefix() != prefix) {
-        var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.prefix());
+        net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(properties.prefix());
         PacketAccessors.PREFIX_FIELD.set(parameters, vanilla);
         prefix = properties.prefix();
       }
 
       if (properties.suffix() != suffix) {
-        var vanilla = NativeAdventureUtil.fromAdventureComponent(properties.suffix());
+        net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(properties.suffix());
         PacketAccessors.SUFFIX_FIELD.set(parameters, vanilla);
         suffix = properties.suffix();
       }
