@@ -1,11 +1,12 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect;
 
+import org.jetbrains.annotations.NotNull;
+import sun.misc.Unsafe;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
-import org.jetbrains.annotations.NotNull;
-import sun.misc.Unsafe;
 
 public class ReflectUtil {
   // Inspired by

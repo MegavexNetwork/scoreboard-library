@@ -2,10 +2,11 @@ package net.megavex.scoreboardlibrary.api.sidebar.component.animation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Collection;
+import java.util.List;
 
 public final class CollectionSidebarAnimation<T> implements FramedSidebarAnimation<T> {
   private final List<T> frames;

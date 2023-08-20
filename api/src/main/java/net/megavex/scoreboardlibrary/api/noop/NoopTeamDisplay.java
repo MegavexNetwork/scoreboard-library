@@ -1,9 +1,5 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
@@ -13,6 +9,10 @@ import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static net.kyori.adventure.text.Component.empty;
 

@@ -1,12 +1,13 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
-import java.util.Locale;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.util.Locale;
 
 /**
  * no-op implementation of ScoreboardLibrary.

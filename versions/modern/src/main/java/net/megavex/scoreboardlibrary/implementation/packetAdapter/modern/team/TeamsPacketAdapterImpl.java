@@ -1,7 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 
-import java.util.Collection;
-import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
@@ -11,6 +9,9 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePac
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.Locale;
 
 public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
   public TeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {

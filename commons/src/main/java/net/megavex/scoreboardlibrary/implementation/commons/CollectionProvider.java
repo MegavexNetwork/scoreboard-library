@@ -1,16 +1,12 @@
 package net.megavex.scoreboardlibrary.implementation.commons;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.jetbrains.annotations.NotNull;
+import java.util.*;
 
 public final class CollectionProvider {
   private static final MethodHandle mapConstructor, setConstructor, listConstructor;

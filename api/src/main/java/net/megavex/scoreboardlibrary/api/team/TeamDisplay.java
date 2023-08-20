@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.api.team;
 
-import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
@@ -8,6 +7,8 @@ import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * Represents the display information of a {@link ScoreboardTeam}.

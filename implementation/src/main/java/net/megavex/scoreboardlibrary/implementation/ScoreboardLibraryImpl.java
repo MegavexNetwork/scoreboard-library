@@ -2,11 +2,6 @@ package net.megavex.scoreboardlibrary.implementation;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -24,6 +19,12 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   private final Plugin plugin;

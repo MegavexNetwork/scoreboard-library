@@ -1,14 +1,15 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.Consumer;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class SingleLocaleSidebar extends AbstractSidebar {
   private final Locale locale;

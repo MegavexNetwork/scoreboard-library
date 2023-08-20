@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.api.sidebar.component;
 
-import java.util.Arrays;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -8,11 +7,10 @@ import net.megavex.scoreboardlibrary.api.sidebar.component.animation.CollectionS
 import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnimation;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 
 import static net.kyori.adventure.text.Component.text;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ComponentSidebarLayoutTest {
   private final Sidebar sidebar = new NoopScoreboardLibrary().createSidebar();

@@ -1,15 +1,16 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.util;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Function;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
 
 public final class LocalePacketUtil {
   private LocalePacketUtil() {

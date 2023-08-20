@@ -1,15 +1,16 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sidebar;
 
-import java.util.Collection;
-import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.Locale;
 
 public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   private final ClientboundSetObjectivePacket createPacket;

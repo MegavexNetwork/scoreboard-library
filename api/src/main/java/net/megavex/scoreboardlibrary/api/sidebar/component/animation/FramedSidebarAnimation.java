@@ -1,8 +1,9 @@
 package net.megavex.scoreboardlibrary.api.sidebar.component.animation;
 
-import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.List;
 
 /**
  * A {@link SidebarAnimation} with predetermined frames

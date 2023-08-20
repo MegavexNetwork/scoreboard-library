@@ -1,7 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
-import java.util.Collection;
-import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
@@ -16,6 +14,8 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore.EnumScoreboardA
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.Locale;
 
 import static net.kyori.adventure.text.Component.empty;
 

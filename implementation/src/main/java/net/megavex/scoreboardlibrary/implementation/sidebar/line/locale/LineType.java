@@ -1,10 +1,11 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
-import java.util.function.BiFunction;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
+
+import java.util.function.BiFunction;
 
 public enum LineType {
   MODERN(ModernLocaleLine::new),

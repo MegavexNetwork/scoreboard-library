@@ -1,9 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
-import java.util.Locale;
-import java.util.Objects;
-
-import net.kyori.adventure.Adventure;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -23,6 +19,8 @@ import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
+import java.util.Objects;
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 

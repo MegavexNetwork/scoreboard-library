@@ -1,9 +1,10 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 
-import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 public abstract class TeamsPacketAdapter<P, T extends ScoreboardLibraryPacketAdapter<P>> {
   protected static final int LEGACY_CHARACTER_LIMIT = 16;

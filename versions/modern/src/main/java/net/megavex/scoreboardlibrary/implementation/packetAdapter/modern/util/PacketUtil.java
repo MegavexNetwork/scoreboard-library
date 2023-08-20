@@ -1,13 +1,14 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.CraftBukkitUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.entity.Player;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 
 public final class PacketUtil {
   private static final MethodHandle GET_HANDLE;

@@ -1,7 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
-import java.util.Collection;
-import java.util.Optional;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.FieldAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.PacketConstructor;
@@ -12,6 +10,9 @@ import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+
+import java.util.Collection;
+import java.util.Optional;
 
 public final class PacketAccessors {
   public static final PacketConstructor<ClientboundSetObjectivePacket> OBJECTIVE_PACKET_CONSTRUCTOR =

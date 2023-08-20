@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.
 
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerTeams;
-import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.GlobalTranslator;
@@ -12,6 +11,8 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.P
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 public class AdventureTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> {
   private final TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter;

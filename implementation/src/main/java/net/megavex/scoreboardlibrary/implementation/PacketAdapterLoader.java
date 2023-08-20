@@ -1,11 +1,12 @@
 package net.megavex.scoreboardlibrary.implementation;
 
-import java.lang.reflect.InvocationTargetException;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.CraftBukkitUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.InvocationTargetException;
 
 public final class PacketAdapterLoader {
   private PacketAdapterLoader() {

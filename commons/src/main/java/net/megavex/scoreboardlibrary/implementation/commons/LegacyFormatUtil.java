@@ -1,8 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.commons;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -11,6 +8,9 @@ import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 import static net.kyori.adventure.text.Component.empty;
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;

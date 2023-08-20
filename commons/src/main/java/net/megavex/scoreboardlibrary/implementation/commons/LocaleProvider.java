@@ -1,12 +1,13 @@
 package net.megavex.scoreboardlibrary.implementation.commons;
 
+import net.kyori.adventure.translation.Translator;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Locale;
-import net.kyori.adventure.translation.Translator;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public interface LocaleProvider {
   Locale DEFAULT_LOCALE = Locale.US;

@@ -1,13 +1,10 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
-import java.util.Collection;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.FieldAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
-import net.minecraft.server.v1_8_R3.IScoreboardCriteria;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardDisplayObjective;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardObjective;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardScore;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
+import net.minecraft.server.v1_8_R3.*;
+
+import java.util.Collection;
 
 final class PacketAccessors {
   static final FieldAccessor<PacketPlayOutScoreboardObjective, String> OBJECTIVE_NAME_FIELD =

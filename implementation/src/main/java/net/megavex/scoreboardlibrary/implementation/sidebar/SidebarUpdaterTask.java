@@ -1,9 +1,10 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
-import java.util.logging.Level;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.scheduler.RunningTask;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Level;
 
 public class SidebarUpdaterTask implements Runnable {
   private final ScoreboardLibraryImpl scoreboardLibrary;

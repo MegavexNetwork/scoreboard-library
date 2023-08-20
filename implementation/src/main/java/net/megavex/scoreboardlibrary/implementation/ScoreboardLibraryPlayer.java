@@ -1,7 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation;
 
-import java.util.List;
-import java.util.UUID;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.team.TeamManagerImpl;
@@ -9,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.UUID;
 
 public class ScoreboardLibraryPlayer {
   private final UUID playerUuid;

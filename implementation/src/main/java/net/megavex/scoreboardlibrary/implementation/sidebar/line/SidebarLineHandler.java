@@ -1,7 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
-import java.util.Collection;
-import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -9,6 +7,9 @@ import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LocaleLine;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
+import java.util.Set;
 
 public class SidebarLineHandler {
   private final LineType lineType;

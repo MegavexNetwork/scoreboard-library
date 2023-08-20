@@ -1,14 +1,15 @@
 package net.megavex.scoreboardlibrary.implementation.scheduler;
 
+import net.kyori.adventure.util.Ticks;
+import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import net.kyori.adventure.util.Ticks;
-import org.bukkit.Server;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
 class FoliaTaskScheduler implements TaskScheduler {
   private static final Class<?> asyncSchedulerClass;

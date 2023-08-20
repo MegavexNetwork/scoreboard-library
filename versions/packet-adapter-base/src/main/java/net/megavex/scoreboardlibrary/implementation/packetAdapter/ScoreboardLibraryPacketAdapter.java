@@ -1,11 +1,11 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 
-import java.util.UUID;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider.localeProvider;
 

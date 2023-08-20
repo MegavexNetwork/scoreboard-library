@@ -1,12 +1,13 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
-import java.util.Collections;
-import java.util.Locale;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.Locale;
 
 public class LocaleLineHandler {
   private final AbstractSidebar sidebar;

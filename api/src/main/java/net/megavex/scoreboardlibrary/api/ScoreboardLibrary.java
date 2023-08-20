@@ -1,7 +1,5 @@
 package net.megavex.scoreboardlibrary.api;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Locale;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -10,6 +8,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 
 /**
  * Allows creating {@link Sidebar}s and {@link TeamManager}s.

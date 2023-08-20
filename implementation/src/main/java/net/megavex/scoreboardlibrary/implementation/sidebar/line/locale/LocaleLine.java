@@ -1,11 +1,12 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
-import java.util.Collection;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 public interface LocaleLine<C> extends ImmutableTeamProperties<C> {
   @NotNull GlobalLineInfo info();

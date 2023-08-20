@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.jetbrains.annotations.NotNull;
 
-
 import static net.kyori.adventure.text.Component.empty;
 
 public final class ComponentSidebarLayout {

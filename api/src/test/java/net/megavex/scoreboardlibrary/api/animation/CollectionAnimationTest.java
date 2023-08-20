@@ -1,10 +1,10 @@
 package net.megavex.scoreboardlibrary.api.animation;
 
-import java.util.Arrays;
-import java.util.List;
 import net.megavex.scoreboardlibrary.api.sidebar.component.animation.CollectionSidebarAnimation;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

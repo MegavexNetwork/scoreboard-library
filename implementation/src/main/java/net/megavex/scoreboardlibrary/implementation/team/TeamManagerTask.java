@@ -1,8 +1,9 @@
 package net.megavex.scoreboardlibrary.implementation.team;
 
-import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 public class TeamManagerTask {
   private TeamManagerTask() {
