@@ -16,7 +16,7 @@ jobs:
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
           distribution: 'temurin'
       - name: Build the project
         uses: gradle/gradle-build-action@v2.4.2
