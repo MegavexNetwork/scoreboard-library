@@ -57,6 +57,8 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
   @Override
   public void value(@NotNull Component renderedComponent) {
+    // I really need to rewrite this
+
     @NotNull String legacyValue = legacySection().serialize(renderedComponent);
 
     oldPlayer = player;
@@ -69,14 +71,13 @@ class LegacyLocaleLine implements LocaleLine<String> {
         this.player = info.player();
       }
     } else {
-      boolean color = legacyValue.charAt(15) == LegacyComponentSerializer.SECTION_CHAR;
+      boolean endsWithSection = legacyValue.charAt(15) == LegacyComponentSerializer.SECTION_CHAR;
 
-      int prefixEnd = color ? 15 : 16;
+      int prefixEnd = endsWithSection ? 15 : 16;
       this.prefix = legacyValue.substring(0, prefixEnd);
 
-      this.player = info.player() + ChatColor.RESET
-        + ChatColor.getLastColors(prefix +
-        LegacyComponentSerializer.SECTION_CHAR + (color ? legacyValue.charAt(16) : ""));
+      String last = prefix + LegacyComponentSerializer.SECTION_CHAR + (endsWithSection ? legacyValue.charAt(16) : "");
+      this.player = info.player() + ChatColor.RESET + ChatColor.getLastColors(last);
 
       int playerEnd = prefixEnd;
       if (legacyValue.length() > 32) {
@@ -87,7 +88,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
         player += legacyValue.substring(prefixEnd, playerEnd);
       }
 
-      this.suffix = legacyValue.substring(playerEnd + (color ? 2 : 0));
+      this.suffix = legacyValue.substring(playerEnd + (endsWithSection ? 2 : 0));
       if (suffix.length() > 16) {
         String newSuffix = suffix.substring(0, 16);
         if (newSuffix.endsWith(String.valueOf(LegacyComponentSerializer.SECTION_CHAR)) &&

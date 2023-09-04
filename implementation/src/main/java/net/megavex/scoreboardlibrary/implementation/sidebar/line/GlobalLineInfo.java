@@ -3,33 +3,28 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GlobalLineInfo {
-  private static final String[] lineColors = new String[15];
-
-  static {
-    ChatColor[] values = ChatColor.values();
-    for (int i = 0; i < lineColors.length; i++) {
-      lineColors[i] = values[i].toString();
-    }
-  }
-
+  private final String player;
   private final int line;
   private final TeamsPacketAdapter<?, ?> packetAdapter;
   private Component value;
   private int objectiveScore;
   private boolean updateScore;
 
-  public GlobalLineInfo(@NotNull AbstractSidebar sidebar, int line) {
+  public GlobalLineInfo(@NotNull AbstractSidebar sidebar, @NotNull String player, int line) {
+    this.player = player;
     this.line = line;
-    this.packetAdapter = sidebar.scoreboardLibrary().packetAdapter().createTeamPacketAdapter("sidebar_line_" + line);
+    this.packetAdapter = sidebar
+      .scoreboardLibrary()
+      .packetAdapter()
+      .createTeamPacketAdapter("sidebar_line_" + line);
   }
 
   public @NotNull String player() {
-    return lineColors[line];
+    return player;
   }
 
   public int line() {

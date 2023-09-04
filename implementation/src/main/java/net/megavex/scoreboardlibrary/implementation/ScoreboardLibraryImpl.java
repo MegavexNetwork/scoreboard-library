@@ -93,8 +93,8 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   public @NotNull Sidebar createSidebar(int maxLines, @Nullable Locale locale) {
     checkClosed();
 
-    if (maxLines <= 0 || maxLines > Sidebar.MAX_LINES) {
-      throw new IllegalArgumentException("maxLines");
+    if (maxLines <= 0) {
+      throw new IllegalArgumentException("invalid maxLines value: " + maxLines);
     }
 
     AbstractSidebar sidebar;

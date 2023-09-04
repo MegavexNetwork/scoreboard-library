@@ -16,8 +16,9 @@ import java.util.Locale;
  */
 @ApiStatus.NonExtendable
 public interface Sidebar {
-  // Constants
-
+  /**
+   * The max amount of lines a vanilla client can display at once.
+   */
   int MAX_LINES = 15;
 
   // Main

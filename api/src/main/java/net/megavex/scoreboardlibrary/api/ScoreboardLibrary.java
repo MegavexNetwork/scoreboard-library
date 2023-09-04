@@ -49,7 +49,7 @@ public interface ScoreboardLibrary {
   }
 
   /**
-   * Creates a {@link Sidebar}.
+   * Creates a {@link Sidebar} with max amount of lines set to {@value Sidebar#MAX_LINES} (vanilla limit).
    *
    * @return Sidebar
    */
@@ -60,17 +60,19 @@ public interface ScoreboardLibrary {
   /**
    * Creates a {@link Sidebar}.
    *
-   * @param maxLines Max amount of lines the sidebar will have
+   * @param maxLines Max amount of lines the sidebar will have.
+   *                 Note that vanilla clients can only display {@value Sidebar#MAX_LINES} lines at once
    * @return Sidebar
    */
-  default @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines) {
+  default @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines) {
     return createSidebar(maxLines, null);
   }
 
   /**
    * Creates a {@link Sidebar}.
    *
-   * @param maxLines Max amount of lines the sidebar will have
+   * @param maxLines Max amount of lines the sidebar will have.
+   *                 Note that vanilla clients can only display {@value Sidebar#MAX_LINES} lines at once
    * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
    *                 or null if the locale should depend on the player
    * @return Sidebar

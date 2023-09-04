@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.PlayerNameProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,7 @@ import static net.kyori.adventure.text.Component.empty;
 public abstract class AbstractSidebar implements Sidebar {
   private final ScoreboardLibraryImpl scoreboardLibrary;
   private final SidebarPacketAdapter<?, ?> packetAdapter;
+  private final List<String> linePlayerNames;
 
   private final GlobalLineInfo[] lines;
   private Component title = empty();
@@ -37,6 +39,7 @@ public abstract class AbstractSidebar implements Sidebar {
   public AbstractSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     this.scoreboardLibrary = scoreboardLibrary;
     this.packetAdapter = scoreboardLibrary.packetAdapter().createSidebarPacketAdapter(this);
+    this.linePlayerNames = PlayerNameProvider.provideLinePlayerNames(maxLines);
     this.lines = new GlobalLineInfo[maxLines];
   }
 
@@ -250,7 +253,7 @@ public abstract class AbstractSidebar implements Sidebar {
   private @NotNull GlobalLineInfo getLineInfo(int line) {
     GlobalLineInfo globalLineInfo = lines[line];
     if (globalLineInfo == null) {
-      globalLineInfo = lines[line] = new GlobalLineInfo(this, line);
+      globalLineInfo = lines[line] = new GlobalLineInfo(this, linePlayerNames.get(line), line);
       updateScores();
     }
 
