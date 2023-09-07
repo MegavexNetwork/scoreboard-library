@@ -31,7 +31,7 @@ dependencies {
   // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
   // - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
   // Example how to load PacketEvents in your plugin:
-  // https://github.com/retrooper/packetevents-example/blob/aa20c0cee117c06d5f86e61d52f9ad4b22df97c0/shading-packetevents/src/main/java/main/Main.java
+  // https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java
 
   // If using the 1.8 version implementation, add Adventure as well:
   implementation("net.kyori:adventure-platform-bukkit:4.0.1")
@@ -100,7 +100,7 @@ Then add the dependencies:
     - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
     - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
     Example how to load PacketEvents in your plugin:
-    https://github.com/retrooper/packetevents-example/blob/aa20c0cee117c06d5f86e61d52f9ad4b22df97c0/shading-packetevents/src/main/java/main/Main.java 
+    https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java 
     -->
 
   <!-- If using the 1.8 version implementation, add Adventure as well: -->
