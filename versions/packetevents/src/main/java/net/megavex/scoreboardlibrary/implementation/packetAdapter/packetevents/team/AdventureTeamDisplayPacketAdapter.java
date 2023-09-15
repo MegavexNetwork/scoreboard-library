@@ -65,7 +65,7 @@ public class AdventureTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDi
       Component suffix = GlobalTranslator.render(properties.suffix(), locale);
       WrapperPlayServerTeams.NameTagVisibility nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
       WrapperPlayServerTeams.CollisionRule collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
-      NamedTextColor color = properties.playerColor();
+      NamedTextColor color = properties.playerColor() != null ? properties.playerColor() : NamedTextColor.WHITE;
       WrapperPlayServerTeams.OptionData optionData = WrapperPlayServerTeams.OptionData.fromValue((byte) properties.packOptions());
 
       WrapperPlayServerTeams.ScoreBoardTeamInfo info = new WrapperPlayServerTeams.ScoreBoardTeamInfo(
