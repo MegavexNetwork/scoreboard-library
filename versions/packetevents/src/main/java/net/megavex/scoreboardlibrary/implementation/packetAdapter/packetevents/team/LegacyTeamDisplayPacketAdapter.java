@@ -56,7 +56,7 @@ public class LegacyTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDispl
   }
 
   private void sendTeamPacket(Collection<Player> players, boolean update) {
-    LocalePacketUtil.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null,
+    LocalePacketUtil.sendLocalePackets(packetAdapter.packetAdapter().localeProvider(), null,
       packetAdapter.packetAdapter(),
       players,
       locale -> new WrapperPlayServerTeamsLegacy(

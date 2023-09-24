@@ -12,10 +12,13 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.Pa
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.TeamsPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.PacketUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
+import net.minecraft.world.scores.DisplaySlot;
+import net.minecraft.world.scores.Objective;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,15 +28,11 @@ import java.util.Objects;
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
 public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
-  private final ClientboundSetDisplayObjectivePacket displayPacket = new ClientboundSetDisplayObjectivePacket(POSITION_SIDEBAR, null);
-  private final ClientboundSetObjectivePacket removePacket = ReflectUtil.findPacketConstructor(ClientboundSetObjectivePacket.class).invoke();
-  private boolean nativeAdventure;
+  private final ClientboundSetDisplayObjectivePacket displayPacket = createSidebarDisplayPacket();
+  private final ClientboundSetObjectivePacket removePacket = createRemoveSidebarPacket();
+  private boolean isNativeAdventure;
 
   public PacketAdapterImpl() {
-    PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(displayPacket, objectiveName);
-    PacketAccessors.SET_OBJECTIVE_NAME.set(removePacket, objectiveName);
-    PacketAccessors.SET_OBJECTIVE_MODE.set(removePacket, OBJECTIVE_MODE_REMOVE);
-
     try {
       Class.forName("io.papermc.paper.adventure.PaperAdventure");
 
@@ -42,15 +41,40 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
 
       // The native adventure optimisations only work when the adventure library isn't relocated
       if (Component.class.getPackage().getName().equals(notRelocatedPackage)) {
-        nativeAdventure = true;
+        isNativeAdventure = true;
       }
     } catch (ClassNotFoundException ignored) {
     }
   }
 
+  private ClientboundSetDisplayObjectivePacket createSidebarDisplayPacket() {
+    ClientboundSetDisplayObjectivePacket displayPacket;
+    try {
+      Class.forName("net.minecraft.world.scores.DisplaySlot"); // Added in 1.20.2
+      displayPacket = new ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, null);
+    } catch (ClassNotFoundException ignored) {
+      ConstructorAccessor<ClientboundSetDisplayObjectivePacket> constructor = ReflectUtil.constructorAccessor(
+        ClientboundSetDisplayObjectivePacket.class,
+        int.class,
+        Objective.class
+      );
+      displayPacket = constructor.invoke(POSITION_SIDEBAR, null);
+    }
+
+    PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(displayPacket, objectiveName());
+    return displayPacket;
+  }
+
+  private ClientboundSetObjectivePacket createRemoveSidebarPacket() {
+    ClientboundSetObjectivePacket packet = ReflectUtil.findPacketConstructor(ClientboundSetObjectivePacket.class).invoke();
+    PacketAccessors.SET_OBJECTIVE_NAME.set(packet, objectiveName());
+    PacketAccessors.SET_OBJECTIVE_MODE.set(packet, OBJECTIVE_MODE_REMOVE);
+    return packet;
+  }
+
   @Override
   public @NotNull SidebarPacketAdapter<Packet<?>, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar) {
-    return nativeAdventure ? new PaperSidebarPacketAdapterImpl(this, sidebar) : new SidebarPacketAdapterImpl(this, sidebar);
+    return isNativeAdventure ? new PaperSidebarPacketAdapterImpl(this, sidebar) : new SidebarPacketAdapterImpl(this, sidebar);
   }
 
   @Override
@@ -65,7 +89,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
 
   @Override
   public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
-    return nativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName) : new TeamsPacketAdapterImpl(this, teamName);
+    return isNativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName) : new TeamsPacketAdapterImpl(this, teamName);
   }
 
   @Override
@@ -79,7 +103,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
   }
 
   public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
-    if (nativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
+    if (isNativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
 
     component = GlobalTranslator.render(component, Objects.requireNonNull(locale));
     return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(component));

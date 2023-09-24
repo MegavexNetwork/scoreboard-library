@@ -22,9 +22,9 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
       throw new IllegalStateException("PacketEvents isn't loaded");
     }
 
-    this.displayPacket = new WrapperPlayServerDisplayScoreboard(POSITION_SIDEBAR, this.objectiveName);
+    this.displayPacket = new WrapperPlayServerDisplayScoreboard(POSITION_SIDEBAR, objectiveName());
     this.removePacket = new WrapperPlayServerScoreboardObjective(
-      this.objectiveName,
+      objectiveName(),
       WrapperPlayServerScoreboardObjective.ObjectiveMode.REMOVE,
       null,
       null

@@ -39,11 +39,16 @@ public class TeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
     }
 
     private void sendTeamPacket(Collection<Player> players, boolean create) {
-      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
-        ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters = parametersConstructor.invoke();
-        fillParameters(parameters, locale);
-        return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName(), parameters, properties.entries());
-      });
+      LocalePacketUtil.sendLocalePackets(
+        packetAdapter().localeProvider(),
+        null,
+        packetAdapter(),
+        players, locale -> {
+          ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters = parametersConstructor.invoke();
+          fillParameters(parameters, locale);
+          return createTeamsPacket(create ? MODE_CREATE : MODE_UPDATE, teamName(), parameters, properties.entries());
+        }
+      );
     }
 
     @Override

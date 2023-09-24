@@ -78,25 +78,30 @@ public class TeamsPacketAdapterImpl extends TeamsPacketAdapter<Packet<PacketList
     }
 
     private void sendTeamPacket(Collection<Player> players, boolean update) {
-      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, null, packetAdapter(), players, locale -> {
-        String displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
-        String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
-        String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
+      LocalePacketUtil.sendLocalePackets(
+        packetAdapter().localeProvider(),
+        null,
+        packetAdapter(),
+        players, locale -> {
+          String displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
+          String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
+          String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamsPacketAdapter.LEGACY_CHARACTER_LIMIT);
 
-        PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
-        PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName());
-        PacketAccessors.TEAM_MODE_FIELD.set(packet, update ? MODE_UPDATE : MODE_CREATE);
-        PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
-        PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
-        PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
-        PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
-        PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
-        if (!update) {
-          PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.entries());
+          PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+          PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName());
+          PacketAccessors.TEAM_MODE_FIELD.set(packet, update ? MODE_UPDATE : MODE_CREATE);
+          PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
+          PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
+          PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
+          PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
+          PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
+          if (!update) {
+            PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.entries());
+          }
+
+          return packet;
         }
-
-        return packet;
-      });
+      );
     }
 
     protected abstract String toLegacy(C component, Locale locale);

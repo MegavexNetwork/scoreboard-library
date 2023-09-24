@@ -2,7 +2,7 @@ package net.megavex.scoreboardlibrary.implementation;
 
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.CraftBukkitUtil;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,13 +26,8 @@ public final class PacketAdapterLoader {
   }
 
   private static @Nullable Class<?> findAndLoadImplementationClass() {
-    String version = CraftBukkitUtil.version();
-    Class<?> nmsClass = tryLoadImplementationClass(version);
-    if (nmsClass != null) {
-      return nmsClass;
-    }
-
-    nmsClass = tryLoadModern(version);
+    String version = Bukkit.getServer().getBukkitVersion();
+    Class<?> nmsClass = tryLoadVersion(version);
     if (nmsClass != null) {
       return nmsClass;
     }
@@ -40,16 +35,24 @@ public final class PacketAdapterLoader {
     return tryLoadPacketEvents();
   }
 
-  private static @Nullable Class<?> tryLoadModern(@NotNull String version) {
+  private static @Nullable Class<?> tryLoadVersion(@NotNull String version) {
     // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
     switch (version) {
-      case "v1_17_R1":
-      case "v1_18_R1":
-      case "v1_18_R2":
-      case "v1_19_R1":
-      case "v1_19_R2":
-      case "v1_19_R3":
-      case "v1_20_R1":
+      case "1.8.8-R0.1-SNAPSHOT":
+        return tryLoadImplementationClass("v1_8_R3");
+      case "1.17-R0.1-SNAPSHOT":
+      case "1.17.1-R0.1-SNAPSHOT":
+      case "1.18-R0.1-SNAPSHOT":
+      case "1.18.1-R0.1-SNAPSHOT":
+      case "1.18.2-R0.1-SNAPSHOT":
+      case "1.19-R0.1-SNAPSHOT":
+      case "1.19.1-R0.1-SNAPSHOT":
+      case "1.19.2-R0.1-SNAPSHOT":
+      case "1.19.3-R0.1-SNAPSHOT":
+      case "1.19.4-R0.1-SNAPSHOT":
+      case "1.20-R0.1-SNAPSHOT":
+      case "1.20.1-R0.1-SNAPSHOT":
+      case "1.20.2-R0.1-SNAPSHOT":
         return tryLoadImplementationClass("modern");
       default:
         return null;
@@ -73,7 +76,8 @@ public final class PacketAdapterLoader {
 
   private static @Nullable Class<?> tryLoadImplementationClass(@NotNull String name) {
     try {
-      return Class.forName("net.megavex.scoreboardlibrary.implementation.packetAdapter." + name + ".PacketAdapterImpl");
+      String path = "net.megavex.scoreboardlibrary.implementation.packetAdapter." + name + ".PacketAdapterImpl";
+      return Class.forName(path);
     } catch (ClassNotFoundException ignored) {
       return null;
     }

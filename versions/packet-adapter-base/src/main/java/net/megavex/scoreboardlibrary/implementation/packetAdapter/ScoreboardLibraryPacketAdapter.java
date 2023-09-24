@@ -7,19 +7,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-import static net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider.localeProvider;
-
 public abstract class ScoreboardLibraryPacketAdapter<P> {
   protected static final int POSITION_SIDEBAR = 1;
   protected static final int OBJECTIVE_MODE_REMOVE = 1;
 
-  public final String objectiveName;
-  public final LocaleProvider localeProvider;
+  private final String objectiveName;
+  private final LocaleProvider localeProvider;
 
   public ScoreboardLibraryPacketAdapter() {
     String random = UUID.randomUUID().toString().substring(0, 5);
     this.objectiveName = "_s" + random;
-    this.localeProvider = localeProvider();
+    this.localeProvider = LocaleProvider.localeProvider();
+  }
+
+  public @NotNull String objectiveName() {
+    return objectiveName;
+  }
+
+  public @NotNull LocaleProvider localeProvider() {
+    return localeProvider;
   }
 
   // Sidebar

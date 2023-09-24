@@ -20,19 +20,24 @@ public abstract class AbstractSidebarImpl extends SidebarPacketAdapter<Packet<?>
   }
 
   protected void createObjectivePacket(ClientboundSetObjectivePacket packet, int mode) {
-    PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, packetAdapter().objectiveName);
+    PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, packetAdapter().objectiveName());
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, mode);
     PacketAccessors.OBJECTIVE_RENDER_TYPE_FIELD.set(packet, ObjectiveCriteria.RenderType.INTEGER);
   }
 
   @Override
   public void removeLine(@NotNull Collection<Player> players, @NotNull String line) {
-    packetAdapter().sendPacket(players, new ClientboundSetScorePacket(ServerScoreboard.Method.REMOVE, packetAdapter().objectiveName, line, 0));
+    packetAdapter().sendPacket(players, new ClientboundSetScorePacket(ServerScoreboard.Method.REMOVE, packetAdapter().objectiveName(), line, 0));
   }
 
   @Override
   public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
-    ClientboundSetScorePacket packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, packetAdapter().objectiveName, line, score);
+    ClientboundSetScorePacket packet = new ClientboundSetScorePacket(
+      ServerScoreboard.Method.CHANGE,
+      packetAdapter().objectiveName(),
+      line,
+      score
+    );
     packetAdapter().sendPacket(players, packet);
   }
 }

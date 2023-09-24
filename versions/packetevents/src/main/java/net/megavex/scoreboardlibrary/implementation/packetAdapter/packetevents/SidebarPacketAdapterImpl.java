@@ -50,7 +50,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
       LocalePacketUtil.sendLocalePackets(
-        packetAdapter().localeProvider,
+        packetAdapter().localeProvider(),
         sidebar().locale(),
         packetAdapter(),
         players,
@@ -70,7 +70,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
       new WrapperPlayServerUpdateScore(
         line,
         WrapperPlayServerUpdateScore.Action.REMOVE_ITEM,
-        packetAdapter().objectiveName,
+        packetAdapter().objectiveName(),
         Optional.empty()
       )
     );
@@ -83,7 +83,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
       new WrapperPlayServerUpdateScore(
         line,
         WrapperPlayServerUpdateScore.Action.CREATE_OR_UPDATE_ITEM,
-        packetAdapter().objectiveName,
+        packetAdapter().objectiveName(),
         Optional.of(score)
       )
     );
@@ -91,7 +91,7 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<PacketWrapper
 
   private WrapperPlayServerScoreboardObjective createObjectivePacket(ObjectiveMode mode, Component displayName, Locale locale) {
     return new WrapperPlayServerScoreboardObjective(
-      packetAdapter().objectiveName,
+      packetAdapter().objectiveName(),
       mode,
       GlobalTranslator.render(displayName, locale),
       WrapperPlayServerScoreboardObjective.RenderType.INTEGER

@@ -59,32 +59,37 @@ public class AdventureTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDi
   }
 
   private void sendTeamPacket(Collection<Player> players, boolean update) {
-    LocalePacketUtil.sendLocalePackets(packetAdapter.packetAdapter().localeProvider, null, packetAdapter.packetAdapter(), players, locale -> {
-      Component displayName = GlobalTranslator.render(properties.displayName(), locale);
-      Component prefix = GlobalTranslator.render(properties.prefix(), locale);
-      Component suffix = GlobalTranslator.render(properties.suffix(), locale);
-      WrapperPlayServerTeams.NameTagVisibility nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
-      WrapperPlayServerTeams.CollisionRule collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
-      NamedTextColor color = properties.playerColor() != null ? properties.playerColor() : NamedTextColor.WHITE;
-      WrapperPlayServerTeams.OptionData optionData = WrapperPlayServerTeams.OptionData.fromValue((byte) properties.packOptions());
+    LocalePacketUtil.sendLocalePackets(
+      packetAdapter.packetAdapter().localeProvider(),
+      null,
+      packetAdapter.packetAdapter(),
+      players,
+      locale -> {
+        Component displayName = GlobalTranslator.render(properties.displayName(), locale);
+        Component prefix = GlobalTranslator.render(properties.prefix(), locale);
+        Component suffix = GlobalTranslator.render(properties.suffix(), locale);
+        WrapperPlayServerTeams.NameTagVisibility nameTagVisibility = WrapperPlayServerTeams.NameTagVisibility.values()[properties.nameTagVisibility().ordinal()];
+        WrapperPlayServerTeams.CollisionRule collisionRule = WrapperPlayServerTeams.CollisionRule.values()[properties.collisionRule().ordinal()];
+        NamedTextColor color = properties.playerColor() != null ? properties.playerColor() : NamedTextColor.WHITE;
+        WrapperPlayServerTeams.OptionData optionData = WrapperPlayServerTeams.OptionData.fromValue((byte) properties.packOptions());
 
-      WrapperPlayServerTeams.ScoreBoardTeamInfo info = new WrapperPlayServerTeams.ScoreBoardTeamInfo(
-        displayName,
-        prefix,
-        suffix,
-        nameTagVisibility,
-        collisionRule,
-        color,
-        optionData
-      );
+        WrapperPlayServerTeams.ScoreBoardTeamInfo info = new WrapperPlayServerTeams.ScoreBoardTeamInfo(
+          displayName,
+          prefix,
+          suffix,
+          nameTagVisibility,
+          collisionRule,
+          color,
+          optionData
+        );
 
-      return new WrapperPlayServerTeams(
-        packetAdapter.teamName(),
-        update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE,
-        info,
-        properties.entries()
-      );
-    });
+        return new WrapperPlayServerTeams(
+          packetAdapter.teamName(),
+          update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE,
+          info,
+          properties.entries()
+        );
+      });
   }
 }
 

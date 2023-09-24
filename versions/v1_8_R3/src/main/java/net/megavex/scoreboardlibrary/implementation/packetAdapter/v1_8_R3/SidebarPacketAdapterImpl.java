@@ -51,11 +51,16 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
     if (sidebar().locale() != null) {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
     } else {
-      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
-        PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
-        createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE, sidebar().title(), locale);
-        return packet;
-      });
+      LocalePacketUtil.sendLocalePackets(
+        packetAdapter().localeProvider(),
+        sidebar().locale(),
+        packetAdapter(),
+        players, locale -> {
+          PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
+          createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE, sidebar().title(), locale);
+          return packet;
+        }
+      );
     }
   }
 
@@ -68,14 +73,14 @@ public class SidebarPacketAdapterImpl extends SidebarPacketAdapter<Packet<Packet
   public void score(@NotNull Collection<Player> players, int score, @NotNull String line) {
     PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore();
     PacketAccessors.SCORE_NAME_FIELD.set(packet, line);
-    PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, packetAdapter().objectiveName);
+    PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, packetAdapter().objectiveName());
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, score);
     PacketAccessors.SCORE_ACTION_FIELD.set(packet, EnumScoreboardAction.CHANGE);
     packetAdapter().sendPacket(players, packet);
   }
 
   private void createObjectivePacket(PacketPlayOutScoreboardObjective packet, int mode, Component displayName, Locale locale) {
-    PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, packetAdapter().objectiveName);
+    PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, packetAdapter().objectiveName());
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, mode);
     PacketAccessors.OBJECTIVE_HEALTH_DISPLAY_FIELD.set(packet, EnumScoreboardHealthDisplay.INTEGER);
     updateDisplayName(packet, displayName, locale);

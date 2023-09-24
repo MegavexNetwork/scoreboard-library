@@ -18,9 +18,9 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<Pac
 
   public PacketAdapterImpl() {
     PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(displayPacket, POSITION_SIDEBAR);
-    PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(displayPacket, objectiveName);
+    PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(displayPacket, objectiveName());
 
-    PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
+    PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName());
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, OBJECTIVE_MODE_REMOVE);
   }
 

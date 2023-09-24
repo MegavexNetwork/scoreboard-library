@@ -1,9 +1,9 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
 
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.CraftBukkitUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandle;
@@ -19,9 +19,11 @@ public final class PacketUtil {
   }
 
   static {
+    String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
+
     Class<?> craftPlayer;
     try {
-      craftPlayer = Class.forName("org.bukkit.craftbukkit." + CraftBukkitUtil.version() + ".entity.CraftPlayer");
+      craftPlayer = Class.forName(cbPackage + ".entity.CraftPlayer");
     } catch (ClassNotFoundException e) {
       throw new ExceptionInInitializerError(e);
     }
@@ -50,17 +52,20 @@ public final class PacketUtil {
     PLAYER_CONNECTION = playerConnection;
 
     MethodType sendMethodType = MethodType.methodType(void.class, Packet.class);
-    MethodHandle sendPacket;
-    try {
-      sendPacket = lookup.findVirtual(ServerGamePacketListenerImpl.class, "a", sendMethodType);
-    } catch (NoSuchMethodException e) {
+    MethodHandle sendPacket = null;
+
+    String[] sendPacketNames = {"a", "sendPacket", "b"};
+    for (String name : sendPacketNames) {
       try {
-        sendPacket = lookup.findVirtual(ServerGamePacketListenerImpl.class, "sendPacket", sendMethodType);
-      } catch (NoSuchMethodException | IllegalAccessException ex) {
-        throw new ExceptionInInitializerError(ex);
+        sendPacket = lookup.findVirtual(ServerGamePacketListenerImpl.class, name, sendMethodType);
+      } catch (NoSuchMethodException ignored) {
+      } catch (IllegalAccessException e) {
+        throw new ExceptionInInitializerError(e);
       }
-    } catch (IllegalAccessException e) {
-      throw new ExceptionInInitializerError(e);
+    }
+
+    if (sendPacket == null) {
+      throw new ExceptionInInitializerError(new RuntimeException("Couldn't find send packet method"));
     }
 
     SEND_PACKET = sendPacket;

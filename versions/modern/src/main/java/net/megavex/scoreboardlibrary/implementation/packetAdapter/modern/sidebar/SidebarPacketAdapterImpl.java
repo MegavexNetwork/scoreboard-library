@@ -52,13 +52,19 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
   public void sendObjectivePacket(@NotNull Collection<Player> players, @NotNull ObjectivePacket type) {
     if (sidebar().locale() != null) {
       packetAdapter().sendPacket(players, type == ObjectivePacket.CREATE ? createPacket : updatePacket);
-    } else {
-      LocalePacketUtil.sendLocalePackets(packetAdapter().localeProvider, sidebar().locale(), packetAdapter(), players, locale -> {
+      return;
+    }
+
+    LocalePacketUtil.sendLocalePackets(
+      packetAdapter().localeProvider(),
+      sidebar().locale(),
+      packetAdapter(),
+      players, locale -> {
         ClientboundSetObjectivePacket packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
         createObjectivePacket(packet, type == ObjectivePacket.CREATE ? MODE_CREATE : MODE_UPDATE);
         updateDisplayName(packet, sidebar().title(), locale);
         return packet;
-      });
-    }
+      }
+    );
   }
 }
