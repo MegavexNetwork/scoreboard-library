@@ -3,9 +3,12 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective.PaperObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective.SpigotObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sidebar.PaperSidebarPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.sidebar.SidebarPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.PaperTeamsPacketAdapterImpl;
@@ -21,6 +24,7 @@ import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -88,6 +92,11 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
   }
 
   @Override
+  public @NotNull ObjectivesPacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
+    return isNativeAdventure ? new PaperObjectivePacketAdapter(this, objectiveName) : new SpigotObjectivePacketAdapter(this, objectiveName);
+  }
+
+  @Override
   public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
     return isNativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName) : new TeamsPacketAdapterImpl(this, teamName);
   }
@@ -102,10 +111,18 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
     PacketUtil.sendPacket(player, packet);
   }
 
-  public net.minecraft.network.chat.Component fromAdventure(Component component, Locale locale) {
-    if (isNativeAdventure) return NativeAdventureUtil.fromAdventureComponent(component);
+  public net.minecraft.network.chat.Component fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
+    if (isNativeAdventure) {
+      return NativeAdventureUtil.fromAdventureComponent(adventure);
+    }
 
-    component = GlobalTranslator.render(component, Objects.requireNonNull(locale));
-    return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(component));
+    Component rendered;
+    if (locale != null) {
+      rendered = GlobalTranslator.render(adventure, Objects.requireNonNull(locale));
+    } else {
+      rendered = adventure;
+    }
+
+    return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(rendered));
   }
 }

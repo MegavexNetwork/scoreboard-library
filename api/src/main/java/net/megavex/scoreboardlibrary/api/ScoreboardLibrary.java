@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api;
 
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.bukkit.plugin.Plugin;
@@ -85,6 +86,8 @@ public interface ScoreboardLibrary {
    * @return TeamManager
    */
   @NotNull TeamManager createTeamManager();
+
+  @NotNull ObjectiveManager createObjectiveManager();
 
   /**
    * Closes this scoreboard-library instance.

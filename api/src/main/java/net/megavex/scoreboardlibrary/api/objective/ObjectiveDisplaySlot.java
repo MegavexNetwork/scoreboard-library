@@ -7,9 +7,17 @@ import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.NonExtendable
 public interface ObjectiveDisplaySlot {
-  PlayerList PLAYER_LIST = new PlayerList();
-  Sidebar SIDEBAR = new Sidebar();
-  BelowName BELOW_NAME = new BelowName();
+  static @NotNull PlayerList playerList() {
+    return PlayerList.INSTANCE;
+  }
+
+  static @NotNull Sidebar sidebar() {
+    return Sidebar.INSTANCE;
+  }
+
+  static @NotNull BelowName belowName() {
+    return BelowName.INSTANCE;
+  }
 
   static @NotNull TeamSidebar teamSidebar(@NotNull NamedTextColor teamColor) {
     Preconditions.checkNotNull(teamColor);
@@ -17,17 +25,38 @@ public interface ObjectiveDisplaySlot {
   }
 
   class PlayerList implements ObjectiveDisplaySlot {
+    private static final PlayerList INSTANCE = new PlayerList();
+
     private PlayerList() {
+    }
+
+    @Override
+    public String toString() {
+      return "PlayerList";
     }
   }
 
   class Sidebar implements ObjectiveDisplaySlot {
+    private static final Sidebar INSTANCE = new Sidebar();
+
     private Sidebar() {
+    }
+
+    @Override
+    public String toString() {
+      return "Sidebar";
     }
   }
 
   class BelowName implements ObjectiveDisplaySlot {
+    private static final BelowName INSTANCE = new BelowName();
+
     private BelowName() {
+    }
+
+    @Override
+    public String toString() {
+      return "BelowName";
     }
   }
 
@@ -40,6 +69,24 @@ public interface ObjectiveDisplaySlot {
 
     public @NotNull NamedTextColor teamColor() {
       return teamColor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      TeamSidebar that = (TeamSidebar) o;
+      return teamColor.equals(that.teamColor);
+    }
+
+    @Override
+    public int hashCode() {
+      return teamColor.hashCode();
+    }
+
+    @Override
+    public String toString() {
+      return "TeamSidebar{teamColor=" + teamColor + "}";
     }
   }
 }

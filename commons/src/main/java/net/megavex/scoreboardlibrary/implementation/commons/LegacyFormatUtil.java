@@ -53,7 +53,7 @@ public final class LegacyFormatUtil {
     return legacySection().serialize(GlobalTranslator.render(component, locale));
   }
 
-  public static char getChar(NamedTextColor color) {
+  public static char getChar(@Nullable NamedTextColor color) {
     if (color == null) return 'r';
 
     return legacyMap.getOrDefault(color, '\0');

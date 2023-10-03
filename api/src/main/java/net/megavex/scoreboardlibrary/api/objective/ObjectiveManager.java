@@ -3,26 +3,13 @@ package net.megavex.scoreboardlibrary.api.objective;
 import java.util.Collection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface ObjectiveManager {
-  // Objectives
+  @NotNull ScoreboardObjective create(@NotNull String name);
 
-  @NotNull Collection<ScoreboardObjective> objectives();
+  void remove(@NotNull ScoreboardObjective objective);
 
-  @Nullable ScoreboardObjective objective(@NotNull String name);
-
-  boolean objectiveExists(@NotNull String name);
-
-  @NotNull ScoreboardObjective createIfAbsent(@NotNull String name);
-
-  boolean removeObjective(@NotNull String name);
-
-  void removeObjective(@NotNull ScoreboardObjective team);
-
-  void display(ScoreboardObjective objective, ObjectiveDisplaySlot displaySlot);
-
-  // Players
+  void display(@NotNull ObjectiveDisplaySlot displaySlot, @NotNull ScoreboardObjective objective);
 
   @NotNull Collection<Player> players();
 
@@ -41,8 +28,6 @@ public interface ObjectiveManager {
       removePlayer(player);
     }
   }
-
-  // Close
 
   void close();
 

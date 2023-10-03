@@ -7,7 +7,7 @@ public final class NativeAdventureUtil {
   private NativeAdventureUtil() {
   }
 
-  public static net.minecraft.network.chat.Component fromAdventureComponent(Component component) {
+  public static AdventureComponent fromAdventureComponent(Component component) {
     return new AdventureComponent(component);
   }
 }

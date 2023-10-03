@@ -12,7 +12,7 @@ public interface ScoreboardObjective {
 
   void renderType(@NotNull ObjectiveRenderType renderType);
 
-  int score(String entry);
+  int score(@NotNull String entry);
 
-  void score(String entry, int score);
+  void score(@NotNull String entry, int score);
 }

@@ -4,8 +4,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
+import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveManagerImpl;
+import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveUpdaterTask;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.scheduler.TaskScheduler;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
@@ -35,10 +38,12 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   private final Map<Player, ScoreboardLibraryPlayer> playerMap = new MapMaker().weakKeys().makeMap();
 
   private volatile Set<TeamManagerImpl> teamManagers;
+  private volatile Set<ObjectiveManagerImpl> objectiveManagers;
   private volatile Set<AbstractSidebar> sidebars;
 
   private final LocaleListener localeListener;
   private TeamUpdaterTask teamTask;
+  private ObjectiveUpdaterTask objectiveTask;
   private SidebarUpdaterTask sidebarTask;
 
   private final Object lock = new Object();
@@ -118,6 +123,15 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   @Override
+  public @NotNull ObjectiveManager createObjectiveManager() {
+    checkClosed();
+
+    ObjectiveManagerImpl objectiveManager = new ObjectiveManagerImpl(this);
+    objectiveManagers().add(objectiveManager);
+    return objectiveManager;
+  }
+
+  @Override
   public void close() {
     if (closed) {
       return;
@@ -139,6 +153,16 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
         for (TeamManagerImpl teamManager : teamManagers) {
           teamManager.close();
           teamManager.tick();
+        }
+      }
+    }
+
+    if (objectiveManagers != null) {
+      objectiveTask.task().cancel();
+      synchronized (objectiveTask.lock()) {
+        for (ObjectiveManagerImpl objectiveManager : objectiveManagers) {
+          objectiveManager.close();
+          objectiveManager.tick();
         }
       }
     }
@@ -170,6 +194,19 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     }
 
     return teamManagers;
+  }
+
+  public Set<ObjectiveManagerImpl> objectiveManagers() {
+    if (objectiveManagers == null) {
+      synchronized (lock) {
+        if (objectiveManagers == null) {
+          objectiveManagers = Collections.newSetFromMap(new ConcurrentHashMap<>(4, 0.75f, 2));
+          objectiveTask = new ObjectiveUpdaterTask(this);
+        }
+      }
+    }
+
+    return objectiveManagers;
   }
 
   public Set<AbstractSidebar> sidebars() {
