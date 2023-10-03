@@ -1,32 +1,17 @@
-package net.megavex.scoreboardlibrary.implementation.objective;
+package net.megavex.scoreboardlibrary.api.noop;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.kyori.adventure.text.Component.empty;
-
-public class ScoreboardObjectiveImpl implements ScoreboardObjective {
-  private final ObjectivesPacketAdapter<?, ?> packetAdapter;
-  private final String name;
-
+public class NoopScoreboardObjective implements ScoreboardObjective {
   private final Map<String, Integer> scores = new HashMap<>();
-  private Component value = empty();
-  private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
-
-  public ScoreboardObjectiveImpl(@NotNull ObjectiveManagerImpl manager, @NotNull String name) {
-    this.packetAdapter = manager.library().packetAdapter().createObjectiveAdapter(name);
-    this.name = name;
-  }
-
-  public @NotNull String name() {
-    return name;
-  }
+  private Component value;
+  private ObjectiveRenderType renderType;
 
   @Override
   public @NotNull Component value() {

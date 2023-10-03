@@ -15,4 +15,6 @@ public interface ScoreboardObjective {
   int score(@NotNull String entry);
 
   void score(@NotNull String entry, int score);
+
+  void removeScore(@NotNull String entry);
 }

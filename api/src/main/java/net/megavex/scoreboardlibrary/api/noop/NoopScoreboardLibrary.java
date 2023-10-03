@@ -31,7 +31,8 @@ public final class NoopScoreboardLibrary implements ScoreboardLibrary {
 
   @Override
   public @NotNull ObjectiveManager createObjectiveManager() {
-    throw new UnsupportedOperationException();
+    checkClosed();
+    return new NoopObjectiveManager();
   }
 
   @Override
