@@ -71,7 +71,7 @@ public abstract class AbstractObjectivePacketAdapter extends ObjectivesPacketAda
     return packet;
   }
 
-  protected @NotNull ClientboundSetObjectivePacket createPacket(@NotNull ObjectivePacketType type, @NotNull net.minecraft.network.chat.Component nmsDisplay, ObjectiveRenderType renderType) {
+  protected @NotNull ClientboundSetObjectivePacket createPacket(@NotNull ObjectivePacketType type, @NotNull net.minecraft.network.chat.Component nmsValue, ObjectiveRenderType renderType) {
     int mode;
     switch (type) {
       case CREATE:
@@ -87,7 +87,7 @@ public abstract class AbstractObjectivePacketAdapter extends ObjectivesPacketAda
     ClientboundSetObjectivePacket packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, mode);
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName());
-    PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, nmsDisplay);
+    PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, nmsValue);
 
     ObjectiveCriteria.RenderType nmsRenderType;
     switch (renderType) {

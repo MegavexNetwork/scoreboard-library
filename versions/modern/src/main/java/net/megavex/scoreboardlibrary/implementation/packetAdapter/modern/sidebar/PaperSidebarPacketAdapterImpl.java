@@ -33,7 +33,7 @@ public class PaperSidebarPacketAdapterImpl extends AbstractSidebarImpl {
   }
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, net.minecraft.network.chat.Component displayName) {
-    PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, displayName);
+    PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, displayName);
   }
 
   @Override

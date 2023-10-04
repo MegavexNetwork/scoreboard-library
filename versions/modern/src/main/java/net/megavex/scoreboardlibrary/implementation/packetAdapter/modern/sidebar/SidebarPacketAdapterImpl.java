@@ -36,7 +36,7 @@ public class SidebarPacketAdapterImpl extends AbstractSidebarImpl {
 
   private void updateDisplayName(ClientboundSetObjectivePacket packet, Component displayName, Locale locale) {
     net.minecraft.network.chat.Component vanilla = packetAdapter().fromAdventure(displayName, locale);
-    PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, vanilla);
+    PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, vanilla);
   }
 
   @Override

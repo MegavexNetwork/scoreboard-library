@@ -30,7 +30,7 @@ public abstract class ObjectivesPacketAdapter<P, T extends ScoreboardLibraryPack
   public abstract void sendProperties(
     @NotNull Collection<Player> players,
     @NotNull ObjectivePacketType packetType,
-    @NotNull Component displayName,
+    @NotNull Component value,
     @NotNull ObjectiveRenderType renderType,
     boolean renderRequired
   );

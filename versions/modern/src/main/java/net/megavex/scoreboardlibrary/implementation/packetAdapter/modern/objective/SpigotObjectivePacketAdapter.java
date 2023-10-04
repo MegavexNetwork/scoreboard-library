@@ -18,7 +18,7 @@ public class SpigotObjectivePacketAdapter extends AbstractObjectivePacketAdapter
   public void sendProperties(
     @NotNull Collection<Player> players,
     @NotNull ObjectivePacketType packetType,
-    @NotNull Component displayName,
+    @NotNull Component value,
     @NotNull ObjectiveRenderType renderType,
     boolean renderRequired
   ) {
@@ -28,8 +28,8 @@ public class SpigotObjectivePacketAdapter extends AbstractObjectivePacketAdapter
       packetAdapter(),
       players,
       locale -> {
-        net.minecraft.network.chat.Component nmsDisplayName = packetAdapter().fromAdventure(displayName, locale);
-        return createPacket(packetType, nmsDisplayName, renderType);
+        net.minecraft.network.chat.Component nmsValue = packetAdapter().fromAdventure(value, locale);
+        return createPacket(packetType, nmsValue, renderType);
       }
     );
   }

@@ -12,23 +12,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter {
-  private AdventureComponent lastDisplayName;
+  private AdventureComponent lastValue;
 
   public PaperObjectivePacketAdapter(@NotNull PacketAdapterImpl packetAdapter, @NotNull String objectiveName) {
     super(packetAdapter, objectiveName);
   }
 
   @Override
-  public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketType packetType, @NotNull Component displayName, @NotNull ObjectiveRenderType renderType, boolean renderRequired) {
-    AdventureComponent nmsDisplayName;
-    if (this.lastDisplayName != null && this.lastDisplayName.adventure$component() == displayName) {
-      nmsDisplayName = this.lastDisplayName;
+  public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType, boolean renderRequired) {
+    AdventureComponent nmsValue;
+    if (this.lastValue != null && this.lastValue.adventure$component() == value) {
+      nmsValue = this.lastValue;
     } else {
-      nmsDisplayName = NativeAdventureUtil.fromAdventureComponent(displayName);
-      this.lastDisplayName = nmsDisplayName;
+      nmsValue = NativeAdventureUtil.fromAdventureComponent(value);
+      this.lastValue = nmsValue;
     }
 
-    ClientboundSetObjectivePacket packet = createPacket(packetType, nmsDisplayName, renderType);
+    ClientboundSetObjectivePacket packet = createPacket(packetType, nmsValue, renderType);
     packetAdapter().sendPacket(players, packet);
   }
 }
