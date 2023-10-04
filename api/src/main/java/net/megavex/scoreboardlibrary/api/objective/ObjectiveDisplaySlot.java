@@ -5,6 +5,11 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents all valid display slots that objectives can be shown in.
+ *
+ * @see <a href="https://minecraft.wiki/w/Scoreboard#Display_slots">Minecraft Wiki</a>
+ */
 @ApiStatus.NonExtendable
 public interface ObjectiveDisplaySlot {
   static @NotNull PlayerList playerList() {
