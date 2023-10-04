@@ -8,20 +8,27 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 import static net.kyori.adventure.text.Component.empty;
 
 public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   private final ObjectivesPacketAdapter<?, ?> packetAdapter;
+  private final Queue<ObjectiveManagerTask> taskQueue;
   private final String name;
 
   private final Map<String, Integer> scores = new HashMap<>();
   private Component value = empty();
   private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
 
-  public ScoreboardObjectiveImpl(@NotNull ObjectiveManagerImpl manager, @NotNull String name) {
-    this.packetAdapter = manager.library().packetAdapter().createObjectiveAdapter(name);
+  public ScoreboardObjectiveImpl(@NotNull ObjectivesPacketAdapter<?, ?> packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
+    this.packetAdapter = packetAdapter;
+    this.taskQueue = taskQueue;
     this.name = name;
+  }
+
+  public ObjectivesPacketAdapter<?, ?> packetAdapter() {
+    return packetAdapter;
   }
 
   public @NotNull String name() {
@@ -35,7 +42,10 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
 
   @Override
   public void value(@NotNull Component value) {
-    this.value = value;
+    if (!this.value.equals(value)) {
+      this.value = value;
+      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+    }
   }
 
   @Override
@@ -45,7 +55,10 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
 
   @Override
   public void renderType(@NotNull ObjectiveRenderType renderType) {
-    this.renderType = renderType;
+    if (this.renderType != renderType) {
+      this.renderType = renderType;
+      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+    }
   }
 
   @Override
@@ -56,6 +69,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   @Override
   public void score(@NotNull String entry, int score) {
     scores.put(entry, score);
+    taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, score));
   }
 
   @Override

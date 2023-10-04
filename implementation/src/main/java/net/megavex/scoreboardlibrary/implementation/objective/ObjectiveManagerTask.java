@@ -87,6 +87,22 @@ public class ObjectiveManagerTask {
     }
   }
 
+  public static final class UpdateScore extends ObjectiveManagerTask {
+    private final ScoreboardObjectiveImpl objective;
+    private final String entry;
+    private final int score;
+
+    public UpdateScore(@NotNull ScoreboardObjectiveImpl objective, @NotNull String entry, int score) {
+      this.objective = objective;
+      this.entry = entry;
+      this.score = score;
+    }
+
+    public @NotNull ScoreboardObjectiveImpl objective() {
+      return objective;
+    }
+  }
+
   public static final class UpdateDisplaySlot extends ObjectiveManagerTask {
     private final ObjectiveDisplaySlot displaySlot;
     private final ScoreboardObjectiveImpl objective;

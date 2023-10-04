@@ -10,6 +10,8 @@ import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveManagerImpl;
 import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveUpdaterTask;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.player.LocaleListener;
+import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.scheduler.TaskScheduler;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;

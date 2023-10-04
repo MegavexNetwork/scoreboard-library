@@ -5,6 +5,9 @@ import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
+import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,12 +15,13 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ObjectiveManagerImpl implements ObjectiveManager {
+public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable {
   private final ScoreboardLibraryImpl library;
   private final Map<String, ScoreboardObjectiveImpl> objectives = new ConcurrentHashMap<>();
   private final Map<ObjectiveDisplaySlot, ScoreboardObjectiveImpl> displaySlots = new HashMap<>();
 
   private final Set<Player> players = CollectionProvider.set(8);
+  private final Set<Player> displayingPlayers = CollectionProvider.set(8);
   private final Queue<ObjectiveManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
   private boolean closed;
 
@@ -25,14 +29,11 @@ public class ObjectiveManagerImpl implements ObjectiveManager {
     this.library = library;
   }
 
-  public @NotNull ScoreboardLibraryImpl library() {
-    return library;
-  }
-
   @Override
   public @NotNull ScoreboardObjective create(@NotNull String name) {
     return objectives.computeIfAbsent(name, i -> {
-      ScoreboardObjectiveImpl objective = new ScoreboardObjectiveImpl(this, name);
+      ObjectivesPacketAdapter<?, ?> packetAdapter = library.packetAdapter().createObjectiveAdapter(name);
+      ScoreboardObjectiveImpl objective = new ScoreboardObjectiveImpl(packetAdapter, taskQueue, name);
       taskQueue.add(new ObjectiveManagerTask.AddObjective(objective));
       return objective;
     });
@@ -111,31 +112,42 @@ public class ObjectiveManagerImpl implements ObjectiveManager {
       }
 
       if (task instanceof ObjectiveManagerTask.Close) {
-        // TODO
+        library.objectiveManagers().remove(this);
+        // TODO: hide objectives
+        for (Player player : players) {
+          Objects.requireNonNull(library.getPlayer(player)).objectiveManagerQueue().remove(this);
+        }
       } else if (task instanceof ObjectiveManagerTask.AddPlayer) {
         Player player = ((ObjectiveManagerTask.AddPlayer) task).player();
-        // TODO
+        @NotNull ScoreboardLibraryPlayer slPlayer = library.getOrCreatePlayer(player);
+        slPlayer.objectiveManagerQueue().add(this);
       } else if (task instanceof ObjectiveManagerTask.RemovePlayer) {
         Player player = ((ObjectiveManagerTask.RemovePlayer) task).player();
-        // TODO
+        // TODO: hide objectives
+        Objects.requireNonNull(library.getPlayer(player)).objectiveManagerQueue().remove(this);
       } else if (task instanceof ObjectiveManagerTask.ReloadPlayer) {
         Player player = ((ObjectiveManagerTask.ReloadPlayer) task).player();
-        // TODO
+        // TODO: resend objective data
       } else if (task instanceof ObjectiveManagerTask.AddObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.AddObjective) task).objective();
-        // TODO
+        // TODO: show to players
       } else if (task instanceof ObjectiveManagerTask.RemoveObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.RemoveObjective) task).objective();
-        // TODO
-      } else if (task instanceof ObjectiveManagerTask.UpdateObjective) {
-        ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.UpdateObjective) task).objective();
-        // TODO
+        // TODO: hide from players
+      } else if (task instanceof ObjectiveManagerTask.UpdateScore) {
+        ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.UpdateScore) task).objective();
+        // TODO: resend data to players
       } else if (task instanceof ObjectiveManagerTask.UpdateDisplaySlot) {
         ObjectiveManagerTask.UpdateDisplaySlot updateDisplaySlotTask = (ObjectiveManagerTask.UpdateDisplaySlot) task;
         ObjectiveDisplaySlot slot = updateDisplaySlotTask.displaySlot();
         ScoreboardObjectiveImpl objective = updateDisplaySlotTask.objective();
-        // TODO
+        // TODO: send change to players
       }
     }
+  }
+
+  @Override
+  public void show(@NotNull Player player) {
+    displayingPlayers.add(player);
   }
 }

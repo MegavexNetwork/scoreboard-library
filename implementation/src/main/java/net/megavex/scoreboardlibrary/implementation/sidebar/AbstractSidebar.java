@@ -5,7 +5,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryPlayer;
+import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
+import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
 
-public abstract class AbstractSidebar implements Sidebar {
+public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
   private final SidebarPacketAdapter<?, ?> packetAdapter;
   private final List<String> linePlayerNames;
@@ -173,14 +174,14 @@ public abstract class AbstractSidebar implements Sidebar {
         scoreboardLibrary.packetAdapter().removeSidebar(internalPlayers());
 
         for (Player player : internalPlayers()) {
-          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).removeSidebar(this);
+          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).sidebarQueue().remove(this);
         }
 
         return;
       } else if (task instanceof SidebarTask.AddPlayer) {
         SidebarTask.AddPlayer addPlayerTask = (SidebarTask.AddPlayer) task;
         ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
-        slPlayer.addSidebar(this);
+        slPlayer.sidebarQueue().add(this);
       } else if (task instanceof SidebarTask.RemovePlayer) {
         SidebarTask.RemovePlayer removePlayerTask = (SidebarTask.RemovePlayer) task;
         LocaleLineHandler lineHandler = removePlayer0(removePlayerTask.player());
@@ -192,7 +193,7 @@ public abstract class AbstractSidebar implements Sidebar {
         lineHandler.removePlayer(removePlayerTask.player());
         scoreboardLibrary.packetAdapter().removeSidebar(Collections.singleton(removePlayerTask.player()));
 
-        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeSidebar(this);
+        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).sidebarQueue().remove(this);
       } else if (task instanceof SidebarTask.ReloadPlayer) {
         SidebarTask.ReloadPlayer reloadPlayerTask = (SidebarTask.ReloadPlayer) task;
         @Nullable LocaleLineHandler lineHandler = removePlayer0(reloadPlayerTask.player());

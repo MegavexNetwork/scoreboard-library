@@ -1,5 +1,6 @@
-package net.megavex.scoreboardlibrary.implementation;
+package net.megavex.scoreboardlibrary.implementation.player;
 
+import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarTask;
@@ -27,12 +28,12 @@ public class LocaleListener implements Listener {
     scoreboardLibrary.taskScheduler().runNextTick(() -> {
       ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getPlayer(player);
       if (slPlayer != null) {
-        TeamManagerImpl teamManager = slPlayer.teamManager();
+        TeamManagerImpl teamManager = slPlayer.teamManagerQueue().current();
         if (teamManager != null) {
           teamManager.taskQueue().add(new TeamManagerTask.ReloadPlayer(player));
         }
 
-        AbstractSidebar sidebar = slPlayer.sidebar();
+        AbstractSidebar sidebar = slPlayer.sidebarQueue().current();
         if (sidebar instanceof PlayerDependantLocaleSidebar) {
           sidebar.taskQueue().add(new SidebarTask.ReloadPlayer(player));
         }
