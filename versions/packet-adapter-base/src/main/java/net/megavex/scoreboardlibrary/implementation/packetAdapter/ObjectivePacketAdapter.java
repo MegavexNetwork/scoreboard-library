@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public abstract class ObjectivesPacketAdapter<P, T extends ScoreboardLibraryPacketAdapter<P>> {
+public abstract class ObjectivePacketAdapter<P, T extends ScoreboardLibraryPacketAdapter<P>> {
   private final T packetAdapter;
   private final String objectiveName;
 
-  public ObjectivesPacketAdapter(@NotNull T packetAdapter, @NotNull String objectiveName) {
+  public ObjectivePacketAdapter(@NotNull T packetAdapter, @NotNull String objectiveName) {
     this.packetAdapter = packetAdapter;
     this.objectiveName = objectiveName;
   }

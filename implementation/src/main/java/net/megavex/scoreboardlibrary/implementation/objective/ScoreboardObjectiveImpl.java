@@ -3,17 +3,16 @@ package net.megavex.scoreboardlibrary.implementation.objective;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 import static net.kyori.adventure.text.Component.empty;
 
 public class ScoreboardObjectiveImpl implements ScoreboardObjective {
-  private final ObjectivesPacketAdapter<?, ?> packetAdapter;
+  private final ObjectivePacketAdapter<?, ?> packetAdapter;
   private final Queue<ObjectiveManagerTask> taskQueue;
   private final String name;
 
@@ -21,14 +20,18 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   private Component value = empty();
   private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
 
-  public ScoreboardObjectiveImpl(@NotNull ObjectivesPacketAdapter<?, ?> packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
+  public ScoreboardObjectiveImpl(@NotNull ObjectivePacketAdapter<?, ?> packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
     this.packetAdapter = packetAdapter;
     this.taskQueue = taskQueue;
     this.name = name;
   }
 
-  public ObjectivesPacketAdapter<?, ?> packetAdapter() {
+  public ObjectivePacketAdapter<?, ?> packetAdapter() {
     return packetAdapter;
+  }
+
+  public @NotNull Map<String, Integer> scores() {
+    return scores;
   }
 
   public @NotNull String name() {
@@ -75,5 +78,10 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   @Override
   public void removeScore(@NotNull String entry) {
     scores.remove(entry);
+    taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, null));
+  }
+
+  public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketAdapter.ObjectivePacketType packetType) {
+    packetAdapter.sendProperties(players, packetType, value, renderType, true);
   }
 }

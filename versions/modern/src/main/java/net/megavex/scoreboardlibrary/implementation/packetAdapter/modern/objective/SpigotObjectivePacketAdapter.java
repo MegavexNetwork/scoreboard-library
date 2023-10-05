@@ -22,15 +22,18 @@ public class SpigotObjectivePacketAdapter extends AbstractObjectivePacketAdapter
     @NotNull ObjectiveRenderType renderType,
     boolean renderRequired
   ) {
+    if (!renderRequired) {
+      net.minecraft.network.chat.Component nmsValue = packetAdapter().fromAdventure(value, null);
+      packetAdapter().sendPacket(players, createPacket(packetType, nmsValue, renderType));
+      return;
+    }
+
     LocalePacketUtil.sendLocalePackets(
       packetAdapter().localeProvider(),
       null,
       packetAdapter(),
       players,
-      locale -> {
-        net.minecraft.network.chat.Component nmsValue = packetAdapter().fromAdventure(value, locale);
-        return createPacket(packetType, nmsValue, renderType);
-      }
+      locale -> createPacket(packetType, packetAdapter().fromAdventure(value, locale), renderType)
     );
   }
 }

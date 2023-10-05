@@ -5,7 +5,7 @@ import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
   @Override
   public @NotNull ScoreboardObjective create(@NotNull String name) {
     return objectives.computeIfAbsent(name, i -> {
-      ObjectivesPacketAdapter<?, ?> packetAdapter = library.packetAdapter().createObjectiveAdapter(name);
+      ObjectivePacketAdapter<?, ?> packetAdapter = library.packetAdapter().createObjectiveAdapter(name);
       ScoreboardObjectiveImpl objective = new ScoreboardObjectiveImpl(packetAdapter, taskQueue, name);
       taskQueue.add(new ObjectiveManagerTask.AddObjective(objective));
       return objective;
@@ -113,35 +113,57 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
       if (task instanceof ObjectiveManagerTask.Close) {
         library.objectiveManagers().remove(this);
-        // TODO: hide objectives
+        for (ScoreboardObjectiveImpl objective : objectives.values()) {
+          objective.packetAdapter().remove(displayingPlayers);
+        }
+
         for (Player player : players) {
           Objects.requireNonNull(library.getPlayer(player)).objectiveManagerQueue().remove(this);
         }
+        return;
       } else if (task instanceof ObjectiveManagerTask.AddPlayer) {
         Player player = ((ObjectiveManagerTask.AddPlayer) task).player();
         @NotNull ScoreboardLibraryPlayer slPlayer = library.getOrCreatePlayer(player);
         slPlayer.objectiveManagerQueue().add(this);
       } else if (task instanceof ObjectiveManagerTask.RemovePlayer) {
         Player player = ((ObjectiveManagerTask.RemovePlayer) task).player();
-        // TODO: hide objectives
+        Collection<Player> singleton = Collections.singleton(player);
+        for (ScoreboardObjectiveImpl objective : objectives.values()) {
+          objective.packetAdapter().remove(singleton);
+        }
+
+        displayingPlayers.remove(player);
         Objects.requireNonNull(library.getPlayer(player)).objectiveManagerQueue().remove(this);
       } else if (task instanceof ObjectiveManagerTask.ReloadPlayer) {
         Player player = ((ObjectiveManagerTask.ReloadPlayer) task).player();
-        // TODO: resend objective data
+        Collection<Player> singleton = Collections.singleton(player);
+        for (ScoreboardObjectiveImpl objective : objectives.values()) {
+          objective.sendProperties(singleton, ObjectivePacketAdapter.ObjectivePacketType.UPDATE);
+        }
       } else if (task instanceof ObjectiveManagerTask.AddObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.AddObjective) task).objective();
-        // TODO: show to players
+        objective.sendProperties(players, ObjectivePacketAdapter.ObjectivePacketType.CREATE);
       } else if (task instanceof ObjectiveManagerTask.RemoveObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.RemoveObjective) task).objective();
-        // TODO: hide from players
+        objective.packetAdapter().remove(displayingPlayers);
+      } else if (task instanceof ObjectiveManagerTask.UpdateObjective) {
+        ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.UpdateObjective) task).objective();
+        objective.sendProperties(displayingPlayers, ObjectivePacketAdapter.ObjectivePacketType.UPDATE);
       } else if (task instanceof ObjectiveManagerTask.UpdateScore) {
-        ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.UpdateScore) task).objective();
-        // TODO: resend data to players
+        ObjectiveManagerTask.UpdateScore updateScoreTask = ((ObjectiveManagerTask.UpdateScore) task);
+        ScoreboardObjectiveImpl objective = updateScoreTask.objective();
+        String entry = updateScoreTask.entry();
+        Integer score = updateScoreTask.score();
+        if (score != null) {
+          objective.packetAdapter().sendScore(displayingPlayers, entry, score);
+        } else {
+          objective.packetAdapter().removeScore(displayingPlayers, entry);
+        }
       } else if (task instanceof ObjectiveManagerTask.UpdateDisplaySlot) {
         ObjectiveManagerTask.UpdateDisplaySlot updateDisplaySlotTask = (ObjectiveManagerTask.UpdateDisplaySlot) task;
         ObjectiveDisplaySlot slot = updateDisplaySlotTask.displaySlot();
         ScoreboardObjectiveImpl objective = updateDisplaySlotTask.objective();
-        // TODO: send change to players
+        objective.packetAdapter().display(displayingPlayers, slot);
       }
     }
   }
@@ -149,5 +171,17 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
   @Override
   public void show(@NotNull Player player) {
     displayingPlayers.add(player);
+    Collection<Player> singleton = Collections.singleton(player);
+
+    for (ScoreboardObjectiveImpl objective : objectives.values()) {
+      objective.sendProperties(singleton, ObjectivePacketAdapter.ObjectivePacketType.CREATE);
+      for (Map.Entry<String, Integer> entry : objective.scores().entrySet()) {
+        objective.packetAdapter().sendScore(singleton, entry.getKey(), entry.getValue());
+      }
+    }
+
+    for (Map.Entry<ObjectiveDisplaySlot, ScoreboardObjectiveImpl> entry : displaySlots.entrySet()) {
+      entry.getValue().packetAdapter().display(singleton, entry.getKey());
+    }
   }
 }

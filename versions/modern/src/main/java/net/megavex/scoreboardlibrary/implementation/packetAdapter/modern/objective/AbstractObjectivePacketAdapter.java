@@ -2,7 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.object
 
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ObjectiveConstants;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public abstract class AbstractObjectivePacketAdapter extends ObjectivesPacketAdapter<Packet<?>, PacketAdapterImpl> {
+public abstract class AbstractObjectivePacketAdapter extends ObjectivePacketAdapter<Packet<?>, PacketAdapterImpl> {
   private final ClientboundSetObjectivePacket removePacket;
 
   public AbstractObjectivePacketAdapter(@NotNull PacketAdapterImpl packetAdapter, @NotNull String objectiveName) {

@@ -3,7 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivesPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
@@ -92,7 +92,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
   }
 
   @Override
-  public @NotNull ObjectivesPacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
+  public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
     return isNativeAdventure ? new PaperObjectivePacketAdapter(this, objectiveName) : new SpigotObjectivePacketAdapter(this, objectiveName);
   }
 
