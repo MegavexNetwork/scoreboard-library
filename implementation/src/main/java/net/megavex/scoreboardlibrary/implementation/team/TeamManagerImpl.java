@@ -5,9 +5,9 @@ import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
+import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
-import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,10 +23,8 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
 
   private final Set<Player> players = CollectionProvider.set(8);
   private final Map<String, ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
-
-  private boolean closed;
-
   private final Queue<TeamManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
+  private boolean closed;
 
   public TeamManagerImpl(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
     this.scoreboardLibrary = scoreboardLibrary;

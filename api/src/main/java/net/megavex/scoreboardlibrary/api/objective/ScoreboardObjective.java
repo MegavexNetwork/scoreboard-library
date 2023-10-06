@@ -17,7 +17,7 @@ public interface ScoreboardObjective {
    *
    * @param value New value
    */
-  void value(@NotNull Component value);
+  @NotNull ScoreboardObjective value(@NotNull Component value);
 
   /**
    * @return The render type of the objective, default is {@link ObjectiveRenderType#INTEGER}
@@ -27,15 +27,15 @@ public interface ScoreboardObjective {
   /**
    * @param renderType Sets the render type of the objective
    */
-  void renderType(@NotNull ObjectiveRenderType renderType);
+  @NotNull ScoreboardObjective renderType(@NotNull ObjectiveRenderType renderType);
 
   /**
-   * Gets the score value for an entry
+   * Gets the score value for an entry, or null if the entry has no score registered
    *
    * @param entry Entry to get score of
    * @return The score, or 0 if score doesn't exist
    */
-  int score(@NotNull String entry);
+  Integer score(@NotNull String entry);
 
   /**
    * Sets the score for an entry
@@ -43,12 +43,12 @@ public interface ScoreboardObjective {
    * @param entry Entry to update score of
    * @param score The new score value
    */
-  void score(@NotNull String entry, int score);
+  @NotNull ScoreboardObjective score(@NotNull String entry, int score);
 
   /**
    * Removes a score
    *
    * @param entry Entry to remove score from
    */
-  void removeScore(@NotNull String entry);
+  @NotNull ScoreboardObjective removeScore(@NotNull String entry);
 }

@@ -5,7 +5,9 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PlayerNameProvider {
   private static final ChatColor[] CHAT_COLORS = ChatColor.values();

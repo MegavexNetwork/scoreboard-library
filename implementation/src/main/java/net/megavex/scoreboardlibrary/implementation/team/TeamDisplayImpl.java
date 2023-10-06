@@ -31,7 +31,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   private CollisionRule collisionRule = CollisionRule.ALWAYS;
   private NamedTextColor playerColor = null;
 
-  public TeamDisplayImpl(ScoreboardTeamImpl team) {
+  public TeamDisplayImpl(@NotNull ScoreboardTeamImpl team) {
     this.team = team;
     this.packetAdapter = team.packetAdapter().createTeamDisplayAdapter(this);
     updateTeamPackets();

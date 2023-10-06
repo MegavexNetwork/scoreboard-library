@@ -19,8 +19,9 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
-  public void value(@NotNull Component value) {
+  public @NotNull ScoreboardObjective value(@NotNull Component value) {
     this.value = value;
+    return this;
   }
 
   @Override
@@ -29,22 +30,25 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
-  public void renderType(@NotNull ObjectiveRenderType renderType) {
+  public @NotNull ScoreboardObjective renderType(@NotNull ObjectiveRenderType renderType) {
     this.renderType = renderType;
+    return this;
   }
 
   @Override
-  public int score(@NotNull String entry) {
+  public Integer score(@NotNull String entry) {
     return scores.get(entry);
   }
 
   @Override
-  public void score(@NotNull String entry, int score) {
+  public @NotNull ScoreboardObjective score(@NotNull String entry, int score) {
     scores.put(entry, score);
+    return this;
   }
 
   @Override
-  public void removeScore(@NotNull String entry) {
+  public @NotNull ScoreboardObjective removeScore(@NotNull String entry) {
     scores.remove(entry);
+    return this;
   }
 }

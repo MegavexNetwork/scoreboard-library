@@ -1,10 +1,9 @@
 package net.megavex.scoreboardlibrary.api.objective;
 
-import java.util.Collection;
-
-import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 /**
  * Manages a group of {@link ScoreboardObjective}s.

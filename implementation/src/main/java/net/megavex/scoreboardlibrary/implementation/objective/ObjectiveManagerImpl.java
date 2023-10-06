@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.objective;
 
+import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
@@ -29,8 +30,14 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
     this.library = library;
   }
 
+  public @NotNull Queue<ObjectiveManagerTask> taskQueue() {
+    return taskQueue;
+  }
+
   @Override
   public @NotNull ScoreboardObjective create(@NotNull String name) {
+    Preconditions.checkNotNull(name);
+    checkClosed();
     return objectives.computeIfAbsent(name, i -> {
       ObjectivePacketAdapter<?, ?> packetAdapter = library.packetAdapter().createObjectiveAdapter(name);
       ScoreboardObjectiveImpl objective = new ScoreboardObjectiveImpl(packetAdapter, taskQueue, name);
@@ -41,18 +48,26 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
   @Override
   public void remove(@NotNull ScoreboardObjective objective) {
+    Preconditions.checkNotNull(objective);
+    checkClosed();
     if (!(objective instanceof ScoreboardObjectiveImpl)) {
       return;
     }
 
     ScoreboardObjectiveImpl impl = (ScoreboardObjectiveImpl) objective;
     if (objectives.values().remove(impl)) {
+      displaySlots.values().removeIf(e -> e == impl);
+      impl.close();
       taskQueue.add(new ObjectiveManagerTask.RemoveObjective(impl));
     }
   }
 
   @Override
   public void display(@NotNull ObjectiveDisplaySlot displaySlot, @NotNull ScoreboardObjective objective) {
+    Preconditions.checkNotNull(displaySlot);
+    Preconditions.checkNotNull(objective);
+    checkClosed();
+
     if (!(objective instanceof ScoreboardObjectiveImpl)) {
       throw new IllegalArgumentException("Invalid objective implementation");
     }
@@ -73,6 +88,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
   @Override
   public boolean addPlayer(@NotNull Player player) {
+    checkClosed();
     if (!players.add(player)) {
       return false;
     }
@@ -83,6 +99,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
   @Override
   public boolean removePlayer(@NotNull Player player) {
+    checkClosed();
     if (!players.remove(player)) {
       return false;
     }
@@ -182,6 +199,12 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
     for (Map.Entry<ObjectiveDisplaySlot, ScoreboardObjectiveImpl> entry : displaySlots.entrySet()) {
       entry.getValue().packetAdapter().display(singleton, entry.getKey());
+    }
+  }
+
+  private void checkClosed() {
+    if (closed) {
+      throw new IllegalStateException("ObjectiveManager is closed");
     }
   }
 }

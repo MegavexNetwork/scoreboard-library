@@ -7,7 +7,10 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacke
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -19,6 +22,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   private final Map<String, Integer> scores = new HashMap<>();
   private Component value = empty();
   private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
+  private boolean closed;
 
   public ScoreboardObjectiveImpl(@NotNull ObjectivePacketAdapter<?, ?> packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
     this.packetAdapter = packetAdapter;
@@ -38,17 +42,24 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
     return name;
   }
 
+  public void close() {
+    closed = true;
+  }
+
   @Override
   public @NotNull Component value() {
     return value;
   }
 
   @Override
-  public void value(@NotNull Component value) {
+  public @NotNull ScoreboardObjective value(@NotNull Component value) {
     if (!this.value.equals(value)) {
       this.value = value;
-      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+      if (!closed) {
+        taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+      }
     }
+    return this;
   }
 
   @Override
@@ -57,28 +68,36 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
-  public void renderType(@NotNull ObjectiveRenderType renderType) {
+  public @NotNull ScoreboardObjective renderType(@NotNull ObjectiveRenderType renderType) {
     if (this.renderType != renderType) {
       this.renderType = renderType;
-      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+      if (!closed) {
+        taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+      }
     }
+    return this;
   }
 
   @Override
-  public int score(@NotNull String entry) {
+  public Integer score(@NotNull String entry) {
     return scores.get(entry);
   }
 
   @Override
-  public void score(@NotNull String entry, int score) {
-    scores.put(entry, score);
-    taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, score));
+  public @NotNull ScoreboardObjective score(@NotNull String entry, int score) {
+    Integer oldScore = scores.put(entry, score);
+    if (!closed && (oldScore == null || score != oldScore)) {
+      taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, score));
+    }
+    return this;
   }
 
   @Override
-  public void removeScore(@NotNull String entry) {
-    scores.remove(entry);
-    taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, null));
+  public @NotNull ScoreboardObjective removeScore(@NotNull String entry) {
+    if (scores.remove(entry) != null && !closed) {
+      taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, null));
+    }
+    return this;
   }
 
   public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketAdapter.ObjectivePacketType packetType) {

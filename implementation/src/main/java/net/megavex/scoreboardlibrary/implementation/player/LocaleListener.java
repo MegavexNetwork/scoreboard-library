@@ -1,6 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.player;
 
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
+import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveManagerImpl;
+import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveManagerTask;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.PlayerDependantLocaleSidebar;
 import net.megavex.scoreboardlibrary.implementation.sidebar.SidebarTask;
@@ -31,6 +33,11 @@ public class LocaleListener implements Listener {
         TeamManagerImpl teamManager = slPlayer.teamManagerQueue().current();
         if (teamManager != null) {
           teamManager.taskQueue().add(new TeamManagerTask.ReloadPlayer(player));
+        }
+
+        ObjectiveManagerImpl objectiveManager = slPlayer.objectiveManagerQueue().current();
+        if (objectiveManager != null) {
+          objectiveManager.taskQueue().add(new ObjectiveManagerTask.ReloadPlayer(player));
         }
 
         AbstractSidebar sidebar = slPlayer.sidebarQueue().current();
