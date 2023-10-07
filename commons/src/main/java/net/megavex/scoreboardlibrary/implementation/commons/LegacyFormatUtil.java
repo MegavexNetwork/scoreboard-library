@@ -47,10 +47,17 @@ public final class LegacyFormatUtil {
     return text.substring(0, lastNotColorCharIndex + 1);
   }
 
-  public static String serialize(@Nullable Component component, Locale locale) {
+  public static String serialize(@Nullable Component component, @Nullable Locale locale) {
     if (component == null || component == empty()) return "";
 
-    return legacySection().serialize(GlobalTranslator.render(component, locale));
+    Component translated;
+    if (locale != null) {
+      translated = GlobalTranslator.render(component, locale);
+    } else {
+      translated = component;
+    }
+
+    return legacySection().serialize(translated);
   }
 
   public static char getChar(@Nullable NamedTextColor color) {

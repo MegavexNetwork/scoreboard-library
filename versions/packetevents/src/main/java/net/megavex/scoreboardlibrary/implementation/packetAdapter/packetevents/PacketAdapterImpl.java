@@ -6,6 +6,7 @@ import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisplayScoreboard;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
@@ -19,7 +20,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
 
   public PacketAdapterImpl() {
     if (PacketEvents.getAPI() == null) {
-      throw new IllegalStateException("PacketEvents isn't loaded");
+      throw new IllegalStateException("PacketEvents exists in classpath but isn't loaded");
     }
 
     this.displayPacket = new WrapperPlayServerDisplayScoreboard(POSITION_SIDEBAR, objectiveName());
@@ -49,6 +50,11 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
   @Override
   public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
     return new TeamsPacketAdapterImpl(this, teamName);
+  }
+
+  @Override
+  public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

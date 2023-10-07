@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
@@ -42,6 +43,11 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<Pac
   @Override
   public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
     return new TeamsPacketAdapterImpl(this, teamName);
+  }
+
+  @Override
+  public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
+    return new ObjectivePacketAdapterImpl(this, objectiveName);
   }
 
   @Override

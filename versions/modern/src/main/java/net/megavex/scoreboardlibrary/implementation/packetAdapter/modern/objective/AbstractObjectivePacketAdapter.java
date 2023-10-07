@@ -5,7 +5,7 @@ import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ObjectiveConstants;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.ObjectiveConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.network.protocol.Packet;
@@ -64,28 +64,16 @@ public abstract class AbstractObjectivePacketAdapter extends ObjectivePacketAdap
         int.class,
         Objective.class
       );
-      packet = constructor.invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
+      packet = constructor.invoke(ObjectiveConstants.displaySlotIndex(displaySlot, false), null);
     }
 
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName());
     return packet;
   }
 
-  protected @NotNull ClientboundSetObjectivePacket createPacket(@NotNull ObjectivePacketType type, @NotNull net.minecraft.network.chat.Component nmsValue, ObjectiveRenderType renderType) {
-    int mode;
-    switch (type) {
-      case CREATE:
-        mode = ObjectiveConstants.MODE_CREATE;
-        break;
-      case UPDATE:
-        mode = ObjectiveConstants.MODE_UPDATE;
-        break;
-      default:
-        throw new IllegalStateException();
-    }
-
+  protected @NotNull ClientboundSetObjectivePacket createPacket(@NotNull ObjectivePacketType packetType, @NotNull net.minecraft.network.chat.Component nmsValue, ObjectiveRenderType renderType) {
     ClientboundSetObjectivePacket packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
-    PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, mode);
+    PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, ObjectiveConstants.mode(packetType));
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName());
     PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, nmsValue);
 

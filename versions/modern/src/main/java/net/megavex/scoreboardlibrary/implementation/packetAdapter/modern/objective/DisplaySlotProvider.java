@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective;
 
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ObjectiveConstants;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.ObjectiveConstants;
 import net.minecraft.world.scores.DisplaySlot;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +13,6 @@ public final class DisplaySlotProvider {
   }
 
   public static @NotNull DisplaySlot toNms(@NotNull ObjectiveDisplaySlot slot) {
-    return VALUES[ObjectiveConstants.displaySlotIndex(slot)];
+    return VALUES[ObjectiveConstants.displaySlotIndex(slot, false)];
   }
 }

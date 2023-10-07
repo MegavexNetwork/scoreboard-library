@@ -36,9 +36,7 @@ public abstract class ScoreboardLibraryPacketAdapter<P> {
   public abstract void removeSidebar(@NotNull Iterable<Player> players);
 
   // Objective
-  public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
-    throw new UnsupportedOperationException();
-  }
+  public abstract @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName);
 
   // Team
   public abstract @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName);
