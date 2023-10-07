@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisplayScoreboard;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
@@ -37,7 +38,7 @@ public class ObjectivePacketAdapterImpl extends ObjectivePacketAdapter<PacketWra
     WrapperPlayServerDisplayScoreboard modern = new WrapperPlayServerDisplayScoreboard(slotIndex, objectiveName());
     WrapperPlayServerDisplayScoreboard legacy = new WrapperPlayServerDisplayScoreboard(legacySlotIndex, objectiveName());
     for (Player player : players) {
-      if (!packetAdapter().isLegacy(player)) {
+      if (packetAdapter().clientVersion(player).isNewerThanOrEquals(ClientVersion.V_1_12_2)) {
         packetAdapter().sendPacket(player, modern);
       } else {
         packetAdapter().sendPacket(player, legacy);
