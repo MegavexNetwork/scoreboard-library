@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 
-import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -8,9 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public abstract class ScoreboardLibraryPacketAdapter<P> {
-  protected static final int POSITION_SIDEBAR = 1;
-  protected static final int OBJECTIVE_MODE_REMOVE = 1;
-
   private final String objectiveName;
   private final LocaleProvider localeProvider;
 
@@ -27,13 +23,6 @@ public abstract class ScoreboardLibraryPacketAdapter<P> {
   public @NotNull LocaleProvider localeProvider() {
     return localeProvider;
   }
-
-  // Sidebar
-  public abstract @NotNull SidebarPacketAdapter<P, ?> createSidebarPacketAdapter(@NotNull Sidebar sidebar);
-
-  public abstract void displaySidebar(@NotNull Iterable<Player> players);
-
-  public abstract void removeSidebar(@NotNull Iterable<Player> players);
 
   // Objective
   public abstract @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName);

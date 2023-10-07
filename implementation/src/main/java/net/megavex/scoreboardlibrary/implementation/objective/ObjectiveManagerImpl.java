@@ -88,6 +88,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
   @Override
   public boolean addPlayer(@NotNull Player player) {
+    Preconditions.checkNotNull(player);
     checkClosed();
     if (!players.add(player)) {
       return false;
@@ -99,6 +100,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
   @Override
   public boolean removePlayer(@NotNull Player player) {
+    Preconditions.checkNotNull(player);
     checkClosed();
     if (!players.remove(player)) {
       return false;
