@@ -159,7 +159,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         }
       } else if (task instanceof ObjectiveManagerTask.AddObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.AddObjective) task).objective();
-        objective.sendProperties(players, ObjectivePacketAdapter.ObjectivePacketType.CREATE);
+        objective.sendProperties(displayingPlayers, ObjectivePacketAdapter.ObjectivePacketType.CREATE);
       } else if (task instanceof ObjectiveManagerTask.RemoveObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.RemoveObjective) task).objective();
         objective.packetAdapter().remove(displayingPlayers);
