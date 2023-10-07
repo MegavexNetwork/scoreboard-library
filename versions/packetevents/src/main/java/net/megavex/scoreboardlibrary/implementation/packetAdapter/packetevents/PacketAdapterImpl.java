@@ -54,7 +54,7 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
 
   @Override
   public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
-    throw new UnsupportedOperationException();
+    return new ObjectivePacketAdapterImpl(this, objectiveName);
   }
 
   @Override
