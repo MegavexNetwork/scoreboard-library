@@ -19,7 +19,7 @@ public final class PacketAccessors {
     ReflectUtil.findPacketConstructor(ClientboundSetObjectivePacket.class);
   public static final FieldAccessor<ClientboundSetObjectivePacket, String> OBJECTIVE_NAME_FIELD =
     ReflectUtil.fieldAccessor(ClientboundSetObjectivePacket.class, "d", String.class);
-  public static final FieldAccessor<ClientboundSetObjectivePacket, net.minecraft.network.chat.Component> OBJECTIVE_DISPLAY_NAME_FIELD =
+  public static final FieldAccessor<ClientboundSetObjectivePacket, net.minecraft.network.chat.Component> OBJECTIVE_VALUE_FIELD =
     ReflectUtil.fieldAccessor(ClientboundSetObjectivePacket.class, "e", net.minecraft.network.chat.Component.class);
   public static final FieldAccessor<ClientboundSetObjectivePacket, ObjectiveCriteria.RenderType> OBJECTIVE_RENDER_TYPE_FIELD =
     ReflectUtil.fieldAccessor(ClientboundSetObjectivePacket.class, "f", ObjectiveCriteria.RenderType.class);

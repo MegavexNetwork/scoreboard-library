@@ -3,14 +3,17 @@ package net.megavex.scoreboardlibrary.implementation.sidebar;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.SidebarPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
+import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.PlayerNameProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
+import net.megavex.scoreboardlibrary.implementation.sidebar.line.PlayerNameProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,9 +25,9 @@ import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
 
-public abstract class AbstractSidebar implements Sidebar {
+public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
-  private final SidebarPacketAdapter<?, ?> packetAdapter;
+  private final ObjectivePacketAdapter<?, ?> packetAdapter;
   private final List<String> linePlayerNames;
 
   private final GlobalLineInfo[] lines;
@@ -38,7 +41,9 @@ public abstract class AbstractSidebar implements Sidebar {
 
   public AbstractSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     this.scoreboardLibrary = scoreboardLibrary;
-    this.packetAdapter = scoreboardLibrary.packetAdapter().createSidebarPacketAdapter(this);
+
+    String objectiveName = UUID.randomUUID().toString().substring(0, 5);
+    this.packetAdapter = scoreboardLibrary.packetAdapter().createObjectiveAdapter(objectiveName);
     this.linePlayerNames = PlayerNameProvider.provideLinePlayerNames(maxLines);
     this.lines = new GlobalLineInfo[maxLines];
   }
@@ -140,7 +145,7 @@ public abstract class AbstractSidebar implements Sidebar {
     return scoreboardLibrary;
   }
 
-  public final @NotNull SidebarPacketAdapter<?, ?> packetAdapter() {
+  public final ObjectivePacketAdapter<?, ?> packetAdapter() {
     return packetAdapter;
   }
 
@@ -153,12 +158,12 @@ public abstract class AbstractSidebar implements Sidebar {
   }
 
   public final void show(@NotNull Player player) {
-    packetAdapter.sendObjectivePacket(Collections.singleton(player), SidebarPacketAdapter.ObjectivePacket.CREATE);
+    packetAdapter.sendProperties(players, ObjectivePacketAdapter.ObjectivePacketType.CREATE, title, ObjectiveRenderType.INTEGER, true);
 
     LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
     lineHandler.addPlayer(player);
     lineHandler.show(player);
-    scoreboardLibrary.packetAdapter().displaySidebar(Collections.singleton(player));
+    packetAdapter.display(Collections.singleton(player), ObjectiveDisplaySlot.sidebar());
   }
 
   public final void tick() {
@@ -170,17 +175,17 @@ public abstract class AbstractSidebar implements Sidebar {
 
       if (task instanceof SidebarTask.Close) {
         forEachSidebar(LocaleLineHandler::hide);
-        scoreboardLibrary.packetAdapter().removeSidebar(internalPlayers());
+        packetAdapter.remove(internalPlayers());
 
         for (Player player : internalPlayers()) {
-          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).removeSidebar(this);
+          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).sidebarQueue().remove(this);
         }
 
         return;
       } else if (task instanceof SidebarTask.AddPlayer) {
         SidebarTask.AddPlayer addPlayerTask = (SidebarTask.AddPlayer) task;
         ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
-        slPlayer.addSidebar(this);
+        slPlayer.sidebarQueue().add(this);
       } else if (task instanceof SidebarTask.RemovePlayer) {
         SidebarTask.RemovePlayer removePlayerTask = (SidebarTask.RemovePlayer) task;
         LocaleLineHandler lineHandler = removePlayer0(removePlayerTask.player());
@@ -190,9 +195,9 @@ public abstract class AbstractSidebar implements Sidebar {
 
         lineHandler.hide(removePlayerTask.player());
         lineHandler.removePlayer(removePlayerTask.player());
-        scoreboardLibrary.packetAdapter().removeSidebar(Collections.singleton(removePlayerTask.player()));
+        packetAdapter.remove(Collections.singleton(removePlayerTask.player()));
 
-        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeSidebar(this);
+        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).sidebarQueue().remove(this);
       } else if (task instanceof SidebarTask.ReloadPlayer) {
         SidebarTask.ReloadPlayer reloadPlayerTask = (SidebarTask.ReloadPlayer) task;
         @Nullable LocaleLineHandler lineHandler = removePlayer0(reloadPlayerTask.player());
@@ -200,7 +205,7 @@ public abstract class AbstractSidebar implements Sidebar {
           continue;
         }
 
-        scoreboardLibrary.packetAdapter().removeSidebar(Collections.singleton(reloadPlayerTask.player()));
+        packetAdapter.remove(Collections.singleton(reloadPlayerTask.player()));
         lineHandler.hide(reloadPlayerTask.player());
         lineHandler.removePlayer(reloadPlayerTask.player());
 
@@ -215,8 +220,7 @@ public abstract class AbstractSidebar implements Sidebar {
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachSidebar(LocaleLineHandler::updateScores);
       } else if (task instanceof SidebarTask.UpdateTitle) {
-        packetAdapter.updateTitle(title);
-        packetAdapter.sendObjectivePacket(internalPlayers(), SidebarPacketAdapter.ObjectivePacket.UPDATE);
+        packetAdapter.sendProperties(internalPlayers(), ObjectivePacketAdapter.ObjectivePacketType.UPDATE, title, ObjectiveRenderType.INTEGER, true);
       }
     }
   }

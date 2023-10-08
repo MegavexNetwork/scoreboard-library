@@ -44,7 +44,7 @@ class ModernLocaleLine implements LocaleLine<Component> {
 
   @Override
   public void sendScore(@NotNull Collection<Player> players) {
-    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), info.player());
+    handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, info.player(), info.objectiveScore());
   }
 
   @Override
@@ -55,7 +55,7 @@ class ModernLocaleLine implements LocaleLine<Component> {
 
   @Override
   public void hide(@NotNull Collection<Player> players) {
-    handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, info.player());
+    handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, info.player());
     info.packetAdapter().removeTeam(players);
   }
 

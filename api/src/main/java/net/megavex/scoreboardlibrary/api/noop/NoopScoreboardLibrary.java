@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,12 @@ public final class NoopScoreboardLibrary implements ScoreboardLibrary {
   public @NotNull TeamManager createTeamManager() {
     checkClosed();
     return new NoopTeamManager();
+  }
+
+  @Override
+  public @NotNull ObjectiveManager createObjectiveManager() {
+    checkClosed();
+    return new NoopObjectiveManager();
   }
 
   @Override

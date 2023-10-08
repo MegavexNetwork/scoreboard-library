@@ -5,8 +5,9 @@ import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
-import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
+import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
+import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +18,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class TeamManagerImpl implements TeamManager {
+public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
 
   private final Set<Player> players = CollectionProvider.set(8);
   private final Map<String, ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
-
-  private boolean closed;
-
   private final Queue<TeamManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
+  private boolean closed;
 
   public TeamManagerImpl(@NotNull ScoreboardLibraryImpl scoreboardLibrary) {
     this.scoreboardLibrary = scoreboardLibrary;
@@ -180,20 +179,20 @@ public class TeamManagerImpl implements TeamManager {
         }
 
         for (Player player : players) {
-          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).removeTeamManager(this);
+          Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).teamManagerQueue().remove(this);
         }
         return;
       } else if (task instanceof TeamManagerTask.AddPlayer) {
         TeamManagerTask.AddPlayer addPlayerTask = (TeamManagerTask.AddPlayer) task;
-        net.megavex.scoreboardlibrary.implementation.@NotNull ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
-        slPlayer.addTeamManager(this);
+        @NotNull ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
+        slPlayer.teamManagerQueue().add(this);
       } else if (task instanceof TeamManagerTask.RemovePlayer) {
         TeamManagerTask.RemovePlayer removePlayerTask = (TeamManagerTask.RemovePlayer) task;
         for (ScoreboardTeamImpl team : teams.values()) {
           team.removePlayer(removePlayerTask.player());
         }
 
-        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).removeTeamManager(this);
+        Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).teamManagerQueue().remove(this);
       } else if (task instanceof TeamManagerTask.ReloadPlayer) {
         TeamManagerTask.ReloadPlayer reloadPlayerTask = (TeamManagerTask.ReloadPlayer) task;
         for (ScoreboardTeamImpl team : teams.values()) {
@@ -207,7 +206,7 @@ public class TeamManagerImpl implements TeamManager {
         ScoreboardTeamImpl team = addTeamTask.team();
         for (Player player : team.displayMap().keySet()) {
           ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getPlayer(player);
-          if (slPlayer != null && slPlayer.teamManager() == this) {
+          if (slPlayer != null && slPlayer.teamManagerQueue().current() == this) {
             team.addPlayer(player);
           }
         }

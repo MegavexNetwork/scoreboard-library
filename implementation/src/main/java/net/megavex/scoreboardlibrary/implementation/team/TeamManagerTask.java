@@ -52,7 +52,6 @@ public class TeamManagerTask {
     }
   }
 
-
   public static final class AddTeam extends TeamManagerTask {
     private final ScoreboardTeamImpl team;
 
