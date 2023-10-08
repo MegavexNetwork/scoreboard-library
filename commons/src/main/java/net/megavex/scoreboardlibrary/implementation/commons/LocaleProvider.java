@@ -8,13 +8,21 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Locale;
+import java.util.function.Function;
 
-public interface LocaleProvider {
-  Locale DEFAULT_LOCALE = Locale.US;
+public final class LocaleProvider {
+  private static final Locale DEFAULT_LOCALE = Locale.US;
+  private static final Function<Player, Locale> provider = get();
 
-  static @NotNull LocaleProvider localeProvider() {
+  public static @NotNull Locale locale(Player player) {
+    return provider.apply(player);
+  }
+
+
+  private static @NotNull Function<Player, Locale> get() {
     MethodHandles.Lookup lookup = MethodHandles.publicLookup();
     try {
+      @SuppressWarnings("JavaLangInvokeHandleSignature")
       MethodHandle adventureMethod = lookup.findVirtual(Player.class, "locale", MethodType.methodType(Locale.class));
       return player -> {
         try {
@@ -54,6 +62,4 @@ public interface LocaleProvider {
       throw new RuntimeException("No way to get players locale found");
     }
   }
-
-  @NotNull Locale locale(@NotNull Player player);
 }

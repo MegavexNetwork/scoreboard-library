@@ -6,7 +6,8 @@ import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import org.bukkit.entity.Player;
@@ -39,7 +40,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
     Preconditions.checkNotNull(name);
     checkClosed();
     return objectives.computeIfAbsent(name, i -> {
-      ObjectivePacketAdapter<?, ?> packetAdapter = library.packetAdapter().createObjectiveAdapter(name);
+      ObjectivePacketAdapter packetAdapter = library.packetAdapter().createObjectiveAdapter(name);
       ScoreboardObjectiveImpl objective = new ScoreboardObjectiveImpl(packetAdapter, taskQueue, name);
       taskQueue.add(new ObjectiveManagerTask.AddObjective(objective));
       return objective;
@@ -157,17 +158,17 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         Player player = ((ObjectiveManagerTask.ReloadPlayer) task).player();
         Collection<Player> singleton = Collections.singleton(player);
         for (ScoreboardObjectiveImpl objective : objectives.values()) {
-          objective.sendProperties(singleton, ObjectivePacketAdapter.ObjectivePacketType.UPDATE);
+          objective.sendProperties(singleton, PropertiesPacketType.UPDATE);
         }
       } else if (task instanceof ObjectiveManagerTask.AddObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.AddObjective) task).objective();
-        objective.sendProperties(displayingPlayers, ObjectivePacketAdapter.ObjectivePacketType.CREATE);
+        objective.sendProperties(displayingPlayers, PropertiesPacketType.CREATE);
       } else if (task instanceof ObjectiveManagerTask.RemoveObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.RemoveObjective) task).objective();
         objective.packetAdapter().remove(displayingPlayers);
       } else if (task instanceof ObjectiveManagerTask.UpdateObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.UpdateObjective) task).objective();
-        objective.sendProperties(displayingPlayers, ObjectivePacketAdapter.ObjectivePacketType.UPDATE);
+        objective.sendProperties(displayingPlayers, PropertiesPacketType.UPDATE);
       } else if (task instanceof ObjectiveManagerTask.UpdateScore) {
         ObjectiveManagerTask.UpdateScore updateScoreTask = ((ObjectiveManagerTask.UpdateScore) task);
         ScoreboardObjectiveImpl objective = updateScoreTask.objective();
@@ -193,7 +194,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
     Collection<Player> singleton = Collections.singleton(player);
 
     for (ScoreboardObjectiveImpl objective : objectives.values()) {
-      objective.sendProperties(singleton, ObjectivePacketAdapter.ObjectivePacketType.CREATE);
+      objective.sendProperties(singleton, PropertiesPacketType.CREATE);
       for (Map.Entry<String, Integer> entry : objective.scores().entrySet()) {
         objective.packetAdapter().sendScore(singleton, entry.getKey(), entry.getValue());
       }

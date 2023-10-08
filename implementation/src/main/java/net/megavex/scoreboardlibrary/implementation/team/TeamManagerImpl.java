@@ -6,6 +6,8 @@ import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import org.bukkit.entity.Player;
@@ -198,7 +200,7 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
         for (ScoreboardTeamImpl team : teams.values()) {
           TeamDisplayImpl teamDisplay = team.displayMap().get(reloadPlayerTask.player());
           if (teamDisplay != null) {
-            teamDisplay.packetAdapter().updateTeam(Collections.singleton(reloadPlayerTask.player()));
+            teamDisplay.packetAdapter().sendProperties(PropertiesPacketType.UPDATE, Collections.singleton(reloadPlayerTask.player()));
           }
         }
       } else if (task instanceof TeamManagerTask.AddTeam) {
@@ -226,15 +228,15 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
         TeamManagerTask.UpdateTeamDisplay updateTeamDisplayTask = (TeamManagerTask.UpdateTeamDisplay) task;
         @NotNull TeamDisplayImpl teamDisplay = updateTeamDisplayTask.teamDisplay();
         teamDisplay.updateTeamPackets();
-        teamDisplay.packetAdapter().updateTeam(teamDisplay.players());
+        teamDisplay.packetAdapter().sendProperties(PropertiesPacketType.UPDATE, teamDisplay.players());
       } else if (task instanceof TeamManagerTask.AddEntries) {
         TeamManagerTask.AddEntries addEntriesTask = (TeamManagerTask.AddEntries) task;
         @NotNull TeamDisplayImpl teamDisplay = addEntriesTask.teamDisplay();
-        teamDisplay.packetAdapter().addEntries(teamDisplay.players(), addEntriesTask.entries());
+        teamDisplay.packetAdapter().sendEntries(EntriesPacketType.ADD, teamDisplay.players(), addEntriesTask.entries());
       } else if (task instanceof TeamManagerTask.RemoveEntries) {
         TeamManagerTask.RemoveEntries removeEntriesTask = (TeamManagerTask.RemoveEntries) task;
         @NotNull TeamDisplayImpl teamDisplay = removeEntriesTask.teamDisplay();
-        teamDisplay.packetAdapter().removeEntries(teamDisplay.players(), removeEntriesTask.entries());
+        teamDisplay.packetAdapter().sendEntries(EntriesPacketType.REMOVE, teamDisplay.players(), removeEntriesTask.entries());
       } else if (task instanceof TeamManagerTask.ChangeTeamDisplay) {
         TeamManagerTask.ChangeTeamDisplay changeTeamDisplayTask = (TeamManagerTask.ChangeTeamDisplay) task;
         changeTeamDisplayTask.team().changeTeamDisplay(changeTeamDisplayTask.player(), changeTeamDisplayTask.oldTeamDisplay(), changeTeamDisplayTask.newTeamDisplay());

@@ -3,7 +3,8 @@ package net.megavex.scoreboardlibrary.implementation.objective;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ import java.util.Queue;
 import static net.kyori.adventure.text.Component.empty;
 
 public class ScoreboardObjectiveImpl implements ScoreboardObjective {
-  private final ObjectivePacketAdapter<?, ?> packetAdapter;
+  private final ObjectivePacketAdapter packetAdapter;
   private final Queue<ObjectiveManagerTask> taskQueue;
   private final String name;
 
@@ -24,13 +25,13 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
   private boolean closed;
 
-  public ScoreboardObjectiveImpl(@NotNull ObjectivePacketAdapter<?, ?> packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
+  public ScoreboardObjectiveImpl(@NotNull ObjectivePacketAdapter packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
     this.packetAdapter = packetAdapter;
     this.taskQueue = taskQueue;
     this.name = name;
   }
 
-  public ObjectivePacketAdapter<?, ?> packetAdapter() {
+  public ObjectivePacketAdapter packetAdapter() {
     return packetAdapter;
   }
 
@@ -100,7 +101,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
     return this;
   }
 
-  public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketAdapter.ObjectivePacketType packetType) {
-    packetAdapter.sendProperties(players, packetType, value, renderType, true);
+  public void sendProperties(@NotNull Collection<Player> players, @NotNull PropertiesPacketType packetType) {
+    packetAdapter.sendProperties(players, packetType, value, renderType);
   }
 }

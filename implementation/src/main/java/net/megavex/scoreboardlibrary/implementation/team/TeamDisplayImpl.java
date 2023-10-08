@@ -9,7 +9,7 @@ import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ import static net.kyori.adventure.text.Component.empty;
 
 public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Component> {
   private final ScoreboardTeamImpl team;
-  private final TeamsPacketAdapter.TeamDisplayPacketAdapter<?> packetAdapter;
+  private final TeamDisplayPacketAdapter packetAdapter;
   private final Set<Player> players = CollectionProvider.set(4);
   private final Set<String> entries = CollectionProvider.set(4);
   private Component displayName = empty(),
@@ -197,7 +197,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
     return this;
   }
 
-  public @NotNull TeamsPacketAdapter.TeamDisplayPacketAdapter<?> packetAdapter() {
+  public @NotNull TeamDisplayPacketAdapter packetAdapter() {
     return packetAdapter;
   }
 

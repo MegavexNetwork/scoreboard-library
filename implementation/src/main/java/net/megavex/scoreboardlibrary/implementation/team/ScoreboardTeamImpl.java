@@ -3,7 +3,9 @@ package net.megavex.scoreboardlibrary.implementation.team;
 import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ScoreboardTeamImpl implements ScoreboardTeam {
   private final TeamManagerImpl teamManager;
   private final String name;
-  private final TeamsPacketAdapter<?, ?> packetAdapter;
+  private final TeamsPacketAdapter packetAdapter;
 
   private final TeamDisplayImpl defaultDisplay;
   private final Map<Player, TeamDisplayImpl> displayMap = new ConcurrentHashMap<>();
@@ -77,7 +79,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     return new TeamDisplayImpl(this);
   }
 
-  public @NotNull TeamsPacketAdapter<?, ?> packetAdapter() {
+  public @NotNull TeamsPacketAdapter packetAdapter() {
     return packetAdapter;
   }
 
@@ -88,7 +90,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
   public void addPlayer(@NotNull Player player) {
     TeamDisplayImpl teamDisplay = Objects.requireNonNull(displayMap.get(player));
     if (teamDisplay.players().add(player)) {
-      teamDisplay.packetAdapter().createTeam(Collections.singleton(player));
+      teamDisplay.packetAdapter().sendProperties(PropertiesPacketType.CREATE, Collections.singleton(player));
     }
   }
 
@@ -107,26 +109,26 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     newTeamDisplay.players().add(player);
 
     Collection<Player> singleton = Collections.singleton(player);
-    newTeamDisplay.packetAdapter().updateTeam(singleton);
+    newTeamDisplay.packetAdapter().sendProperties(PropertiesPacketType.UPDATE, singleton);
 
     Collection<String> oldEntries = oldTeamDisplay.entries();
     Collection<String> newEntries = newTeamDisplay.entries();
 
     if (oldEntries.isEmpty()) {
-      newTeamDisplay.packetAdapter().addEntries(singleton, newEntries);
+      newTeamDisplay.packetAdapter().sendEntries(EntriesPacketType.ADD, singleton, newEntries);
       return;
     }
 
     List<String> entries = new ArrayList<>(oldEntries);
     entries.removeAll(newEntries);
     if (!entries.isEmpty()) {
-      newTeamDisplay.packetAdapter().removeEntries(singleton, entries);
+      newTeamDisplay.packetAdapter().sendEntries(EntriesPacketType.REMOVE, singleton, entries);
     }
 
     entries = new ArrayList<>(newEntries);
     entries.removeAll(oldEntries);
     if (!entries.isEmpty()) {
-      newTeamDisplay.packetAdapter().addEntries(singleton, entries);
+      newTeamDisplay.packetAdapter().sendEntries(EntriesPacketType.ADD, singleton, entries);
     }
   }
 }

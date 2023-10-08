@@ -8,64 +8,63 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.ObjectiveConstants;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public class ObjectivePacketAdapterImpl extends ObjectivePacketAdapter<PacketWrapper<?>, PacketAdapterImpl> {
+public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
+  private final PacketSender<PacketWrapper<?>> provider;
+  private final String objectiveName;
   private WrapperPlayServerScoreboardObjective removePacket;
 
-  public ObjectivePacketAdapterImpl(@NotNull PacketAdapterImpl packetAdapter, @NotNull String objectiveName) {
-    super(packetAdapter, objectiveName);
+  public ObjectivePacketAdapterImpl(@NotNull PacketSender<PacketWrapper<?>> provider, @NotNull String objectiveName) {
+    this.provider = provider;
+    this.objectiveName = objectiveName;
   }
 
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
-    WrapperPlayServerDisplayScoreboard packet = new WrapperPlayServerDisplayScoreboard(ObjectiveConstants.displaySlotIndex(slot), objectiveName());
-    packetAdapter().sendPacket(players, packet);
+    WrapperPlayServerDisplayScoreboard packet = new WrapperPlayServerDisplayScoreboard(ObjectiveConstants.displaySlotIndex(slot), objectiveName);
+    provider.sendPacket(players, packet);
   }
 
   @Override
-  public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType, boolean renderRequired) {
-    if (!renderRequired) {
-      packetAdapter().sendPacket(players, createObjectivePacket(packetType, value, renderType));
-      return;
-    }
-
+  public void sendProperties(@NotNull Collection<Player> players, @NotNull PropertiesPacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType) {
     LocalePacketUtil.sendLocalePackets(
-      packetAdapter().localeProvider(),
-      null,
-      packetAdapter(),
-      players, locale -> createObjectivePacket(packetType, GlobalTranslator.render(value, locale), renderType)
+      provider,
+      players,
+      locale -> createObjectivePacket(packetType, GlobalTranslator.render(value, locale), renderType)
     );
   }
 
   @Override
   public void remove(@NotNull Collection<Player> players) {
     if (removePacket == null) {
-      removePacket = new WrapperPlayServerScoreboardObjective(objectiveName(), WrapperPlayServerScoreboardObjective.ObjectiveMode.REMOVE, null, null);
+      removePacket = new WrapperPlayServerScoreboardObjective(objectiveName, WrapperPlayServerScoreboardObjective.ObjectiveMode.REMOVE, null, null);
     }
-    packetAdapter().sendPacket(players, removePacket);
+    provider.sendPacket(players, removePacket);
   }
 
   @Override
   public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value) {
-    WrapperPlayServerUpdateScore packet = new WrapperPlayServerUpdateScore(entry, WrapperPlayServerUpdateScore.Action.CREATE_OR_UPDATE_ITEM, objectiveName(), Optional.of(value));
-    packetAdapter().sendPacket(players, packet);
+    WrapperPlayServerUpdateScore packet = new WrapperPlayServerUpdateScore(entry, WrapperPlayServerUpdateScore.Action.CREATE_OR_UPDATE_ITEM, objectiveName, Optional.of(value));
+    provider.sendPacket(players, packet);
   }
 
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
-    WrapperPlayServerUpdateScore packet = new WrapperPlayServerUpdateScore(entry, WrapperPlayServerUpdateScore.Action.REMOVE_ITEM, objectiveName(), Optional.empty());
-    packetAdapter().sendPacket(players, packet);
+    WrapperPlayServerUpdateScore packet = new WrapperPlayServerUpdateScore(entry, WrapperPlayServerUpdateScore.Action.REMOVE_ITEM, objectiveName, Optional.empty());
+    provider.sendPacket(players, packet);
   }
 
-  private WrapperPlayServerScoreboardObjective createObjectivePacket(@NotNull ObjectivePacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType) {
+  private WrapperPlayServerScoreboardObjective createObjectivePacket(@NotNull PropertiesPacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType) {
     WrapperPlayServerScoreboardObjective.ObjectiveMode peMode;
     switch (packetType) {
       case CREATE:
@@ -90,6 +89,6 @@ public class ObjectivePacketAdapterImpl extends ObjectivePacketAdapter<PacketWra
         throw new IllegalStateException();
     }
 
-    return new WrapperPlayServerScoreboardObjective(objectiveName(), peMode, value, peRenderType);
+    return new WrapperPlayServerScoreboardObjective(objectiveName, peMode, value, peRenderType);
   }
 }

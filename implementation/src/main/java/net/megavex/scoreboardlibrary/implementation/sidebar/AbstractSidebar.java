@@ -8,7 +8,8 @@ import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -27,7 +28,7 @@ import static net.kyori.adventure.text.Component.empty;
 
 public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
-  private final ObjectivePacketAdapter<?, ?> packetAdapter;
+  private final ObjectivePacketAdapter packetAdapter;
   private final List<String> linePlayerNames;
 
   private final GlobalLineInfo[] lines;
@@ -145,7 +146,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
     return scoreboardLibrary;
   }
 
-  public final ObjectivePacketAdapter<?, ?> packetAdapter() {
+  public final ObjectivePacketAdapter packetAdapter() {
     return packetAdapter;
   }
 
@@ -158,7 +159,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   }
 
   public final void show(@NotNull Player player) {
-    packetAdapter.sendProperties(players, ObjectivePacketAdapter.ObjectivePacketType.CREATE, title, ObjectiveRenderType.INTEGER, true);
+    packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER);
 
     LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
     lineHandler.addPlayer(player);
@@ -220,7 +221,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachSidebar(LocaleLineHandler::updateScores);
       } else if (task instanceof SidebarTask.UpdateTitle) {
-        packetAdapter.sendProperties(internalPlayers(), ObjectivePacketAdapter.ObjectivePacketType.UPDATE, title, ObjectiveRenderType.INTEGER, true);
+        packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER);
       }
     }
   }

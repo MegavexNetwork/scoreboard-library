@@ -61,7 +61,7 @@ public class ReflectUtil {
     }
   }
 
-  public static <T> PacketConstructor<T> findPacketConstructor(Class<T> packetClass) {
+  public static <T> @NotNull PacketConstructor<T> findPacketConstructor(@NotNull Class<T> packetClass) {
     try {
       MethodHandle constructor = LOOKUP.findConstructor(packetClass, VOID_METHOD_TYPE);
       return () -> {
@@ -85,7 +85,7 @@ public class ReflectUtil {
     };
   }
 
-  private static MethodHandle convertToGeneric(MethodHandle handle) {
+  private static @NotNull MethodHandle convertToGeneric(@NotNull MethodHandle handle) {
     MethodHandle target = handle.asFixedArity();
     MethodType methodType = MethodType.genericMethodType(0, true);
     target = target.asSpreader(Object[].class, handle.type().parameterCount());

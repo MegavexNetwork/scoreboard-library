@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
+import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
       return null;
     }
 
-    Locale locale = scoreboardLibrary().localeProvider().locale(player);
+    Locale locale = LocaleProvider.locale(player);
 
     sidebar = localeMap.get(locale);
     if (sidebar != null) {

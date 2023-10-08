@@ -3,27 +3,29 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team.TeamsPacketAdapterImpl;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrapper<?>> {
-  public PacketAdapterImpl() {
+@SuppressWarnings("unused")
+public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<PacketWrapper<?>> {
+  public PacketAdapterProviderImpl() {
     if (PacketEvents.getAPI() == null) {
       throw new IllegalStateException("PacketEvents exists in classpath but isn't loaded");
     }
   }
 
   @Override
-  public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
+  public @NotNull TeamsPacketAdapter createTeamPacketAdapter(@NotNull String teamName) {
     return new TeamsPacketAdapterImpl(this, teamName);
   }
 
   @Override
-  public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
+  public @NotNull ObjectivePacketAdapter createObjectiveAdapter(@NotNull String objectiveName) {
     return new ObjectivePacketAdapterImpl(this, objectiveName);
   }
 
@@ -35,8 +37,13 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
       .isOlderThanOrEquals(ClientVersion.V_1_12_2);
   }
 
-  @Override
   public void sendPacket(@NotNull Player player, @NotNull PacketWrapper<?> packet) {
     PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
+  }
+
+  public void sendPacket(@NotNull Iterable<Player> players, @NotNull PacketWrapper<?> packet) {
+    for (Player player : players) {
+      sendPacket(player, packet);
+    }
   }
 }

@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public class GlobalLineInfo {
   private final String player;
   private final int line;
-  private final TeamsPacketAdapter<?, ?> packetAdapter;
+  private final TeamsPacketAdapter packetAdapter;
   private Component value;
   private int objectiveScore;
   private boolean updateScore;
@@ -31,7 +31,7 @@ public class GlobalLineInfo {
     return line;
   }
 
-  public @NotNull TeamsPacketAdapter<?, ?> packetAdapter() {
+  public @NotNull TeamsPacketAdapter packetAdapter() {
     return packetAdapter;
   }
 

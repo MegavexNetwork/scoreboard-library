@@ -6,63 +6,23 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-public class AdventureTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> {
-  private final TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter;
-
-  public AdventureTeamDisplayPacketAdapter(TeamsPacketAdapter<PacketWrapper<?>, PacketAdapterImpl> packetAdapter, ImmutableTeamProperties<Component> properties) {
-    super(properties);
-    this.packetAdapter = packetAdapter;
+public class AdventureTeamDisplayPacketAdapter extends AbstractTeamDisplayPacketAdapter<Component> {
+  public AdventureTeamDisplayPacketAdapter(@NotNull PacketSender<PacketWrapper<?>> sender, @NotNull String teamName, @NotNull ImmutableTeamProperties<Component> properties) {
+    super(sender, teamName, properties);
   }
 
   @Override
-  public void addEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-    packetAdapter.packetAdapter().sendPacket(
-      players,
-      new WrapperPlayServerTeams(
-        packetAdapter.teamName(),
-        WrapperPlayServerTeams.TeamMode.ADD_ENTITIES,
-        (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
-        entries
-      )
-    );
-  }
-
-  @Override
-  public void removeEntries(@NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-    packetAdapter.packetAdapter().sendPacket(
-      players,
-      new WrapperPlayServerTeams(
-        packetAdapter.teamName(),
-        WrapperPlayServerTeams.TeamMode.REMOVE_ENTITIES,
-        (WrapperPlayServerTeams.ScoreBoardTeamInfo) null,
-        entries
-      )
-    );
-  }
-
-  @Override
-  public void createTeam(@NotNull Collection<Player> players) {
-    sendTeamPacket(players, false);
-  }
-
-  @Override
-  public void updateTeam(@NotNull Collection<Player> players) {
-    sendTeamPacket(players, true);
-  }
-
-  private void sendTeamPacket(Collection<Player> players, boolean update) {
+  public void sendProperties(@NotNull PropertiesPacketType packetType, @NotNull Collection<Player> players) {
     LocalePacketUtil.sendLocalePackets(
-      packetAdapter.packetAdapter().localeProvider(),
-      null,
-      packetAdapter.packetAdapter(),
+      sender,
       players,
       locale -> {
         Component displayName = GlobalTranslator.render(properties.displayName(), locale);
@@ -84,8 +44,8 @@ public class AdventureTeamDisplayPacketAdapter extends TeamsPacketAdapter.TeamDi
         );
 
         return new WrapperPlayServerTeams(
-          packetAdapter.teamName(),
-          update ? WrapperPlayServerTeams.TeamMode.UPDATE : WrapperPlayServerTeams.TeamMode.CREATE,
+          teamName,
+          mode(packetType),
           info,
           properties.entries()
         );

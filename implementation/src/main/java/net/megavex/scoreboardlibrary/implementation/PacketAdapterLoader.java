@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation;
 
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,14 +12,14 @@ public final class PacketAdapterLoader {
   private PacketAdapterLoader() {
   }
 
-  public static @NotNull ScoreboardLibraryPacketAdapter<?> loadPacketAdapter() throws NoPacketAdapterAvailableException {
+  public static @NotNull PacketAdapterProvider loadPacketAdapter() throws NoPacketAdapterAvailableException {
     Class<?> nmsClass = findAndLoadImplementationClass();
     if (nmsClass == null) {
       throw new NoPacketAdapterAvailableException();
     }
 
     try {
-      return (ScoreboardLibraryPacketAdapter<?>) nmsClass.getConstructors()[0].newInstance();
+      return (PacketAdapterProvider) nmsClass.getConstructors()[0].newInstance();
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException("couldn't initialize packet adapter", e);
     }
@@ -67,16 +67,15 @@ public final class PacketAdapterLoader {
 
     try {
       Class.forName("com.github.retrooper.packetevents.PacketEvents");
+      return nmsClass;
     } catch (ClassNotFoundException ignored) {
       return null;
     }
-
-    return nmsClass;
   }
 
   private static @Nullable Class<?> tryLoadImplementationClass(@NotNull String name) {
     try {
-      String path = "net.megavex.scoreboardlibrary.implementation.packetAdapter." + name + ".PacketAdapterImpl";
+      String path = "net.megavex.scoreboardlibrary.implementation.packetAdapter." + name + ".PacketAdapterProviderImpl";
       return Class.forName(path);
     } catch (ClassNotFoundException ignored) {
       return null;

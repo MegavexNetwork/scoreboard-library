@@ -1,30 +1,31 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
+import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ObjectivePacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective.PaperObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective.SpigotObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.PaperTeamsPacketAdapterImpl;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.TeamsPacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.SpigotTeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.PacketUtil;
 import net.minecraft.network.protocol.Packet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Objects;
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
-public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>> {
+public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<Packet<?>>, ComponentProvider {
   private boolean isNativeAdventure;
 
-  public PacketAdapterImpl() {
+  public PacketAdapterProviderImpl() {
     try {
       Class.forName("io.papermc.paper.adventure.PaperAdventure");
 
@@ -40,13 +41,17 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
   }
 
   @Override
-  public @NotNull ObjectivePacketAdapter<?, ?> createObjectiveAdapter(@NotNull String objectiveName) {
-    return isNativeAdventure ? new PaperObjectivePacketAdapter(this, objectiveName) : new SpigotObjectivePacketAdapter(this, objectiveName);
+  public @NotNull ObjectivePacketAdapter createObjectiveAdapter(@NotNull String objectiveName) {
+    return isNativeAdventure
+      ? new PaperObjectivePacketAdapter(this, this, objectiveName)
+      : new SpigotObjectivePacketAdapter(this, this, objectiveName);
   }
 
   @Override
-  public @NotNull TeamsPacketAdapter<?, ?> createTeamPacketAdapter(@NotNull String teamName) {
-    return isNativeAdventure ? new PaperTeamsPacketAdapterImpl(this, teamName) : new TeamsPacketAdapterImpl(this, teamName);
+  public @NotNull TeamsPacketAdapter createTeamPacketAdapter(@NotNull String teamName) {
+    return isNativeAdventure
+      ? new PaperTeamsPacketAdapterImpl(this, this, teamName)
+      : new SpigotTeamsPacketAdapter(this, this, teamName);
   }
 
   @Override
@@ -59,18 +64,13 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<Packet<?>>
     PacketUtil.sendPacket(player, packet);
   }
 
-  public net.minecraft.network.chat.Component fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
+  @Override
+  public net.minecraft.network.chat.@NotNull Component fromAdventure(@NotNull Component adventure, @NotNull Locale locale) {
     if (isNativeAdventure) {
       return NativeAdventureUtil.fromAdventureComponent(adventure);
     }
 
-    Component rendered;
-    if (locale != null) {
-      rendered = GlobalTranslator.render(adventure, Objects.requireNonNull(locale));
-    } else {
-      rendered = adventure;
-    }
-
-    return net.minecraft.network.chat.Component.Serializer.fromJson(gson().serializeToTree(rendered));
+    JsonElement json = gson().serializeToTree(GlobalTranslator.render(adventure, locale));
+    return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(json));
   }
 }

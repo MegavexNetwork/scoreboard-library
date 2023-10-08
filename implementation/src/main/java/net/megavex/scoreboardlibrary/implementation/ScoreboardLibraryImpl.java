@@ -6,10 +6,9 @@ import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.implementation.commons.LocaleProvider;
 import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveManagerImpl;
 import net.megavex.scoreboardlibrary.implementation.objective.ObjectiveUpdaterTask;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.ScoreboardLibraryPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.player.LocaleListener;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.scheduler.TaskScheduler;
@@ -33,8 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   private final Plugin plugin;
-  private final ScoreboardLibraryPacketAdapter<?> packetAdapter;
-  private final LocaleProvider localeProvider;
+  private final PacketAdapterProvider packetAdapter;
   private final TaskScheduler taskScheduler;
 
   private final Map<Player, ScoreboardLibraryPlayer> playerMap = new MapMaker().weakKeys().makeMap();
@@ -62,7 +60,6 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
     this.plugin = plugin;
     this.packetAdapter = PacketAdapterLoader.loadPacketAdapter();
-    this.localeProvider = this.packetAdapter.localeProvider();
     this.taskScheduler = TaskScheduler.create(plugin);
 
     boolean localeEventExists = false;
@@ -84,12 +81,8 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
     return plugin;
   }
 
-  public @NotNull ScoreboardLibraryPacketAdapter<?> packetAdapter() {
+  public @NotNull PacketAdapterProvider packetAdapter() {
     return packetAdapter;
-  }
-
-  public @NotNull LocaleProvider localeProvider() {
-    return localeProvider;
   }
 
   public @NotNull TaskScheduler taskScheduler() {

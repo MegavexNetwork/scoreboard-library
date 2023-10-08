@@ -1,7 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
 import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ class ModernLocaleLine implements LocaleLine<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;
-  private final TeamsPacketAdapter.TeamDisplayPacketAdapter<Component> packetAdapter;
+  private final TeamDisplayPacketAdapter packetAdapter;
 
   public ModernLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
@@ -39,7 +40,7 @@ class ModernLocaleLine implements LocaleLine<Component> {
   @Override
   public void updateTeam() {
     packetAdapter.updateTeamPackets(entries);
-    packetAdapter.updateTeam(handler.players());
+    packetAdapter.sendProperties(PropertiesPacketType.UPDATE, handler.players());
   }
 
   @Override
@@ -50,7 +51,7 @@ class ModernLocaleLine implements LocaleLine<Component> {
   @Override
   public void show(@NotNull Collection<Player> players) {
     sendScore(players);
-    packetAdapter.createTeam(players);
+    packetAdapter.sendProperties(PropertiesPacketType.CREATE, players);
   }
 
   @Override

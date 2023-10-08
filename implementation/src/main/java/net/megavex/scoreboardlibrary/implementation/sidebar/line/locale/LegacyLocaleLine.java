@@ -2,7 +2,9 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.TeamsPacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.SidebarLineHandler;
 import org.bukkit.ChatColor;
@@ -18,7 +20,7 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
-  private final TeamsPacketAdapter.TeamDisplayPacketAdapter<String> packetAdapter;
+  private final TeamDisplayPacketAdapter packetAdapter;
   private String player, oldPlayer;
   private String prefix, suffix;
   private String currentValue;
@@ -111,17 +113,17 @@ class LegacyLocaleLine implements LocaleLine<String> {
   public void updateTeam() {
     Set<Player> players = handler.players();
     if (oldPlayer != null) {
-      packetAdapter.removeEntries(players, Collections.singleton(oldPlayer));
+      packetAdapter.sendEntries(EntriesPacketType.REMOVE, players, Collections.singleton(oldPlayer));
       handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, oldPlayer);
       oldPlayer = null;
 
       Collection<String> entries = entries();
       packetAdapter.updateTeamPackets(entries);
-      packetAdapter.addEntries(players, entries);
+      packetAdapter.sendEntries(EntriesPacketType.ADD, players, entries);
       handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore());
     }
 
-    packetAdapter.updateTeam(players);
+    packetAdapter.sendProperties(PropertiesPacketType.UPDATE, players);
   }
 
   @Override
@@ -136,7 +138,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
   @Override
   public void show(@NotNull Collection<Player> players) {
     sendScore(players);
-    packetAdapter.createTeam(players);
+    packetAdapter.sendProperties(PropertiesPacketType.CREATE, players);
   }
 
   @Override

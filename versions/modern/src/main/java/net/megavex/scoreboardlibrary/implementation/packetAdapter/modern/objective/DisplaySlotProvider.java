@@ -1,7 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective;
 
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.ObjectiveConstants;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
 import net.minecraft.world.scores.DisplaySlot;
 import org.jetbrains.annotations.NotNull;
 

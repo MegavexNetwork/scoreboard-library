@@ -2,7 +2,9 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.object
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterProviderImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -10,30 +12,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public class SpigotObjectivePacketAdapter extends AbstractObjectivePacketAdapter {
-  public SpigotObjectivePacketAdapter(@NotNull PacketAdapterImpl packetAdapter, @NotNull String objectiveName) {
-    super(packetAdapter, objectiveName);
+  public SpigotObjectivePacketAdapter(@NotNull PacketAdapterProviderImpl packetAdapter, @NotNull ComponentProvider componentProvider, @NotNull String objectiveName) {
+    super(packetAdapter, componentProvider, objectiveName);
   }
 
   @Override
   public void sendProperties(
     @NotNull Collection<Player> players,
-    @NotNull ObjectivePacketType packetType,
+    @NotNull PropertiesPacketType packetType,
     @NotNull Component value,
-    @NotNull ObjectiveRenderType renderType,
-    boolean renderRequired
+    @NotNull ObjectiveRenderType renderType
   ) {
-    if (!renderRequired) {
-      net.minecraft.network.chat.Component nmsValue = packetAdapter().fromAdventure(value, null);
-      packetAdapter().sendPacket(players, createPacket(packetType, nmsValue, renderType));
-      return;
-    }
-
     LocalePacketUtil.sendLocalePackets(
-      packetAdapter().localeProvider(),
-      null,
-      packetAdapter(),
+      sender,
       players,
-      locale -> createPacket(packetType, packetAdapter().fromAdventure(value, locale), renderType)
+      locale -> createPacket(packetType, componentProvider.fromAdventure(value, locale), renderType)
     );
   }
 }

@@ -3,7 +3,9 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.object
 import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterImpl;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterProviderImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
@@ -14,12 +16,17 @@ import java.util.Collection;
 public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter {
   private AdventureComponent lastValue;
 
-  public PaperObjectivePacketAdapter(@NotNull PacketAdapterImpl packetAdapter, @NotNull String objectiveName) {
-    super(packetAdapter, objectiveName);
+  public PaperObjectivePacketAdapter(@NotNull PacketAdapterProviderImpl packetAdapter, @NotNull ComponentProvider componentProvider, @NotNull String objectiveName) {
+    super(packetAdapter, componentProvider, objectiveName);
   }
 
   @Override
-  public void sendProperties(@NotNull Collection<Player> players, @NotNull ObjectivePacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType, boolean renderRequired) {
+  public void sendProperties(
+    @NotNull Collection<Player> players,
+    @NotNull PropertiesPacketType packetType,
+    @NotNull Component value,
+    @NotNull ObjectiveRenderType renderType
+  ) {
     AdventureComponent nmsValue;
     if (this.lastValue != null && this.lastValue.adventure$component() == value) {
       nmsValue = this.lastValue;
@@ -29,6 +36,6 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
     }
 
     ClientboundSetObjectivePacket packet = createPacket(packetType, nmsValue, renderType);
-    packetAdapter().sendPacket(players, packet);
+    sender.sendPacket(players, packet);
   }
 }
