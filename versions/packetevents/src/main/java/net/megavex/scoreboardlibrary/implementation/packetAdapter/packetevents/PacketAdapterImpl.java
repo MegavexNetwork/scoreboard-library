@@ -29,17 +29,14 @@ public class PacketAdapterImpl extends ScoreboardLibraryPacketAdapter<PacketWrap
 
   @Override
   public boolean isLegacy(@NotNull Player player) {
-    return clientVersion(player).isOlderThanOrEquals(ClientVersion.V_1_12_2);
+    return PacketEvents.getAPI()
+      .getPlayerManager()
+      .getClientVersion(player)
+      .isOlderThanOrEquals(ClientVersion.V_1_12_2);
   }
 
   @Override
   public void sendPacket(@NotNull Player player, @NotNull PacketWrapper<?> packet) {
     PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
-  }
-
-  public ClientVersion clientVersion(@NotNull Player player) {
-    return PacketEvents.getAPI()
-      .getPlayerManager()
-      .getClientVersion(player);
   }
 }

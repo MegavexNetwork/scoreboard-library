@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisplayScoreboard;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
@@ -27,23 +26,8 @@ public class ObjectivePacketAdapterImpl extends ObjectivePacketAdapter<PacketWra
 
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
-    int slotIndex = ObjectiveConstants.displaySlotIndex(slot, false);
-    int legacySlotIndex = ObjectiveConstants.displaySlotIndex(slot, true);
-
-    if (slotIndex == legacySlotIndex) {
-      packetAdapter().sendPacket(players, new WrapperPlayServerDisplayScoreboard(slotIndex, objectiveName()));
-      return;
-    }
-
-    WrapperPlayServerDisplayScoreboard modern = new WrapperPlayServerDisplayScoreboard(slotIndex, objectiveName());
-    WrapperPlayServerDisplayScoreboard legacy = new WrapperPlayServerDisplayScoreboard(legacySlotIndex, objectiveName());
-    for (Player player : players) {
-      if (packetAdapter().clientVersion(player).isNewerThanOrEquals(ClientVersion.V_1_12_2)) {
-        packetAdapter().sendPacket(player, modern);
-      } else {
-        packetAdapter().sendPacket(player, legacy);
-      }
-    }
+    WrapperPlayServerDisplayScoreboard packet = new WrapperPlayServerDisplayScoreboard(ObjectiveConstants.displaySlotIndex(slot), objectiveName());
+    packetAdapter().sendPacket(players, packet);
   }
 
   @Override

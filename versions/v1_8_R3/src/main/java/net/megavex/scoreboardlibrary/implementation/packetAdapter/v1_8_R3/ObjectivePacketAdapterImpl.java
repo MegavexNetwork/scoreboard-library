@@ -25,7 +25,7 @@ public class ObjectivePacketAdapterImpl extends ObjectivePacketAdapter<Packet<Pa
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
     PacketPlayOutScoreboardDisplayObjective packet = new PacketPlayOutScoreboardDisplayObjective();
-    PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot, true));
+    PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot));
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName());
     packetAdapter().sendPacket(players, packet);
   }

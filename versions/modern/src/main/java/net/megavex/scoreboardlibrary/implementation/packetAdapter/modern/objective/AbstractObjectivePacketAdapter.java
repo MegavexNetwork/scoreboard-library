@@ -64,7 +64,7 @@ public abstract class AbstractObjectivePacketAdapter extends ObjectivePacketAdap
         int.class,
         Objective.class
       );
-      packet = constructor.invoke(ObjectiveConstants.displaySlotIndex(displaySlot, false), null);
+      packet = constructor.invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
     }
 
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName());

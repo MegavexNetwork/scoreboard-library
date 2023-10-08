@@ -13,6 +13,6 @@ public final class DisplaySlotProvider {
   }
 
   public static @NotNull DisplaySlot toNms(@NotNull ObjectiveDisplaySlot slot) {
-    return VALUES[ObjectiveConstants.displaySlotIndex(slot, false)];
+    return VALUES[ObjectiveConstants.displaySlotIndex(slot)];
   }
 }

@@ -27,7 +27,7 @@ public final class ObjectiveConstants {
     }
   }
 
-  public static int displaySlotIndex(@NotNull ObjectiveDisplaySlot slot, boolean isLegacy) {
+  public static int displaySlotIndex(@NotNull ObjectiveDisplaySlot slot) {
     if (slot instanceof ObjectiveDisplaySlot.PlayerList) {
       return 0;
     }
@@ -38,11 +38,6 @@ public final class ObjectiveConstants {
 
     if (slot instanceof ObjectiveDisplaySlot.BelowName) {
       return 2;
-    }
-
-    // Colored sidebar slots don't exist in legacy versions
-    if (isLegacy) {
-      return 1;
     }
 
     NamedTextColor color = ((ObjectiveDisplaySlot.TeamSidebar) slot).teamColor();
