@@ -21,9 +21,9 @@ public abstract class AbstractTeamsPacketAdapterImpl extends TeamsPacketAdapter<
   static final PacketConstructor<Parameters> parametersConstructor =
     ReflectUtil.findPacketConstructor(Parameters.class);
 
-  protected ClientboundSetPlayerTeamPacket removePacket;
+  private ClientboundSetPlayerTeamPacket removePacket;
 
-  AbstractTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
+  public AbstractTeamsPacketAdapterImpl(PacketAdapterImpl impl, String teamName) {
     super(impl, teamName);
   }
 

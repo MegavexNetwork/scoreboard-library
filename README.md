@@ -11,6 +11,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Sidebars. Up to 42 characters (depends on the formatting) for 1.12.2 and below, no limit for newer versions
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
+- Objectives.
 - Doesn't require extra dependencies (assuming you're targeting the latest version of Paper)
 - Packet-level, meaning it works with other scoreboard plugins (and is faster)
 - Supports [Folia](https://github.com/PaperMC/Folia)
@@ -263,4 +264,18 @@ team.display(player, newTeamDisplay);
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();
+```
+
+### ObjectiveManager
+
+```java
+ObjectiveManager objectiveManager = scoreboardLibrary.createObjectiveManager();
+ScoreboardObjective objective = objectiveManager.create("coolobjective");
+objective.value(Component.text("Display name"));
+objective.score(player.getName(), 69420);
+
+objectiveManager.addPlayer(player); // Make a player see the objectives
+
+// After you've finished using the ObjectiveManager, make sure to close it to prevent a memory leak:
+objectiveManager.close();
 ```

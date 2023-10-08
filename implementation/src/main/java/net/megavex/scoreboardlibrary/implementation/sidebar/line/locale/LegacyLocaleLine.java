@@ -112,13 +112,13 @@ class LegacyLocaleLine implements LocaleLine<String> {
     Set<Player> players = handler.players();
     if (oldPlayer != null) {
       packetAdapter.removeEntries(players, Collections.singleton(oldPlayer));
-      handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
+      handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, oldPlayer);
       oldPlayer = null;
 
       Collection<String> entries = entries();
       packetAdapter.updateTeamPackets(entries);
       packetAdapter.addEntries(players, entries);
-      handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), player);
+      handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore());
     }
 
     packetAdapter.updateTeam(players);
@@ -127,10 +127,10 @@ class LegacyLocaleLine implements LocaleLine<String> {
   @Override
   public void sendScore(@NotNull Collection<Player> players) {
     if (oldPlayer != null) {
-      handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
+      handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, oldPlayer);
     }
 
-    handler.localeLineHandler().sidebar().packetAdapter().score(players, info.objectiveScore(), player);
+    handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore());
   }
 
   @Override
@@ -142,10 +142,10 @@ class LegacyLocaleLine implements LocaleLine<String> {
   @Override
   public void hide(@NotNull Collection<Player> players) {
     if (oldPlayer != null) {
-      handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, oldPlayer);
+      handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, oldPlayer);
     }
 
-    handler.localeLineHandler().sidebar().packetAdapter().removeLine(players, player);
+    handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, player);
     info.packetAdapter().removeTeam(players);
   }
 }

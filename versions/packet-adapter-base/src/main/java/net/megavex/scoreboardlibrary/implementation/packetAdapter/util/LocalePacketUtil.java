@@ -23,22 +23,28 @@ public final class LocalePacketUtil {
     @NotNull Collection<Player> players,
     @NotNull Function<Locale, P> packetFunction
   ) {
-    if (players.isEmpty()) return;
+    if (players.isEmpty()) {
+      return;
+    }
 
     if (specificLocale != null) {
       P packet = packetFunction.apply(specificLocale);
       nms.sendPacket(players, packet);
-    } else if (players.size() == 1) {
+      return;
+    }
+
+    if (players.size() == 1) {
       Player player = players.iterator().next();
       P packet = packetFunction.apply(localeProvider.locale(player));
       nms.sendPacket(player, packet);
-    } else {
-      Map<Locale, P> map = CollectionProvider.map(1);
-      for (Player player : players) {
-        Locale locale = localeProvider.locale(player);
-        P packet = map.computeIfAbsent(locale, i -> packetFunction.apply(locale));
-        nms.sendPacket(player, packet);
-      }
+      return;
+    }
+
+    Map<Locale, P> map = CollectionProvider.map(1);
+    for (Player player : players) {
+      Locale locale = localeProvider.locale(player);
+      P packet = map.computeIfAbsent(locale, i -> packetFunction.apply(locale));
+      nms.sendPacket(player, packet);
     }
   }
 }
