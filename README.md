@@ -273,6 +273,7 @@ ObjectiveManager objectiveManager = scoreboardLibrary.createObjectiveManager();
 ScoreboardObjective objective = objectiveManager.create("coolobjective");
 objective.value(Component.text("Display name"));
 objective.score(player.getName(), 69420);
+objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
 
 objectiveManager.addPlayer(player); // Make a player see the objectives
 
