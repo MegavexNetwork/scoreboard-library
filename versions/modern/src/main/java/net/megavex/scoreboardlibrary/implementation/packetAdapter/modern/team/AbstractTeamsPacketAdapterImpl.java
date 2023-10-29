@@ -73,32 +73,21 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
     }
 
     protected void fillTeamPacket(ClientboundSetPlayerTeamPacket packet, Collection<String> entries) {
-      if (packet.getPlayers() != entries) {
-        PacketAccessors.ENTRIES_FIELD.set(packet, entries);
-      }
+      PacketAccessors.ENTRIES_FIELD.set(packet, entries);
     }
 
     protected void fillParameters(@NotNull Parameters parameters, @UnknownNullability Locale locale) {
       String nameTagVisibilityKey = properties.nameTagVisibility().key();
-      if (!Objects.equals(parameters.getNametagVisibility(), nameTagVisibilityKey)) {
-        PacketAccessors.NAME_TAG_VISIBILITY_FIELD.set(parameters, nameTagVisibilityKey);
-      }
+      PacketAccessors.NAME_TAG_VISIBILITY_FIELD.set(parameters, nameTagVisibilityKey);
 
       String collisionRuleKey = properties.collisionRule().key();
-      if (!Objects.equals(parameters.getCollisionRule(), collisionRuleKey)) {
-        PacketAccessors.COLLISION_RULE_FIELD.set(parameters, collisionRuleKey);
-      }
+      PacketAccessors.COLLISION_RULE_FIELD.set(parameters, collisionRuleKey);
 
       char legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
-      //noinspection ConstantValue
-      if (parameters.getColor() == null || parameters.getColor().getChar() != legacyChar) {
-        PacketAccessors.COLOR_FIELD.set(parameters, ChatFormatting.getByCode(legacyChar));
-      }
+      PacketAccessors.COLOR_FIELD.set(parameters, ChatFormatting.getByCode(legacyChar));
 
       int options = properties.packOptions();
-      if (parameters.getOptions() != options) {
-        PacketAccessors.OPTIONS_FIELD.set(parameters, options);
-      }
+      PacketAccessors.OPTIONS_FIELD.set(parameters, options);
     }
   }
 }
