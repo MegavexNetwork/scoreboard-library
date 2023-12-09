@@ -53,6 +53,8 @@ public final class PacketAdapterLoader {
       case "1.20-R0.1-SNAPSHOT":
       case "1.20.1-R0.1-SNAPSHOT":
       case "1.20.2-R0.1-SNAPSHOT":
+      case "1.20.3-R0.1-SNAPSHOT":
+      case "1.20.4-R0.1-SNAPSHOT":
         return tryLoadImplementationClass("modern");
       default:
         return null;

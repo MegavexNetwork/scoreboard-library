@@ -2,25 +2,25 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.object
 
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.server.ServerScoreboard;
-import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Objects;
 
 public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketAdapter {
   protected final PacketSender<Packet<?>> sender;
@@ -42,22 +42,37 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   @Override
   public void remove(@NotNull Collection<Player> players) {
     if (removePacket == null) {
-      this.removePacket = ReflectUtil.findPacketConstructor(ClientboundSetObjectivePacket.class).invoke();
-      PacketAccessors.SET_OBJECTIVE_NAME.set(removePacket, objectiveName);
-      PacketAccessors.SET_OBJECTIVE_MODE.set(removePacket, ObjectiveConstants.MODE_REMOVE);
+      this.removePacket = ReflectUtil.findEmptyConstructor(ClientboundSetObjectivePacket.class).invoke();
+      PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
+      PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
     sender.sendPacket(players, removePacket);
   }
 
   @Override
   public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value) {
-    ClientboundSetScorePacket packet = new ClientboundSetScorePacket(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
+    ClientboundSetScorePacket packet;
+    try {
+      Class.forName("net.minecraft.network.chat.numbers.NumberFormat"); // Added in 1.20.3
+      packet = new ClientboundSetScorePacket(entry, objectiveName, value, null, null);
+    } catch (ClassNotFoundException ignored) {
+      packet = Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
+        .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
+    }
+
     sender.sendPacket(players, packet);
   }
 
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
-    ClientboundSetScorePacket packet = new ClientboundSetScorePacket(ServerScoreboard.Method.REMOVE, objectiveName, entry, 0);
+    Packet<?> packet;
+    try {
+      Class.forName("net.minecraft.network.protocol.game.ClientboundResetScorePacket"); // Added in 1.20.3
+      packet = new ClientboundResetScorePacket(entry, objectiveName);
+    } catch (ClassNotFoundException ignored) {
+      packet = Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
+        .invoke(ServerScoreboard.Method.REMOVE, objectiveName, entry, 0);
+    }
     sender.sendPacket(players, packet);
   }
 
@@ -67,12 +82,8 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
       Class.forName("net.minecraft.world.scores.DisplaySlot"); // Added in 1.20.2
       packet = new ClientboundSetDisplayObjectivePacket(DisplaySlotProvider.toNms(displaySlot), null);
     } catch (ClassNotFoundException ignored) {
-      ConstructorAccessor<ClientboundSetDisplayObjectivePacket> constructor = ReflectUtil.constructorAccessor(
-        ClientboundSetDisplayObjectivePacket.class,
-        int.class,
-        Objective.class
-      );
-      packet = constructor.invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
+      packet = Objects.requireNonNull(PacketAccessors.DISPLAY_LEGACY_CONSTRUCTOR)
+        .invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
     }
 
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName);

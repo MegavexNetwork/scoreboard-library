@@ -22,7 +22,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Packet Adapters
 
-- **modern.** Supports 1.17-1.20.2. Takes advantage of [Paper](https://papermc.io)'s native adventure support to improve
+- **modern.** Supports 1.17-1.20.4. Takes advantage of [Paper](https://papermc.io)'s native adventure support to improve
   performance. [Spigot](https://www.spigotmc.org/) is also supported, but will have worse performance
 - **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
   classpath. Should work on all versions 1.8+

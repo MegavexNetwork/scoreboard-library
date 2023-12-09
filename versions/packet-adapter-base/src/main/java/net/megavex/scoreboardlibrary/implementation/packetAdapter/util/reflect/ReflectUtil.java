@@ -1,12 +1,14 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class ReflectUtil {
   // Inspired by
@@ -43,25 +45,43 @@ public class ReflectUtil {
   private ReflectUtil() {
   }
 
-  public static <T, V> @NotNull FieldAccessor<T, V> fieldAccessor(@NotNull Class<T> clazz, @NotNull String name, @NotNull Class<V> valueClass) {
-    try {
-      MethodHandle setter = LOOKUP.findSetter(clazz, name, valueClass).asType(VIRTUAL_FIELD_SETTER);
-      return new FieldAccessor<>(setter);
-    } catch (NoSuchFieldException | IllegalAccessException e) {
-      throw new IllegalStateException("couldn't get field accessor", e);
-    }
+  public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, @NotNull String name, @NotNull Class<V> valueClass) {
+    return findField(clazz, new String[]{name}, valueClass);
   }
 
-  public static <T> @NotNull ConstructorAccessor<T> constructorAccessor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
+  public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, @NotNull String[] names, @NotNull Class<V> valueClass) {
+    for (String name : names) {
+      try {
+        MethodHandle setter = LOOKUP.findSetter(clazz, name, valueClass).asType(VIRTUAL_FIELD_SETTER);
+        return new FieldAccessor<>(setter);
+      } catch (NoSuchFieldException ignored) {
+      } catch (IllegalAccessException e) {
+        throw new IllegalStateException("couldn't get field accessor", e);
+      }
+    }
+
+    throw new IllegalStateException("couldn't find field on class " + clazz.getSimpleName() + " with names " + Arrays.toString(names));
+  }
+
+  public static <T> @NotNull ConstructorAccessor<T> findConstructorOrThrow(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
+    ConstructorAccessor<T> accessor = findConstructor(clazz, args);
+    if (accessor == null) {
+      throw new IllegalStateException("couldn't get constructor accessor for class " + clazz.getSimpleName());
+    }
+
+    return accessor;
+  }
+
+  public static <T> @Nullable ConstructorAccessor<T> findConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
     try {
       MethodHandle handle = LOOKUP.findConstructor(clazz, MethodType.methodType(void.class, args));
       return new ConstructorAccessor<>(convertToGeneric(handle));
     } catch (NoSuchMethodException | IllegalAccessException e) {
-      throw new IllegalStateException("couldn't get constructor accessor", e);
+      return null;
     }
   }
 
-  public static <T> @NotNull PacketConstructor<T> findPacketConstructor(@NotNull Class<T> packetClass) {
+  public static <T> @NotNull PacketConstructor<T> findEmptyConstructor(@NotNull Class<T> packetClass) {
     try {
       MethodHandle constructor = LOOKUP.findConstructor(packetClass, VOID_METHOD_TYPE);
       return () -> {
@@ -80,7 +100,7 @@ public class ReflectUtil {
         // noinspection unchecked
         return (T) UNSAFE.allocateInstance(packetClass);
       } catch (Throwable e) {
-        throw new IllegalStateException("couldn't allocate packet instance using unsafe", e);
+        throw new IllegalStateException("couldn't allocate packet instance using Unsafe", e);
       }
     };
   }
