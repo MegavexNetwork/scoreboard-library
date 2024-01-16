@@ -41,6 +41,7 @@ try {
 } catch (NoPacketAdapterAvailableException e) {
   // If no packet adapter was found, you can fallback to the no-op implementation:
   scoreboardLibrary = new NoopScoreboardLibrary();
+  plugin.getLogger().warning("No scoreboard packet adapter available!");
 }
 
 // On plugin shutdown:
