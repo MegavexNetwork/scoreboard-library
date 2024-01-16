@@ -28,7 +28,7 @@ dependencies {
 
   // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
   // Follow either of:
-  // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
+  // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre%E2%80%90built-PacketEvents
   // - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
   // Example how to load PacketEvents in your plugin:
   // https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java
