@@ -25,31 +25,36 @@ public class DisplayableQueue<T extends PlayerDisplayable> {
     }
   }
 
-  public synchronized void add(@NotNull T manager) {
-    if (queue.contains(manager)) {
-      throw new RuntimeException("manager already registered");
+  public synchronized void add(@NotNull T displayable) {
+    if (queue.contains(displayable)) {
+      throw new IllegalStateException("displayable already registered");
     }
 
-    queue.add(manager);
+    queue.add(displayable);
 
-    if (current() == manager) {
+    if (current() == displayable) {
       Player player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
-        manager.show(player);
+        displayable.display(player);
       }
     }
   }
 
-  public synchronized void remove(@NotNull T manager) {
-    if (!queue.remove(manager)) {
-      throw new RuntimeException("manager not registered");
+  public synchronized void remove(@NotNull T displayable) {
+    boolean wasCurrent = displayable == current();
+    if (!queue.remove(displayable)) {
+      throw new IllegalStateException("displayable not registered");
     }
 
-    T newTeamManager = current();
-    if (newTeamManager != null) {
+    if (!wasCurrent) {
+      return;
+    }
+
+    T newDisplayable = current();
+    if (newDisplayable != null) {
       Player player = Bukkit.getPlayer(playerUuid);
       if (player != null) {
-        newTeamManager.show(player);
+        newDisplayable.display(player);
       }
     }
   }

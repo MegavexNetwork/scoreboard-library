@@ -51,7 +51,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
 
   protected abstract @NotNull Set<Player> internalPlayers();
 
-  protected abstract void forEachSidebar(@NotNull Consumer<LocaleLineHandler> consumer);
+  protected abstract void forEachLineHandler(@NotNull Consumer<LocaleLineHandler> consumer);
 
   protected abstract @Nullable LocaleLineHandler addPlayer0(@NotNull Player player);
 
@@ -158,7 +158,8 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
     return taskQueue;
   }
 
-  public final void show(@NotNull Player player) {
+  @Override
+  public final void display(@NotNull Player player) {
     packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER);
 
     LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
@@ -167,7 +168,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
     packetAdapter.display(Collections.singleton(player), ObjectiveDisplaySlot.sidebar());
   }
 
-  public final void tick() {
+  public final boolean tick() {
     while (true) {
       SidebarTask task = taskQueue.poll();
       if (task == null) {
@@ -175,33 +176,32 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       }
 
       if (task instanceof SidebarTask.Close) {
-        forEachSidebar(LocaleLineHandler::hide);
+        forEachLineHandler(LocaleLineHandler::hide);
         packetAdapter.remove(internalPlayers());
 
         for (Player player : internalPlayers()) {
           Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).sidebarQueue().remove(this);
         }
 
-        return;
+        return false;
       } else if (task instanceof SidebarTask.AddPlayer) {
         SidebarTask.AddPlayer addPlayerTask = (SidebarTask.AddPlayer) task;
         ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
         slPlayer.sidebarQueue().add(this);
       } else if (task instanceof SidebarTask.RemovePlayer) {
         SidebarTask.RemovePlayer removePlayerTask = (SidebarTask.RemovePlayer) task;
-        LocaleLineHandler lineHandler = removePlayer0(removePlayerTask.player());
-        if (lineHandler == null) {
-          continue;
-        }
 
-        lineHandler.hide(removePlayerTask.player());
-        lineHandler.removePlayer(removePlayerTask.player());
-        packetAdapter.remove(Collections.singleton(removePlayerTask.player()));
+        LocaleLineHandler lineHandler = removePlayer0(removePlayerTask.player());
+        if (lineHandler != null) {
+          lineHandler.hide(removePlayerTask.player());
+          lineHandler.removePlayer(removePlayerTask.player());
+          packetAdapter.remove(Collections.singleton(removePlayerTask.player()));
+        }
 
         Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).sidebarQueue().remove(this);
       } else if (task instanceof SidebarTask.ReloadPlayer) {
         SidebarTask.ReloadPlayer reloadPlayerTask = (SidebarTask.ReloadPlayer) task;
-        @Nullable LocaleLineHandler lineHandler = removePlayer0(reloadPlayerTask.player());
+        LocaleLineHandler lineHandler = removePlayer0(reloadPlayerTask.player());
         if (lineHandler == null) {
           continue;
         }
@@ -210,20 +210,21 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
         lineHandler.hide(reloadPlayerTask.player());
         lineHandler.removePlayer(reloadPlayerTask.player());
 
-        show(reloadPlayerTask.player());
+        display(reloadPlayerTask.player());
       } else if (task instanceof SidebarTask.UpdateLine) {
         SidebarTask.UpdateLine updateLineTask = (SidebarTask.UpdateLine) task;
-        forEachSidebar(sidebar -> {
+        forEachLineHandler(sidebar -> {
           Component value = lines[updateLineTask.line()].value();
           Component renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
           sidebar.updateLine(updateLineTask.line(), renderedValue);
         });
       } else if (task instanceof SidebarTask.UpdateScores) {
-        forEachSidebar(LocaleLineHandler::updateScores);
+        forEachLineHandler(LocaleLineHandler::updateScores);
       } else if (task instanceof SidebarTask.UpdateTitle) {
         packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER);
       }
     }
+    return true;
   }
 
   private void updateScores() {

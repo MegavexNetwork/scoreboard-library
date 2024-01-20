@@ -4,6 +4,7 @@ import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.scheduler.RunningTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 
 public class TeamUpdaterTask implements Runnable {
@@ -27,11 +28,19 @@ public class TeamUpdaterTask implements Runnable {
   @Override
   public void run() {
     synchronized (lock) {
-      for (TeamManagerImpl teamManager : scoreboardLibrary.teamManagers()) {
+      Iterator<TeamManagerImpl> iterator = scoreboardLibrary.teamManagers().iterator();
+      while (iterator.hasNext()) {
+        TeamManagerImpl teamManager = iterator.next();
+        boolean result;
         try {
-          teamManager.tick();
+          result = teamManager.tick();
         } catch (Exception e) {
-          scoreboardLibrary.plugin().getLogger().log(Level.SEVERE, "an error occurred while updating a TeamManager instance", e);
+          scoreboardLibrary.plugin().getLogger().log(Level.WARNING, "an error occurred while updating a TeamManager instance", e);
+          continue;
+        }
+
+        if (!result) {
+          iterator.remove();
         }
       }
     }

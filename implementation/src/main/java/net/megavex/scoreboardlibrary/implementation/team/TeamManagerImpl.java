@@ -156,13 +156,13 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
     return taskQueue;
   }
 
-  public void show(@NotNull Player player) {
+  public void display(@NotNull Player player) {
     for (ScoreboardTeamImpl team : teams.values()) {
       team.addPlayer(player);
     }
   }
 
-  public void tick() {
+  public boolean tick() {
     while (true) {
       TeamManagerTask task = taskQueue.poll();
       if (task == null) {
@@ -170,8 +170,6 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
       }
 
       if (task instanceof TeamManagerTask.Close) {
-        scoreboardLibrary.teamManagers().remove(this);
-
         for (ScoreboardTeamImpl team : teams.values()) {
           Set<Player> removePlayers = CollectionProvider.set(players.size());
           for (TeamDisplayImpl value : team.displayMap().values()) {
@@ -183,7 +181,7 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
         for (Player player : players) {
           Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).teamManagerQueue().remove(this);
         }
-        return;
+        return false;
       } else if (task instanceof TeamManagerTask.AddPlayer) {
         TeamManagerTask.AddPlayer addPlayerTask = (TeamManagerTask.AddPlayer) task;
         @NotNull ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
@@ -242,6 +240,7 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
         changeTeamDisplayTask.team().changeTeamDisplay(changeTeamDisplayTask.player(), changeTeamDisplayTask.oldTeamDisplay(), changeTeamDisplayTask.newTeamDisplay());
       }
     }
+    return true;
   }
 
   private void checkClosed() {

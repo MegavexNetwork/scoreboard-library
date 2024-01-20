@@ -4,6 +4,7 @@ import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.scheduler.RunningTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 
 public class SidebarUpdaterTask implements Runnable {
@@ -27,11 +28,19 @@ public class SidebarUpdaterTask implements Runnable {
   @Override
   public void run() {
     synchronized (lock) {
-      for (AbstractSidebar sidebar : scoreboardLibrary.sidebars()) {
+      Iterator<AbstractSidebar> iterator = scoreboardLibrary.sidebars().iterator();
+      while (iterator.hasNext()) {
+        AbstractSidebar sidebar = iterator.next();
+        boolean result;
         try {
-          sidebar.tick();
+          result = sidebar.tick();
         } catch (Exception e) {
           scoreboardLibrary.plugin().getLogger().log(Level.WARNING, "an error occurred while updating a Sidebar instance", e);
+          continue;
+        }
+
+        if (!result) {
+          iterator.remove();
         }
       }
     }

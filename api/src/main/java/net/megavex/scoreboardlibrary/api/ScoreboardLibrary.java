@@ -14,8 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
 /**
- * Allows creating {@link Sidebar}s and {@link TeamManager}s.
- * Each plugin should have it's own instance of this interface.
+ * Main class of the library.
  * Note: this class is thread-safe.
  */
 @ApiStatus.NonExtendable
@@ -23,8 +22,6 @@ public interface ScoreboardLibrary {
   /**
    * Creates an instance of {@link ScoreboardLibrary}.
    *
-   * @param plugin The plugin that owns this instance
-   * @return A new instance of {@link ScoreboardLibrary}
    * @throws NoPacketAdapterAvailableException if there is no packet adapter available in the classpath
    */
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
@@ -78,7 +75,7 @@ public interface ScoreboardLibrary {
    *                 or null if the locale should depend on the player
    * @return Sidebar
    */
-  @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale);
+  @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines, @Nullable Locale locale);
 
   /**
    * Creates a {@link TeamManager}.

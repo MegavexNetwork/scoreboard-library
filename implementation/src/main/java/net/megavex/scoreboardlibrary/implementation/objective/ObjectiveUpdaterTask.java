@@ -4,6 +4,7 @@ import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.scheduler.RunningTask;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
 import java.util.logging.Level;
 
 public class ObjectiveUpdaterTask implements Runnable {
@@ -27,11 +28,19 @@ public class ObjectiveUpdaterTask implements Runnable {
   @Override
   public void run() {
     synchronized (lock) {
-      for (ObjectiveManagerImpl objectiveManager : scoreboardLibrary.objectiveManagers()) {
+      Iterator<ObjectiveManagerImpl> iterator = scoreboardLibrary.objectiveManagers().iterator();
+      while (iterator.hasNext()) {
+        ObjectiveManagerImpl objectiveManager = iterator.next();
+        boolean result;
         try {
-          objectiveManager.tick();
+          result = objectiveManager.tick();
         } catch (Exception e) {
-          scoreboardLibrary.plugin().getLogger().log(Level.SEVERE, "an error occurred while updating a ObjectiveManager instance", e);
+          scoreboardLibrary.plugin().getLogger().log(Level.WARNING, "an error occurred while updating an ObjectiveManager instance", e);
+          continue;
+        }
+
+        if (!result) {
+          iterator.remove();
         }
       }
     }

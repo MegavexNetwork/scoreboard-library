@@ -17,7 +17,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   private final Map<Player, LocaleLineHandler> playerMap = new HashMap<>();
   private final Map<Locale, LocaleLineHandler> localeMap = new HashMap<>();
 
-  public PlayerDependantLocaleSidebar(ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
+  public PlayerDependantLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     super(scoreboardLibrary, maxLines);
   }
 
@@ -32,7 +32,7 @@ public class PlayerDependantLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected void forEachSidebar(@NotNull Consumer<LocaleLineHandler> consumer) {
+  protected void forEachLineHandler(@NotNull Consumer<LocaleLineHandler> consumer) {
     if (localeMap != null) {
       for (LocaleLineHandler value : localeMap.values()) {
         consumer.accept(value);

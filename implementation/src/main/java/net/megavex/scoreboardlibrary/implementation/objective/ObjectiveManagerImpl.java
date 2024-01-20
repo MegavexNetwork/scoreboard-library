@@ -124,7 +124,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
     return closed;
   }
 
-  public void tick() {
+  public boolean tick() {
     while (true) {
       ObjectiveManagerTask task = taskQueue.poll();
       if (task == null) {
@@ -132,7 +132,6 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
       }
 
       if (task instanceof ObjectiveManagerTask.Close) {
-        library.objectiveManagers().remove(this);
         for (ScoreboardObjectiveImpl objective : objectives.values()) {
           objective.packetAdapter().remove(displayingPlayers);
         }
@@ -140,7 +139,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         for (Player player : players) {
           Objects.requireNonNull(library.getPlayer(player)).objectiveManagerQueue().remove(this);
         }
-        return;
+        return false;
       } else if (task instanceof ObjectiveManagerTask.AddPlayer) {
         Player player = ((ObjectiveManagerTask.AddPlayer) task).player();
         @NotNull ScoreboardLibraryPlayer slPlayer = library.getOrCreatePlayer(player);
@@ -186,10 +185,11 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         objective.packetAdapter().display(displayingPlayers, slot);
       }
     }
+    return true;
   }
 
   @Override
-  public void show(@NotNull Player player) {
+  public void display(@NotNull Player player) {
     displayingPlayers.add(player);
     Collection<Player> singleton = Collections.singleton(player);
 

@@ -16,11 +16,11 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   private final LocaleLineHandler sidebar;
   private final Set<Player> internalPlayers;
 
-  public SingleLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int size, Locale locale) {
+  public SingleLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int size, @NotNull Locale locale) {
     super(scoreboardLibrary, size);
     this.locale = locale;
     this.sidebar = new LocaleLineHandler(this, locale());
-    this.internalPlayers = CollectionProvider.set(1);
+    this.internalPlayers = CollectionProvider.set(8);
   }
 
   @Override
@@ -48,7 +48,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   }
 
   @Override
-  protected void forEachSidebar(@NotNull Consumer<LocaleLineHandler> consumer) {
+  protected void forEachLineHandler(@NotNull Consumer<LocaleLineHandler> consumer) {
     consumer.accept(sidebar);
   }
 }
