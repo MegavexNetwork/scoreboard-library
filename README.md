@@ -12,13 +12,13 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
 - Objectives.
-- Doesn't require extra dependencies (assuming you're targeting the latest version of Paper)
-- Packet-level, meaning it works with other scoreboard plugins (and is faster)
+- Doesn't require extra dependencies (assuming you're targeting modern versions of Paper)
+- Packet-level, meaning it works with other scoreboard plugins
 - Supports [Folia](https://github.com/PaperMC/Folia)
-- Fully async. All packet work is done asynchronously so you can (but don't have to) use the library from the main
+- Fully async. All packet work is done asynchronously, so you can use the library from the main
   thread without sacrificing any performance
-- Works with `TranslatableComponent`s, meaning all components are automatically translated using `GlobalTranslator` for
-  each players client locale (and automatically update whenever the player changes it in their settings)
+- Automatically works with `TranslatableComponent`s. All components are translated using `GlobalTranslator` for
+  each player's client locale and automatically update whenever the player changes it in their settings
 
 ## Available Packet Adapters
 
