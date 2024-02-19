@@ -3,6 +3,9 @@ package net.megavex.scoreboardlibrary.implementation;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +33,11 @@ public final class PacketAdapterLoader {
     Class<?> nmsClass = tryLoadVersion(version);
     if (nmsClass != null) {
       return nmsClass;
+    }
+
+    Class<?> plibClass = tryLoadProtocolLib();
+    if (plibClass != null) {
+      return plibClass;
     }
 
     return tryLoadPacketEvents();
@@ -61,15 +69,26 @@ public final class PacketAdapterLoader {
     }
   }
 
-  private static @Nullable Class<?> tryLoadPacketEvents() {
-    Class<?> nmsClass = tryLoadImplementationClass("packetevents");
-    if (nmsClass == null) {
+  private static @Nullable Class<?> tryLoadProtocolLib() {
+    Plugin loaderPlugin = JavaPlugin.getProvidingPlugin(PacketAdapterLoader.class);
+
+    Plugin plibPlugin = loaderPlugin.getServer().getPluginManager().getPlugin("ProtocolLib");
+    if (plibPlugin == null) {
       return null;
     }
 
+    PluginDescriptionFile d = loaderPlugin.getDescription();
+    if (!d.getDepend().contains(plibPlugin.getName()) && !d.getSoftDepend().contains(plibPlugin.getName())) {
+      return null;
+    }
+
+    return tryLoadImplementationClass("protocollib");
+  }
+
+  private static @Nullable Class<?> tryLoadPacketEvents() {
     try {
       Class.forName("com.github.retrooper.packetevents.PacketEvents");
-      return nmsClass;
+      return tryLoadImplementationClass("packetevents");
     } catch (ClassNotFoundException ignored) {
       return null;
     }

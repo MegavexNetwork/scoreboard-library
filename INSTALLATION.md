@@ -19,10 +19,11 @@ dependencies {
   val scoreboardLibraryVersion = "{VERSION HERE}"
   implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-api:$scoreboardLibraryVersion")
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")
-  implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
+  implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // Kotlin specific extensions (optional)
 
   // Add packet adapter implementations you want:
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-modern:$scoreboardLibraryVersion") // 1.17+
+  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-protocollib:$scoreboardLibraryVersion") // 1.8+
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
 
@@ -67,7 +68,7 @@ Then add the dependencies:
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
-  <!-- If using Kotlin: -->
+  <!-- Kotlin specific extensions (optional) -->
   <dependency>
     <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
     <artifactId>scoreboard-library-extra-kotlin</artifactId>
@@ -78,6 +79,12 @@ Then add the dependencies:
   <dependency>
     <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
     <artifactId>scoreboard-library-modern</artifactId>
+    <version>{VERSION HERE}</version>
+    <scope>runtime</scope>
+  </dependency>
+  <dependency>
+    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <artifactId>scoreboard-library-protocollib</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
