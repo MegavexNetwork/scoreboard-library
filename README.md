@@ -20,13 +20,15 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Works with `TranslatableComponent`s, meaning all components are automatically translated using `GlobalTranslator` for
   each players client locale (and automatically update whenever the player changes it in their settings)
 
-## Packet Adapters
+## Available Packet Adapters
 
-- **modern.** Supports 1.17-1.20.4. Takes advantage of [Paper](https://papermc.io)'s native adventure support to improve
-  performance. [Spigot](https://www.spigotmc.org/) is also supported, but will have worse performance
-- **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
-  classpath. Should work on all versions 1.8+
+- **modern.** Supports 1.17-1.20.4. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
+- **ProtocolLib**. Supports 1.8+. Requires [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) to be installed on the server.
+- **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin. Can be less stable than ProtocolLib.
 - **1.8.8.**
+
+> [!NOTE]  
+> You can add multiple packet adapters, the best one will automatically be picked depending on the server version.
 
 ## Installation
 

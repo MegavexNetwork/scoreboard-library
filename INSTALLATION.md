@@ -2,6 +2,19 @@
 
 Latest version: `2.0.2`
 
+## ProtocolLib
+
+If you're going to use the ProtocolLib packet adapter, make sure to add ProtocolLib as a `depend` or `softdepend` in your `plugin.yml`:
+```yaml
+depend:
+- ProtocolLib
+```
+or
+```yaml
+softdepend:
+- ProtocolLib
+```
+
 ## Gradle
 
 Make sure you have the Jitpack repository:
@@ -27,19 +40,19 @@ dependencies {
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
   runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
 
-  // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
+  // If using the PacketEvents adapter, scoreboard-library expects PacketEvents to be loaded in the classpath.
   // Follow either of:
   // - https://github.com/retrooper/packetevents/wiki/Depending-on-pre%E2%80%90built-PacketEvents
   // - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
   // Example how to load PacketEvents in your plugin:
   // https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java
 
-  // If using the 1.8 version implementation, add Adventure as well:
+  // If targeting platforms that don't support native adventure, add it as well:
   implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 }
 ```
 
-You will need to shade these dependencies and relocate them with something
+You will need to shade these dependencies and relocate them using something
 like [Shadow](https://imperceptiblethoughts.com/shadow/).
 
 ## Maven
@@ -102,7 +115,7 @@ Then add the dependencies:
   </dependency>
 
   <!--
-    If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
+    If using the PacketEvents adapter, scoreboard-library expects PacketEvents to be loaded in the classpath.
     Follow either of:
     - https://github.com/retrooper/packetevents/wiki/Depending-on-pre-built-PacketEvents
     - https://github.com/retrooper/packetevents/wiki/Shading-PacketEvents
@@ -110,7 +123,7 @@ Then add the dependencies:
     https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java 
     -->
 
-  <!-- If using the 1.8 version implementation, add Adventure as well: -->
+  <!-- If targeting platforms that don't support native adventure, add it as well: -->
   <dependency>
     <groupId>net.kyori</groupId>
     <artifactId>adventure-platform-bukkit</artifactId>
@@ -119,5 +132,5 @@ Then add the dependencies:
 </dependencies>
 ```
 
-You will need to shade these dependencies and relocate them with something
+You will need to shade these dependencies and relocate them using something
 like [maven-shade-plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
