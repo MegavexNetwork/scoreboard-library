@@ -21,6 +21,8 @@ public final class PacketAdapterLoader {
       throw new NoPacketAdapterAvailableException();
     }
 
+    System.out.println("[scoreboard-library] Using packet adapter: " + nmsClass.getName());
+
     try {
       return (PacketAdapterProvider) nmsClass.getConstructors()[0].newInstance();
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
