@@ -74,7 +74,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
       packet.getStrings().write(0, objectiveName);
 
       Component translatedValue = GlobalTranslator.render(value, locale);
-      if (MinecraftVersion.getCurrentVersion().isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) { // TODO: DOUBLE CHECK IF CORRECT
+      if (MinecraftVersion.getCurrentVersion().isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
         WrappedChatComponent wrappedValue = WrappedChatComponent.fromJson(gson().serialize(translatedValue));
         packet.getChatComponents().write(0, wrappedValue);
       } else {

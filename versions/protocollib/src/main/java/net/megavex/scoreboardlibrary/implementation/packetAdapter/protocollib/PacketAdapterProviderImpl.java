@@ -6,6 +6,7 @@ import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib.team.TeamsPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider {
 
   @Override
   public @NotNull TeamsPacketAdapter createTeamPacketAdapter(@NotNull String teamName) {
-    throw new UnsupportedOperationException();
+    return new TeamsPacketAdapterImpl(pm, teamName);
   }
 
   @Override

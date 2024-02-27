@@ -17,6 +17,7 @@ import java.util.Set;
 
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
 
+// 1.12.2 and below
 class LegacyLocaleLine implements LocaleLine<String> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
