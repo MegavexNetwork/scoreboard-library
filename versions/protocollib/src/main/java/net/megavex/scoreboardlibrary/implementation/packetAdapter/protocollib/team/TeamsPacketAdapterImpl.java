@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib.t
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.utility.MinecraftVersion;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
@@ -25,7 +26,8 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
   public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
       removePacket = pm.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM);
-      removePacket.getIntegers().write(1, TeamConstants.MODE_REMOVE);
+      int modeIdx = MinecraftVersion.AQUATIC_UPDATE.atOrAbove() ? 0 : 1;
+      removePacket.getIntegers().write(modeIdx, TeamConstants.MODE_REMOVE);
       removePacket.getStrings().write(0, teamName);
     }
 

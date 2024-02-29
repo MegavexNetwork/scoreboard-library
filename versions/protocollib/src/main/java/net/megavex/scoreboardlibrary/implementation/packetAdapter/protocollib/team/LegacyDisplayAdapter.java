@@ -54,8 +54,8 @@ public class LegacyDisplayAdapter implements TeamDisplayPacketAdapter {
       .write(0, teamName)
       .write(1, displayName)
       .write(2, prefix)
-      .write(2, suffix)
-      .write(3, properties.nameTagVisibility().key());
+      .write(3, suffix)
+      .write(4, properties.nameTagVisibility().key());
 
     if (packetType == PropertiesPacketType.CREATE) {
       packet.getSpecificModifier(Collection.class).write(0, properties.entries());
