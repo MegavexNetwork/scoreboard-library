@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
@@ -21,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
-import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
 
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
@@ -42,7 +40,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     packet.getStrings().write(0, objectiveName);
 
     int displaySlotIdx = ObjectiveConstants.displaySlotIndex(slot);
-    if (MinecraftVersion.getCurrentVersion().isAtLeast(new MinecraftVersion(1, 20, 2))) {
+    if (new MinecraftVersion(1, 20, 2).atOrAbove()) {
       packet.getDisplaySlots().write(0, DISPLAY_SLOTS[displaySlotIdx]);
     } else {
       packet.getIntegers().write(0, displaySlotIdx);
@@ -74,9 +72,8 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
       packet.getStrings().write(0, objectiveName);
 
       Component translatedValue = GlobalTranslator.render(value, locale);
-      if (MinecraftVersion.getCurrentVersion().isAtLeast(MinecraftVersion.AQUATIC_UPDATE)) {
-        WrappedChatComponent wrappedValue = WrappedChatComponent.fromJson(gson().serialize(translatedValue));
-        packet.getChatComponents().write(0, wrappedValue);
+      if (MinecraftVersion.AQUATIC_UPDATE.atOrAbove()) {
+        packet.getChatComponents().write(0, ComponentConversions.wrapAdventure(translatedValue));
       } else {
         String legacyValue = LegacyFormatUtil.limitLegacyText(
           legacySection().serialize(translatedValue),
@@ -119,7 +116,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
     PacketContainer packet;
-    if (MinecraftVersion.getCurrentVersion().isAtLeast(new MinecraftVersion(1, 20, 3))) {
+    if (new MinecraftVersion(1, 20, 3).atOrAbove()) {
       packet = pm.createPacket(PacketType.Play.Server.RESET_SCORE);
       packet.getStrings().write(0, entry)
         .write(1, objectiveName);

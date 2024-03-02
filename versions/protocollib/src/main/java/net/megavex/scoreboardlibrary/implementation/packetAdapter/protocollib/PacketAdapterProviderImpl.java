@@ -3,7 +3,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.utility.MinecraftVersion;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib.team.TeamsPacketAdapterImpl;
@@ -20,9 +19,7 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider {
 
   public PacketAdapterProviderImpl() {
     this.pm = Objects.requireNonNull(ProtocolLibrary.getProtocolManager());
-    this.isLegacyVersion = !MinecraftVersion.getCurrentVersion().isAtLeast(MinecraftVersion.AQUATIC_UPDATE);
-    System.out.println("[scoreboard-library] Render type class = " + EnumWrappers.getRenderTypeClass());
-    System.out.println("[scoreboard-library] Display slot class = " + EnumWrappers.getDisplaySlotClass());
+    this.isLegacyVersion = !MinecraftVersion.AQUATIC_UPDATE.atOrAbove();
   }
 
   @Override

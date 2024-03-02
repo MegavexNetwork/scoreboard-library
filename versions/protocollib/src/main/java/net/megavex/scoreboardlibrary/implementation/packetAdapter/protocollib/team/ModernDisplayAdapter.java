@@ -5,7 +5,6 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.comphenix.protocol.wrappers.WrappedTeamParameters;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
@@ -13,6 +12,7 @@ import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib.ComponentConversions;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
@@ -24,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Optional;
 
-import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection;
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
 
@@ -58,12 +57,12 @@ public class ModernDisplayAdapter implements TeamDisplayPacketAdapter {
     PacketSender<PacketContainer> sender = pm::sendServerPacket;
     char legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
     EnumWrappers.ChatFormatting color = EnumWrappers.ChatFormatting.fromBukkit(ChatColor.getByChar(legacyChar));
-    boolean usesParameters = MinecraftVersion.CAVES_CLIFFS_1.atOrAbove();
-    boolean usesComponents = MinecraftVersion.AQUATIC_UPDATE.atOrAbove();
+    boolean v1_17OrAbove = MinecraftVersion.CAVES_CLIFFS_1.atOrAbove();
+    boolean v1_13OrAbove = MinecraftVersion.AQUATIC_UPDATE.atOrAbove();
 
     LocalePacketUtil.sendLocalePackets(sender, players, locale -> {
       PacketContainer packet = pm.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM);
-      int modeIdx = usesComponents ? 0 : 1;
+      int modeIdx = v1_13OrAbove ? 0 : 1;
       packet.getIntegers().write(modeIdx, TeamConstants.mode(packetType));
       packet.getStrings().write(0, teamName);
       packet.getSpecificModifier(Collection.class).write(0, properties.entries());
@@ -72,11 +71,11 @@ public class ModernDisplayAdapter implements TeamDisplayPacketAdapter {
       Component prefix = GlobalTranslator.render(properties.prefix(), locale);
       Component suffix = GlobalTranslator.render(properties.suffix(), locale);
 
-      if (usesParameters) {
+      if (v1_17OrAbove) {
         WrappedTeamParameters params = WrappedTeamParameters.newBuilder()
-          .displayName(wrapComponent(displayName))
-          .prefix(wrapComponent(prefix))
-          .suffix(wrapComponent(suffix))
+          .displayName(ComponentConversions.wrapAdventure(displayName))
+          .prefix(ComponentConversions.wrapAdventure(prefix))
+          .suffix(ComponentConversions.wrapAdventure(suffix))
           .nametagVisibility(properties.nameTagVisibility().key())
           .collisionRule(properties.collisionRule().key())
           .color(color)
@@ -85,17 +84,17 @@ public class ModernDisplayAdapter implements TeamDisplayPacketAdapter {
         packet.getOptionalTeamParameters().write(0, Optional.of(params));
       } else {
         packet.getIntegers().write(modeIdx + 1, properties.packOptions());
-        if (usesComponents) {
+        if (v1_13OrAbove) {
           packet.getChatFormattings().write(0, color);
         } else {
           packet.getIntegers().write(0, color.ordinal());
         }
 
-        if (usesComponents) {
+        if (v1_13OrAbove) {
           packet.getChatComponents()
-            .write(0, wrapComponent(displayName))
-            .write(1, wrapComponent(prefix))
-            .write(2, wrapComponent(suffix));
+            .write(0, ComponentConversions.wrapAdventure(displayName))
+            .write(1, ComponentConversions.wrapAdventure(prefix))
+            .write(2, ComponentConversions.wrapAdventure(suffix));
 
           packet.getStrings()
             .write(1, properties.nameTagVisibility().key())
@@ -112,10 +111,6 @@ public class ModernDisplayAdapter implements TeamDisplayPacketAdapter {
 
       return packet;
     });
-  }
-
-  private @NotNull WrappedChatComponent wrapComponent(@NotNull Component component) {
-    return WrappedChatComponent.fromJson(gson().serialize(component));
   }
 
   private @NotNull String toLegacy(@NotNull Component component) {
