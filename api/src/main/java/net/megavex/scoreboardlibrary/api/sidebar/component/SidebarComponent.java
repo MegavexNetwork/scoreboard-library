@@ -55,28 +55,23 @@ public interface SidebarComponent {
     }
 
     public @NotNull Builder addStaticLine(@NotNull Component line) {
-      addComponent(SidebarComponent.staticLine(line));
-      return this;
+      return addComponent(SidebarComponent.staticLine(line));
     }
 
     public @NotNull Builder addBlankLine() {
-      addComponent(SidebarComponent.blankLine());
-      return this;
+      return addComponent(SidebarComponent.blankLine());
     }
 
     public @NotNull Builder addDynamicLine(@NotNull Supplier<Component> lineSupplier) {
-      addComponent(SidebarComponent.dynamicLine(lineSupplier));
-      return this;
+      return addComponent(SidebarComponent.dynamicLine(lineSupplier));
     }
 
     public @NotNull Builder addAnimatedLine(@NotNull SidebarAnimation<Component> animation) {
-      addComponent(SidebarComponent.animatedLine(animation));
-      return this;
+      return addComponent(SidebarComponent.animatedLine(animation));
     }
 
     public @NotNull Builder addAnimatedComponent(@NotNull SidebarAnimation<SidebarComponent> animation) {
-      addComponent(SidebarComponent.animatedComponent(animation));
-      return this;
+      return addComponent(SidebarComponent.animatedComponent(animation));
     }
 
     public @NotNull SidebarComponent build() {

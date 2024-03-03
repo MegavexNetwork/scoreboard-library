@@ -5,6 +5,7 @@ import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,15 +15,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
 /**
- * Main class of the library.
- * Note: this class is thread-safe.
+ * Entrypoint of the library. To create an instance of this interface, use {@link #loadScoreboardLibrary}.
+ * For unit tests, take a look at {@link net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary}.
+ * Note: this class is thread-safe, meaning you can safely use it from multiple threads at a time.
  */
 @ApiStatus.NonExtendable
 public interface ScoreboardLibrary {
   /**
    * Creates an instance of {@link ScoreboardLibrary}.
    *
-   * @throws NoPacketAdapterAvailableException if there is no packet adapter available in the classpath
+   * @param plugin Your plugin instance
+   * @throws NoPacketAdapterAvailableException if there is no packet adapter available for the current server version
    */
   static @NotNull ScoreboardLibrary loadScoreboardLibrary(@NotNull Plugin plugin) throws NoPacketAdapterAvailableException {
     Class<?> implClass;
@@ -47,53 +50,58 @@ public interface ScoreboardLibrary {
   }
 
   /**
-   * Creates a {@link Sidebar} with max amount of lines set to {@value Sidebar#MAX_LINES} (vanilla limit).
+   * Creates a new {@link Sidebar};
    *
-   * @return Sidebar
+   * @return Newly created sidebar
    */
   default @NotNull Sidebar createSidebar() {
     return createSidebar(Sidebar.MAX_LINES, null);
   }
 
   /**
-   * Creates a {@link Sidebar}.
+   * Creates a new {@link Sidebar}.
    *
    * @param maxLines Max amount of lines the sidebar will have.
-   *                 Note that vanilla clients can only display {@value Sidebar#MAX_LINES} lines at once
-   * @return Sidebar
+   *                 Note that vanilla clients can only display at most {@value Sidebar#MAX_LINES}
+   * @return Newly created sidebar
    */
   default @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines) {
     return createSidebar(maxLines, null);
   }
 
   /**
-   * Creates a {@link Sidebar}.
+   * Creates a new {@link Sidebar}.
    *
    * @param maxLines Max amount of lines the sidebar will have.
-   *                 Note that vanilla clients can only display {@value Sidebar#MAX_LINES} lines at once
-   * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s
+   *                 Note that vanilla clients can only display at most {@value Sidebar#MAX_LINES}
+   * @param locale   Locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
    *                 or null if the locale should depend on the player
-   * @return Sidebar
+   * @return Newly created sidebar
    */
   @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines, @Nullable Locale locale);
 
   /**
-   * Creates a {@link TeamManager}.
+   * Creates a new {@link TeamManager}.
    *
-   * @return TeamManager
+   * @return Newly created team manager
    */
   @NotNull TeamManager createTeamManager();
 
+  /**
+   * Creates a new {@link ObjectiveManager}.
+   *
+   * @return Newly created objective manager
+   */
   @NotNull ObjectiveManager createObjectiveManager();
 
   /**
-   * Closes this scoreboard-library instance.
-   * Should always be called when the plugin is disabled
+   * Closes this scoreboard library instance.
+   * You should call this in {@link JavaPlugin#onDisable()}.
    */
   void close();
 
   /**
-   * @return Whether this scoreboard-library instance is closed
+   * @return Whether this scoreboard library instance is closed
    */
   boolean closed();
 }

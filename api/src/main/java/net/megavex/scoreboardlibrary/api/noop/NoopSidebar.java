@@ -3,7 +3,6 @@ package net.megavex.scoreboardlibrary.api.noop;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.util.SidebarUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,14 +67,14 @@ class NoopSidebar implements Sidebar {
 
   @Override
   public void line(int line, @Nullable Component value) {
-    SidebarUtil.checkLineBounds(maxLines, line);
+    checkLineBounds(line);
     checkClosed();
     lines[line] = value;
   }
 
   @Override
   public @Nullable Component line(int line) {
-    SidebarUtil.checkLineBounds(maxLines, line);
+    checkLineBounds(line);
     checkClosed();
     return lines[line];
   }
@@ -95,6 +94,12 @@ class NoopSidebar implements Sidebar {
   private void checkClosed() {
     if (closed) {
       throw new IllegalStateException("NoopSidebar is closed");
+    }
+  }
+
+  private void checkLineBounds(int line) {
+    if (line >= maxLines || line < 0) {
+      throw new IndexOutOfBoundsException("invalid line " + line);
     }
   }
 }

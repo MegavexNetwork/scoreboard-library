@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +12,10 @@ import java.util.Collection;
 import java.util.Locale;
 
 /**
- * Provides a low-level utility for showing sidebars to players.
- * Note: this class is not thread-safe.
+ * Represents a sidebar.
+ * To get an instance of this interface, use {@link ScoreboardLibrary#createSidebar()}.
+ * Note: this interface is not thread-safe, meaning you can only use it from one thread at a time,
+ * although it does not have to be the main thread.
  */
 @ApiStatus.NonExtendable
 public interface Sidebar {
@@ -26,10 +29,12 @@ public interface Sidebar {
   /**
    * @return Max amount of lines this sidebar can have
    */
-  @Range(from = 1, to = MAX_LINES) int maxLines();
+  @Range(from = 1, to = Integer.MAX_VALUE) int maxLines();
 
   /**
-   * @return {@link Locale} which is used to translate {@link net.kyori.adventure.text.TranslatableComponent}s
+   * @return Locale which is used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
+   *         or null if it depends on each player's client locale.
+   * @see ScoreboardLibrary#createSidebar(int, Locale)
    */
   @Nullable Locale locale();
 
@@ -38,18 +43,18 @@ public interface Sidebar {
   /**
    * Gets a line's value.
    *
-   * @param line Line
-   * @return Value of line
+   * @param line Line index
+   * @return Value of line, or null if unset
    */
-  @Nullable Component line(@Range(from = 0, to = MAX_LINES - 1) int line);
+  @Nullable Component line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int line);
 
   /**
    * Sets a line's value.
    *
-   * @param line  Line
-   * @param value Value
+   * @param line  Line index
+   * @param value New value
    */
-  void line(@Range(from = 0, to = MAX_LINES - 1) int line, @Nullable Component value);
+  void line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int line, @Nullable Component value);
 
   /**
    * Clears all lines in this sidebar.
@@ -63,7 +68,7 @@ public interface Sidebar {
   // Title
 
   /**
-   * @return Title of the sidebar
+   * @return Title of the sidebar, defaults to {@link Component#empty}
    */
   @NotNull Component title();
 
@@ -77,30 +82,27 @@ public interface Sidebar {
   // Players
 
   /**
-   * @return The players that have been added to this sidebar.
+   * @return Unmodifiable collection of viewers in this Sidebar
+   * @see #addPlayer
+   * @see #removePlayer
    */
   @NotNull Collection<Player> players();
 
   /**
-   * Adds a player to this sidebar, making it be able to see it.
+   * Adds a viewer to this Sidebar.
+   * Note that a player can only see a single Sidebar at a time.
+   * The Sidebar will internally be added to a queue for this player who
+   * will start seeing it once they are removed from all previous Sidebars.
    *
    * @param player Player to add
-   * @return Whether the player has been added
+   * @return Whether the player was added
    */
   boolean addPlayer(@NotNull Player player);
 
   /**
-   * Removes a player from this sidebar, making it not able to see it.
+   * Adds multiple viewers to this Sidebar.
    *
-   * @param player Player to remove
-   * @return Whether the player has been removed
-   */
-  boolean removePlayer(@NotNull Player player);
-
-  /**
-   * Adds multiple players to this sidebar.
-   *
-   * @param players Players to add
+   * @param players Viewers to add
    * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players) {
@@ -110,10 +112,17 @@ public interface Sidebar {
   }
 
   /**
-   * Removes multiple players from this sidebar.
+   * Removes a viewer from this Sidebar.
    *
-   * @param players Players to remove
-   * @see #removePlayer
+   * @param player Viewer to remove
+   * @return Whether the viewer was removed
+   */
+  boolean removePlayer(@NotNull Player player);
+
+  /**
+   * Removes multiple viewers from this Sidebar
+   *
+   * @param players Viewers to remove
    */
   default void removePlayers(@NotNull Collection<Player> players) {
     for (Player player : players) {
@@ -121,15 +130,15 @@ public interface Sidebar {
     }
   }
 
-  // Close
-
   /**
-   * Closes this sidebar
+   * Closes this Sidebar.
+   * This must be called once you no longer need this Sidebar to prevent a memory leak.
    */
   void close();
 
   /**
    * @return Whether this sidebar is closed
+   * @see #close
    */
   boolean closed();
 }

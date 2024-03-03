@@ -7,6 +7,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPack
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -80,7 +81,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
-  public Integer score(@NotNull String entry) {
+  public @Nullable Integer score(@NotNull String entry) {
     return scores.get(entry);
   }
 

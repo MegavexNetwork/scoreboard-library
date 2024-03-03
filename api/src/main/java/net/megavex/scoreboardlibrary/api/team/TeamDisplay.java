@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
+import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,132 +12,156 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**
- * Represents the display information of a {@link ScoreboardTeam}.
- * This includes things like the entries, display name, prefix etc..
- * Note: this class is not thread-safe.
+ * Represents the display properties of a scoreboard team.
+ * Note: this interface is not thread-safe, meaning you can only use it from one thread at a time,
+ * although it does not have to be the main thread.
  */
 @ApiStatus.NonExtendable
 public interface TeamDisplay {
   /**
-   * @return Team which is assigned to this {@link TeamDisplay}
+   * @return team which this team display is assigned to
    */
   @NotNull ScoreboardTeam team();
 
   // Entries
 
+  /**
+   * Gets the entries. The entries specify which players are members of the team.
+   *
+   * @return entries of the team.
+   */
   @NotNull Collection<String> entries();
 
   /**
    * Adds an entry.
    *
-   * @param entry Entry to add
-   * @return Whether the entry was added
+   * @param entry entry to add
+   * @return whether the entry was added
+   * @see #entries
    */
   boolean addEntry(@NotNull String entry);
 
   /**
    * Removes an entry.
    *
-   * @param entry Entry to remove
-   * @return Whether the entry was removed
+   * @param entry entry to remove
+   * @return whether the entry was removed
+   * @see #entries
    */
   boolean removeEntry(@NotNull String entry);
 
   // Properties
 
   /**
-   * @return Display name
+   * @return display name, defaults to {@link Component#empty()
    */
   @NotNull Component displayName();
 
   /**
-   * Sets the display name.
+   * Updates the display name.
    *
-   * @param displayName Display name
+   * @param displayName new display name
    */
   @NotNull TeamDisplay displayName(@NotNull Component displayName);
 
   /**
-   * @return Prefix
+   * Gets the prefix, which defaults to {@link Component#empty()}.
+   * The suffix is prepended to all team members' names.
+   *
+   * @return prefix, defaults to {@link Component#empty()
    */
   @NotNull Component prefix();
 
   /**
-   * Sets the prefix.
+   * Updates the prefix.
    *
-   * @param prefix Prefix
+   * @param prefix new prefix
+   * @see #prefix()
    */
   @NotNull TeamDisplay prefix(@NotNull Component prefix);
 
   /**
-   * @return Suffix
+   * Gets the suffix, which defaults to {@link Component#empty()}.
+   * The suffix is appended to all team members' names.
+   *
+   * @return suffix
    */
   @NotNull Component suffix();
 
   /**
-   * Sets the suffix.
+   * Updates the suffix.
    *
-   * @param suffix Suffix
+   * @param suffix new suffix
+   * @see #suffix()
    */
   @NotNull TeamDisplay suffix(@NotNull Component suffix);
 
   /**
-   * @return Friendly fire rule
+   * @return friendly fire rule value, defaults to false
    */
   boolean friendlyFire();
 
   /**
-   * Sets whether friendly fire is allowed.
+   * Updates the friendly fire rule.
    *
-   * @param friendlyFire whether friendly fire is allowed
+   * @param friendlyFire new rule value
    */
   @NotNull TeamDisplay friendlyFire(boolean friendlyFire);
 
   /**
-   * @return Can see friendly invisibles rule
+   * Gets the can see friendly invisibles rule value, which is false by default.
+   * If true, team members can see other members with the invisibility effect.
+   *
+   * @return rule value
    */
   boolean canSeeFriendlyInvisibles();
 
   /**
-   * Sets whether players can see friendly invisibles.
+   * Updates the can see friendly invisibles rule.
    *
-   * @param canSeeFriendlyInvisibles whether players can see friendly invisibles
+   * @param canSeeFriendlyInvisibles new rule value
+   * @see #canSeeFriendlyInvisibles()
    */
   @NotNull TeamDisplay canSeeFriendlyInvisibles(boolean canSeeFriendlyInvisibles);
 
   /**
-   * @return Name tag visibility rule
+   * @return name tag visibility rule value
    */
   @NotNull NameTagVisibility nameTagVisibility();
 
   /**
-   * Sets the {@link NameTagVisibility}.
+   * Updates the name tag visibility rule.
    *
-   * @param nameTagVisibility Name tag visibility rule
+   * @param nameTagVisibility new rule value
    */
   @NotNull TeamDisplay nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
 
   /**
-   * @return Collision rule
+   * @return collision rule
+   * @since Minecraft 1.9
    */
   @NotNull CollisionRule collisionRule();
 
   /**
-   * Sets the {@link CollisionRule}.
+   * Updates the collision rule.
    *
-   * @param collisionRule Collision rule
+   * @param collisionRule new rule value
+   * @since Minecraft 1.9
    */
   @NotNull TeamDisplay collisionRule(@NotNull CollisionRule collisionRule);
 
   /**
-   * @return Player color
+   * Gets the player color. The player color is the color player name tags are displayed in.
+   *
+   * @return player color
    */
   @Nullable NamedTextColor playerColor();
 
   /**
-   * Sets the player color.
+   * Updates the player color.
    *
-   * @param playerColor Player color
+   * @param playerColor new player color
+   * @see #playerColor()
    */
   @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor);
 }

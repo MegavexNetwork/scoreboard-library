@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.api.team;
 
+import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -10,30 +11,30 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * Manages a group of {@link ScoreboardTeam}s.
- * Note: this class is not thread-safe.
+ * Represents a group of {@link ScoreboardTeam}s.
+ * To get an instance of this interface, use {@link ScoreboardLibrary#createTeamManager()}.
+ * Note: this interface is not thread-safe, meaning you can only use it from one thread at a time,
+ * although it does not have to be the main thread.
  */
 @ApiStatus.NonExtendable
 public interface TeamManager {
   // Teams
 
   /**
-   * Returns an unmodifiable set of teams in this team manager
-   *
-   * @return Teams
+   * @return Unmodifiable collection of teams in this TeamManager
    */
   @NotNull Collection<ScoreboardTeam> teams();
 
   /**
-   * Returns team based on its name
+   * Gets a team by its name.
    *
    * @param name Name of team
-   * @return Team with this name
+   * @return Team with the name, or null if one doesn't exist
    */
   @Nullable ScoreboardTeam team(@NotNull String name);
 
   /**
-   * Returns whether a team by the name exists
+   * Check whether a team with a name exists.
    *
    * @param name Name of team
    * @return Whether a team by the name exists
@@ -41,26 +42,26 @@ public interface TeamManager {
   boolean teamExists(@NotNull String name);
 
   /**
-   * Returns team based on its name. If it doesn't already exist, creates it
+   * Creates a team with a name if one doesn't already exist and returns it.
    *
    * @param name Name of team
-   * @return Existing or newly created team with the name
+   * @return Team
    */
   default @NotNull ScoreboardTeam createIfAbsent(@NotNull String name) {
     return createIfAbsent(name, null);
   }
 
   /**
-   * Returns a team based on its name. If it doesn't already exist, it creates it
+   * Creates a team with a name if one doesn't already exist and returns it.
    *
    * @param name                Name of team
    * @param teamDisplayFunction A function that provides the team display to set for each player
-   * @return Team with this name
+   * @return Team
    */
   @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamDisplay> teamDisplayFunction);
 
   /**
-   * Removes a team
+   * Removes a team by its name.
    *
    * @param name Name of team
    * @return If there was a team with than name
@@ -68,9 +69,9 @@ public interface TeamManager {
   boolean removeTeam(@NotNull String name);
 
   /**
-   * Removes a team
+   * Removes a team.
    *
-   * @param team Team
+   * @param team Team to remove
    * @throws IllegalArgumentException If the provided team is not owned by this TeamManager
    */
   void removeTeam(@NotNull ScoreboardTeam team);
@@ -78,14 +79,19 @@ public interface TeamManager {
   // Players
 
   /**
-   * @return Players in this TeamManager
+   * @return Unmodifiable collection of viewers in this TeamManager
+   * @see #addPlayer
+   * @see #removePlayer
    */
   @NotNull Collection<Player> players();
 
   /**
-   * Adds a player to this TeamManager
+   * Adds a viewer to this TeamManager.
+   * Note that a player can only see a single TeamManager at a time.
+   * The TeamManager will internally be added to a queue for this player who
+   * will start seeing it once they are removed from all previous TeamManagers.
    *
-   * @param player Player to add to TeamManager
+   * @param player Player to add
    * @return Whether the player was added
    */
   default boolean addPlayer(@NotNull Player player) {
@@ -93,28 +99,33 @@ public interface TeamManager {
   }
 
   /**
-   * Adds a player to this TeamManager
+   * Adds a viewer to this TeamManager.
+   * Note that a player can only see a single TeamManager at a time.
+   * The TeamManager will internally be added to a queue for this player who
+   * will start seeing it once they are removed from all previous TeamManagers.
    *
-   * @param player              Player to add
+   * @param player Player to add
    * @param teamDisplayFunction A function that provides the team display to set for each team
    * @return Whether the player was added
    */
   boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction);
 
   /**
-   * Adds a player to this TeamManager
+   * Adds multiple viewers to this TeamManager.
    *
-   * @param players Players to add
+   * @param players Viewers to add
+   * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players) {
     addPlayers(players, null);
   }
 
   /**
-   * Adds a collection of players to this TeamManager
+   * Adds multiple viewers to this TeamManager.
    *
-   * @param players             Players to add
+   * @param players Viewers to add
    * @param teamDisplayFunction A function that provides the team display to set for each team
+   * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
     for (Player player : players) {
@@ -123,17 +134,17 @@ public interface TeamManager {
   }
 
   /**
-   * Removes a player from this TeamManager
+   * Removes a viewer from this TeamManager.
    *
-   * @param player Player to remove
-   * @return Whether the player wasn't already in this TeamManager
+   * @param player Viewer to remove
+   * @return Whether the viewer was removed
    */
   boolean removePlayer(@NotNull Player player);
 
   /**
-   * Removes a collection of players from this TeamManager
+   * Removes multiple viewers from this TeamManager.
    *
-   * @param players Players to remove
+   * @param players Viewers to remove
    */
   default void removePlayers(@NotNull Collection<Player> players) {
     for (Player player : players) {
@@ -144,12 +155,14 @@ public interface TeamManager {
   // Close
 
   /**
-   * Closes this TeamManager
+   * Closes this TeamManager.
+   * This must be called once you no longer need this TeamManager to prevent a memory leak.
    */
   void close();
 
   /**
    * @return Whether this TeamManager is closed
+   * @see #close
    */
   boolean closed();
 }

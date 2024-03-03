@@ -4,13 +4,16 @@ import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.kyori.adventure.text.Component.empty;
+
 public class NoopScoreboardObjective implements ScoreboardObjective {
   private final Map<String, Integer> scores = new HashMap<>();
-  private Component value;
+  private Component value = empty();
   private ObjectiveRenderType renderType;
 
   @Override
@@ -36,7 +39,7 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
-  public Integer score(@NotNull String entry) {
+  public @Nullable Integer score(@NotNull String entry) {
     return scores.get(entry);
   }
 

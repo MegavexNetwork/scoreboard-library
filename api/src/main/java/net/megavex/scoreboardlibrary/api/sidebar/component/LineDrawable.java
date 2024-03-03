@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.NonExtendable
 public interface LineDrawable {
   /**
-   * Draws a line, or does nothing if has reached the limit
+   * Draws a line, or does nothing if it has reached the limit
    *
    * @param line Line component
    */
