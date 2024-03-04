@@ -6,6 +6,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.P
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -18,6 +19,24 @@ import java.util.Collection;
 import java.util.Optional;
 
 public final class PacketAccessors {
+  static {
+    boolean hasNumberFormat = true;
+    try {
+      Class.forName("net.minecraft.network.chat.numbers.NumberFormat");
+    } catch (ClassNotFoundException e) {
+      hasNumberFormat = false;
+    }
+
+    HAS_NUMBER_FORMAT = hasNumberFormat;
+    if (hasNumberFormat) {
+      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findField(ClientboundSetObjectivePacket.class, "g", NumberFormat.class);
+    } else {
+      OBJECTIVE_NUMBER_FORMAT_FIELD = null;
+    }
+  }
+
+  public static final boolean HAS_NUMBER_FORMAT; // 1.20.3+
+
   public static final PacketConstructor<ClientboundSetObjectivePacket> OBJECTIVE_PACKET_CONSTRUCTOR =
     ReflectUtil.findEmptyConstructor(ClientboundSetObjectivePacket.class);
   public static final FieldAccessor<ClientboundSetObjectivePacket, String> OBJECTIVE_NAME_FIELD =
@@ -26,6 +45,7 @@ public final class PacketAccessors {
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, "e", net.minecraft.network.chat.Component.class);
   public static final FieldAccessor<ClientboundSetObjectivePacket, ObjectiveCriteria.RenderType> OBJECTIVE_RENDER_TYPE_FIELD =
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, "f", ObjectiveCriteria.RenderType.class);
+  public static final FieldAccessor<ClientboundSetObjectivePacket, NumberFormat> OBJECTIVE_NUMBER_FORMAT_FIELD;
   public static final FieldAccessor<ClientboundSetObjectivePacket, Integer> OBJECTIVE_MODE_FIELD =
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, new String[]{"g", "h"}, int.class);
 

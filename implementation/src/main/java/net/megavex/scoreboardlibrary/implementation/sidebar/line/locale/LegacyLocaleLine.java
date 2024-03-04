@@ -120,7 +120,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
       Collection<String> entries = entries();
       packetAdapter.updateTeamPackets(entries);
       packetAdapter.sendEntries(EntriesPacketType.ADD, players, entries);
-      handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore());
+      handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore(), null, null);
     }
 
     packetAdapter.sendProperties(PropertiesPacketType.UPDATE, players);
@@ -132,7 +132,7 @@ class LegacyLocaleLine implements LocaleLine<String> {
       handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, oldPlayer);
     }
 
-    handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore());
+    handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore(), null, null);
   }
 
   @Override

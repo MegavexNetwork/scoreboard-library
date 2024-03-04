@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -160,7 +161,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
 
   @Override
   public final void display(@NotNull Player player) {
-    packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER);
+    packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
 
     LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
     lineHandler.addPlayer(player);
@@ -221,7 +222,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachLineHandler(LocaleLineHandler::updateScores);
       } else if (task instanceof SidebarTask.UpdateTitle) {
-        packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER);
+        packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
       }
     }
     return true;

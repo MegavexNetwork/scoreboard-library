@@ -3,13 +3,16 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.object
 import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterProviderImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -25,7 +28,8 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
     @NotNull Collection<Player> players,
     @NotNull PropertiesPacketType packetType,
     @NotNull Component value,
-    @NotNull ObjectiveRenderType renderType
+    @NotNull ObjectiveRenderType renderType,
+    @Nullable ScoreFormat scoreFormat
   ) {
     AdventureComponent nmsValue;
     if (this.lastValue != null && this.lastValue.adventure$component() == value) {
@@ -35,7 +39,8 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
       this.lastValue = nmsValue;
     }
 
-    ClientboundSetObjectivePacket packet = createPacket(packetType, nmsValue, renderType);
+    Object numberFormat = ScoreFormatConverter.convert(componentProvider, null, scoreFormat);
+    ClientboundSetObjectivePacket packet = createPacket(packetType, nmsValue, renderType, numberFormat);
     sender.sendPacket(players, packet);
   }
 }

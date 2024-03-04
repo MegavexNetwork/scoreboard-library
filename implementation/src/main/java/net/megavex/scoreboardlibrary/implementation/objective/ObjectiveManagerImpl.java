@@ -174,7 +174,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         String entry = updateScoreTask.entry();
         Integer score = updateScoreTask.score();
         if (score != null) {
-          objective.packetAdapter().sendScore(displayingPlayers, entry, score);
+          objective.packetAdapter().sendScore(displayingPlayers, entry, score, null, null);
         } else {
           objective.packetAdapter().removeScore(displayingPlayers, entry);
         }
@@ -196,7 +196,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
     for (ScoreboardObjectiveImpl objective : objectives.values()) {
       objective.sendProperties(singleton, PropertiesPacketType.CREATE);
       for (Map.Entry<String, Integer> entry : objective.scores().entrySet()) {
-        objective.packetAdapter().sendScore(singleton, entry.getKey(), entry.getValue());
+        objective.packetAdapter().sendScore(singleton, entry.getKey(), entry.getValue(), null, null);
       }
     }
 

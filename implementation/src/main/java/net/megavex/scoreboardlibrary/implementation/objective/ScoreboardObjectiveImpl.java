@@ -103,6 +103,6 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   public void sendProperties(@NotNull Collection<Player> players, @NotNull PropertiesPacketType packetType) {
-    packetAdapter.sendProperties(players, packetType, value, renderType);
+    packetAdapter.sendProperties(players, packetType, value, renderType, null);
   }
 }
