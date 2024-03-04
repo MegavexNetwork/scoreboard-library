@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api;
 
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
+import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
@@ -16,7 +17,7 @@ import java.util.Locale;
 
 /**
  * Entrypoint of the library. To create an instance of this interface, use {@link #loadScoreboardLibrary}.
- * For unit tests, take a look at {@link net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary}.
+ * For unit tests, take a look at {@link NoopScoreboardLibrary}.
  * Note: this class is thread-safe, meaning you can safely use it from multiple threads at a time.
  */
 @ApiStatus.NonExtendable

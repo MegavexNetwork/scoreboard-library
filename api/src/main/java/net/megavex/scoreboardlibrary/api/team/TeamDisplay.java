@@ -2,9 +2,9 @@ package net.megavex.scoreboardlibrary.api.team;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -152,6 +152,7 @@ public interface TeamDisplay {
 
   /**
    * Gets the player color. The player color is the color player name tags are displayed in.
+   * It is also used for displaying team specific sidebars with the {@link ObjectiveDisplaySlot.TeamSidebar}} display slot.
    *
    * @return player color
    */
