@@ -1,9 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective;
 
-import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
@@ -54,26 +52,6 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   }
 
   @Override
-  public void sendScore(
-    @NotNull Collection<Player> players,
-    @NotNull String entry,
-    int value,
-    @Nullable Component display,
-    @Nullable ScoreFormat numberFormat
-  ) {
-    ClientboundSetScorePacket packet;
-    try {
-      Class.forName("net.minecraft.network.chat.numbers.NumberFormat"); // Added in 1.20.3
-      packet = new ClientboundSetScorePacket(entry, objectiveName, value, null, null);
-    } catch (ClassNotFoundException ignored) {
-      packet = Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
-        .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
-    }
-
-    sender.sendPacket(players, packet);
-  }
-
-  @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
     Packet<?> packet;
     try {
@@ -100,7 +78,21 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     return packet;
   }
 
-  protected @NotNull ClientboundSetObjectivePacket createPacket(
+  protected @NotNull ClientboundSetScorePacket createScorePacket(
+    @NotNull String entry,
+    int value,
+    @Nullable net.minecraft.network.chat.Component nmsDisplay,
+    @Nullable Object numberFormat
+  ) {
+    if (PacketAccessors.HAS_NUMBER_FORMAT) {
+      return new ClientboundSetScorePacket(entry, objectiveName, value, nmsDisplay, (NumberFormat) numberFormat);
+    } else {
+      return Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
+        .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
+    }
+  }
+
+  protected @NotNull ClientboundSetObjectivePacket createObjectivePacket(
     @NotNull PropertiesPacketType packetType,
     @NotNull net.minecraft.network.chat.Component nmsValue,
     @NotNull ObjectiveRenderType renderType,

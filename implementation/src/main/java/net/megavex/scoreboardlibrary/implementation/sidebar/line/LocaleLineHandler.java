@@ -68,6 +68,10 @@ public class LocaleLineHandler {
     throw new RuntimeException();
   }
 
+  public void updateScoreFormat(int lineIndex) {
+    modernLineHandler.updateScore(lineIndex);
+  }
+
   public void updateLine(int lineIndex, Component renderedValue) {
     if (modernLineHandler != null) {
       modernLineHandler.setLine(lineIndex, renderedValue);

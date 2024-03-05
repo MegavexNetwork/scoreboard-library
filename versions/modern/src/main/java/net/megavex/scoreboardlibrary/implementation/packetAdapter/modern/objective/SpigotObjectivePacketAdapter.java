@@ -19,6 +19,15 @@ public class SpigotObjectivePacketAdapter extends AbstractObjectivePacketAdapter
   }
 
   @Override
+  public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value, @Nullable Component display, @Nullable ScoreFormat scoreFormat) {
+    LocalePacketUtil.sendLocalePackets(sender, players, locale -> {
+      net.minecraft.network.chat.Component nmsDisplay = display == null ? null : componentProvider.fromAdventure(display, locale);
+      Object numberFormat = ScoreFormatConverter.convert(componentProvider, locale, scoreFormat);
+      return createScorePacket(entry, value, nmsDisplay, numberFormat);
+    });
+  }
+
+  @Override
   public void sendProperties(
     @NotNull Collection<Player> players,
     @NotNull PropertiesPacketType packetType,
@@ -31,7 +40,7 @@ public class SpigotObjectivePacketAdapter extends AbstractObjectivePacketAdapter
       players,
       locale -> {
         Object numberFormat = ScoreFormatConverter.convert(componentProvider, locale, scoreFormat);
-        return createPacket(packetType, componentProvider.fromAdventure(value, locale), renderType, numberFormat);
+        return createObjectivePacket(packetType, componentProvider.fromAdventure(value, locale), renderType, numberFormat);
       }
     );
   }

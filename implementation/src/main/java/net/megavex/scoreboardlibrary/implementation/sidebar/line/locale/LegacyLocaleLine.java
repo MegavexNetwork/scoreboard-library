@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -128,11 +129,12 @@ class LegacyLocaleLine implements LocaleLine<String> {
 
   @Override
   public void sendScore(@NotNull Collection<Player> players) {
+    ObjectivePacketAdapter pd = handler.localeLineHandler().sidebar().packetAdapter();
     if (oldPlayer != null) {
-      handler.localeLineHandler().sidebar().packetAdapter().removeScore(players, oldPlayer);
+      pd.removeScore(players, oldPlayer);
     }
 
-    handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, player, info.objectiveScore(), null, null);
+    pd.sendScore(players, player, info.objectiveScore(), null, null);
   }
 
   @Override

@@ -108,13 +108,17 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   }
 
   @Override
-  public final void line(@Range(from = 0, to = MAX_LINES - 1) int line, @Nullable Component value) {
+  public final void line(@Range(from = 0, to = MAX_LINES - 1) int index, @Nullable Component value, @Nullable ScoreFormat scoreFormat) {
     checkClosed();
 
-    GlobalLineInfo globalLineInfo = getLineInfo(line);
-    if (!Objects.equals(globalLineInfo.value(), value)) {
+    GlobalLineInfo globalLineInfo = getLineInfo(index);
+    boolean updateValue = !Objects.equals(globalLineInfo.value(), value);
+    boolean updateScore = !Objects.equals(globalLineInfo.scoreFormat(), scoreFormat);
+
+    if (updateValue || updateScore) {
       globalLineInfo.value(value);
-      taskQueue.add(new SidebarTask.UpdateLine(line));
+      globalLineInfo.scoreFormat(scoreFormat);
+      taskQueue.add(new SidebarTask.UpdateLine(index, updateValue, updateScore));
       updateScores();
     }
   }
@@ -215,9 +219,15 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       } else if (task instanceof SidebarTask.UpdateLine) {
         SidebarTask.UpdateLine updateLineTask = (SidebarTask.UpdateLine) task;
         forEachLineHandler(sidebar -> {
-          Component value = lines[updateLineTask.line()].value();
-          Component renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
-          sidebar.updateLine(updateLineTask.line(), renderedValue);
+          if (updateLineTask.updateValue()) {
+            Component value = lines[updateLineTask.line()].value();
+            Component renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
+            sidebar.updateLine(updateLineTask.line(), renderedValue);
+          }
+
+          if (updateLineTask.updateScore()) {
+            sidebar.updateScoreFormat(updateLineTask.line());
+          }
         });
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachLineHandler(LocaleLineHandler::updateScores);

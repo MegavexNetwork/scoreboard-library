@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.api.sidebar;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ public interface Sidebar {
 
   /**
    * @return Locale which is used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
-   *         or null if it depends on each player's client locale.
+   * or null if it depends on each player's client locale.
    * @see ScoreboardLibrary#createSidebar(int, Locale)
    */
   @Nullable Locale locale();
@@ -51,10 +52,26 @@ public interface Sidebar {
   /**
    * Sets a line's value.
    *
-   * @param line  Line index
-   * @param value New value
+   * @param index Line index
+   * @param value New value, or null to hide
    */
-  void line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int line, @Nullable Component value);
+  default void line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int index, @Nullable Component value) {
+    line(index, value, null);
+  }
+
+  /**
+   * Sets a line's value with a custom score format.
+   * Note that custom score formats are only supported in Minecraft 1.20.3+.
+   *
+   * @param index       Line index
+   * @param value       New value, or null to hide
+   * @param scoreFormat Score format
+   */
+  void line(
+    @Range(from = 0, to = Integer.MAX_VALUE - 1) int index,
+    @Nullable Component value,
+    @Nullable ScoreFormat scoreFormat
+  );
 
   /**
    * Clears all lines in this sidebar.
