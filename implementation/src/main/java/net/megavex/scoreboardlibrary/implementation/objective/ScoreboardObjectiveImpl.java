@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.objective;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
@@ -9,10 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -24,6 +22,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   private final Map<String, Integer> scores = new HashMap<>();
   private Component value = empty();
   private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
+  private ScoreFormat defaultScoreFormat;
   private boolean closed;
 
   public ScoreboardObjectiveImpl(@NotNull ObjectivePacketAdapter packetAdapter, @NotNull Queue<ObjectiveManagerTask> taskQueue, @NotNull String name) {
@@ -81,6 +80,19 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
+  public @Nullable ScoreFormat defaultScoreFormat() {
+    return defaultScoreFormat;
+  }
+
+  @Override
+  public void defaultScoreFormat(@Nullable ScoreFormat defaultScoreFormat) {
+    if (!Objects.equals(this.defaultScoreFormat, defaultScoreFormat)) {
+      this.defaultScoreFormat = defaultScoreFormat;
+      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+    }
+  }
+
+  @Override
   public @Nullable Integer score(@NotNull String entry) {
     return scores.get(entry);
   }
@@ -103,6 +115,6 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   public void sendProperties(@NotNull Collection<Player> players, @NotNull PropertiesPacketType packetType) {
-    packetAdapter.sendProperties(players, packetType, value, renderType, null);
+    packetAdapter.sendProperties(players, packetType, value, renderType, defaultScoreFormat);
   }
 }

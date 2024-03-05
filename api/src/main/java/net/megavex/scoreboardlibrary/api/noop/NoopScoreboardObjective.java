@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.api.noop;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +16,7 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   private final Map<String, Integer> scores = new HashMap<>();
   private Component value = empty();
   private ObjectiveRenderType renderType;
+  private ScoreFormat defaultScoreFormat;
 
   @Override
   public @NotNull Component value() {
@@ -36,6 +38,16 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   public @NotNull ScoreboardObjective renderType(@NotNull ObjectiveRenderType renderType) {
     this.renderType = renderType;
     return this;
+  }
+
+  @Override
+  public @Nullable ScoreFormat defaultScoreFormat() {
+    return defaultScoreFormat;
+  }
+
+  @Override
+  public void defaultScoreFormat(@Nullable ScoreFormat defaultScoreFormat) {
+    this.defaultScoreFormat = defaultScoreFormat;
   }
 
   @Override

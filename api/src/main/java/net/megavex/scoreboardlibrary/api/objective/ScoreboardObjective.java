@@ -36,6 +36,19 @@ public interface ScoreboardObjective {
   @NotNull ScoreboardObjective renderType(@NotNull ObjectiveRenderType renderType);
 
   /**
+   * @return the default score format for all scores in this objective, defaults to null
+   */
+  @Nullable ScoreFormat defaultScoreFormat();
+
+  /**
+   * Sets ghe default score format of this objective.
+   *
+   * @param defaultScoreFormat new default score format
+   * @see #defaultScoreFormat()
+   */
+  void defaultScoreFormat(@Nullable ScoreFormat defaultScoreFormat);
+
+  /**
    * Gets the score value for an entry, or null if the entry has no score registered.
    *
    * @param entry Entry to get score of
