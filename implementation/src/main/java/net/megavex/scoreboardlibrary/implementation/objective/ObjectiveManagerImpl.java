@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.objective;
 import com.google.common.base.Preconditions;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -172,9 +173,9 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         ObjectiveManagerTask.UpdateScore updateScoreTask = ((ObjectiveManagerTask.UpdateScore) task);
         ScoreboardObjectiveImpl objective = updateScoreTask.objective();
         String entry = updateScoreTask.entry();
-        Integer score = updateScoreTask.score();
+        ObjectiveScore score = updateScoreTask.score();
         if (score != null) {
-          objective.packetAdapter().sendScore(displayingPlayers, entry, score, null, null);
+          objective.packetAdapter().sendScore(displayingPlayers, entry, score.value(), score.display(), score.format());
         } else {
           objective.packetAdapter().removeScore(displayingPlayers, entry);
         }
@@ -195,8 +196,9 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
 
     for (ScoreboardObjectiveImpl objective : objectives.values()) {
       objective.sendProperties(singleton, PropertiesPacketType.CREATE);
-      for (Map.Entry<String, Integer> entry : objective.scores().entrySet()) {
-        objective.packetAdapter().sendScore(singleton, entry.getKey(), entry.getValue(), null, null);
+      for (Map.Entry<String, ObjectiveScore> entry : objective.scores().entrySet()) {
+        ObjectiveScore score = entry.getValue();
+        objective.packetAdapter().sendScore(singleton, entry.getKey(), score.value(), score.display(), score.format());
       }
     }
 

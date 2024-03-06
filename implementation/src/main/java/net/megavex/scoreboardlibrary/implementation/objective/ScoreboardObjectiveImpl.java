@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.objective;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
@@ -19,7 +20,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   private final Queue<ObjectiveManagerTask> taskQueue;
   private final String name;
 
-  private final Map<String, Integer> scores = new HashMap<>();
+  private final Map<String, ObjectiveScore> scores = new HashMap<>();
   private Component value = empty();
   private ObjectiveRenderType renderType = ObjectiveRenderType.INTEGER;
   private ScoreFormat defaultScoreFormat;
@@ -35,7 +36,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
     return packetAdapter;
   }
 
-  public @NotNull Map<String, Integer> scores() {
+  public @NotNull Map<String, ObjectiveScore> scores() {
     return scores;
   }
 
@@ -93,14 +94,14 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
-  public @Nullable Integer score(@NotNull String entry) {
+  public @Nullable ObjectiveScore scoreInfo(@NotNull String entry) {
     return scores.get(entry);
   }
 
   @Override
-  public @NotNull ScoreboardObjective score(@NotNull String entry, int score) {
-    Integer oldScore = scores.put(entry, score);
-    if (!closed && (oldScore == null || score != oldScore)) {
+  public @NotNull ScoreboardObjective score(@NotNull String entry, ObjectiveScore score) {
+    ObjectiveScore oldScore = scores.put(entry, score);
+    if (!Objects.equals(oldScore, score)) {
       taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, score));
     }
     return this;
@@ -108,7 +109,7 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
 
   @Override
   public @NotNull ScoreboardObjective removeScore(@NotNull String entry) {
-    if (scores.remove(entry) != null && !closed) {
+    if (scores.remove(entry) != null) {
       taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, null));
     }
     return this;
