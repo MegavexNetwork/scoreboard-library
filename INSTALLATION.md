@@ -1,6 +1,6 @@
 # Installation
 
-Latest version: `2.0.2`
+Latest version: `2.1.0`
 
 ## ProtocolLib
 

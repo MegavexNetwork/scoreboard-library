@@ -45,7 +45,10 @@ class ModernLocaleLine implements LocaleLine<Component> {
 
   @Override
   public void sendScore(@NotNull Collection<Player> players) {
-    handler.localeLineHandler().sidebar().packetAdapter().sendScore(players, info.player(), info.objectiveScore());
+    handler.localeLineHandler()
+      .sidebar()
+      .packetAdapter()
+      .sendScore(players, info.player(), info.objectiveScore(), null, info.scoreFormat());
   }
 
   @Override

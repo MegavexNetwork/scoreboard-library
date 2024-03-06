@@ -11,8 +11,9 @@ import org.jetbrains.annotations.Range;
 import java.util.Locale;
 
 /**
- * no-op implementation of ScoreboardLibrary.
+ * No-op implementation of {@link ScoreboardLibrary}.
  * Can be used as a fallback when there is no packet adapter available
+ * and for unit testing.
  */
 public final class NoopScoreboardLibrary implements ScoreboardLibrary {
   private boolean closed = false;

@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
@@ -58,8 +59,8 @@ class NoopTeamDisplay implements TeamDisplay {
   }
 
   @Override
-  public @NotNull TeamDisplay displayName(@NotNull Component displayName) {
-    this.displayName = displayName;
+  public @NotNull TeamDisplay displayName(@NotNull ComponentLike displayName) {
+    this.displayName = displayName.asComponent();
     return this;
   }
 
@@ -69,8 +70,8 @@ class NoopTeamDisplay implements TeamDisplay {
   }
 
   @Override
-  public @NotNull TeamDisplay prefix(@NotNull Component prefix) {
-    this.prefix = prefix;
+  public @NotNull TeamDisplay prefix(@NotNull ComponentLike prefix) {
+    this.prefix = prefix.asComponent();
     return this;
   }
 
@@ -80,8 +81,8 @@ class NoopTeamDisplay implements TeamDisplay {
   }
 
   @Override
-  public @NotNull TeamDisplay suffix(@NotNull Component suffix) {
-    this.suffix = suffix;
+  public @NotNull TeamDisplay suffix(@NotNull ComponentLike suffix) {
+    this.suffix = suffix.asComponent();
     return this;
   }
 

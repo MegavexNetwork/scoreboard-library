@@ -12,6 +12,10 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
 - Objectives.
+<<<<<<< HEAD
+=======
+- Full support for new 1.20.4 features (score display names, custom score formats)
+>>>>>>> main
 - Doesn't require extra dependencies (assuming you're targeting modern versions of Paper)
 - Packet-level, meaning it works with other scoreboard plugins
 - Supports [Folia](https://github.com/PaperMC/Folia)
@@ -23,7 +27,10 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 ## Available Packet Adapters
 
 - **modern.** Supports 1.17-1.20.4. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
+<<<<<<< HEAD
 - **ProtocolLib**. Supports 1.8+. Requires [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) to be installed on the server.
+=======
+>>>>>>> main
 - **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin. Can be less stable than ProtocolLib.
 - **1.8.8.**
 

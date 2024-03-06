@@ -2,8 +2,9 @@ package net.megavex.scoreboardlibrary.api.noop;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.util.SidebarUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,15 +68,15 @@ class NoopSidebar implements Sidebar {
   }
 
   @Override
-  public void line(int line, @Nullable Component value) {
-    SidebarUtil.checkLineBounds(maxLines, line);
+  public void line(int index, @Nullable ComponentLike value, @Nullable ScoreFormat scoreFormat) {
+    checkLineBounds(index);
     checkClosed();
-    lines[line] = value;
+    lines[index] = value == null ? null : value.asComponent();
   }
 
   @Override
   public @Nullable Component line(int line) {
-    SidebarUtil.checkLineBounds(maxLines, line);
+    checkLineBounds(line);
     checkClosed();
     return lines[line];
   }
@@ -86,15 +87,21 @@ class NoopSidebar implements Sidebar {
   }
 
   @Override
-  public void title(@NotNull Component title) {
+  public void title(@NotNull ComponentLike title) {
     Preconditions.checkNotNull(title);
     checkClosed();
-    this.title = title;
+    this.title = title.asComponent();
   }
 
   private void checkClosed() {
     if (closed) {
       throw new IllegalStateException("NoopSidebar is closed");
+    }
+  }
+
+  private void checkLineBounds(int line) {
+    if (line >= maxLines || line < 0) {
+      throw new IndexOutOfBoundsException("invalid line " + line);
     }
   }
 }

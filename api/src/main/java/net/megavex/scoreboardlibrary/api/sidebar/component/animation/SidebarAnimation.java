@@ -6,11 +6,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * An animation that can be used with {@link ComponentSidebarLayout}s
  *
- * @param <T> Frame type
+ * @param <T> frame type
  */
 public interface SidebarAnimation<T> {
   /**
-   * @return The current frame of the animation
+   * @return the current frame of the animation
    */
   @NotNull T currentFrame();
 

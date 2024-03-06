@@ -5,15 +5,17 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -40,7 +42,8 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     @NotNull Collection<Player> players,
     @NotNull PropertiesPacketType packetType,
     @NotNull Component value,
-    @NotNull ObjectiveRenderType renderType
+    @NotNull ObjectiveRenderType renderType,
+    @Nullable ScoreFormat scoreFormat
   ) {
     LocalePacketUtil.sendLocalePackets(
       sender,
@@ -60,7 +63,13 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   }
 
   @Override
-  public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value) {
+  public void sendScore(
+    @NotNull Collection<Player> players,
+    @NotNull String entry,
+    int value,
+    @Nullable Component display,
+    @Nullable ScoreFormat scoreFormat
+  ) {
     PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, value);

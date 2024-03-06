@@ -38,6 +38,8 @@ public final class PacketAccessors {
     ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, "d", String.class);
   public static final FieldAccessor<PacketPlayOutScoreboardTeam, String> TEAM_NAME_TAG_VISIBILITY_FIELD =
     ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, "e", String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, Integer> TEAM_COLOR_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, "f", int.class);
   @SuppressWarnings("rawtypes")
   public static final FieldAccessor<PacketPlayOutScoreboardTeam, Collection> TEAM_ENTRIES_FIELD =
     ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, "g", Collection.class);

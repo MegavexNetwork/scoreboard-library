@@ -1,17 +1,24 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.kyori.adventure.text.Component.empty;
+
 public class NoopScoreboardObjective implements ScoreboardObjective {
-  private final Map<String, Integer> scores = new HashMap<>();
-  private Component value;
+  private final Map<String, ObjectiveScore> scores = new HashMap<>();
+  private Component value = empty();
   private ObjectiveRenderType renderType;
+  private ScoreFormat defaultScoreFormat;
 
   @Override
   public @NotNull Component value() {
@@ -19,8 +26,8 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
-  public @NotNull ScoreboardObjective value(@NotNull Component value) {
-    this.value = value;
+  public @NotNull ScoreboardObjective value(@NotNull ComponentLike value) {
+    this.value = value.asComponent();
     return this;
   }
 
@@ -36,12 +43,22 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
-  public Integer score(@NotNull String entry) {
+  public @Nullable ScoreFormat defaultScoreFormat() {
+    return defaultScoreFormat;
+  }
+
+  @Override
+  public void defaultScoreFormat(@Nullable ScoreFormat defaultScoreFormat) {
+    this.defaultScoreFormat = defaultScoreFormat;
+  }
+
+  @Override
+  public @Nullable ObjectiveScore scoreInfo(@NotNull String entry) {
     return scores.get(entry);
   }
 
   @Override
-  public @NotNull ScoreboardObjective score(@NotNull String entry, int score) {
+  public @NotNull ScoreboardObjective score(@NotNull String entry, ObjectiveScore score) {
     scores.put(entry, score);
     return this;
   }

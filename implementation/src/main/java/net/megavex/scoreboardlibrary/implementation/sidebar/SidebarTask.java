@@ -52,13 +52,24 @@ public class SidebarTask {
 
   public static final class UpdateLine extends SidebarTask {
     private final int line;
+    private final boolean updateValue, updateScore;
 
-    public UpdateLine(int line) {
+    public UpdateLine(int line, boolean updateValue, boolean updateScore) {
       this.line = line;
+      this.updateValue = updateValue;
+      this.updateScore = updateScore;
     }
 
     public int line() {
       return line;
+    }
+
+    public boolean updateValue() {
+      return updateValue;
+    }
+
+    public boolean updateScore() {
+      return updateScore;
     }
   }
 

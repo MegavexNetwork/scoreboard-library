@@ -10,13 +10,12 @@ import java.util.*;
 
 class NoopObjectiveManager implements ObjectiveManager {
   private final Map<String, ScoreboardObjective> objectives = new HashMap<>();
-  private final Map<ObjectiveDisplaySlot, ScoreboardObjective> displaySlots = new HashMap<>();
   private final Set<Player> players = new HashSet<>();
   private boolean isClosed = true;
 
   @Override
   public @NotNull ScoreboardObjective create(@NotNull String name) {
-    return objectives.computeIfAbsent(name, i -> null);
+    return objectives.computeIfAbsent(name, i -> new NoopScoreboardObjective());
   }
 
   @Override
@@ -26,7 +25,6 @@ class NoopObjectiveManager implements ObjectiveManager {
 
   @Override
   public void display(@NotNull ObjectiveDisplaySlot displaySlot, @NotNull ScoreboardObjective objective) {
-    displaySlots.put(displaySlot, objective);
   }
 
   @Override

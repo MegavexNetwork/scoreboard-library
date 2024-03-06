@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
@@ -10,6 +11,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConst
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
+import net.minecraft.server.v1_8_R3.EnumChatFormat;
 import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Objects;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
 
@@ -84,6 +87,13 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
           PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
           PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
           PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
+
+          NamedTextColor color = properties.playerColor();
+          if (color != null) {
+            String name = NamedTextColor.NAMES.key(color);
+            PacketAccessors.TEAM_COLOR_FIELD.set(packet, Objects.requireNonNull(EnumChatFormat.b(name)).b());
+          }
+
           PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
           if (packetType == PropertiesPacketType.CREATE) {
             PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.entries());

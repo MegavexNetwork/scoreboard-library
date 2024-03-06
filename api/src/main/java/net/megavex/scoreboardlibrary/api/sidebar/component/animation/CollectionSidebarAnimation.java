@@ -8,6 +8,11 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Implementation of {@link FramedSidebarAnimation} using a predefined collection of frames.
+ *
+ * @param <T> frame type
+ */
 public final class CollectionSidebarAnimation<T> implements FramedSidebarAnimation<T> {
   private final List<T> frames;
   private int currentFrameIndex;
