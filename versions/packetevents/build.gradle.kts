@@ -9,5 +9,5 @@ repositories {
 
 dependencies {
   compileOnly(project(":scoreboard-library-packet-adapter-base"))
-  compileOnly("com.github.retrooper.packetevents:spigot:2.0.2")
+  compileOnly("com.github.retrooper.packetevents:spigot:2.2.1")
 }

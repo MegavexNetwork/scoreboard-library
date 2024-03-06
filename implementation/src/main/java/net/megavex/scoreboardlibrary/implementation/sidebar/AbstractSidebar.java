@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
@@ -107,13 +108,17 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   }
 
   @Override
-  public final void line(@Range(from = 0, to = MAX_LINES - 1) int line, @Nullable Component value) {
+  public final void line(@Range(from = 0, to = MAX_LINES - 1) int index, @Nullable Component value, @Nullable ScoreFormat scoreFormat) {
     checkClosed();
 
-    GlobalLineInfo globalLineInfo = getLineInfo(line);
-    if (!Objects.equals(globalLineInfo.value(), value)) {
+    GlobalLineInfo globalLineInfo = getLineInfo(index);
+    boolean updateValue = !Objects.equals(globalLineInfo.value(), value);
+    boolean updateScore = !Objects.equals(globalLineInfo.scoreFormat(), scoreFormat);
+
+    if (updateValue || updateScore) {
       globalLineInfo.value(value);
-      taskQueue.add(new SidebarTask.UpdateLine(line));
+      globalLineInfo.scoreFormat(scoreFormat);
+      taskQueue.add(new SidebarTask.UpdateLine(index, updateValue, updateScore));
       updateScores();
     }
   }
@@ -160,7 +165,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
 
   @Override
   public final void display(@NotNull Player player) {
-    packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER);
+    packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
 
     LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
     lineHandler.addPlayer(player);
@@ -214,14 +219,20 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       } else if (task instanceof SidebarTask.UpdateLine) {
         SidebarTask.UpdateLine updateLineTask = (SidebarTask.UpdateLine) task;
         forEachLineHandler(sidebar -> {
-          Component value = lines[updateLineTask.line()].value();
-          Component renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
-          sidebar.updateLine(updateLineTask.line(), renderedValue);
+          if (updateLineTask.updateValue()) {
+            Component value = lines[updateLineTask.line()].value();
+            Component renderedValue = value == null ? null : GlobalTranslator.render(value, sidebar.locale());
+            sidebar.updateLine(updateLineTask.line(), renderedValue);
+          }
+
+          if (updateLineTask.updateScore()) {
+            sidebar.updateScoreFormat(updateLineTask.line());
+          }
         });
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachLineHandler(LocaleLineHandler::updateScores);
       } else if (task instanceof SidebarTask.UpdateTitle) {
-        packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER);
+        packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
       }
     }
     return true;

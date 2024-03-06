@@ -16,6 +16,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.Pa
 import net.minecraft.network.protocol.Packet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -65,12 +66,17 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
   }
 
   @Override
-  public net.minecraft.network.chat.@NotNull Component fromAdventure(@NotNull Component adventure, @NotNull Locale locale) {
+  public net.minecraft.network.chat.@NotNull Component fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
     if (isNativeAdventure) {
       return NativeAdventureUtil.fromAdventureComponent(adventure);
     }
 
-    JsonElement json = gson().serializeToTree(GlobalTranslator.render(adventure, locale));
+    Component translated = adventure;
+    if (locale != null) {
+      translated = GlobalTranslator.render(adventure, locale);
+    }
+
+    JsonElement json = gson().serializeToTree(translated);
     return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(json));
   }
 }

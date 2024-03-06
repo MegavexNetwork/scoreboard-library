@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.api.noop;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -66,10 +67,10 @@ class NoopSidebar implements Sidebar {
   }
 
   @Override
-  public void line(int line, @Nullable Component value) {
-    checkLineBounds(line);
+  public void line(int index, @Nullable Component value, @Nullable ScoreFormat scoreFormat) {
+    checkLineBounds(index);
     checkClosed();
-    lines[line] = value;
+    lines[index] = value;
   }
 
   @Override

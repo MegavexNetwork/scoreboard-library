@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +12,7 @@ public class GlobalLineInfo {
   private final int line;
   private final TeamsPacketAdapter packetAdapter;
   private Component value;
+  private ScoreFormat scoreFormat;
   private int objectiveScore;
   private boolean updateScore;
 
@@ -41,6 +43,14 @@ public class GlobalLineInfo {
 
   public void value(@Nullable Component value) {
     this.value = value;
+  }
+
+  public @Nullable ScoreFormat scoreFormat() {
+    return scoreFormat;
+  }
+
+  public void scoreFormat(@Nullable ScoreFormat scoreFormat) {
+    this.scoreFormat = scoreFormat;
   }
 
   public int objectiveScore() {

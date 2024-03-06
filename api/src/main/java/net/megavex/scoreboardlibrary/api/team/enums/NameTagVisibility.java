@@ -4,8 +4,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Represents all possible name tag visibility rule values of a team.
- *
- * @since Minecraft 1.9
  */
 public enum NameTagVisibility {
   ALWAYS("always"),

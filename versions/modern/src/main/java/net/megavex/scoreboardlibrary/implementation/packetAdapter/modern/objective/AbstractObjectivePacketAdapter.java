@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketA
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
+import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
@@ -18,6 +19,7 @@ import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -50,20 +52,6 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   }
 
   @Override
-  public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value) {
-    ClientboundSetScorePacket packet;
-    try {
-      Class.forName("net.minecraft.network.chat.numbers.NumberFormat"); // Added in 1.20.3
-      packet = new ClientboundSetScorePacket(entry, objectiveName, value, null, null);
-    } catch (ClassNotFoundException ignored) {
-      packet = Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
-        .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
-    }
-
-    sender.sendPacket(players, packet);
-  }
-
-  @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
     Packet<?> packet;
     try {
@@ -90,15 +78,35 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     return packet;
   }
 
-  protected @NotNull ClientboundSetObjectivePacket createPacket(
+  protected @NotNull ClientboundSetScorePacket createScorePacket(
+    @NotNull String entry,
+    int value,
+    @Nullable net.minecraft.network.chat.Component nmsDisplay,
+    @Nullable Object numberFormat
+  ) {
+    if (PacketAccessors.HAS_NUMBER_FORMAT) {
+      return new ClientboundSetScorePacket(entry, objectiveName, value, nmsDisplay, (NumberFormat) numberFormat);
+    } else {
+      return Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
+        .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
+    }
+  }
+
+  protected @NotNull ClientboundSetObjectivePacket createObjectivePacket(
     @NotNull PropertiesPacketType packetType,
     @NotNull net.minecraft.network.chat.Component nmsValue,
-    @NotNull ObjectiveRenderType renderType
+    @NotNull ObjectiveRenderType renderType,
+    @Nullable Object numberFormat
   ) {
     ClientboundSetObjectivePacket packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, ObjectiveConstants.mode(packetType));
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, nmsValue);
+
+    if (numberFormat != null) {
+      assert PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD != null;
+      PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD.set(packet, (NumberFormat) numberFormat);
+    }
 
     ObjectiveCriteria.RenderType nmsRenderType;
     switch (renderType) {

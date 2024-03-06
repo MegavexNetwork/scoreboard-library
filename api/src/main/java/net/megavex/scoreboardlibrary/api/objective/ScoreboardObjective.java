@@ -36,25 +36,108 @@ public interface ScoreboardObjective {
   @NotNull ScoreboardObjective renderType(@NotNull ObjectiveRenderType renderType);
 
   /**
-   * Gets the score value for an entry, or null if the entry has no score registered.
+   * @return the default score format for all scores in this objective, defaults to null
+   */
+  @Nullable ScoreFormat defaultScoreFormat();
+
+  /**
+   * Sets the default score format of this objective.
+   *
+   * @param defaultScoreFormat new default score format
+   * @see #defaultScoreFormat()
+   */
+  void defaultScoreFormat(@Nullable ScoreFormat defaultScoreFormat);
+
+  /**
+   * Get the score for an entry, or null if the entry has no score.
    *
    * @param entry Entry to get score of
-   * @return The score, or null if it doesn't exist for the entry
+   * @return The score value, or null if it doesn't exist for the entry
    */
-  @Nullable Integer score(@NotNull String entry);
+  @Nullable ObjectiveScore scoreInfo(@NotNull String entry);
+
+  /**
+   * Gets the score value for an entry, or null if the entry has no score.
+   *
+   * @param entry Entry to get score of
+   * @return The score value, or null if it doesn't exist for the entry
+   * @deprecated use {@link #scoreInfo(String).value()} and {@link ObjectiveScore#value()} instead
+   */
+  @Deprecated
+  default @Nullable Integer score(@NotNull String entry) {
+    ObjectiveScore score = scoreInfo(entry);
+    return score == null ? null : score.value();
+  }
 
   /**
    * Updates the score of an entry.
    *
    * @param entry Entry to update score of
-   * @param score New score value
+   * @param score Score
    */
-  @NotNull ScoreboardObjective score(@NotNull String entry, int score);
+  @NotNull ScoreboardObjective score(@NotNull String entry, ObjectiveScore score);
 
   /**
-   * Removes a score.
+   * Updates the score of an entry.
    *
-   * @param entry Entry to remove score from
+   * @param entry Entry to update score of
+   * @param scoreValue Score value
+   */
+  default @NotNull ScoreboardObjective score(@NotNull String entry, int scoreValue) {
+    return score(entry, new ObjectiveScore(scoreValue, null, null));
+  }
+
+  /**
+   * Updates the score of an entry.
+   *
+   * @param entry entry to update score of
+   * @param scoreValue score value
+   * @param displayName score display name
+   * @param scoreFormat score format
+   */
+  default @NotNull ScoreboardObjective score(
+    @NotNull String entry,
+    int scoreValue,
+    @Nullable Component displayName,
+    @Nullable ScoreFormat scoreFormat
+  ) {
+    return score(entry, new ObjectiveScore(scoreValue, displayName, scoreFormat));
+  }
+
+  /**
+   * Updates the score of an entry.
+   *
+   * @param entry entry to update score of
+   * @param scoreValue score value
+   * @param displayName score display name
+   */
+  default @NotNull ScoreboardObjective score(
+    @NotNull String entry,
+    int scoreValue,
+    @Nullable Component displayName
+  ) {
+    return score(entry, new ObjectiveScore(scoreValue, displayName, null));
+  }
+
+  /**
+   * Updates the score of an entry.
+   *
+   * @param entry entry to update score of
+   * @param scoreValue score value
+   * @param scoreFormat score format
+   */
+  default @NotNull ScoreboardObjective score(
+    @NotNull String entry,
+    int scoreValue,
+    @Nullable ScoreFormat scoreFormat
+  ) {
+    return score(entry, new ObjectiveScore(scoreValue, null, scoreFormat));
+  }
+
+  /**
+   * Removes a score associated with an entry.
+   *
+   * @param entry Entry to remove score of
    */
   @NotNull ScoreboardObjective removeScore(@NotNull String entry);
 }

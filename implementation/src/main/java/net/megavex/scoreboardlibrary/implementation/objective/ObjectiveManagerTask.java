@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.objective;
 
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,9 +92,9 @@ public class ObjectiveManagerTask {
   public static final class UpdateScore extends ObjectiveManagerTask {
     private final ScoreboardObjectiveImpl objective;
     private final String entry;
-    private final Integer score;
+    private final ObjectiveScore score;
 
-    public UpdateScore(@NotNull ScoreboardObjectiveImpl objective, @NotNull String entry, @Nullable Integer score) {
+    public UpdateScore(@NotNull ScoreboardObjectiveImpl objective, @NotNull String entry, @Nullable ObjectiveScore score) {
       this.objective = objective;
       this.entry = entry;
       this.score = score;
@@ -107,7 +108,7 @@ public class ObjectiveManagerTask {
       return entry;
     }
 
-    public @Nullable Integer score() {
+    public @Nullable ObjectiveScore score() {
       return score;
     }
   }

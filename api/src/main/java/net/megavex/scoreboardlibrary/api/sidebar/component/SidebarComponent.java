@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.api.sidebar.component;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnimation;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +17,11 @@ public interface SidebarComponent {
   static @NotNull SidebarComponent staticLine(@NotNull Component line) {
     Preconditions.checkNotNull(line);
     return drawable -> drawable.drawLine(line);
+  }
+
+  static @NotNull SidebarComponent staticLine(@NotNull Component line, @NotNull ScoreFormat scoreFormat) {
+    Preconditions.checkNotNull(line);
+    return drawable -> drawable.drawLine(line, scoreFormat);
   }
 
   static @NotNull SidebarComponent blankLine() {
@@ -56,6 +62,10 @@ public interface SidebarComponent {
 
     public @NotNull Builder addStaticLine(@NotNull Component line) {
       return addComponent(SidebarComponent.staticLine(line));
+    }
+
+    public @NotNull Builder addStaticLine(@NotNull Component line, @NotNull ScoreFormat scoreFormat) {
+      return addComponent(SidebarComponent.staticLine(line, scoreFormat));
     }
 
     public @NotNull Builder addBlankLine() {
