@@ -12,21 +12,22 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
 - Objectives.
-- Doesn't require extra dependencies (assuming you're targeting the latest version of Paper)
-- Packet-level, meaning it works with other scoreboard plugins (and is faster)
+- Doesn't require extra dependencies (assuming you're targeting modern versions of Paper)
+- Packet-level, meaning it works with other scoreboard plugins
 - Supports [Folia](https://github.com/PaperMC/Folia)
-- Fully async. All packet work is done asynchronously so you can (but don't have to) use the library from the main
+- Fully async. All packet work is done asynchronously, so you can use the library from the main
   thread without sacrificing any performance
-- Works with `TranslatableComponent`s, meaning all components are automatically translated using `GlobalTranslator` for
-  each players client locale (and automatically update whenever the player changes it in their settings)
+- Automatically works with `TranslatableComponent`s. All components are translated using `GlobalTranslator` for
+  each player's client locale and automatically update whenever the player changes it in their settings
 
-## Packet Adapters
+## Available Packet Adapters
 
-- **modern.** Supports 1.17-1.20.4. Takes advantage of [Paper](https://papermc.io)'s native adventure support to improve
-  performance. [Spigot](https://www.spigotmc.org/) is also supported, but will have worse performance
-- **PacketEvents.** Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be loaded in the
-  classpath. Should work on all versions 1.8+
+- **modern.** Supports 1.17-1.20.4. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
+- **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin. Can be less stable than ProtocolLib.
 - **1.8.8.**
+
+> [!NOTE]  
+> You can add multiple packet adapters, the best one will automatically be picked depending on the server version.
 
 ## Installation
 
@@ -37,15 +38,15 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 ```java
 ScoreboardLibrary scoreboardLibrary;
 try {
-  scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
+scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
 } catch (NoPacketAdapterAvailableException e) {
-  // If no packet adapter was found, you can fallback to the no-op implementation:
-  scoreboardLibrary = new NoopScoreboardLibrary();
+// If no packet adapter was found, you can fallback to the no-op implementation:
+scoreboardLibrary = new NoopScoreboardLibrary();
   plugin.getLogger().warning("No scoreboard packet adapter available!");
 }
 
 // On plugin shutdown:
-scoreboardLibrary.close();
+  scoreboardLibrary.close();
 ```
 
 ### Thread safety warning (Folia)
@@ -59,13 +60,13 @@ synchronisation to make sure you're using them from only one thread at a time.
 Sidebar sidebar = scoreboardLibrary.createSidebar();
 
 sidebar.title(Component.text("Sidebar Title"));
-sidebar.line(0, Component.empty());
-sidebar.line(1, Component.text("Line 1"));
-sidebar.line(2, Component.text("Line 2"));
-sidebar.line(2, Component.empty());
-sidebar.line(3, Component.text("epicserver.net"));
+  sidebar.line(0, Component.empty());
+  sidebar.line(1, Component.text("Line 1"));
+  sidebar.line(2, Component.text("Line 2"));
+  sidebar.line(2, Component.empty());
+  sidebar.line(3, Component.text("epicserver.net"));
 
-sidebar.addPlayer(player); // Add the player to the sidebar
+  sidebar.addPlayer(player); // Add the player to the sidebar
 
 // After you've finished using the Sidebar, make sure to close it to prevent a memory leak:
 sidebar.close();
@@ -112,7 +113,7 @@ Set<NamedTextColor> colors = NamedTextColor.NAMES.values();
 List<Component> frames = new ArrayList<>(colors.size());
 for (NamedTextColor color : colors) {
   frames.add(lineComponent.color(color));
-}
+  }
 
 SidebarAnimation<Component> animation = new CollectionSidebarAnimation<>(frames);
 // You can also implement SidebarAnimation yourself
@@ -249,19 +250,19 @@ ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 // use the default TeamDisplay that is created in every ScoreboardTeam.
 TeamDisplay teamDisplay = team.defaultDisplay();
 teamDisplay.displayName(Component.text("Team Display Name"));
-teamDisplay.prefix(Component.text("[Prefix] "));
-teamDisplay.suffix(Component.text(" [Suffix]"));
-teamDisplay.playerColor(NamedTextColor.RED);
+  teamDisplay.prefix(Component.text("[Prefix] "));
+  teamDisplay.suffix(Component.text(" [Suffix]"));
+  teamDisplay.playerColor(NamedTextColor.RED);
 teamDisplay.addEntry(player.getName());
 
-teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
+  teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
 
 // Create a new TeamDisplay like this:
 TeamDisplay newTeamDisplay = team.createDisplay();
 newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 
 // Change the TeamDisplay a player sees like this:
-team.display(player, newTeamDisplay);
+  team.display(player, newTeamDisplay);
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();
@@ -273,10 +274,10 @@ teamManager.close();
 ObjectiveManager objectiveManager = scoreboardLibrary.createObjectiveManager();
 ScoreboardObjective objective = objectiveManager.create("coolobjective");
 objective.value(Component.text("Display name"));
-objective.score(player.getName(), 69420);
-objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
+  objective.score(player.getName(), 69420);
+  objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
 
-objectiveManager.addPlayer(player); // Make a player see the objectives
+  objectiveManager.addPlayer(player); // Make a player see the objectives
 
 // After you've finished using the ObjectiveManager, make sure to close it to prevent a memory leak:
 objectiveManager.close();
