@@ -12,7 +12,6 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
 - Objectives.
-- Supports new 1.20.4 features (score display names, custom score formats)
 - Doesn't require extra dependencies (assuming you're targeting the latest version of Paper)
 - Packet-level, meaning it works with other scoreboard plugins (and is faster)
 - Supports [Folia](https://github.com/PaperMC/Folia)
