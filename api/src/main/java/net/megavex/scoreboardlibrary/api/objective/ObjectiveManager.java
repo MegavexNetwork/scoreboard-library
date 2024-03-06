@@ -16,28 +16,28 @@ public interface ObjectiveManager {
   /**
    * Creates an objective with a name if one doesn't already exist and returns it.
    *
-   * @param name Name of the objective
-   * @return Objective
+   * @param name name of the objective
+   * @return objective
    */
   @NotNull ScoreboardObjective create(@NotNull String name);
 
   /**
    * Removes an objective.
    *
-   * @param objective Objective to remove
+   * @param objective objective to remove
    */
   void remove(@NotNull ScoreboardObjective objective);
 
   /**
    * Updates which objective is shown in a display slot.
    *
-   * @param displaySlot Display slot value to show objective in
-   * @param objective   Objective to display in that display slot
+   * @param displaySlot display slot value to show objective in
+   * @param objective   objective to display in that display slot
    */
   void display(@NotNull ObjectiveDisplaySlot displaySlot, @NotNull ScoreboardObjective objective);
 
   /**
-   * @return Unmodifiable collection of viewers in this ObjectiveManager
+   * @return unmodifiable collection of viewers in this ObjectiveManager
    * @see #addPlayer
    * @see #removePlayer
    */
@@ -49,15 +49,15 @@ public interface ObjectiveManager {
    * The ObjectiveManager will internally be added to a queue for this player who
    * will start seeing it once they are removed from all previous ObjectiveManagers.
    *
-   * @param player Player to add
-   * @return Whether the player was added
+   * @param player player to add
+   * @return whether the player was added
    */
   boolean addPlayer(@NotNull Player player);
 
   /**
    * Adds multiple viewers to this ObjectiveManager.
    *
-   * @param players Viewers to add
+   * @param players viewers to add
    * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players) {
@@ -69,15 +69,15 @@ public interface ObjectiveManager {
   /**
    * Removes a viewer from this ObjectiveManager.
    *
-   * @param player Viewer to remove
-   * @return Whether the viewer was removed
+   * @param player viewer to remove
+   * @return whether the viewer was removed
    */
   boolean removePlayer(@NotNull Player player);
 
   /**
    * Removes multiple viewers from this ObjectiveManager
    *
-   * @param players Viewers to remove
+   * @param players viewers to remove
    */
   default void removePlayers(@NotNull Collection<Player> players) {
     for (Player player : players) {
@@ -92,7 +92,7 @@ public interface ObjectiveManager {
   void close();
 
   /**
-   * @return Whether this ObjectiveManager is closed
+   * @return whether this ObjectiveManager is closed
    * @see #close
    */
   boolean closed();

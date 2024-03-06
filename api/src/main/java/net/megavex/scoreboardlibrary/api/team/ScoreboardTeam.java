@@ -52,7 +52,7 @@ public interface ScoreboardTeam {
    * Creates a new {@link TeamDisplay}.
    * To show it to players, use {@link #display(Player, TeamDisplay)}.
    *
-   * @return Newly created team display
+   * @return newly created team display
    */
   @NotNull TeamDisplay createDisplay();
 }

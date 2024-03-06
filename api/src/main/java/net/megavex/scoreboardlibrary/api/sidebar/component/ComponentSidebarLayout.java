@@ -10,6 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.kyori.adventure.text.Component.empty;
 
+/**
+ * Represents a component sidebar layout that can be applied to a {@link Sidebar}.
+ */
 public final class ComponentSidebarLayout {
   private final SidebarComponent titleComponent;
   private final SidebarComponent linesComponent;

@@ -21,31 +21,31 @@ public interface TeamManager {
   // Teams
 
   /**
-   * @return Unmodifiable collection of teams in this TeamManager
+   * @return unmodifiable collection of teams in this TeamManager
    */
   @NotNull Collection<ScoreboardTeam> teams();
 
   /**
    * Gets a team by its name.
    *
-   * @param name Name of team
-   * @return Team with the name, or null if one doesn't exist
+   * @param name name of team
+   * @return team with the name, or null if one doesn't exist
    */
   @Nullable ScoreboardTeam team(@NotNull String name);
 
   /**
    * Check whether a team with a name exists.
    *
-   * @param name Name of team
-   * @return Whether a team by the name exists
+   * @param name name of team
+   * @return whether a team by the name exists
    */
   boolean teamExists(@NotNull String name);
 
   /**
    * Creates a team with a name if one doesn't already exist and returns it.
    *
-   * @param name Name of team
-   * @return Team
+   * @param name name of team
+   * @return team
    */
   default @NotNull ScoreboardTeam createIfAbsent(@NotNull String name) {
     return createIfAbsent(name, null);
@@ -54,32 +54,32 @@ public interface TeamManager {
   /**
    * Creates a team with a name if one doesn't already exist and returns it.
    *
-   * @param name                Name of team
-   * @param teamDisplayFunction A function that provides the team display to set for each player
-   * @return Team
+   * @param name                name of team
+   * @param teamDisplayFunction a function that provides the team display to set for each player
+   * @return team
    */
   @NotNull ScoreboardTeam createIfAbsent(@NotNull String name, @Nullable BiFunction<Player, ScoreboardTeam, TeamDisplay> teamDisplayFunction);
 
   /**
    * Removes a team by its name.
    *
-   * @param name Name of team
-   * @return If there was a team with than name
+   * @param name name of team
+   * @return if there was a team with than name
    */
   boolean removeTeam(@NotNull String name);
 
   /**
    * Removes a team.
    *
-   * @param team Team to remove
-   * @throws IllegalArgumentException If the provided team is not owned by this TeamManager
+   * @param team team to remove
+   * @throws IllegalArgumentException if the provided team is not owned by this TeamManager
    */
   void removeTeam(@NotNull ScoreboardTeam team);
 
   // Players
 
   /**
-   * @return Unmodifiable collection of viewers in this TeamManager
+   * @return unmodifiable collection of viewers in this TeamManager
    * @see #addPlayer
    * @see #removePlayer
    */
@@ -91,8 +91,8 @@ public interface TeamManager {
    * The TeamManager will internally be added to a queue for this player who
    * will start seeing it once they are removed from all previous TeamManagers.
    *
-   * @param player Player to add
-   * @return Whether the player was added
+   * @param player player to add
+   * @return whether the player was added
    */
   default boolean addPlayer(@NotNull Player player) {
     return addPlayer(player, null);
@@ -104,16 +104,16 @@ public interface TeamManager {
    * The TeamManager will internally be added to a queue for this player who
    * will start seeing it once they are removed from all previous TeamManagers.
    *
-   * @param player Player to add
-   * @param teamDisplayFunction A function that provides the team display to set for each team
-   * @return Whether the player was added
+   * @param player player to add
+   * @param teamDisplayFunction a function that provides the team display to set for each team
+   * @return whether the player was added
    */
   boolean addPlayer(@NotNull Player player, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction);
 
   /**
    * Adds multiple viewers to this TeamManager.
    *
-   * @param players Viewers to add
+   * @param players viewers to add
    * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players) {
@@ -123,8 +123,8 @@ public interface TeamManager {
   /**
    * Adds multiple viewers to this TeamManager.
    *
-   * @param players Viewers to add
-   * @param teamDisplayFunction A function that provides the team display to set for each team
+   * @param players viewers to add
+   * @param teamDisplayFunction a function that provides the team display to set for each team
    * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players, @Nullable Function<ScoreboardTeam, TeamDisplay> teamDisplayFunction) {
@@ -136,15 +136,15 @@ public interface TeamManager {
   /**
    * Removes a viewer from this TeamManager.
    *
-   * @param player Viewer to remove
-   * @return Whether the viewer was removed
+   * @param player viewer to remove
+   * @return whether the viewer was removed
    */
   boolean removePlayer(@NotNull Player player);
 
   /**
    * Removes multiple viewers from this TeamManager.
    *
-   * @param players Viewers to remove
+   * @param players viewers to remove
    */
   default void removePlayers(@NotNull Collection<Player> players) {
     for (Player player : players) {

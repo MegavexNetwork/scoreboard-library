@@ -6,26 +6,26 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.List;
 
 /**
- * A {@link SidebarAnimation} with predetermined frames
+ * A {@link SidebarAnimation} with predetermined frames.
  *
- * @param <T> Frame type
+ * @param <T> frame type
  */
 public interface FramedSidebarAnimation<T> extends SidebarAnimation<T> {
   /**
-   * @return All frames in this animation
+   * @return all frames in this animation
    */
   @Unmodifiable @NotNull List<T> frames();
 
   /**
-   * @return The index of the current frame
+   * @return the index of the current frame
    */
   int currentFrameIndex();
 
   /**
    * Switches the current frame
    *
-   * @param frameIndex The index of the new current frame
-   * @throws ArrayIndexOutOfBoundsException If frame is out of bounds
+   * @param frameIndex the index of the new current frame
+   * @throws ArrayIndexOutOfBoundsException if frame is out of bounds
    */
   void switchFrame(int frameIndex);
 }

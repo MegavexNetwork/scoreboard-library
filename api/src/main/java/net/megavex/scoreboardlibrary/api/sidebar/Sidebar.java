@@ -29,12 +29,12 @@ public interface Sidebar {
   // Main
 
   /**
-   * @return Max amount of lines this sidebar can have
+   * @return max amount of lines this sidebar can have
    */
   @Range(from = 1, to = Integer.MAX_VALUE) int maxLines();
 
   /**
-   * @return Locale which is used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
+   * @return locale which is used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
    * or null if it depends on each player's client locale.
    * @see ScoreboardLibrary#createSidebar(int, Locale)
    */
@@ -45,16 +45,16 @@ public interface Sidebar {
   /**
    * Gets a line's value.
    *
-   * @param line Line index
-   * @return Value of line, or null if unset
+   * @param line line index
+   * @return value of line, or null if unset
    */
   @Nullable Component line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int line);
 
   /**
    * Sets a line's value.
    *
-   * @param index Line index
-   * @param value New value, or null to hide
+   * @param index line index
+   * @param value new value, or null to hide
    */
   default void line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int index, @Nullable ComponentLike value) {
     line(index, value, null);
@@ -64,9 +64,9 @@ public interface Sidebar {
    * Sets a line's value with a custom score format.
    * Note that custom score formats are only supported in Minecraft 1.20.3+.
    *
-   * @param index       Line index
-   * @param value       New value, or null to hide
-   * @param scoreFormat Score format
+   * @param index       line index
+   * @param value       new value, or null to hide
+   * @param scoreFormat score format
    */
   void line(
     @Range(from = 0, to = Integer.MAX_VALUE - 1) int index,
@@ -86,21 +86,21 @@ public interface Sidebar {
   // Title
 
   /**
-   * @return Title of the sidebar, defaults to {@link Component#empty}
+   * @return title of the sidebar, defaults to {@link Component#empty}
    */
   @NotNull Component title();
 
   /**
    * Sets the title of the sidebar.
    *
-   * @param title Title
+   * @param title title
    */
   void title(@NotNull ComponentLike title);
 
   // Players
 
   /**
-   * @return Unmodifiable collection of viewers in this Sidebar
+   * @return unmodifiable collection of viewers in this Sidebar
    * @see #addPlayer
    * @see #removePlayer
    */
@@ -112,15 +112,15 @@ public interface Sidebar {
    * The Sidebar will internally be added to a queue for this player who
    * will start seeing it once they are removed from all previous Sidebars.
    *
-   * @param player Player to add
-   * @return Whether the player was added
+   * @param player player to add
+   * @return whether the player was added
    */
   boolean addPlayer(@NotNull Player player);
 
   /**
    * Adds multiple viewers to this Sidebar.
    *
-   * @param players Viewers to add
+   * @param players viewers to add
    * @see #addPlayer
    */
   default void addPlayers(@NotNull Collection<Player> players) {
@@ -132,15 +132,15 @@ public interface Sidebar {
   /**
    * Removes a viewer from this Sidebar.
    *
-   * @param player Viewer to remove
-   * @return Whether the viewer was removed
+   * @param player viewer to remove
+   * @return whether the viewer was removed
    */
   boolean removePlayer(@NotNull Player player);
 
   /**
    * Removes multiple viewers from this Sidebar
    *
-   * @param players Viewers to remove
+   * @param players viewers to remove
    */
   default void removePlayers(@NotNull Collection<Player> players) {
     for (Player player : players) {
