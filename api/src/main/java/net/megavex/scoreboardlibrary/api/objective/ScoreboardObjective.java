@@ -92,16 +92,16 @@ public interface ScoreboardObjective {
    *
    * @param entry entry to update score of
    * @param scoreValue score value
-   * @param display score display
+   * @param displayName score display name
    * @param scoreFormat score format
    */
   default @NotNull ScoreboardObjective score(
     @NotNull String entry,
     int scoreValue,
-    @Nullable Component display,
+    @Nullable Component displayName,
     @Nullable ScoreFormat scoreFormat
   ) {
-    return score(entry, new ObjectiveScore(scoreValue, display, scoreFormat));
+    return score(entry, new ObjectiveScore(scoreValue, displayName, scoreFormat));
   }
 
   /**
@@ -109,14 +109,14 @@ public interface ScoreboardObjective {
    *
    * @param entry entry to update score of
    * @param scoreValue score value
-   * @param display score display
+   * @param displayName score display name
    */
   default @NotNull ScoreboardObjective score(
     @NotNull String entry,
     int scoreValue,
-    @Nullable Component display
+    @Nullable Component displayName
   ) {
-    return score(entry, new ObjectiveScore(scoreValue, display, null));
+    return score(entry, new ObjectiveScore(scoreValue, displayName, null));
   }
 
   /**

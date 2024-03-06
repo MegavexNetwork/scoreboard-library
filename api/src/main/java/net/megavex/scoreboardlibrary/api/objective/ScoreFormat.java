@@ -2,11 +2,17 @@ package net.megavex.scoreboardlibrary.api.objective;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.StyleBuilderApplicable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import static net.kyori.adventure.text.format.Style.style;
+
 /**
+ * Represents all valid objective score formats.
+ *
  * @since Minecraft 1.20.3
  */
 @ApiStatus.NonExtendable
@@ -15,14 +21,19 @@ public interface ScoreFormat {
     return Blank.INSTANCE;
   }
 
-  static @NotNull Fixed fixed(@NotNull Component content) {
+  static @NotNull Fixed fixed(@NotNull ComponentLike content) {
     Preconditions.checkNotNull(content);
-    return new Fixed(content);
+    return new Fixed(content.asComponent());
   }
 
   static @NotNull Styled styled(@NotNull Style style) {
     Preconditions.checkNotNull(style);
     return new Styled(style);
+  }
+
+  static @NotNull Styled styled(@NotNull StyleBuilderApplicable @NotNull ... styleBuilderApplicables) {
+    Preconditions.checkNotNull(styleBuilderApplicables);
+    return new Styled(style(styleBuilderApplicables));
   }
 
   class Blank implements ScoreFormat {

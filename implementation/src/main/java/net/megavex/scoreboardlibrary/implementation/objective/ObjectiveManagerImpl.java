@@ -159,6 +159,11 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         Collection<Player> singleton = Collections.singleton(player);
         for (ScoreboardObjectiveImpl objective : objectives.values()) {
           objective.sendProperties(singleton, PropertiesPacketType.UPDATE);
+
+          for (Map.Entry<String, ObjectiveScore> entry : objective.scores().entrySet()) {
+            ObjectiveScore score = entry.getValue();
+            objective.packetAdapter().sendScore(singleton, entry.getKey(), score.value(), score.displayName(), score.format());
+          }
         }
       } else if (task instanceof ObjectiveManagerTask.AddObjective) {
         ScoreboardObjectiveImpl objective = ((ObjectiveManagerTask.AddObjective) task).objective();
@@ -175,7 +180,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
         String entry = updateScoreTask.entry();
         ObjectiveScore score = updateScoreTask.score();
         if (score != null) {
-          objective.packetAdapter().sendScore(displayingPlayers, entry, score.value(), score.display(), score.format());
+          objective.packetAdapter().sendScore(displayingPlayers, entry, score.value(), score.displayName(), score.format());
         } else {
           objective.packetAdapter().removeScore(displayingPlayers, entry);
         }
@@ -198,7 +203,7 @@ public class ObjectiveManagerImpl implements ObjectiveManager, PlayerDisplayable
       objective.sendProperties(singleton, PropertiesPacketType.CREATE);
       for (Map.Entry<String, ObjectiveScore> entry : objective.scores().entrySet()) {
         ObjectiveScore score = entry.getValue();
-        objective.packetAdapter().sendScore(singleton, entry.getKey(), score.value(), score.display(), score.format());
+        objective.packetAdapter().sendScore(singleton, entry.getKey(), score.value(), score.displayName(), score.format());
       }
     }
 

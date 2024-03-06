@@ -1,7 +1,10 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
+import com.github.retrooper.packetevents.PacketEventsAPI;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisplayScoreboard;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerResetScore;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerScoreboardObjective;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerUpdateScore;
 import net.kyori.adventure.text.Component;
@@ -24,11 +27,13 @@ import java.util.Optional;
 
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   private final PacketSender<PacketWrapper<?>> provider;
+  private final PacketEventsAPI<?> packetEvents;
   private final String objectiveName;
   private WrapperPlayServerScoreboardObjective removePacket;
 
-  public ObjectivePacketAdapterImpl(@NotNull PacketSender<PacketWrapper<?>> provider, @NotNull String objectiveName) {
+  public ObjectivePacketAdapterImpl(@NotNull PacketSender<PacketWrapper<?>> provider, @NotNull PacketEventsAPI<?> packetEvents, @NotNull String objectiveName) {
     this.provider = provider;
+    this.packetEvents = packetEvents;
     this.objectiveName = objectiveName;
   }
 
@@ -90,13 +95,25 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
 
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
-    WrapperPlayServerUpdateScore packet = new WrapperPlayServerUpdateScore(
+    WrapperPlayServerUpdateScore oldPacket = new WrapperPlayServerUpdateScore(
       entry,
       WrapperPlayServerUpdateScore.Action.REMOVE_ITEM,
       objectiveName,
       Optional.empty()
     );
-    provider.sendPacket(players, packet);
+
+    WrapperPlayServerResetScore newPacket = new WrapperPlayServerResetScore(
+      entry,
+      objectiveName
+    );
+
+    for (Player player : players) {
+      if (packetEvents.getPlayerManager().getClientVersion(player).isNewerThanOrEquals(ClientVersion.V_1_20_3)) {
+        provider.sendPacket(players, newPacket);
+      } else {
+        provider.sendPacket(players, oldPacket);
+      }
+    }
   }
 
   private WrapperPlayServerScoreboardObjective createObjectivePacket(

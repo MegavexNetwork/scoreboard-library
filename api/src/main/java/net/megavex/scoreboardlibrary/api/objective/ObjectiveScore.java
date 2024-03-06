@@ -10,12 +10,12 @@ import java.util.Objects;
  */
 public final class ObjectiveScore {
   private final int value;
-  private final Component display;
+  private final Component displayName;
   private final ScoreFormat format;
 
-  public ObjectiveScore(int value, @Nullable Component display, @Nullable ScoreFormat format) {
+  public ObjectiveScore(int value, @Nullable Component displayName, @Nullable ScoreFormat format) {
     this.value = value;
-    this.display = display;
+    this.displayName = displayName;
     this.format = format;
   }
 
@@ -32,8 +32,8 @@ public final class ObjectiveScore {
    * @return score display
    * @since Minecraft 1.20.3
    */
-  public @Nullable Component display() {
-    return display;
+  public @Nullable Component displayName() {
+    return displayName;
   }
 
   /**
@@ -50,7 +50,7 @@ public final class ObjectiveScore {
   public String toString() {
     return "ObjectiveScore{" +
       "value=" + value +
-      ", display=" + display +
+      ", displayName=" + displayName +
       ", format=" + format +
       '}';
   }
@@ -63,14 +63,14 @@ public final class ObjectiveScore {
     ObjectiveScore that = (ObjectiveScore) o;
 
     if (value != that.value) return false;
-    if (!Objects.equals(display, that.display)) return false;
+    if (!Objects.equals(displayName, that.displayName)) return false;
     return Objects.equals(format, that.format);
   }
 
   @Override
   public int hashCode() {
     int result = value;
-    result = 31 * result + (display != null ? display.hashCode() : 0);
+    result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
     result = 31 * result + (format != null ? format.hashCode() : 0);
     return result;
   }

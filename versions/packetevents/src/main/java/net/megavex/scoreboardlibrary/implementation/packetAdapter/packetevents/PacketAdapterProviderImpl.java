@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
@@ -13,8 +14,11 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<PacketWrapper<?>> {
+  private final PacketEventsAPI<?> packetEvents;
+
   public PacketAdapterProviderImpl() {
-    if (PacketEvents.getAPI() == null) {
+    this.packetEvents = PacketEvents.getAPI();
+    if (this.packetEvents == null) {
       throw new IllegalStateException("PacketEvents exists in classpath but isn't loaded");
     }
   }
@@ -26,19 +30,19 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
 
   @Override
   public @NotNull ObjectivePacketAdapter createObjectiveAdapter(@NotNull String objectiveName) {
-    return new ObjectivePacketAdapterImpl(this, objectiveName);
+    return new ObjectivePacketAdapterImpl(this, packetEvents, objectiveName);
   }
 
   @Override
   public boolean isLegacy(@NotNull Player player) {
-    return PacketEvents.getAPI()
+    return packetEvents
       .getPlayerManager()
       .getClientVersion(player)
       .isOlderThanOrEquals(ClientVersion.V_1_12_2);
   }
 
   public void sendPacket(@NotNull Player player, @NotNull PacketWrapper<?> packet) {
-    PacketEvents.getAPI().getPlayerManager().sendPacket(player, packet);
+    packetEvents.getPlayerManager().sendPacket(player, packet);
   }
 
   public void sendPacket(@NotNull Iterable<Player> players, @NotNull PacketWrapper<?> packet) {
