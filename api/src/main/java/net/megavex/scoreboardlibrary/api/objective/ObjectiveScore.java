@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.objective;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -13,9 +14,9 @@ public final class ObjectiveScore {
   private final Component displayName;
   private final ScoreFormat format;
 
-  public ObjectiveScore(int value, @Nullable Component displayName, @Nullable ScoreFormat format) {
+  public ObjectiveScore(int value, @Nullable ComponentLike displayName, @Nullable ScoreFormat format) {
     this.value = value;
-    this.displayName = displayName;
+    this.displayName = displayName == null ? null : displayName.asComponent();
     this.format = format;
   }
 

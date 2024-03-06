@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.objective;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +22,7 @@ public interface ScoreboardObjective {
    *
    * @param value New value
    */
-  @NotNull ScoreboardObjective value(@NotNull Component value);
+  @NotNull ScoreboardObjective value(@NotNull ComponentLike value);
 
   /**
    * @return The render type of the objective, defaults to {@link ObjectiveRenderType#INTEGER}
@@ -98,7 +99,7 @@ public interface ScoreboardObjective {
   default @NotNull ScoreboardObjective score(
     @NotNull String entry,
     int scoreValue,
-    @Nullable Component displayName,
+    @Nullable ComponentLike displayName,
     @Nullable ScoreFormat scoreFormat
   ) {
     return score(entry, new ObjectiveScore(scoreValue, displayName, scoreFormat));
@@ -114,7 +115,7 @@ public interface ScoreboardObjective {
   default @NotNull ScoreboardObjective score(
     @NotNull String entry,
     int scoreValue,
-    @Nullable Component displayName
+    @Nullable ComponentLike displayName
   ) {
     return score(entry, new ObjectiveScore(scoreValue, displayName, null));
   }

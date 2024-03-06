@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.objective;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
@@ -54,9 +55,10 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
-  public @NotNull ScoreboardObjective value(@NotNull Component value) {
-    if (!this.value.equals(value)) {
-      this.value = value;
+  public @NotNull ScoreboardObjective value(@NotNull ComponentLike value) {
+    Component component = value.asComponent();
+    if (!this.value.equals(component)) {
+      this.value = component;
       if (!closed) {
         taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
       }

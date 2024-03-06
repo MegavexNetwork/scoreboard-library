@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
@@ -108,15 +109,16 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   }
 
   @Override
-  public final void line(@Range(from = 0, to = MAX_LINES - 1) int index, @Nullable Component value, @Nullable ScoreFormat scoreFormat) {
+  public final void line(@Range(from = 0, to = MAX_LINES - 1) int index, @Nullable ComponentLike value, @Nullable ScoreFormat scoreFormat) {
     checkClosed();
 
+    Component component = value == null ? null : value.asComponent();
     GlobalLineInfo globalLineInfo = getLineInfo(index);
-    boolean updateValue = !Objects.equals(globalLineInfo.value(), value);
+    boolean updateValue = !Objects.equals(globalLineInfo.value(), component);
     boolean updateScore = !Objects.equals(globalLineInfo.scoreFormat(), scoreFormat);
 
     if (updateValue || updateScore) {
-      globalLineInfo.value(value);
+      globalLineInfo.value(component);
       globalLineInfo.scoreFormat(scoreFormat);
       taskQueue.add(new SidebarTask.UpdateLine(index, updateValue, updateScore));
       updateScores();
@@ -137,12 +139,13 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   }
 
   @Override
-  public final void title(@NotNull Component title) {
+  public final void title(@NotNull ComponentLike title) {
     Preconditions.checkNotNull(title);
     checkClosed();
 
-    if (!Objects.equals(this.title, title)) {
-      this.title = title;
+    Component component = title.asComponent();
+    if (!Objects.equals(this.title, component)) {
+      this.title = component;
       taskQueue.add(SidebarTask.UpdateTitle.INSTANCE);
     }
   }

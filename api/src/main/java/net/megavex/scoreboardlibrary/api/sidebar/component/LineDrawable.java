@@ -1,6 +1,6 @@
 package net.megavex.scoreboardlibrary.api.sidebar.component;
 
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public interface LineDrawable {
    *
    * @param line line component
    */
-  default void drawLine(@NotNull Component line) {
+  default void drawLine(@NotNull ComponentLike line) {
     drawLine(line, null);
   }
 
@@ -26,5 +26,5 @@ public interface LineDrawable {
    * @param line        line component
    * @param scoreFormat score format
    */
-  void drawLine(@NotNull Component line, @Nullable ScoreFormat scoreFormat);
+  void drawLine(@NotNull ComponentLike line, @Nullable ScoreFormat scoreFormat);
 }

@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import org.bukkit.entity.Player;
@@ -55,7 +56,7 @@ public interface Sidebar {
    * @param index Line index
    * @param value New value, or null to hide
    */
-  default void line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int index, @Nullable Component value) {
+  default void line(@Range(from = 0, to = Integer.MAX_VALUE - 1) int index, @Nullable ComponentLike value) {
     line(index, value, null);
   }
 
@@ -69,7 +70,7 @@ public interface Sidebar {
    */
   void line(
     @Range(from = 0, to = Integer.MAX_VALUE - 1) int index,
-    @Nullable Component value,
+    @Nullable ComponentLike value,
     @Nullable ScoreFormat scoreFormat
   );
 
@@ -94,7 +95,7 @@ public interface Sidebar {
    *
    * @param title Title
    */
-  void title(@NotNull Component title);
+  void title(@NotNull ComponentLike title);
 
   // Players
 

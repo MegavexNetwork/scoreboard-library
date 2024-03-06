@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.implementation.team;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
@@ -73,11 +74,12 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   }
 
   @Override
-  public @NotNull TeamDisplay displayName(@NotNull Component displayName) {
+  public @NotNull TeamDisplay displayName(@NotNull ComponentLike displayName) {
     Preconditions.checkNotNull(displayName);
 
-    if (!Objects.equals(this.displayName, displayName)) {
-      this.displayName = displayName;
+    Component component = displayName.asComponent();
+    if (!Objects.equals(this.displayName, component)) {
+      this.displayName = component;
       scheduleUpdate();
     }
 
@@ -90,11 +92,12 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   }
 
   @Override
-  public @NotNull TeamDisplay prefix(@NotNull Component prefix) {
+  public @NotNull TeamDisplay prefix(@NotNull ComponentLike prefix) {
     Preconditions.checkNotNull(prefix);
 
-    if (!Objects.equals(this.prefix, prefix)) {
-      this.prefix = prefix;
+    Component component = prefix.asComponent();
+    if (!Objects.equals(this.prefix, component)) {
+      this.prefix = component;
       scheduleUpdate();
     }
 
@@ -107,11 +110,12 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   }
 
   @Override
-  public @NotNull TeamDisplay suffix(@NotNull Component suffix) {
+  public @NotNull TeamDisplay suffix(@NotNull ComponentLike suffix) {
     Preconditions.checkNotNull(suffix);
 
-    if (!Objects.equals(this.suffix, suffix)) {
-      this.suffix = suffix;
+    Component component = prefix.asComponent();
+    if (!Objects.equals(this.suffix, component)) {
+      this.suffix = component;
       scheduleUpdate();
     }
 

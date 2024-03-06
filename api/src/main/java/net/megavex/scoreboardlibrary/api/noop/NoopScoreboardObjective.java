@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.noop;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
@@ -25,8 +26,8 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
-  public @NotNull ScoreboardObjective value(@NotNull Component value) {
-    this.value = value;
+  public @NotNull ScoreboardObjective value(@NotNull ComponentLike value) {
+    this.value = value.asComponent();
     return this;
   }
 

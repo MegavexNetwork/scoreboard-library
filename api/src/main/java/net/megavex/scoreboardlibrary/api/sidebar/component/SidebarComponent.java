@@ -2,7 +2,7 @@ package net.megavex.scoreboardlibrary.api.sidebar.component;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnimation;
 import org.jetbrains.annotations.NotNull;
@@ -14,12 +14,12 @@ import java.util.function.Supplier;
 import static net.kyori.adventure.text.Component.empty;
 
 public interface SidebarComponent {
-  static @NotNull SidebarComponent staticLine(@NotNull Component line) {
+  static @NotNull SidebarComponent staticLine(@NotNull ComponentLike line) {
     Preconditions.checkNotNull(line);
     return drawable -> drawable.drawLine(line);
   }
 
-  static @NotNull SidebarComponent staticLine(@NotNull Component line, @NotNull ScoreFormat scoreFormat) {
+  static @NotNull SidebarComponent staticLine(@NotNull ComponentLike line, @NotNull ScoreFormat scoreFormat) {
     Preconditions.checkNotNull(line);
     return drawable -> drawable.drawLine(line, scoreFormat);
   }
@@ -28,16 +28,16 @@ public interface SidebarComponent {
     return drawable -> drawable.drawLine(empty());
   }
 
-  static @NotNull SidebarComponent dynamicLine(@NotNull Supplier<Component> lineSupplier) {
+  static @NotNull <T extends ComponentLike> SidebarComponent dynamicLine(@NotNull Supplier<T> lineSupplier) {
     return drawable -> drawable.drawLine(lineSupplier.get());
   }
 
-  static @NotNull SidebarComponent animatedLine(@NotNull SidebarAnimation<Component> animation) {
+  static @NotNull <T extends ComponentLike> SidebarComponent animatedLine(@NotNull SidebarAnimation<T> animation) {
     Preconditions.checkNotNull(animation);
     return drawable -> drawable.drawLine(animation.currentFrame());
   }
 
-  static @NotNull SidebarComponent animatedComponent(@NotNull SidebarAnimation<SidebarComponent> animation) {
+  static @NotNull <T extends SidebarComponent> SidebarComponent animatedComponent(@NotNull SidebarAnimation<T> animation) {
     Preconditions.checkNotNull(animation);
     return drawable -> animation.currentFrame().draw(drawable);
   }
@@ -60,11 +60,11 @@ public interface SidebarComponent {
       return this;
     }
 
-    public @NotNull Builder addStaticLine(@NotNull Component line) {
+    public @NotNull Builder addStaticLine(@NotNull ComponentLike line) {
       return addComponent(SidebarComponent.staticLine(line));
     }
 
-    public @NotNull Builder addStaticLine(@NotNull Component line, @NotNull ScoreFormat scoreFormat) {
+    public @NotNull Builder addStaticLine(@NotNull ComponentLike line, @NotNull ScoreFormat scoreFormat) {
       return addComponent(SidebarComponent.staticLine(line, scoreFormat));
     }
 
@@ -72,15 +72,15 @@ public interface SidebarComponent {
       return addComponent(SidebarComponent.blankLine());
     }
 
-    public @NotNull Builder addDynamicLine(@NotNull Supplier<Component> lineSupplier) {
+    public @NotNull <T extends ComponentLike> Builder addDynamicLine(@NotNull Supplier<T> lineSupplier) {
       return addComponent(SidebarComponent.dynamicLine(lineSupplier));
     }
 
-    public @NotNull Builder addAnimatedLine(@NotNull SidebarAnimation<Component> animation) {
+    public <T extends ComponentLike> @NotNull Builder addAnimatedLine(@NotNull SidebarAnimation<T> animation) {
       return addComponent(SidebarComponent.animatedLine(animation));
     }
 
-    public @NotNull Builder addAnimatedComponent(@NotNull SidebarAnimation<SidebarComponent> animation) {
+    public @NotNull <T extends SidebarComponent> Builder addAnimatedComponent(@NotNull SidebarAnimation<T> animation) {
       return addComponent(SidebarComponent.animatedComponent(animation));
     }
 

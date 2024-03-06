@@ -2,6 +2,7 @@ package net.megavex.scoreboardlibrary.api.sidebar.component;
 
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import org.jetbrains.annotations.NotNull;
@@ -47,11 +48,11 @@ public final class ComponentSidebarLayout {
     private Component title;
 
     @Override
-    public void drawLine(@NotNull Component line, @Nullable ScoreFormat scoreFormat) {
+    public void drawLine(@NotNull ComponentLike line, @Nullable ScoreFormat scoreFormat) {
       Preconditions.checkNotNull(line);
 
       if (title == null) {
-        title = line;
+        title = line.asComponent();
       }
     }
   }
@@ -65,7 +66,7 @@ public final class ComponentSidebarLayout {
     }
 
     @Override
-    public void drawLine(@NotNull Component line, @Nullable ScoreFormat scoreFormat) {
+    public void drawLine(@NotNull ComponentLike line, @Nullable ScoreFormat scoreFormat) {
       Preconditions.checkNotNull(line);
 
       if (index < Sidebar.MAX_LINES) {

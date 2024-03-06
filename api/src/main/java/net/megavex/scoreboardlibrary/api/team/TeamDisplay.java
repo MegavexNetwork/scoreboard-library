@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.api.team;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
@@ -62,7 +63,7 @@ public interface TeamDisplay {
    *
    * @param displayName new display name
    */
-  @NotNull TeamDisplay displayName(@NotNull Component displayName);
+  @NotNull TeamDisplay displayName(@NotNull ComponentLike displayName);
 
   /**
    * Gets the prefix, which defaults to {@link Component#empty()}.
@@ -78,7 +79,7 @@ public interface TeamDisplay {
    * @param prefix new prefix
    * @see #prefix()
    */
-  @NotNull TeamDisplay prefix(@NotNull Component prefix);
+  @NotNull TeamDisplay prefix(@NotNull ComponentLike prefix);
 
   /**
    * Gets the suffix, which defaults to {@link Component#empty()}.
@@ -94,7 +95,7 @@ public interface TeamDisplay {
    * @param suffix new suffix
    * @see #suffix()
    */
-  @NotNull TeamDisplay suffix(@NotNull Component suffix);
+  @NotNull TeamDisplay suffix(@NotNull ComponentLike suffix);
 
   /**
    * @return friendly fire rule value, defaults to false
