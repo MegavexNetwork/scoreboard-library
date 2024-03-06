@@ -38,15 +38,15 @@ See installation instructions [here](https://github.com/MegavexNetwork/scoreboar
 ```java
 ScoreboardLibrary scoreboardLibrary;
 try {
-scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
+  scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(plugin);
 } catch (NoPacketAdapterAvailableException e) {
-// If no packet adapter was found, you can fallback to the no-op implementation:
-scoreboardLibrary = new NoopScoreboardLibrary();
+  // If no packet adapter was found, you can fallback to the no-op implementation:
+  scoreboardLibrary = new NoopScoreboardLibrary();
   plugin.getLogger().warning("No scoreboard packet adapter available!");
 }
 
 // On plugin shutdown:
-  scoreboardLibrary.close();
+scoreboardLibrary.close();
 ```
 
 ### Thread safety warning (Folia)
@@ -60,13 +60,13 @@ synchronisation to make sure you're using them from only one thread at a time.
 Sidebar sidebar = scoreboardLibrary.createSidebar();
 
 sidebar.title(Component.text("Sidebar Title"));
-  sidebar.line(0, Component.empty());
-  sidebar.line(1, Component.text("Line 1"));
-  sidebar.line(2, Component.text("Line 2"));
-  sidebar.line(2, Component.empty());
-  sidebar.line(3, Component.text("epicserver.net"));
+sidebar.line(0, Component.empty());
+sidebar.line(1, Component.text("Line 1"));
+sidebar.line(2, Component.text("Line 2"));
+sidebar.line(2, Component.empty());
+sidebar.line(3, Component.text("epicserver.net"));
 
-  sidebar.addPlayer(player); // Add the player to the sidebar
+sidebar.addPlayer(player); // Add the player to the sidebar
 
 // After you've finished using the Sidebar, make sure to close it to prevent a memory leak:
 sidebar.close();
@@ -113,7 +113,7 @@ Set<NamedTextColor> colors = NamedTextColor.NAMES.values();
 List<Component> frames = new ArrayList<>(colors.size());
 for (NamedTextColor color : colors) {
   frames.add(lineComponent.color(color));
-  }
+}
 
 SidebarAnimation<Component> animation = new CollectionSidebarAnimation<>(frames);
 // You can also implement SidebarAnimation yourself
@@ -250,19 +250,19 @@ ScoreboardTeam team = teamManager.createIfAbsent("team_name");
 // use the default TeamDisplay that is created in every ScoreboardTeam.
 TeamDisplay teamDisplay = team.defaultDisplay();
 teamDisplay.displayName(Component.text("Team Display Name"));
-  teamDisplay.prefix(Component.text("[Prefix] "));
-  teamDisplay.suffix(Component.text(" [Suffix]"));
-  teamDisplay.playerColor(NamedTextColor.RED);
+teamDisplay.prefix(Component.text("[Prefix] "));
+teamDisplay.suffix(Component.text(" [Suffix]"));
+teamDisplay.playerColor(NamedTextColor.RED);
 teamDisplay.addEntry(player.getName());
 
-  teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
+teamManager.addPlayer(player); // Player will be added to the default TeamDisplay of each ScoreboardTeam
 
 // Create a new TeamDisplay like this:
 TeamDisplay newTeamDisplay = team.createDisplay();
 newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 
 // Change the TeamDisplay a player sees like this:
-  team.display(player, newTeamDisplay);
+team.display(player, newTeamDisplay);
 
 // After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
 teamManager.close();
@@ -274,10 +274,10 @@ teamManager.close();
 ObjectiveManager objectiveManager = scoreboardLibrary.createObjectiveManager();
 ScoreboardObjective objective = objectiveManager.create("coolobjective");
 objective.value(Component.text("Display name"));
-  objective.score(player.getName(), 69420);
-  objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
+objective.score(player.getName(), 69420);
+objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
 
-  objectiveManager.addPlayer(player); // Make a player see the objectives
+objectiveManager.addPlayer(player); // Make a player see the objectives
 
 // After you've finished using the ObjectiveManager, make sure to close it to prevent a memory leak:
 objectiveManager.close();
