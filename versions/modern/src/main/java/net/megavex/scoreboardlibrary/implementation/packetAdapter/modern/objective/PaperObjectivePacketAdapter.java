@@ -9,6 +9,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.Compone
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterProviderImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
+import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,8 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
   public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value, @Nullable Component display, @Nullable ScoreFormat scoreFormat) {
     net.minecraft.network.chat.Component nmsDisplay = display == null ? null : componentProvider.fromAdventure(display, null);
     Object numberFormat = ScoreFormatConverter.convert(componentProvider, null, scoreFormat);
-    createScorePacket(entry, value, nmsDisplay, numberFormat);
+    ClientboundSetScorePacket packet = createScorePacket(entry, value, nmsDisplay, numberFormat);
+    sender.sendPacket(players, packet);
   }
 
   @Override
