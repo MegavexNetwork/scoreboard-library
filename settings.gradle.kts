@@ -2,7 +2,7 @@ rootProject.name = "scoreboard-library"
 
 include(":api")
 include(":commons")
-include(":implementation")
+// include(":implementation")
 include("extra-kotlin")
 
 include(":packet-adapter-base")

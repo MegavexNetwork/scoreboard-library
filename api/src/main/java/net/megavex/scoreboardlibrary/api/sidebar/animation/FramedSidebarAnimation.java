@@ -1,8 +1,11 @@
-package net.megavex.scoreboardlibrary.api.sidebar.component.animation;
+package net.megavex.scoreboardlibrary.api.sidebar.animation;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -11,6 +14,12 @@ import java.util.List;
  * @param <T> frame type
  */
 public interface FramedSidebarAnimation<T> extends SidebarAnimation<T> {
+  static <R> FramedSidebarAnimation<R> create(@NotNull Collection<R> frames) {
+    Preconditions.checkNotNull(frames);
+    Preconditions.checkArgument(!frames.isEmpty());
+    return new CollectionSidebarAnimation<>(ImmutableList.copyOf(frames));
+  }
+
   /**
    * @return all frames in this animation
    */

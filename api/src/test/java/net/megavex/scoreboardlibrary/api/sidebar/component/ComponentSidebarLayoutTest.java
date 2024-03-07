@@ -2,9 +2,8 @@ package net.megavex.scoreboardlibrary.api.sidebar.component;
 
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
-import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.sidebar.component.animation.CollectionSidebarAnimation;
-import net.megavex.scoreboardlibrary.api.sidebar.component.animation.SidebarAnimation;
+import net.megavex.scoreboardlibrary.api.sidebar.animation.CollectionSidebarAnimation;
+import net.megavex.scoreboardlibrary.api.sidebar.animation.SidebarAnimation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

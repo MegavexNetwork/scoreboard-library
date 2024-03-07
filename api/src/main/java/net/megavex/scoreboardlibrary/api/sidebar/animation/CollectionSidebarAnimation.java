@@ -1,26 +1,16 @@
-package net.megavex.scoreboardlibrary.api.sidebar.component.animation;
+package net.megavex.scoreboardlibrary.api.sidebar.animation;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Collection;
 import java.util.List;
 
-/**
- * Implementation of {@link FramedSidebarAnimation} using a predefined collection of frames.
- *
- * @param <T> frame type
- */
-public final class CollectionSidebarAnimation<T> implements FramedSidebarAnimation<T> {
+final class CollectionSidebarAnimation<T> implements FramedSidebarAnimation<T> {
   private final List<T> frames;
   private int currentFrameIndex;
 
-  public CollectionSidebarAnimation(@NotNull Collection<T> frames) {
-    Preconditions.checkNotNull(frames);
-    Preconditions.checkArgument(!frames.isEmpty());
-    this.frames = ImmutableList.copyOf(frames);
+  CollectionSidebarAnimation(List<T> frames) {
+    this.frames = frames;
   }
 
   @Override

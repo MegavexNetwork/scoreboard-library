@@ -9,11 +9,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Locale;
 
 /**
  * Entrypoint of the library. To create an instance of this interface, use {@link #loadScoreboardLibrary}.
@@ -56,7 +54,7 @@ public interface ScoreboardLibrary {
    * @return newly created sidebar
    */
   default @NotNull Sidebar createSidebar() {
-    return createSidebar(Sidebar.MAX_LINES, null);
+    return createSidebar(Sidebar.MAX_LINES);
   }
 
   /**
@@ -66,20 +64,7 @@ public interface ScoreboardLibrary {
    *                 Note that vanilla clients can only display at most {@value Sidebar#MAX_LINES}
    * @return newly created sidebar
    */
-  default @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines) {
-    return createSidebar(maxLines, null);
-  }
-
-  /**
-   * Creates a new {@link Sidebar}.
-   *
-   * @param maxLines max amount of lines the sidebar will have.
-   *                 Note that vanilla clients can only display at most {@value Sidebar#MAX_LINES}
-   * @param locale   locale which will be used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
-   *                 or null if the locale should depend on the player
-   * @return newly created sidebar
-   */
-  @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines, @Nullable Locale locale);
+  @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines);
 
   /**
    * Creates a new {@link TeamManager}.

@@ -1,6 +1,6 @@
 package net.megavex.scoreboardlibrary.api.animation;
 
-import net.megavex.scoreboardlibrary.api.sidebar.component.animation.CollectionSidebarAnimation;
+import net.megavex.scoreboardlibrary.api.sidebar.animation.FramedSidebarAnimation;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -12,7 +12,7 @@ class CollectionAnimationTest {
   @Test
   void loopTest() {
     List<Integer> frames = Arrays.asList(0, 1, 2);
-    CollectionSidebarAnimation<Integer> animation = new CollectionSidebarAnimation<>(frames);
+    FramedSidebarAnimation<Integer> animation = FramedSidebarAnimation.create(frames);
     assertEquals(0, animation.currentFrame());
     animation.nextFrame();
     assertEquals(1, animation.currentFrame());
