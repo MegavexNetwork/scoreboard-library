@@ -113,7 +113,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   public @NotNull TeamDisplay suffix(@NotNull ComponentLike suffix) {
     Preconditions.checkNotNull(suffix);
 
-    Component component = prefix.asComponent();
+    Component component = suffix.asComponent();
     if (!Objects.equals(this.suffix, component)) {
       this.suffix = component;
       scheduleUpdate();
