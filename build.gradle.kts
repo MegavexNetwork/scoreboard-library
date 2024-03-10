@@ -20,7 +20,7 @@ subprojects {
   dependencies {
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
 
-    val adventureVersion = "4.14.0"
+    val adventureVersion = "4.16.0"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
