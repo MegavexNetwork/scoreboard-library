@@ -1,8 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.minecraft.server.v1_8_R3.Packet;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;

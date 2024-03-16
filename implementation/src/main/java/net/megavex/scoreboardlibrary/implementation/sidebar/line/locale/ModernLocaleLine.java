@@ -13,7 +13,7 @@ import java.util.Collections;
 
 import static net.kyori.adventure.text.Component.empty;
 
-// Implementation for versions above 1.12.2
+// 1.13+
 class ModernLocaleLine implements LocaleLine<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
