@@ -19,17 +19,17 @@ subprojects {
 
   dependencies {
     compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
+    testImplementation("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
 
     val adventureVersion = "4.16.0"
     compileOnly("net.kyori:adventure-api:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
     compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
-
-    testImplementation("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
     testImplementation("net.kyori:adventure-api:$adventureVersion")
+
+    val jupiterVersion = "5.10.2"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
   }
 
   tasks.withType<JavaCompile>().configureEach {

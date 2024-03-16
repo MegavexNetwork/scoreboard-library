@@ -3,7 +3,7 @@ rootProject.name = "scoreboard-library"
 include(":api")
 include(":commons")
 include(":implementation")
-include("extra-kotlin")
+include(":extra-kotlin")
 
 include(":packet-adapter-base")
 project(":packet-adapter-base").projectDir = file("versions/packet-adapter-base")
