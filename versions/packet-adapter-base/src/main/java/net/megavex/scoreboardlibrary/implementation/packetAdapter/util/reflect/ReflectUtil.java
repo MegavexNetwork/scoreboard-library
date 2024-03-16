@@ -2,7 +2,6 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.misc.Unsafe;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -14,31 +13,41 @@ public class ReflectUtil {
   // Inspired by
   // https://github.com/dmulloy2/ProtocolLib/blob/02e917cd08cf5b37a52052e22b223272a040e0df/src/main/java/com/comphenix/protocol/reflect/accessors/MethodHandleHelper.java
 
-  private static final Unsafe UNSAFE;
+  private static final Object UNSAFE;
   private static final MethodHandles.Lookup LOOKUP;
+  private static final MethodHandle ALLOCATE_INSTANCE_HANDLE;
   private static final MethodType VOID_METHOD_TYPE = MethodType.methodType(void.class);
   private static final MethodType VIRTUAL_FIELD_SETTER = MethodType.methodType(void.class, Object.class, Object.class);
 
   static {
+    MethodHandles.Lookup normalLookup = MethodHandles.lookup();
+
     try {
       Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
       Field theUnsafe = unsafeClass.getDeclaredField("theUnsafe");
       theUnsafe.setAccessible(true);
-      UNSAFE = (Unsafe) theUnsafe.get(null);
-    } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+      UNSAFE = theUnsafe.get(null);
+      ALLOCATE_INSTANCE_HANDLE = normalLookup.findVirtual(UNSAFE.getClass(), "allocateInstance", MethodType.methodType(Object.class, Class.class));
+    } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NoSuchMethodException e) {
       throw new ExceptionInInitializerError(e);
     }
 
     MethodHandles.Lookup lookup;
     try {
+      MethodHandle staticFieldOffset = normalLookup.findVirtual(UNSAFE.getClass(), "staticFieldOffset", MethodType.methodType(long.class, Field.class));
+      MethodHandle staticFieldBase = normalLookup.findVirtual(UNSAFE.getClass(), "staticFieldBase", MethodType.methodType(Object.class, Field.class));
+      MethodHandle getObject = normalLookup.findVirtual(UNSAFE.getClass(), "getObject", MethodType.methodType(Object.class, Object.class, long.class));
+
       Field trustedLookup = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-      long offset = UNSAFE.staticFieldOffset(trustedLookup);
-      Object baseValue = UNSAFE.staticFieldBase(trustedLookup);
-      lookup = (MethodHandles.Lookup) UNSAFE.getObject(baseValue, offset);
-    } catch (NoSuchFieldException e) {
+      long offset = (long) staticFieldOffset.invoke(UNSAFE, trustedLookup);
+      Object baseValue = staticFieldBase.invoke(UNSAFE, trustedLookup);
+
+      lookup = (MethodHandles.Lookup) getObject.invoke(UNSAFE, baseValue, offset);
+    } catch (Throwable e) {
       e.printStackTrace();
-      lookup = MethodHandles.lookup();
+      lookup = normalLookup;
     }
+
     LOOKUP = lookup;
   }
 
@@ -98,7 +107,7 @@ public class ReflectUtil {
     return () -> {
       try {
         // noinspection unchecked
-        return (T) UNSAFE.allocateInstance(packetClass);
+        return (T) ALLOCATE_INSTANCE_HANDLE.invoke(UNSAFE, packetClass);
       } catch (Throwable e) {
         throw new IllegalStateException("couldn't allocate packet instance using Unsafe", e);
       }
