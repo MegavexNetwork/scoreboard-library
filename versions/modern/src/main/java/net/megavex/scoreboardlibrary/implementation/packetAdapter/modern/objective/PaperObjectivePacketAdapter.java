@@ -17,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter {
-  private AdventureComponent lastValue;
-
   public PaperObjectivePacketAdapter(@NotNull PacketAdapterProviderImpl packetAdapter, @NotNull ComponentProvider componentProvider, @NotNull String objectiveName) {
     super(packetAdapter, componentProvider, objectiveName);
   }
@@ -39,14 +37,7 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
     @NotNull ObjectiveRenderType renderType,
     @Nullable ScoreFormat scoreFormat
   ) {
-    AdventureComponent nmsValue;
-    if (this.lastValue != null && this.lastValue.adventure$component() == value) {
-      nmsValue = this.lastValue;
-    } else {
-      nmsValue = NativeAdventureUtil.fromAdventureComponent(value);
-      this.lastValue = nmsValue;
-    }
-
+    AdventureComponent nmsValue = NativeAdventureUtil.fromAdventureComponent(value);
     Object numberFormat = ScoreFormatConverter.convert(componentProvider, null, scoreFormat);
     ClientboundSetObjectivePacket packet = createObjectivePacket(packetType, nmsValue, renderType, numberFormat);
     sender.sendPacket(players, packet);
