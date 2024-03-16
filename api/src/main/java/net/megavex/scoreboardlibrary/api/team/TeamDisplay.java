@@ -54,7 +54,7 @@ public interface TeamDisplay {
   // Properties
 
   /**
-   * @return display name, defaults to {@link Component#empty()
+   * @return display name, defaults to {@link Component#empty()}
    */
   @NotNull Component displayName();
 
@@ -69,7 +69,7 @@ public interface TeamDisplay {
    * Gets the prefix, which defaults to {@link Component#empty()}.
    * The suffix is prepended to all team members' names.
    *
-   * @return prefix, defaults to {@link Component#empty()
+   * @return prefix, defaults to {@link Component#empty()}
    */
   @NotNull Component prefix();
 
