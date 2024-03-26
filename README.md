@@ -24,7 +24,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 ## Available Packet Adapters
 
 - **modern.** Supports 1.17-1.20.4. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
-- **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin. Can be less stable than ProtocolLib.
+- **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin.
 - **1.8.8.**
 
 > [!NOTE]  
