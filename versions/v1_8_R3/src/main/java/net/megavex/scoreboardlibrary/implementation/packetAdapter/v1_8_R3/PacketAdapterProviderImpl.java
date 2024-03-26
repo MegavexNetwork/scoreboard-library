@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
+import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
@@ -22,8 +23,8 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
   }
 
   @Override
-  public boolean isLegacy(@NotNull Player player) {
-    return true;
+  public @NotNull LineRenderingStrategy lineRenderingStrategy(@NotNull Player player) {
+    return LineRenderingStrategy.LEGACY;
   }
 
   @Override
