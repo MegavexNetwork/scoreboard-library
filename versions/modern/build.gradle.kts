@@ -1,12 +1,12 @@
 plugins {
   `maven-publish`
   id("net.megavex.scoreboardlibrary.base-conventions")
-  id("io.papermc.paperweight.userdev") version "1.5.11"
+  alias(libs.plugins.paperweight)
 }
 
 dependencies {
   compileOnly(project(":scoreboard-library-packet-adapter-base"))
-  paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
+  paperweight.paperDevBundle(libs.versions.devBundle.get())
 }
 
 tasks {

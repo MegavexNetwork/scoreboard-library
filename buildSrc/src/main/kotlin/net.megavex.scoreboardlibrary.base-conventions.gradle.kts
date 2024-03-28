@@ -6,6 +6,9 @@ plugins {
   `java-library`
 }
 
+// expose version catalog
+val libs = extensions.getByType(org.gradle.accessors.dm.LibrariesForLibs::class)
+
 repositories {
   mavenCentral()
   maven("https://oss.sonatype.org/content/repositories/snapshots")
@@ -13,18 +16,13 @@ repositories {
 }
 
 dependencies {
-  compileOnly("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
-  testImplementation("org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT")
+  compileOnly(libs.spigotApi)
+  compileOnly(libs.bundles.adventure)
 
-  val adventureVersion = "4.16.0"
-  compileOnly("net.kyori:adventure-api:$adventureVersion")
-  compileOnly("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
-  compileOnly("net.kyori:adventure-text-serializer-gson:$adventureVersion")
-  testImplementation("net.kyori:adventure-api:$adventureVersion")
-
-  val jupiterVersion = "5.10.2"
-  testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
+  testImplementation(libs.spigotApi)
+  testImplementation(libs.bundles.adventure)
+  testImplementation(libs.junitJupiterApi)
+  testRuntimeOnly(libs.junitJupiterEngine)
 }
 
 tasks.withType<JavaCompile>().configureEach {

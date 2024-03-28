@@ -5,3 +5,7 @@ plugins {
 repositories {
   gradlePluginPortal()
 }
+
+dependencies {
+  compileOnly(files(libs::class.java.protectionDomain.codeSource.location))
+}

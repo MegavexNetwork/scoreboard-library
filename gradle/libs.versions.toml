@@ -1,0 +1,23 @@
+[versions]
+adventure = "4.16.0"
+junitJupiter = "5.10.2"
+devBundle = "1.20.4-R0.1-SNAPSHOT" # modern packet adapter
+
+[libraries]
+spigotApi = "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT" # do not update
+onePointEightPointEightNms = "org.github.spigot:1.8.8:1.8.8"
+packetEvents = "com.github.retrooper.packetevents:spigot:2.2.1"
+
+adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventureTextSerializerGson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
+adventureTextSerializerLegacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
+
+junitJupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
+junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiter" }
+
+[plugins]
+kotlin = "org.jetbrains.kotlin.jvm:1.9.23"
+paperweight = "io.papermc.paperweight.userdev:1.5.12"
+
+[bundles]
+adventure = [ "adventureApi", "adventureTextSerializerGson", "adventureTextSerializerLegacy" ]
