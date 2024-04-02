@@ -33,7 +33,7 @@ dependencies {
   // Example how to load PacketEvents in your plugin:
   // https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java
 
-  // If using the 1.8 version implementation, add Adventure as well:
+  // If targeting a Minecraft version without native Adventure support, add it as well:
   implementation("net.kyori:adventure-platform-bukkit:4.0.1")
 }
 ```
@@ -103,7 +103,7 @@ Then add the dependencies:
     https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java 
     -->
 
-  <!-- If using the 1.8 version implementation, add Adventure as well: -->
+  <!-- If targeting a Minecraft version without native Adventure support, add it as well: -->
   <dependency>
     <groupId>net.kyori</groupId>
     <artifactId>adventure-platform-bukkit</artifactId>
