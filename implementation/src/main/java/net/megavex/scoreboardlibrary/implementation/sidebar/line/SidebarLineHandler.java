@@ -47,7 +47,6 @@ public class SidebarLineHandler {
     for (LocaleLine line : lines) {
       if (line != null && line.info().updateScore()) {
         line.sendScore(players);
-        line.info().updateScore(false);
       }
     }
   }
