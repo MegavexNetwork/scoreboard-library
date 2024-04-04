@@ -6,6 +6,7 @@ plugins {
   `maven-publish`
   `java-library`
   id("net.kyori.indra")
+  id("net.kyori.indra.publishing")
 }
 
 val libs = extensions.getByType(org.gradle.accessors.dm.LibrariesForLibs::class)
@@ -27,9 +28,28 @@ dependencies {
 }
 
 indra {
+  github("MegavexNetwork", "scoreboard-library") {
+    ci(true)
+  }
+  mitLicense()
+
   javaVersions {
     target(8)
     minimumToolchain(17)
+  }
+
+  signWithKeyFromPrefixedProperties("megavex")
+  configurePublications {
+    pom {
+      url = "https://github.com/MegavexNetwork/agones-kt"
+      developers {
+        developer {
+          id = "vytskalt"
+          name = "vytskalt"
+          email = "vytskalt@protonmail.com"
+        }
+      }
+    }
   }
 }
 
