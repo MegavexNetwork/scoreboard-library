@@ -3,10 +3,11 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
 
 plugins {
+  `maven-publish`
   `java-library`
+  id("net.kyori.indra")
 }
 
-// expose version catalog
 val libs = extensions.getByType(org.gradle.accessors.dm.LibrariesForLibs::class)
 
 repositories {
@@ -25,14 +26,13 @@ dependencies {
   testRuntimeOnly(libs.junitJupiterEngine)
 }
 
-tasks.withType<JavaCompile>().configureEach {
-  sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-  targetCompatibility = JavaVersion.VERSION_1_8.toString()
-  options.encoding = "UTF-8"
-  options.isIncremental = true
-  options.compilerArgs = mutableListOf("-Xlint:-deprecation,-unchecked")
+indra {
+  javaVersions {
+    target(8)
+    minimumToolchain(17)
+  }
 }
 
-tasks.test {
-  useJUnitPlatform()
+tasks.withType<JavaCompile>().configureEach {
+  options.compilerArgs = mutableListOf("-Xlint:-deprecation,-unchecked")
 }
