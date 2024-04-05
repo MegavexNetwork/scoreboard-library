@@ -38,7 +38,6 @@ indra {
     minimumToolchain(17)
   }
 
-  signWithKeyFromPrefixedProperties("megavex")
   configurePublications {
     pom {
       url = "https://github.com/MegavexNetwork/agones-kt"

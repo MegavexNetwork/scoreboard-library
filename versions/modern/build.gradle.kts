@@ -49,10 +49,12 @@ indra {
 publishing {
   publications.getByName<MavenPublication>("maven") {
     artifact(tasks.reobfJar)
-
-    artifact(tasks.named("signReobfJar")) {
-      classifier = "reobf"
-      extension = "asc"
+    val signReobfJar = tasks.named("signReobfJar")
+    if (!signReobfJar.get().state.skipped) {
+      artifact(signReobfJar) {
+        classifier = "reobf"
+        extension = "asc"
+      }
     }
   }
 }
