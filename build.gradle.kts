@@ -1,5 +1,5 @@
 allprojects {
-  version = "2.1.5-SNAPSHOT"
+  version = "2.1.5"
   group = "net.megavex"
   description = "Powerful packet-level scoreboard library for Paper/Spigot servers"
 }
