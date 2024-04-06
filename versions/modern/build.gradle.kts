@@ -15,26 +15,13 @@ tasks {
     options.release = null
   }
 
-  // Based on https://github.com/unnamed/hephaestus-engine/blob/db6deabe1ddb0a549306b0c4b519c3e79e6f1ea8/runtime-bukkit/adapt-v1_20_R3/build.gradle.kts
+  // https://github.com/unnamed/hephaestus-engine/blob/db6deabe1ddb0a549306b0c4b519c3e79e6f1ea8/runtime-bukkit/adapt-v1_20_R3/build.gradle.kts#L25
   reobfJar {
     outputJar = file("build/libs/scoreboard-library-modern-$version-reobf.jar")
   }
 
   assemble {
     dependsOn(reobfJar)
-  }
-
-  create<Sign>("signReobfJar") {
-    dependsOn(reobfJar)
-    description = "Signs the reobfuscated modern packet adapter jar"
-    val signature = Signature(
-      { reobfJar.get().outputJar.get().asFile },
-      { "reobf" },
-      this,
-      this
-    )
-    signatures += signature
-    outputs.files(signature.file)
   }
 }
 
@@ -49,12 +36,7 @@ indra {
 publishing {
   publications.getByName<MavenPublication>("maven") {
     artifact(tasks.reobfJar)
-    val signReobfJar = tasks.named("signReobfJar")
-    if (!signReobfJar.get().state.skipped) {
-      artifact(signReobfJar) {
-        classifier = "reobf"
-        extension = "asc"
-      }
-    }
+    artifact(tasks.javadocJar)
+    artifact(tasks.sourcesJar)
   }
 }
