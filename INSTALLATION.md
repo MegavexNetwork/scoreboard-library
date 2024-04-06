@@ -1,30 +1,24 @@
 # Installation
 
-Latest version: `2.1.4`
+Latest version: `2.1.5`
 
 ## Gradle
 
-Make sure you have the Jitpack repository:
-
 ```kotlin
 repositories {
-  maven("https://jitpack.io/")
+  mavenCentral()
 }
-```
 
-Then add the dependencies:
-
-```kotlin
 dependencies {
   val scoreboardLibraryVersion = "{VERSION HERE}"
-  implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-api:$scoreboardLibraryVersion")
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-implementation:$scoreboardLibraryVersion")
-  implementation("com.github.megavexnetwork.scoreboard-library:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // If using Kotlin
+  implementation("net.megavex:scoreboard-library-api:$scoreboardLibraryVersion")
+  runtimeOnly("net.megavex:scoreboard-library-implementation:$scoreboardLibraryVersion")
+  implementation("net.megavex:scoreboard-library-extra-kotlin:$scoreboardLibraryVersion") // Kotlin specific extensions (optional)
 
   // Add packet adapter implementations you want:
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-modern:$scoreboardLibraryVersion") // 1.17+
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
-  runtimeOnly("com.github.megavexnetwork.scoreboard-library:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
+  runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion") // 1.17+
+  runtimeOnly("net.megavex:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
+  runtimeOnly("net.megavex:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
 
   // If using the PacketEvents implementation, scoreboard-library expects PacketEvents to be in the classpath.
   // Follow either of:
@@ -43,52 +37,41 @@ like [Shadow](https://imperceptiblethoughts.com/shadow/).
 
 ## Maven
 
-Make sure you have the Jitpack repository:
-```xml
-<repositories>
-  <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io/</url>
-  </repository>
-</repositories>
-```
-
-Then add the dependencies:
 ```xml
 <dependencies>
   <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <groupId>net.megavex</groupId>
     <artifactId>scoreboard-library-api</artifactId>
     <version>{VERSION HERE}</version>
   </dependency>
   <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <groupId>net.megavex</groupId>
     <artifactId>scoreboard-library-implementation</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
-  <!-- If using Kotlin: -->
+  <!-- Kotlin specific extensions (optional) -->
   <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <groupId>net.megavex</groupId>
     <artifactId>scoreboard-library-extra-kotlin</artifactId>
     <version>{VERSION HERE}</version>
   </dependency>
 
   <!-- Add packet adapter implementations you want: -->
   <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <groupId>net.megavex</groupId>
     <artifactId>scoreboard-library-modern</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
   <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <groupId>net.megavex</groupId>
     <artifactId>scoreboard-library-packetevents</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
   <dependency>
-    <groupId>com.github.megavexnetwork.scoreboard-library</groupId>
+    <groupId>net.megavex</groupId>
     <artifactId>scoreboard-library-v1_8_R3</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
@@ -112,5 +95,4 @@ Then add the dependencies:
 </dependencies>
 ```
 
-You will need to shade these dependencies and relocate them with something
-like [maven-shade-plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
+You will need to shade these dependencies and relocate them with [maven-shade-plugin](https://maven.apache.org/plugins/maven-shade-plugin/).
