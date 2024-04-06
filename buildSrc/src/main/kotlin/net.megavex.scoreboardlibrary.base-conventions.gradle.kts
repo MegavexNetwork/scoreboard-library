@@ -40,7 +40,7 @@ indra {
 
   configurePublications {
     pom {
-      url = "https://github.com/MegavexNetwork/agones-kt"
+      url = "https://github.com/MegavexNetwork/scoreboard-library"
       developers {
         developer {
           id = "vytskalt"
