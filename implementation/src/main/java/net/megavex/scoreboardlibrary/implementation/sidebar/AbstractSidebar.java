@@ -237,7 +237,9 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachLineHandler(LocaleLineHandler::updateScores);
         for (GlobalLineInfo line : lines) {
-          line.updateScore(false);
+          if (line != null) {
+            line.updateScore(false);
+          }
         }
       } else if (task instanceof SidebarTask.UpdateTitle) {
         packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
