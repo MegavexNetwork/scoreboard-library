@@ -1,5 +1,0 @@
-jdk:
-  - openjdk17
-
-install:
-  - "bash gradlew build publishToMavenLocal"
