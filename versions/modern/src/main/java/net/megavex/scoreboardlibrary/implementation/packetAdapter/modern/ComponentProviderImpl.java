@@ -13,37 +13,31 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Objects;
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
 public class ComponentProviderImpl implements ComponentProvider {
-  private static final MethodHandle FROM_JSON_1_20_4_METHOD;
+  private static final MethodHandle FROM_JSON_METHOD;
 
   static {
-    if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
-      FROM_JSON_1_20_4_METHOD = null;
-    } else {
-      MethodHandle handle = null;
-      for (Method method : Serializer.class.getMethods()) {
-        if (method.getReturnType() == MutableComponent.class && Arrays.equals(method.getParameterTypes(), new Class[]{JsonElement.class})) {
-          try {
-            handle = MethodHandles.lookup().unreflect(method);
-            break;
-          } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-          }
+    MethodHandle handle = null;
+    for (Method method : Serializer.class.getMethods()) {
+      if (method.getReturnType() == MutableComponent.class && method.getParameterCount() >= 1 && method.getParameterTypes()[0] == JsonElement.class) {
+        try {
+          handle = MethodHandles.lookup().unreflect(method);
+          break;
+        } catch (IllegalAccessException e) {
+          throw new RuntimeException(e);
         }
       }
-
-      if (handle == null) {
-        throw new ExceptionInInitializerError("failed to find chat component fromJson method");
-      }
-
-      FROM_JSON_1_20_4_METHOD = handle;
     }
+
+    if (handle == null) {
+      throw new ExceptionInInitializerError("failed to find chat component fromJson method");
+    }
+
+    FROM_JSON_METHOD = handle;
   }
 
   private final boolean isNativeAdventure;
@@ -64,14 +58,17 @@ public class ComponentProviderImpl implements ComponentProvider {
     }
 
     JsonElement json = gson().serializeToTree(translated);
-    if (FROM_JSON_1_20_4_METHOD != null) {
-      try {
-        return (net.minecraft.network.chat.Component) FROM_JSON_1_20_4_METHOD.invokeExact(json);
-      } catch (Throwable e) {
-        throw new RuntimeException(e);
-      }
+    Object[] args;
+    if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
+      args = new Object[]{json, CraftRegistry.getMinecraftRegistry()};
     } else {
-      return Objects.requireNonNull(Serializer.fromJson(json, CraftRegistry.getMinecraftRegistry()));
+      args = new Object[]{json};
+    }
+
+    try {
+      return (net.minecraft.network.chat.Component) FROM_JSON_METHOD.invokeExact(args);
+    } catch (Throwable e) {
+      throw new RuntimeException(e);
     }
   }
 }
