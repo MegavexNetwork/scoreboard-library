@@ -7,7 +7,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
-import java.util.Arrays;
+import java.lang.reflect.Modifier;
 
 public class ReflectUtil {
   // Inspired by
@@ -54,22 +54,28 @@ public class ReflectUtil {
   private ReflectUtil() {
   }
 
-  public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, @NotNull String name, @NotNull Class<V> valueClass) {
-    return findField(clazz, new String[]{name}, valueClass);
-  }
-
-  public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, @NotNull String[] names, @NotNull Class<V> valueClass) {
-    for (String name : names) {
-      try {
-        MethodHandle setter = LOOKUP.findSetter(clazz, name, valueClass).asType(VIRTUAL_FIELD_SETTER);
-        return new FieldAccessor<>(setter);
-      } catch (NoSuchFieldException ignored) {
-      } catch (IllegalAccessException e) {
-        throw new IllegalStateException("couldn't get field accessor", e);
+  public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, int index, @NotNull Class<V> valueClass) {
+    int i = 0;
+    for (Field field : clazz.getDeclaredFields()) {
+      if (Modifier.isStatic(field.getModifiers()) || field.getType() != valueClass) {
+        continue;
       }
+
+      if (i == index) {
+        try {
+          MethodHandle setter = LOOKUP.unreflectSetter(field);
+          return new FieldAccessor<>(setter.asType(VIRTUAL_FIELD_SETTER));
+        } catch (IllegalAccessException e) {
+          throw new RuntimeException("failed to unreflect field setter", e);
+        }
+      }
+
+      i++;
     }
 
-    throw new IllegalStateException("couldn't find field on class " + clazz.getSimpleName() + " with names " + Arrays.toString(names));
+    throw new IllegalStateException(
+      "couldn't find field with class " + valueClass.getSimpleName() + " on " + clazz.getSimpleName() + " at index " + index
+    );
   }
 
   public static <T> @NotNull ConstructorAccessor<T> findConstructorOrThrow(@NotNull Class<T> clazz, @NotNull Class<?>... args) {

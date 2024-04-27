@@ -85,7 +85,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     @Nullable net.minecraft.network.chat.Component nmsDisplay,
     @Nullable Object numberFormat
   ) {
-    if (PacketAccessors.HAS_NUMBER_FORMAT) {
+    if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
       // TODO
       //return new ClientboundSetScorePacket(entry, objectiveName, value, nmsDisplay, (NumberFormat) numberFormat);
       return new ClientboundSetScorePacket(entry, objectiveName, value, Optional.ofNullable(nmsDisplay), Optional.ofNullable((NumberFormat) numberFormat));
@@ -106,9 +106,15 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, nmsValue);
 
-    if (numberFormat != null) {
+    if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
       assert PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD != null;
-      PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD.set(packet, (NumberFormat) numberFormat);
+      Object value;
+      if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
+        value = Optional.ofNullable(numberFormat);
+      } else {
+        value = numberFormat;
+      }
+      PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD.set(packet, value);
     }
 
     ObjectiveCriteria.RenderType nmsRenderType;

@@ -6,7 +6,6 @@ import com.mojang.serialization.JsonOps;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.numbers.BlankFormat;
 import net.minecraft.network.chat.numbers.FixedFormat;
@@ -23,7 +22,7 @@ public final class ScoreFormatConverter {
   }
 
   public static @Nullable Object convert(@NotNull ComponentProvider componentProvider, @Nullable Locale locale, @Nullable ScoreFormat format) {
-    if (format == null || !PacketAccessors.HAS_NUMBER_FORMAT) {
+    if (format == null || !PacketAccessors.IS_1_20_3_OR_ABOVE) {
       return null;
     }
 
