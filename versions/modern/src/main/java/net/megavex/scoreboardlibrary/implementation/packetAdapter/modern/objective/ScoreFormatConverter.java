@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective;
 
 import com.google.gson.JsonElement;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
@@ -30,7 +31,9 @@ public final class ScoreFormatConverter {
       return BlankFormat.INSTANCE;
     } else if (format instanceof ScoreFormat.Styled) {
       JsonElement json = gson().serializer().toJsonTree(((ScoreFormat.Styled) format).style());
-      Style style = Util.getOrThrow(Style.Serializer.CODEC.parse(JsonOps.INSTANCE, json), RuntimeException::new);
+      DataResult<Style> result = Style.Serializer.CODEC.parse(JsonOps.INSTANCE, json);
+      // Style style = Util.getOrThrow(result, RuntimeException::new);
+      Style style = result.getOrThrow(RuntimeException::new);
       return new StyledFormat(style);
     } else if (format instanceof ScoreFormat.Fixed) {
       return new FixedFormat(componentProvider.fromAdventure(((ScoreFormat.Fixed) format).content(), locale));

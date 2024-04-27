@@ -15,6 +15,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.Pa
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.minecraft.network.protocol.Packet;
+import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,6 +79,7 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
     }
 
     JsonElement json = gson().serializeToTree(translated);
-    return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(json));
+    // TODO
+    return Objects.requireNonNull(net.minecraft.network.chat.Component.Serializer.fromJson(json, CraftRegistry.getMinecraftRegistry()));
   }
 }

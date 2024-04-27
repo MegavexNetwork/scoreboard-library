@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketAdapter {
   protected final PacketSender<Packet<?>> sender;
@@ -85,7 +86,9 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     @Nullable Object numberFormat
   ) {
     if (PacketAccessors.HAS_NUMBER_FORMAT) {
-      return new ClientboundSetScorePacket(entry, objectiveName, value, nmsDisplay, (NumberFormat) numberFormat);
+      // TODO
+      //return new ClientboundSetScorePacket(entry, objectiveName, value, nmsDisplay, (NumberFormat) numberFormat);
+      return new ClientboundSetScorePacket(entry, objectiveName, value, Optional.ofNullable(nmsDisplay), Optional.ofNullable((NumberFormat) numberFormat));
     } else {
       return Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
         .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);

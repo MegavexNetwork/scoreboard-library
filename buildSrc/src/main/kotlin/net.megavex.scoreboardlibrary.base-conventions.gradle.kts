@@ -36,7 +36,7 @@ indra {
 
   javaVersions {
     target(8)
-    minimumToolchain(17)
+    minimumToolchain(21)
   }
 
   configurePublications {
