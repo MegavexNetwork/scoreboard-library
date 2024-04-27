@@ -17,6 +17,7 @@ dependencies {
 
   // Add packet adapter implementations you want:
   runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion") // 1.17+
+  runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion:mojmap") // Mojang mapped variant (only use if you know what you're doing!)
   runtimeOnly("net.megavex:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
   runtimeOnly("net.megavex:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
 
@@ -63,6 +64,8 @@ like [Shadow](https://imperceptiblethoughts.com/shadow/).
     <artifactId>scoreboard-library-modern</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
+    <!-- For a Mojang mapped variant, uncomment line below (only use if you know what you're doing!): -->
+    <!-- <classifier>mojmap</classifier> -->
   </dependency>
   <dependency>
     <groupId>net.megavex</groupId>

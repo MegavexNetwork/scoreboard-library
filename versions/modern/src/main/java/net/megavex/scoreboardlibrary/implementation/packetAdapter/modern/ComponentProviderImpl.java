@@ -66,7 +66,7 @@ public class ComponentProviderImpl implements ComponentProvider {
     }
 
     try {
-      return (net.minecraft.network.chat.Component) FROM_JSON_METHOD.invokeExact(args);
+      return (net.minecraft.network.chat.Component) FROM_JSON_METHOD.invokeWithArguments(args);
     } catch (Throwable e) {
       throw new RuntimeException(e);
     }
