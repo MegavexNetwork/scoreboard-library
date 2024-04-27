@@ -22,7 +22,7 @@ public final class PacketAccessors {
     ReflectUtil.findField(PacketPlayOutScoreboardDisplayObjective.class, 0, String.class);
 
   public static final FieldAccessor<PacketPlayOutScoreboardScore, String> SCORE_OBJECTIVE_NAME_FIELD =
-    ReflectUtil.findField(PacketPlayOutScoreboardScore.class, 0, String.class);
+    ReflectUtil.findField(PacketPlayOutScoreboardScore.class, 1, String.class);
   public static final FieldAccessor<PacketPlayOutScoreboardScore, Integer> SCORE_VALUE_FIELD =
     ReflectUtil.findField(PacketPlayOutScoreboardScore.class, 0, int.class);
   public static final FieldAccessor<PacketPlayOutScoreboardScore, PacketPlayOutScoreboardScore.EnumScoreboardAction> SCORE_ACTION_FIELD =

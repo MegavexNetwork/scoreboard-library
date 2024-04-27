@@ -14,13 +14,20 @@ import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public final class PacketAccessors {
   static {
+    boolean is1_20_2OrAbove = false;
+    try {
+      Class.forName("net.minecraft.world.scores.DisplaySlot");
+      is1_20_2OrAbove = true;
+    } catch (ClassNotFoundException ignored) {
+    }
+    IS_1_20_2_OR_ABOVE = is1_20_2OrAbove;
+
     boolean is1_20_3OrAbove = false;
     try {
       Class.forName("net.minecraft.network.chat.numbers.NumberFormat");
@@ -31,26 +38,33 @@ public final class PacketAccessors {
 
     boolean is1_20_5OrAbove = false;
     try {
-      Class.forName("net.minecraft.core.RegistryAccess");
+      Class.forName("net.minecraft.network.protocol.common.ClientboundTransferPacket"); // random 1.20.5 class
       is1_20_5OrAbove = true;
     } catch (ClassNotFoundException ignored) {
     }
     IS_1_20_5_OR_ABOVE = is1_20_5OrAbove;
 
     if (is1_20_5OrAbove) {
+      //noinspection rawtypes
       OBJECTIVE_NUMBER_FORMAT_FIELD = (FieldAccessor) ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, Optional.class);
+      SCORE_1_20_2_CONSTRUCTOR = null;
+      SCORE_1_20_3_CONSTRUCTOR = null;
     } else if (is1_20_3OrAbove) {
+      //noinspection rawtypes
       OBJECTIVE_NUMBER_FORMAT_FIELD = (FieldAccessor) ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, NumberFormat.class);
+      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructorOrNull(ClientboundSetScorePacket.class, String.class, String.class, int.class, Component.class, NumberFormat.class);
+      SCORE_1_20_2_CONSTRUCTOR = null;
     } else {
       OBJECTIVE_NUMBER_FORMAT_FIELD = null;
+      SCORE_1_20_3_CONSTRUCTOR = null;
+      SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructorOrNull(ClientboundSetScorePacket.class, ServerScoreboard.Method.class, String.class, String.class, int.class);
     }
   }
 
-  public static final boolean IS_1_20_3_OR_ABOVE;
-  public static final boolean IS_1_20_5_OR_ABOVE;
+  public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE;
 
   public static final PacketConstructor<ClientboundSetObjectivePacket> OBJECTIVE_PACKET_CONSTRUCTOR =
-    ReflectUtil.findEmptyConstructor(ClientboundSetObjectivePacket.class);
+    ReflectUtil.getEmptyConstructor(ClientboundSetObjectivePacket.class);
   public static final FieldAccessor<ClientboundSetObjectivePacket, String> OBJECTIVE_NAME_FIELD =
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, String.class);
   public static final FieldAccessor<ClientboundSetObjectivePacket, net.minecraft.network.chat.Component> OBJECTIVE_VALUE_FIELD =
@@ -62,13 +76,13 @@ public final class PacketAccessors {
   public static final FieldAccessor<ClientboundSetObjectivePacket, Integer> OBJECTIVE_MODE_FIELD =
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, int.class);
 
-  public static final ConstructorAccessor<ClientboundSetDisplayObjectivePacket> DISPLAY_LEGACY_CONSTRUCTOR =
-    ReflectUtil.findConstructor(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
+  public static final ConstructorAccessor<ClientboundSetDisplayObjectivePacket> DISPLAY_1_20_1_CONSTRUCTOR =
+    ReflectUtil.findConstructorOrNull(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
   public static final FieldAccessor<ClientboundSetDisplayObjectivePacket, String> DISPLAY_OBJECTIVE_NAME =
     ReflectUtil.findField(ClientboundSetDisplayObjectivePacket.class, 0, String.class);
 
-  public static final ConstructorAccessor<ClientboundSetScorePacket> SCORE_LEGACY_CONSTRUCTOR =
-    ReflectUtil.findConstructor(ClientboundSetScorePacket.class, ServerScoreboard.Method.class, String.class, String.class, int.class);
+  public static final ConstructorAccessor<ClientboundSetScorePacket> SCORE_1_20_3_CONSTRUCTOR;
+  public static final ConstructorAccessor<ClientboundSetScorePacket> SCORE_1_20_2_CONSTRUCTOR;
 
   public static final ConstructorAccessor<ClientboundSetPlayerTeamPacket> TEAM_PACKET_CONSTRUCTOR =
     ReflectUtil.findConstructorOrThrow(ClientboundSetPlayerTeamPacket.class, String.class, int.class, Optional.class, Collection.class);

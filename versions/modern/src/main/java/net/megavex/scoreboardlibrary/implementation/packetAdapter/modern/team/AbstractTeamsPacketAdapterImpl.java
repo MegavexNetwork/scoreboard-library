@@ -25,7 +25,7 @@ import java.util.*;
 
 public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapter {
   static final PacketConstructor<Parameters> parametersConstructor =
-    ReflectUtil.findEmptyConstructor(Parameters.class);
+    ReflectUtil.getEmptyConstructor(Parameters.class);
 
   protected final PacketSender<Packet<?>> sender;
   protected final ComponentProvider componentProvider;

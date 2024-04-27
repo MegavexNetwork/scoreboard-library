@@ -79,7 +79,7 @@ public class ReflectUtil {
   }
 
   public static <T> @NotNull ConstructorAccessor<T> findConstructorOrThrow(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
-    ConstructorAccessor<T> accessor = findConstructor(clazz, args);
+    ConstructorAccessor<T> accessor = findConstructorOrNull(clazz, args);
     if (accessor == null) {
       throw new IllegalStateException("couldn't get constructor accessor for class " + clazz.getSimpleName());
     }
@@ -87,7 +87,7 @@ public class ReflectUtil {
     return accessor;
   }
 
-  public static <T> @Nullable ConstructorAccessor<T> findConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
+  public static <T> @Nullable ConstructorAccessor<T> findConstructorOrNull(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
     try {
       MethodHandle handle = LOOKUP.findConstructor(clazz, MethodType.methodType(void.class, args));
       return new ConstructorAccessor<>(convertToGeneric(handle));
@@ -96,7 +96,7 @@ public class ReflectUtil {
     }
   }
 
-  public static <T> @NotNull PacketConstructor<T> findEmptyConstructor(@NotNull Class<T> packetClass) {
+  public static <T> @NotNull PacketConstructor<T> getEmptyConstructor(@NotNull Class<T> packetClass) {
     try {
       MethodHandle constructor = LOOKUP.findConstructor(packetClass, VOID_METHOD_TYPE);
       return () -> {
