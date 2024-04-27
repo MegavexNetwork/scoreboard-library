@@ -35,6 +35,10 @@ indra {
 
 publishing {
   publications.getByName<MavenPublication>("maven") {
+    artifact(tasks.jar) {
+      classifier = "mojmap"
+    }
+
     artifact(tasks.reobfJar)
     artifact(tasks.javadocJar)
     artifact(tasks.sourcesJar)
