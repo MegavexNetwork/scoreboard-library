@@ -9,6 +9,10 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 
 public final class PacketAdapterLoader {
+  private static final String MODERN = "modern",
+    V1_8_R3 = "v1_8_R3",
+    PACKET_EVENTS = "packetevents";
+
   private PacketAdapterLoader() {
   }
 
@@ -39,7 +43,7 @@ public final class PacketAdapterLoader {
     // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
     switch (version) {
       case "1.8.8-R0.1-SNAPSHOT":
-        return tryLoadImplementationClass("v1_8_R3");
+        return tryLoadImplementationClass(V1_8_R3);
       case "1.17-R0.1-SNAPSHOT":
       case "1.17.1-R0.1-SNAPSHOT":
       case "1.18-R0.1-SNAPSHOT":
@@ -56,14 +60,21 @@ public final class PacketAdapterLoader {
       case "1.20.3-R0.1-SNAPSHOT":
       case "1.20.4-R0.1-SNAPSHOT":
       case "1.20.5-R0.1-SNAPSHOT":
-        return tryLoadImplementationClass("modern");
+      case "1.20.6-R0.1-SNAPSHOT":
+        return tryLoadImplementationClass(MODERN);
       default:
+        // Hide from relocation checkers
+        String property = "net.mega".concat("vex.scoreboardlibrary.forceModern");
+        if (System.getProperty(property, "").equalsIgnoreCase("true")) {
+          return tryLoadImplementationClass(MODERN);
+        }
+
         return null;
     }
   }
 
   private static @Nullable Class<?> tryLoadPacketEvents() {
-    Class<?> nmsClass = tryLoadImplementationClass("packetevents");
+    Class<?> nmsClass = tryLoadImplementationClass(PACKET_EVENTS);
     if (nmsClass == null) {
       return null;
     }
