@@ -1,5 +1,5 @@
 [versions]
-adventure = "4.16.0"
+adventure = "4.17.0"
 junitJupiter = "5.10.2"
 devBundle = "1.20.5-R0.1-SNAPSHOT" # modern packet adapter
 
