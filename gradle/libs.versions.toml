@@ -19,7 +19,7 @@ junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", versio
 
 [plugins]
 kotlin = "org.jetbrains.kotlin.jvm:1.9.23"
-paperweight = "io.papermc.paperweight.userdev:1.6.3"
+paperweight = "io.papermc.paperweight.userdev:1.7.1"
 
 [bundles]
 adventure = [ "adventureApi", "adventureTextSerializerGson", "adventureTextSerializerLegacy" ]
