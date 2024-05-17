@@ -7,12 +7,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Something lines can be drawn to. This is either the lines of a sidebar or the sidebar title.
+ * Something lines can be drawn to line by line. This is either the lines of a sidebar or its title.
  */
 @ApiStatus.NonExtendable
 public interface LineDrawable {
   /**
-   * Draws a line, or does nothing if it has reached the limit.
+   * Draws the next line, or does nothing if it has reached a limit.
    *
    * @param line line component
    */
@@ -21,7 +21,7 @@ public interface LineDrawable {
   }
 
   /**
-   * Draws a line with a custom score format, or does nothing if it has reached the limit.
+   * Draws the next line with a custom score format, or does nothing if it has reached a limit.
    *
    * @param line        line component
    * @param scoreFormat score format

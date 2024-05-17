@@ -69,8 +69,7 @@ sidebar.line(3, Component.text("epicserver.net"));
 
 sidebar.addPlayer(player); // Add the player to the sidebar
 
-// After you've finished using the Sidebar, make sure to close it to prevent a memory leak:
-sidebar.close();
+// Don't forget to call sidebar.close() once you don't need it anymore!
 ```
 
 ### Component sidebars
@@ -265,8 +264,7 @@ newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 // Change the TeamDisplay a player sees like this:
 team.display(player, newTeamDisplay);
 
-// After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
-teamManager.close();
+// Don't forget to call teamManager.close() once you don't need it anymore!
 ```
 
 ### ObjectiveManager
@@ -280,6 +278,5 @@ objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
 
 objectiveManager.addPlayer(player); // Make a player see the objectives
 
-// After you've finished using the ObjectiveManager, make sure to close it to prevent a memory leak:
-objectiveManager.close();
+// Don't forget to call objectiveManager.close() once you don't need it anymore!
 ```

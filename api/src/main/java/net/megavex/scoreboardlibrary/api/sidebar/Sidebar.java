@@ -43,7 +43,7 @@ public interface Sidebar {
   // Lines
 
   /**
-   * Gets a line's value.
+   * Gets a line's value, or null if line isn't set.
    *
    * @param line line index
    * @return value of line, or null if unset
@@ -52,6 +52,7 @@ public interface Sidebar {
 
   /**
    * Sets a line's value.
+   * A null value hides the line.
    *
    * @param index line index
    * @param value new value, or null to hide
@@ -62,6 +63,7 @@ public interface Sidebar {
 
   /**
    * Sets a line's value with a custom score format.
+   * A null value hides the line.
    * Note that custom score formats are only supported in Minecraft 1.20.3+.
    *
    * @param index       line index
