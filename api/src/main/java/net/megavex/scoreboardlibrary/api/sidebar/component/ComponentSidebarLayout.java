@@ -33,10 +33,10 @@ public final class ComponentSidebarLayout {
   }
 
   /**
-   * Applies the title & line components to a sidebar.
+   * Applies the title and line components to a sidebar.
    * Call this every time you want to update the sidebar.
    *
-   * @param sidebar sidebar to apply title & line components to
+   * @param sidebar sidebar to apply title and line components to
    */
   public void apply(@NotNull Sidebar sidebar) {
     Preconditions.checkNotNull(sidebar);
