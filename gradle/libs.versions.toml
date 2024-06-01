@@ -8,7 +8,7 @@ spigotApi = "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT" # do not update
 onePointEightPointEightNms = "org.github.spigot:1.8.8:1.8.8"
 packetEvents = "com.github.retrooper.packetevents:spigot:2.3.0"
 buildIndra = { module = "net.kyori:indra-common", version = "3.1.3" }
-buildNmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:0.0.7"
+buildNmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:0.0.8"
 
 adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventureTextSerializerGson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
