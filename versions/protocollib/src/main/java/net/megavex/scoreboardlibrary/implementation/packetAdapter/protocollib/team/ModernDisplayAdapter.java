@@ -73,9 +73,9 @@ public class ModernDisplayAdapter implements TeamDisplayPacketAdapter {
 
       if (v1_17OrAbove) {
         WrappedTeamParameters params = WrappedTeamParameters.newBuilder()
-          .displayName(ComponentConversions.wrapAdventure(displayName))
-          .prefix(ComponentConversions.wrapAdventure(prefix))
-          .suffix(ComponentConversions.wrapAdventure(suffix))
+          .displayName(ComponentConversions.wrapAdventureComponent(displayName))
+          .prefix(ComponentConversions.wrapAdventureComponent(prefix))
+          .suffix(ComponentConversions.wrapAdventureComponent(suffix))
           .nametagVisibility(properties.nameTagVisibility().key())
           .collisionRule(properties.collisionRule().key())
           .color(color)
@@ -92,9 +92,9 @@ public class ModernDisplayAdapter implements TeamDisplayPacketAdapter {
 
         if (v1_13OrAbove) {
           packet.getChatComponents()
-            .write(0, ComponentConversions.wrapAdventure(displayName))
-            .write(1, ComponentConversions.wrapAdventure(prefix))
-            .write(2, ComponentConversions.wrapAdventure(suffix));
+            .write(0, ComponentConversions.wrapAdventureComponent(displayName))
+            .write(1, ComponentConversions.wrapAdventureComponent(prefix))
+            .write(2, ComponentConversions.wrapAdventureComponent(suffix));
 
           packet.getStrings()
             .write(1, properties.nameTagVisibility().key())

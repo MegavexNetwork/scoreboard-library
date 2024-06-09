@@ -2,7 +2,9 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib;
 
 import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import com.comphenix.protocol.wrappers.WrappedComponentStyle;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +21,11 @@ public final class ComponentConversions {
     }
   }
 
-  public static @NotNull WrappedChatComponent wrapAdventure(@NotNull Component component) {
+  public static @NotNull WrappedChatComponent wrapAdventureComponent(@NotNull Component component) {
     return WrappedChatComponent.fromJson(SERIALIZER.serialize(component));
+  }
+
+  public static @NotNull WrappedComponentStyle wrapAdventureStyle(@NotNull Style style) {
+    return WrappedComponentStyle.fromJson(SERIALIZER.serializer().toJsonTree(style));
   }
 }
