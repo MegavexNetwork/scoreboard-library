@@ -18,7 +18,6 @@ public final class LocaleProvider {
     return provider.apply(player);
   }
 
-
   private static @NotNull Function<Player, Locale> get() {
     MethodHandles.Lookup lookup = MethodHandles.publicLookup();
     try {

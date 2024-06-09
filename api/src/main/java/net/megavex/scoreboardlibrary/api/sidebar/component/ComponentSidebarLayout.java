@@ -32,6 +32,12 @@ public final class ComponentSidebarLayout {
     return linesComponent;
   }
 
+  /**
+   * Applies the title and line components to a sidebar.
+   * Call this every time you want to update the sidebar.
+   *
+   * @param sidebar sidebar to apply title and line components to
+   */
   public void apply(@NotNull Sidebar sidebar) {
     Preconditions.checkNotNull(sidebar);
 

@@ -62,7 +62,7 @@ public interface ScoreboardObjective {
    *
    * @param entry entry to get score of
    * @return the score value, or null if it doesn't exist for the entry
-   * @deprecated use {@link #scoreInfo(String).value()} and {@link ObjectiveScore#value()} instead
+   * @deprecated use {@link #scoreInfo(String)} and {@link ObjectiveScore#value()} instead
    */
   @Deprecated
   default @Nullable Integer score(@NotNull String entry) {

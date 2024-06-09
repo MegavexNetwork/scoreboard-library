@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.21"
-  id("net.megavex.scoreboardlibrary.publish-conventions")
+  id("net.megavex.scoreboardlibrary.base-conventions")
+  alias(libs.plugins.kotlin)
 }
 
 kotlin {

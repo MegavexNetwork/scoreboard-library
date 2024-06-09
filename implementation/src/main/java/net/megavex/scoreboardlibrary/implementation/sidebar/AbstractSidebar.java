@@ -17,6 +17,7 @@ import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlay
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.PlayerNameProvider;
+import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,7 +46,7 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   public AbstractSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
     this.scoreboardLibrary = scoreboardLibrary;
 
-    String objectiveName = UUID.randomUUID().toString().substring(0, 5);
+    String objectiveName = RandomStringUtils.randomAlphanumeric(16);
     this.packetAdapter = scoreboardLibrary.packetAdapter().createObjectiveAdapter(objectiveName);
     this.linePlayerNames = PlayerNameProvider.provideLinePlayerNames(maxLines);
     this.lines = new GlobalLineInfo[maxLines];
@@ -168,12 +169,13 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
 
   @Override
   public final void display(@NotNull Player player) {
-    packetAdapter.sendProperties(players, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
+    Collection<Player> singleton = Collections.singleton(player);
+    packetAdapter.sendProperties(singleton, PropertiesPacketType.CREATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
 
     LocaleLineHandler lineHandler = Objects.requireNonNull(addPlayer0(player));
     lineHandler.addPlayer(player);
     lineHandler.show(player);
-    packetAdapter.display(Collections.singleton(player), ObjectiveDisplaySlot.sidebar());
+    packetAdapter.display(singleton, ObjectiveDisplaySlot.sidebar());
   }
 
   public final boolean tick() {
@@ -234,6 +236,11 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
         });
       } else if (task instanceof SidebarTask.UpdateScores) {
         forEachLineHandler(LocaleLineHandler::updateScores);
+        for (GlobalLineInfo line : lines) {
+          if (line != null) {
+            line.updateScore(false);
+          }
+        }
       } else if (task instanceof SidebarTask.UpdateTitle) {
         packetAdapter.sendProperties(internalPlayers(), PropertiesPacketType.UPDATE, title, ObjectiveRenderType.INTEGER, ScoreFormat.blank());
       }

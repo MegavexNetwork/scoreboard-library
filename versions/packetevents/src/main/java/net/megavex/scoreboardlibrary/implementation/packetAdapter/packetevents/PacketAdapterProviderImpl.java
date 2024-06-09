@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
+import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
@@ -34,11 +35,9 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
   }
 
   @Override
-  public boolean isLegacy(@NotNull Player player) {
-    return packetEvents
-      .getPlayerManager()
-      .getClientVersion(player)
-      .isOlderThanOrEquals(ClientVersion.V_1_12_2);
+  public @NotNull LineRenderingStrategy lineRenderingStrategy(@NotNull Player player) {
+    ClientVersion ver = packetEvents.getPlayerManager().getClientVersion(player);
+    return ver.isNewerThanOrEquals(ClientVersion.V_1_13) ? LineRenderingStrategy.MODERN : LineRenderingStrategy.LEGACY;
   }
 
   public void sendPacket(@NotNull Player player, @NotNull PacketWrapper<?> packet) {

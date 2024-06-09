@@ -23,9 +23,9 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Available Packet Adapters
 
-- **modern.** Supports 1.17-1.20.4. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
+- **modern.** Supports 1.17-1.20.6. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
 - **ProtocolLib**. Supports 1.8+. Requires [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) to be installed on the server.
-- **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin. Can be less stable than ProtocolLib.
+- **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin.
 - **1.8.8.**
 
 > [!NOTE]  
@@ -70,8 +70,7 @@ sidebar.line(3, Component.text("epicserver.net"));
 
 sidebar.addPlayer(player); // Add the player to the sidebar
 
-// After you've finished using the Sidebar, make sure to close it to prevent a memory leak:
-sidebar.close();
+// Don't forget to call sidebar.close() once you don't need it anymore!
 ```
 
 ### Component sidebars
@@ -266,8 +265,7 @@ newTeamDisplay.displayName(Component.text("Other Team Display Name"));
 // Change the TeamDisplay a player sees like this:
 team.display(player, newTeamDisplay);
 
-// After you've finished using the TeamManager, make sure to close it to prevent a memory leak:
-teamManager.close();
+// Don't forget to call teamManager.close() once you don't need it anymore!
 ```
 
 ### ObjectiveManager
@@ -281,6 +279,5 @@ objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
 
 objectiveManager.addPlayer(player); // Make a player see the objectives
 
-// After you've finished using the ObjectiveManager, make sure to close it to prevent a memory leak:
-objectiveManager.close();
+// Don't forget to call objectiveManager.close() once you don't need it anymore!
 ```

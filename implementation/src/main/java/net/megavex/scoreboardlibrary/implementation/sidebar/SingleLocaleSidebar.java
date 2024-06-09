@@ -19,7 +19,7 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   public SingleLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int size, @NotNull Locale locale) {
     super(scoreboardLibrary, size);
     this.locale = locale;
-    this.sidebar = new LocaleLineHandler(this, locale());
+    this.sidebar = new LocaleLineHandler(this, locale);
     this.internalPlayers = CollectionProvider.set(8);
   }
 
@@ -36,14 +36,12 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   @Override
   protected @Nullable LocaleLineHandler addPlayer0(@NotNull Player player) {
     if (!internalPlayers.add(player)) return null;
-
     return sidebar;
   }
 
   @Override
   protected @Nullable LocaleLineHandler removePlayer0(@NotNull Player player) {
     if (!internalPlayers.remove(player)) return null;
-
     return sidebar;
   }
 

@@ -1,8 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.sidebar.AbstractSidebar;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.locale.LineType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,111 +12,98 @@ import java.util.Locale;
 public class LocaleLineHandler {
   private final AbstractSidebar sidebar;
   private final Locale locale;
-  private SidebarLineHandler modernLineHandler, legacyLineHandler;
+  private final SidebarLineHandler[] lineHandlers;
 
-  public LocaleLineHandler(AbstractSidebar sidebar, Locale locale) {
+  public LocaleLineHandler(@NotNull AbstractSidebar sidebar, @NotNull Locale locale) {
     this.sidebar = sidebar;
     this.locale = locale;
+    this.lineHandlers = new SidebarLineHandler[LineRenderingStrategy.values().length];
   }
 
-  public AbstractSidebar sidebar() {
+  public @NotNull AbstractSidebar sidebar() {
     return sidebar;
   }
 
-  public Locale locale() {
+  public @NotNull Locale locale() {
     return locale;
   }
 
   public boolean hasPlayers() {
-    return (modernLineHandler != null && !modernLineHandler.players().isEmpty()) || (legacyLineHandler != null && !legacyLineHandler.players().isEmpty());
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null && !lineHandler.players().isEmpty()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public void addPlayer(@NotNull Player player) {
-    boolean isLegacy = sidebar.scoreboardLibrary().packetAdapter().isLegacy(player);
-    LineType lineType = isLegacy ? LineType.LEGACY : LineType.MODERN;
-    lineHandler(lineType).players().add(player);
+    LineRenderingStrategy strategy = sidebar.scoreboardLibrary().packetAdapter().lineRenderingStrategy(player);
+    lineHandler(strategy).players().add(player);
   }
 
   public void removePlayer(@NotNull Player player) {
-    if (modernLineHandler != null && modernLineHandler.players().remove(player)) {
-      return;
-    }
-
-    if (legacyLineHandler != null) {
-      legacyLineHandler.players().remove(player);
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null && lineHandler.players().remove(player)) {
+        return;
+      }
     }
   }
 
-  public @NotNull SidebarLineHandler lineHandler(@NotNull LineType lineType) {
-    switch (lineType) {
-      case MODERN: {
-        if (modernLineHandler == null) {
-          modernLineHandler = new SidebarLineHandler(LineType.MODERN, this);
-        }
-
-        return modernLineHandler;
-      }
-      case LEGACY: {
-        if (legacyLineHandler == null) {
-          legacyLineHandler = new SidebarLineHandler(LineType.LEGACY, this);
-        }
-
-        return legacyLineHandler;
-      }
+  public @NotNull SidebarLineHandler lineHandler(@NotNull LineRenderingStrategy lineType) {
+    SidebarLineHandler lineHandler = lineHandlers[lineType.ordinal()];
+    if (lineHandler == null) {
+      lineHandler = lineHandlers[lineType.ordinal()] = new SidebarLineHandler(lineType, this);
     }
-
-    throw new RuntimeException();
+    return lineHandler;
   }
 
   public void updateScoreFormat(int lineIndex) {
-    modernLineHandler.updateScore(lineIndex);
+    SidebarLineHandler lineHandler = lineHandlers[LineRenderingStrategy.MODERN.ordinal()];
+    if (lineHandler != null) {
+      lineHandler.updateScore(lineIndex);
+    }
   }
 
   public void updateLine(int lineIndex, Component renderedValue) {
-    if (modernLineHandler != null) {
-      modernLineHandler.setLine(lineIndex, renderedValue);
-      modernLineHandler.updateLine(lineIndex);
-    }
-
-    if (legacyLineHandler != null) {
-      legacyLineHandler.setLine(lineIndex, renderedValue);
-      legacyLineHandler.updateLine(lineIndex);
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null) {
+        lineHandler.setLine(lineIndex, renderedValue);
+      }
     }
   }
 
   public void updateScores() {
-    if (modernLineHandler != null) {
-      modernLineHandler.updateScores();
-    }
-
-    if (legacyLineHandler != null) {
-      legacyLineHandler.updateScores();
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null) {
+        lineHandler.updateScores();
+      }
     }
   }
 
   public void show(Player player) {
-    if (modernLineHandler != null && modernLineHandler.players().contains(player)) {
-      modernLineHandler.show(Collections.singleton(player));
-    } else if (legacyLineHandler != null && legacyLineHandler.players().contains(player)) {
-      legacyLineHandler.show(Collections.singleton(player));
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null && lineHandler.players().contains(player)) {
+        lineHandler.show(Collections.singleton(player));
+        return;
+      }
     }
   }
 
   public void hide(Player player) {
-    if (modernLineHandler != null && modernLineHandler.players().contains(player)) {
-      modernLineHandler.hide(Collections.singleton(player));
-    } else if (legacyLineHandler != null && legacyLineHandler.players().contains(player)) {
-      legacyLineHandler.hide(Collections.singleton(player));
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null && lineHandler.players().contains(player)) {
+        lineHandler.hide(Collections.singleton(player));
+        return;
+      }
     }
   }
 
   public void hide() {
-    if (modernLineHandler != null) {
-      modernLineHandler.hide(modernLineHandler.players());
-    }
-
-    if (legacyLineHandler != null) {
-      legacyLineHandler.hide(legacyLineHandler.players());
+    for (SidebarLineHandler lineHandler : lineHandlers) {
+      if (lineHandler != null) {
+        lineHandler.hide(lineHandler.players());
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 
+import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import org.bukkit.entity.Player;
@@ -10,5 +11,5 @@ public interface PacketAdapterProvider {
 
   @NotNull TeamsPacketAdapter createTeamPacketAdapter(@NotNull String teamName);
 
-  boolean isLegacy(@NotNull Player player);
+  @NotNull LineRenderingStrategy lineRenderingStrategy(@NotNull Player player);
 }

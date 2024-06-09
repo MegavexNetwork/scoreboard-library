@@ -22,7 +22,7 @@ public interface FramedSidebarAnimation<T> extends SidebarAnimation<T> {
   int currentFrameIndex();
 
   /**
-   * Switches the current frame
+   * Switches the current frame to specified index
    *
    * @param frameIndex the index of the new current frame
    * @throws ArrayIndexOutOfBoundsException if frame is out of bounds

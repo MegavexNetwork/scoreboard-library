@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketAdapter {
   protected final PacketSender<Packet<?>> sender;
@@ -44,7 +45,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   @Override
   public void remove(@NotNull Collection<Player> players) {
     if (removePacket == null) {
-      this.removePacket = ReflectUtil.findEmptyConstructor(ClientboundSetObjectivePacket.class).invoke();
+      this.removePacket = ReflectUtil.getEmptyConstructor(ClientboundSetObjectivePacket.class).invoke();
       PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
       PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
@@ -54,11 +55,10 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
     Packet<?> packet;
-    try {
-      Class.forName("net.minecraft.network.protocol.game.ClientboundResetScorePacket"); // Added in 1.20.3
+    if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
       packet = new ClientboundResetScorePacket(entry, objectiveName);
-    } catch (ClassNotFoundException ignored) {
-      packet = Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
+    } else {
+      packet = Objects.requireNonNull(PacketAccessors.SCORE_1_20_2_CONSTRUCTOR)
         .invoke(ServerScoreboard.Method.REMOVE, objectiveName, entry, 0);
     }
     sender.sendPacket(players, packet);
@@ -66,14 +66,12 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
 
   protected @NotNull ClientboundSetDisplayObjectivePacket createDisplayPacket(@NotNull ObjectiveDisplaySlot displaySlot) {
     ClientboundSetDisplayObjectivePacket packet;
-    try {
-      Class.forName("net.minecraft.world.scores.DisplaySlot"); // Added in 1.20.2
+    if (PacketAccessors.IS_1_20_2_OR_ABOVE) {
       packet = new ClientboundSetDisplayObjectivePacket(DisplaySlotProvider.toNms(displaySlot), null);
-    } catch (ClassNotFoundException ignored) {
-      packet = Objects.requireNonNull(PacketAccessors.DISPLAY_LEGACY_CONSTRUCTOR)
+    } else {
+      packet = Objects.requireNonNull(PacketAccessors.DISPLAY_1_20_1_CONSTRUCTOR)
         .invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
     }
-
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName);
     return packet;
   }
@@ -84,10 +82,13 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     @Nullable net.minecraft.network.chat.Component nmsDisplay,
     @Nullable Object numberFormat
   ) {
-    if (PacketAccessors.HAS_NUMBER_FORMAT) {
-      return new ClientboundSetScorePacket(entry, objectiveName, value, nmsDisplay, (NumberFormat) numberFormat);
+    if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
+      return new ClientboundSetScorePacket(entry, objectiveName, value, Optional.ofNullable(nmsDisplay), Optional.ofNullable((NumberFormat) numberFormat));
+    } else if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
+      return Objects.requireNonNull(PacketAccessors.SCORE_1_20_3_CONSTRUCTOR)
+        .invoke(entry, objectiveName, value, nmsDisplay, numberFormat);
     } else {
-      return Objects.requireNonNull(PacketAccessors.SCORE_LEGACY_CONSTRUCTOR)
+      return Objects.requireNonNull(PacketAccessors.SCORE_1_20_2_CONSTRUCTOR)
         .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
     }
   }
@@ -103,9 +104,15 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, nmsValue);
 
-    if (numberFormat != null) {
+    if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
       assert PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD != null;
-      PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD.set(packet, (NumberFormat) numberFormat);
+      Object value;
+      if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
+        value = Optional.ofNullable(numberFormat);
+      } else {
+        value = numberFormat;
+      }
+      PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD.set(packet, value);
     }
 
     ObjectiveCriteria.RenderType nmsRenderType;

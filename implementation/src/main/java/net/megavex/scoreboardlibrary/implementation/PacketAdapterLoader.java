@@ -12,6 +12,10 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 
 public final class PacketAdapterLoader {
+  private static final String MODERN = "modern",
+    V1_8_R3 = "v1_8_R3",
+    PACKET_EVENTS = "packetevents";
+
   private PacketAdapterLoader() {
   }
 
@@ -30,6 +34,11 @@ public final class PacketAdapterLoader {
 
   private static @Nullable Class<?> findAndLoadImplementationClass() {
     String version = Bukkit.getServer().getBukkitVersion();
+    int dashIndex = version.indexOf('-');
+    if (dashIndex != -1) {
+      version = version.substring(0, dashIndex);
+    }
+
     Class<?> nmsClass = tryLoadVersion(version);
     if (nmsClass != null) {
       return nmsClass;
@@ -43,28 +52,36 @@ public final class PacketAdapterLoader {
     return tryLoadPacketEvents();
   }
 
-  private static @Nullable Class<?> tryLoadVersion(@NotNull String version) {
+  private static @Nullable Class<?> tryLoadVersion(@NotNull String serverVersion) {
     // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
-    switch (version) {
-      case "1.8.8-R0.1-SNAPSHOT":
-        return tryLoadImplementationClass("v1_8_R3");
-      case "1.17-R0.1-SNAPSHOT":
-      case "1.17.1-R0.1-SNAPSHOT":
-      case "1.18-R0.1-SNAPSHOT":
-      case "1.18.1-R0.1-SNAPSHOT":
-      case "1.18.2-R0.1-SNAPSHOT":
-      case "1.19-R0.1-SNAPSHOT":
-      case "1.19.1-R0.1-SNAPSHOT":
-      case "1.19.2-R0.1-SNAPSHOT":
-      case "1.19.3-R0.1-SNAPSHOT":
-      case "1.19.4-R0.1-SNAPSHOT":
-      case "1.20-R0.1-SNAPSHOT":
-      case "1.20.1-R0.1-SNAPSHOT":
-      case "1.20.2-R0.1-SNAPSHOT":
-      case "1.20.3-R0.1-SNAPSHOT":
-      case "1.20.4-R0.1-SNAPSHOT":
-        return tryLoadImplementationClass("modern");
+    switch (serverVersion) {
+      case "1.8.8":
+        return tryLoadImplementationClass(V1_8_R3);
+      case "1.17":
+      case "1.17.1":
+      case "1.18":
+      case "1.18.1":
+      case "1.18.2":
+      case "1.19":
+      case "1.19.1":
+      case "1.19.2":
+      case "1.19.3":
+      case "1.19.4":
+      case "1.20":
+      case "1.20.1":
+      case "1.20.2":
+      case "1.20.3":
+      case "1.20.4":
+      case "1.20.5":
+      case "1.20.6":
+        return tryLoadImplementationClass(MODERN);
       default:
+        // Hide from relocation checkers
+        String property = "net.mega".concat("vex.scoreboardlibrary.forceModern");
+        if (System.getProperty(property, "").equalsIgnoreCase("true")) {
+          return tryLoadImplementationClass(MODERN);
+        }
+
         return null;
     }
   }

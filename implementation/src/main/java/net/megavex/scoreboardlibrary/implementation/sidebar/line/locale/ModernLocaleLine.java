@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
 import net.kyori.adventure.text.Component;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
@@ -13,8 +14,8 @@ import java.util.Collections;
 
 import static net.kyori.adventure.text.Component.empty;
 
-// 1.13+
-class ModernLocaleLine implements LocaleLine<Component> {
+// Implementation for versions above 1.13
+public class ModernLocaleLine implements LocaleLine, ImmutableTeamProperties<Component> {
   private final GlobalLineInfo info;
   private final SidebarLineHandler handler;
   private final Collection<String> entries;
