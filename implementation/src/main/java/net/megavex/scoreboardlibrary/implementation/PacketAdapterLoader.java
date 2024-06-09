@@ -14,7 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 public final class PacketAdapterLoader {
   private static final String MODERN = "modern",
     V1_8_R3 = "v1_8_R3",
-    PACKET_EVENTS = "packetevents";
+    PACKET_EVENTS = "packetevents",
+    PROTOCOL_LIB = "protocollib";
 
   private PacketAdapterLoader() {
   }
@@ -99,13 +100,19 @@ public final class PacketAdapterLoader {
       return null;
     }
 
-    return tryLoadImplementationClass("protocollib");
+    try {
+      // ensure we are on a supported ProtocolLib version
+      Class.forName("com.comphenix.protocol.wrappers.WrappedTeamParameters");
+      return tryLoadImplementationClass(PROTOCOL_LIB);
+    } catch (ClassNotFoundException e) {
+      return null;
+    }
   }
 
   private static @Nullable Class<?> tryLoadPacketEvents() {
     try {
       Class.forName("com.github.retrooper.packetevents.PacketEvents");
-      return tryLoadImplementationClass("packetevents");
+      return tryLoadImplementationClass(PACKET_EVENTS);
     } catch (ClassNotFoundException ignored) {
       return null;
     }
