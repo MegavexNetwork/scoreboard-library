@@ -31,8 +31,8 @@ dependencies {
   // Add packet adapter implementations you want:
   runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion") // 1.17+
   runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion:mojmap") // Mojang mapped variant (only use if you know what you're doing!)
-  runtimeOnly("net.megavex:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
   runtimeOnly("net.megavex:scoreboard-library-protocollib:$scoreboardLibraryVersion") // 1.8+
+  runtimeOnly("net.megavex:scoreboard-library-packetevents:$scoreboardLibraryVersion") // 1.8+
   runtimeOnly("net.megavex:scoreboard-library-v1_8_R3:$scoreboardLibraryVersion") // 1.8
 
   // If using the PacketEvents adapter, scoreboard-library expects PacketEvents to be loaded in the classpath.
@@ -83,13 +83,13 @@ like [Shadow](https://imperceptiblethoughts.com/shadow/).
   </dependency>
   <dependency>
     <groupId>net.megavex</groupId>
-    <artifactId>scoreboard-library-packetevents</artifactId>
+    <artifactId>scoreboard-library-protocollib</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
   <dependency>
     <groupId>net.megavex</groupId>
-    <artifactId>scoreboard-library-protocollib</artifactId>
+    <artifactId>scoreboard-library-packetevents</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>

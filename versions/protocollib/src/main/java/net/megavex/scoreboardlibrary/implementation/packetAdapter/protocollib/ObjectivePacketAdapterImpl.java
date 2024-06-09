@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
@@ -17,6 +18,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.Obje
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -52,7 +54,13 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   }
 
   @Override
-  public void sendProperties(@NotNull Collection<Player> players, @NotNull PropertiesPacketType packetType, @NotNull Component value, @NotNull ObjectiveRenderType renderType) {
+  public void sendProperties(
+    @NotNull Collection<Player> players,
+    @NotNull PropertiesPacketType packetType,
+    @NotNull Component value,
+    @NotNull ObjectiveRenderType renderType,
+    @Nullable ScoreFormat scoreFormat
+  ) {
     PacketSender<PacketContainer> sender = pm::sendServerPacket;
     LocalePacketUtil.sendLocalePackets(sender, players, locale -> {
       EnumWrappers.RenderType wrappedRenderType;
@@ -83,6 +91,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
       }
 
       packet.getRenderTypes().write(0, wrappedRenderType);
+      // TODO: scoreFormat
       return packet;
     });
   }
@@ -101,7 +110,14 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   }
 
   @Override
-  public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value) {
+  public void sendScore(
+    @NotNull Collection<Player> players,
+    @NotNull String entry,
+    int value,
+    @Nullable Component display,
+    @Nullable ScoreFormat scoreFormat
+  ) {
+
     PacketContainer packet = pm.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
     packet.getScoreboardActions().write(0, EnumWrappers.ScoreboardAction.CHANGE);
     packet.getStrings().write(0, entry)
@@ -111,6 +127,8 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     for (Player player : players) {
       pm.sendServerPacket(player, packet);
     }
+
+    // TODO: scoreFormat
   }
 
   @Override

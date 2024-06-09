@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.utility.MinecraftVersion;
+import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.protocollib.team.TeamsPacketAdapterImpl;
@@ -33,7 +34,7 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider {
   }
 
   @Override
-  public boolean isLegacy(@NotNull Player player) {
-    return isLegacyVersion;
+  public @NotNull LineRenderingStrategy lineRenderingStrategy(@NotNull Player player) {
+    return isLegacyVersion ? LineRenderingStrategy.LEGACY : LineRenderingStrategy.MODERN;
   }
 }
