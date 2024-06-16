@@ -39,6 +39,7 @@ indra {
     minimumToolchain(21)
   }
 
+  publishSnapshotsTo("forgejo", "https://git.megavex.net/api/packages/MegavexPublic/maven")
   configurePublications {
     pom {
       url = "https://github.com/MegavexNetwork/scoreboard-library"
