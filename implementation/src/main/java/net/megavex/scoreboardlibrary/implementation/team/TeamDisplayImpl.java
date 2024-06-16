@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -23,7 +24,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   private final ScoreboardTeamImpl team;
   private final TeamDisplayPacketAdapter packetAdapter;
   private final Set<Player> players = CollectionProvider.set(4);
-  private final Set<String> entries = CollectionProvider.set(4);
+  private final Set<String> entries = new CopyOnWriteArraySet<>();
   private Component displayName = empty(),
     prefix = empty(),
     suffix = empty();
