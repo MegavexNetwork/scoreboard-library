@@ -23,7 +23,11 @@ public class ComponentProviderImpl implements ComponentProvider {
   static {
     MethodHandle handle = null;
     for (Method method : Serializer.class.getMethods()) {
-      if (method.getReturnType() == MutableComponent.class && method.getParameterCount() >= 1 && method.getParameterTypes()[0] == JsonElement.class) {
+      if (method.getReturnType() == MutableComponent.class &&
+        method.getParameterCount() >= 1 &&
+        method.getParameterCount() <= 2 &&
+        method.getParameterTypes()[0] == JsonElement.class
+      ) {
         try {
           handle = MethodHandles.lookup().unreflect(method);
           break;
