@@ -1,6 +1,6 @@
 [versions]
 adventure = "4.17.0"
-junitJupiter = "5.10.2"
+junitJupiter = "5.10.3"
 devBundle = "1.21-R0.1-SNAPSHOT" # modern packet adapter
 
 [libraries]
