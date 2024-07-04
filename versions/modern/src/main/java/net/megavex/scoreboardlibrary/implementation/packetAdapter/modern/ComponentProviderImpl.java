@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.RegistryUtil;
 import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.network.chat.MutableComponent;
-import org.bukkit.craftbukkit.CraftRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,7 +64,7 @@ public class ComponentProviderImpl implements ComponentProvider {
     JsonElement json = gson().serializeToTree(translated);
     Object[] args;
     if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
-      args = new Object[]{json, CraftRegistry.getMinecraftRegistry()};
+      args = new Object[]{json, RegistryUtil.MINECRAFT_REGISTRY};
     } else {
       args = new Object[]{json};
     }
