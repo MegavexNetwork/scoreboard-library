@@ -3,7 +3,7 @@ plugins {
 }
 
 repositories {
-  maven("https://nexus.funkemunky.cc/content/repositories/releases/")
+  maven("https://repo.pgm.fyi/snapshots")
 }
 
 dependencies {
