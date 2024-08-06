@@ -224,7 +224,7 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
       } else if (task instanceof TeamManagerTask.UpdateTeamDisplay) {
         TeamManagerTask.UpdateTeamDisplay updateTeamDisplayTask = (TeamManagerTask.UpdateTeamDisplay) task;
         @NotNull TeamDisplayImpl teamDisplay = updateTeamDisplayTask.teamDisplay();
-        teamDisplay.handleUpdateTeamDisplay();
+        teamDisplay.handleUpdateDisplay();
       } else if (task instanceof TeamManagerTask.AddEntries) {
         TeamManagerTask.AddEntries addEntriesTask = (TeamManagerTask.AddEntries) task;
         @NotNull TeamDisplayImpl teamDisplay = addEntriesTask.teamDisplay();

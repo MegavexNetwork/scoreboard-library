@@ -38,7 +38,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   public TeamDisplayImpl(@NotNull ScoreboardTeamImpl team) {
     this.team = team;
     this.packetAdapter = team.packetAdapter().createTeamDisplayAdapter(this);
-    packetAdapter.updateTeamPackets(syncedEntries);
+    packetAdapter.updateTeamPackets();
   }
 
   @Override
@@ -218,19 +218,21 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
     return players;
   }
 
-  public void handleUpdateTeamDisplay() {
-    packetAdapter.updateTeamPackets(syncedEntries);
+  public void handleUpdateDisplay() {
+    packetAdapter.updateTeamPackets();
     packetAdapter().sendProperties(PropertiesPacketType.UPDATE, players());
   }
 
   public void handleAddEntries(@NotNull Collection<String> newEntries) {
     packetAdapter.sendEntries(EntriesPacketType.ADD, players(), newEntries);
     syncedEntries.addAll(newEntries);
+    packetAdapter.updateTeamPackets();
   }
 
   public void handleRemoveEntries(@NotNull Collection<String> oldEntries) {
     packetAdapter.sendEntries(EntriesPacketType.REMOVE, players(), oldEntries);
     syncedEntries.removeAll(oldEntries);
+    packetAdapter.updateTeamPackets();
   }
 
   private void scheduleUpdate() {

@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
@@ -35,13 +36,14 @@ public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
 
     @Override
     public void sendProperties(@NotNull PropertiesPacketType packetType, @NotNull Collection<Player> players) {
+      Collection<String> entries = ImmutableList.copyOf(properties.syncedEntries());
       LocalePacketUtil.sendLocalePackets(
         sender,
         players,
         locale -> {
-          ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters = parametersConstructor.invoke();
+          ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
           fillParameters(parameters, locale);
-          return createTeamsPacket(TeamConstants.mode(packetType), teamName, parameters, properties.syncedEntries());
+          return createTeamsPacket(TeamConstants.mode(packetType), teamName, parameters, entries);
         }
       );
     }

@@ -10,8 +10,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPa
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.PacketConstructor;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -21,12 +19,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Optional;
 
 public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  static final PacketConstructor<Parameters> parametersConstructor =
-    ReflectUtil.getEmptyConstructor(Parameters.class);
-
   protected final PacketSender<Packet<?>> sender;
   protected final ComponentProvider componentProvider;
   protected final String teamName;
@@ -70,10 +68,6 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
     @Override
     public void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries) {
       sender.sendPacket(players, createTeamsPacket(TeamConstants.mode(packetType), teamName, null, entries));
-    }
-
-    protected void fillTeamPacket(ClientboundSetPlayerTeamPacket packet, Collection<String> entries) {
-      PacketAccessors.ENTRIES_FIELD.set(packet, entries);
     }
 
     protected void fillParameters(@NotNull Parameters parameters, @UnknownNullability Locale locale) {

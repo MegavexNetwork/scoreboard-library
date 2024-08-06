@@ -86,6 +86,8 @@ public final class PacketAccessors {
 
   public static final ConstructorAccessor<ClientboundSetPlayerTeamPacket> TEAM_PACKET_CONSTRUCTOR =
     ReflectUtil.findConstructorOrThrow(ClientboundSetPlayerTeamPacket.class, String.class, int.class, Optional.class, Collection.class);
+  public static final PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> PARAMETERS_CONSTRUCTOR =
+    ReflectUtil.getEmptyConstructor(ClientboundSetPlayerTeamPacket.Parameters.class);
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Component> DISPLAY_NAME_FIELD =
     ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, net.minecraft.network.chat.Component.class);
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, net.minecraft.network.chat.Component> PREFIX_FIELD =

@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
@@ -33,7 +34,7 @@ public class LegacyLocaleLine implements LocaleLine, ImmutableTeamProperties<Str
     this.handler = handler;
     this.player = info.player();
     this.packetAdapter = info.packetAdapter().createLegacyTeamDisplayAdapter(this);
-    packetAdapter.updateTeamPackets(syncedEntries());
+    packetAdapter.updateTeamPackets();
   }
 
   public @NotNull GlobalLineInfo info() {
@@ -57,7 +58,7 @@ public class LegacyLocaleLine implements LocaleLine, ImmutableTeamProperties<Str
 
   @Override
   public @NotNull Collection<String> syncedEntries() {
-    return Collections.singleton(player);
+    return ImmutableList.of(player);
   }
 
   @Override

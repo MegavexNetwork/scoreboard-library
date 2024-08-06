@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter;
 
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
@@ -7,11 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public interface ImmutableTeamProperties<T> {
   default @NotNull Collection<String> syncedEntries() {
-    return Collections.emptySet();
+    return ImmutableList.of();
   }
 
   @NotNull T displayName();
