@@ -65,7 +65,7 @@ public class ModernLocaleLine implements LocaleLine, ImmutableTeamProperties<Com
   }
 
   @Override
-  public @NotNull Collection<String> entries() {
+  public @NotNull Collection<String> syncedEntries() {
     return entries;
   }
 

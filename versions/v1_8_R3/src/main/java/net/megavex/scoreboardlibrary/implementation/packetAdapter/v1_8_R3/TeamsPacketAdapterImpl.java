@@ -96,7 +96,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 
           PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
           if (packetType == PropertiesPacketType.CREATE) {
-            PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.entries());
+            PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.syncedEntries());
           }
 
           return packet;

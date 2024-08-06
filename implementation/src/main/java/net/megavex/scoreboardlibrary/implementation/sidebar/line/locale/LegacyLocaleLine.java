@@ -33,7 +33,7 @@ public class LegacyLocaleLine implements LocaleLine, ImmutableTeamProperties<Str
     this.handler = handler;
     this.player = info.player();
     this.packetAdapter = info.packetAdapter().createLegacyTeamDisplayAdapter(this);
-    packetAdapter.updateTeamPackets(entries());
+    packetAdapter.updateTeamPackets(syncedEntries());
   }
 
   public @NotNull GlobalLineInfo info() {
@@ -56,7 +56,7 @@ public class LegacyLocaleLine implements LocaleLine, ImmutableTeamProperties<Str
   }
 
   @Override
-  public @NotNull Collection<String> entries() {
+  public @NotNull Collection<String> syncedEntries() {
     return Collections.singleton(player);
   }
 

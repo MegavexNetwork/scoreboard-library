@@ -47,7 +47,7 @@ public class AdventureTeamDisplayPacketAdapter extends AbstractTeamDisplayPacket
           teamName,
           mode(packetType),
           info,
-          properties.entries()
+          properties.syncedEntries()
         );
       });
   }

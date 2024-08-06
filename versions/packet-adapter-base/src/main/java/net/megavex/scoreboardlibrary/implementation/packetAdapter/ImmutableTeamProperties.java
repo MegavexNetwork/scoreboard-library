@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public interface ImmutableTeamProperties<T> {
-  default @NotNull Collection<String> entries() {
+  default @NotNull Collection<String> syncedEntries() {
     return Collections.emptySet();
   }
 

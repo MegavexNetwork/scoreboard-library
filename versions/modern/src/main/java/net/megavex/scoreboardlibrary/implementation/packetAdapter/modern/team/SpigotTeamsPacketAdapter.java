@@ -13,7 +13,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Collection;
@@ -42,7 +41,7 @@ public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
         locale -> {
           ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters = parametersConstructor.invoke();
           fillParameters(parameters, locale);
-          return createTeamsPacket(TeamConstants.mode(packetType), teamName, parameters, properties.entries());
+          return createTeamsPacket(TeamConstants.mode(packetType), teamName, parameters, properties.syncedEntries());
         }
       );
     }

@@ -7,7 +7,6 @@ import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import net.megavex.scoreboardlibrary.implementation.ScoreboardLibraryImpl;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import org.bukkit.entity.Player;
@@ -225,16 +224,15 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
       } else if (task instanceof TeamManagerTask.UpdateTeamDisplay) {
         TeamManagerTask.UpdateTeamDisplay updateTeamDisplayTask = (TeamManagerTask.UpdateTeamDisplay) task;
         @NotNull TeamDisplayImpl teamDisplay = updateTeamDisplayTask.teamDisplay();
-        teamDisplay.updateTeamPackets();
-        teamDisplay.packetAdapter().sendProperties(PropertiesPacketType.UPDATE, teamDisplay.players());
+        teamDisplay.handleUpdateTeamDisplay();
       } else if (task instanceof TeamManagerTask.AddEntries) {
         TeamManagerTask.AddEntries addEntriesTask = (TeamManagerTask.AddEntries) task;
         @NotNull TeamDisplayImpl teamDisplay = addEntriesTask.teamDisplay();
-        teamDisplay.packetAdapter().sendEntries(EntriesPacketType.ADD, teamDisplay.players(), addEntriesTask.entries());
+        teamDisplay.handleAddEntries(addEntriesTask.entries());
       } else if (task instanceof TeamManagerTask.RemoveEntries) {
         TeamManagerTask.RemoveEntries removeEntriesTask = (TeamManagerTask.RemoveEntries) task;
         @NotNull TeamDisplayImpl teamDisplay = removeEntriesTask.teamDisplay();
-        teamDisplay.packetAdapter().sendEntries(EntriesPacketType.REMOVE, teamDisplay.players(), removeEntriesTask.entries());
+        teamDisplay.handleRemoveEntries(removeEntriesTask.entries());
       } else if (task instanceof TeamManagerTask.ChangeTeamDisplay) {
         TeamManagerTask.ChangeTeamDisplay changeTeamDisplayTask = (TeamManagerTask.ChangeTeamDisplay) task;
         changeTeamDisplayTask.team().changeTeamDisplay(changeTeamDisplayTask.player(), changeTeamDisplayTask.oldTeamDisplay(), changeTeamDisplayTask.newTeamDisplay());
