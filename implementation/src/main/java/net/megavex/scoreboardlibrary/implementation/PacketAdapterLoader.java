@@ -45,7 +45,6 @@ public final class PacketAdapterLoader {
   }
 
   private static @Nullable Class<?> tryLoadVersion(@NotNull String serverVersion) {
-    // https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/
     switch (serverVersion) {
       case "1.8.8":
         return tryLoadImplementationClass(V1_8_R3);
@@ -67,6 +66,7 @@ public final class PacketAdapterLoader {
       case "1.20.5":
       case "1.20.6":
       case "1.21":
+      case "1.21.1":
         return tryLoadImplementationClass(MODERN);
       default:
         // Hide from relocation checkers
