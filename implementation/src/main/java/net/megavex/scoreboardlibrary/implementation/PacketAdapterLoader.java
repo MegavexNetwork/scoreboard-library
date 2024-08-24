@@ -101,7 +101,6 @@ public final class PacketAdapterLoader {
       String path = "net.megavex.scoreboardlibrary.implementation.packetAdapter." + name + ".PacketAdapterProviderImpl";
       return Class.forName(path);
     } catch (ClassNotFoundException ignored) {
-      System.out.println("ERROR GETTING !");
       return null;
     }
   }
