@@ -2,67 +2,51 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
 
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.FieldAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
+import net.minecraft.server.v1_8_R3.*;
 
 import java.util.Collection;
 
 public final class PacketAccessors {
-  public static final Class<Object> packetPlayOutScoreboardObjectiveClass =
-    RandomUtils.getServerClass("PacketPlayOutScoreboardObjective");
-  public static final Class<Object> enumScoreboardHealthDisplayClass =
-    RandomUtils.getServerClass("IScoreboardCriteria$EnumScoreboardHealthDisplay");
+  public static final FieldAccessor<PacketPlayOutScoreboardObjective, String> OBJECTIVE_NAME_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardObjective.class, 0, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardObjective, String> OBJECTIVE_DISPLAY_NAME_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardObjective.class, 1, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardObjective, IScoreboardCriteria.EnumScoreboardHealthDisplay> OBJECTIVE_HEALTH_DISPLAY_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardObjective.class, 0, IScoreboardCriteria.EnumScoreboardHealthDisplay.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardObjective, Integer> OBJECTIVE_MODE_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardObjective.class, 0, int.class);
 
-  public static final Class<Object> packetPlayOutScoreboardDisplayObjectiveClass =
-    RandomUtils.getServerClass("PacketPlayOutScoreboardDisplayObjective");
+  public static final FieldAccessor<PacketPlayOutScoreboardDisplayObjective, Integer> DISPLAY_OBJECTIVE_POSITION =
+    ReflectUtil.findField(PacketPlayOutScoreboardDisplayObjective.class, 0, int.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardDisplayObjective, String> DISPLAY_OBJECTIVE_NAME =
+    ReflectUtil.findField(PacketPlayOutScoreboardDisplayObjective.class, 0, String.class);
 
-  public static final Class<Object> packetPlayOutScoreboardScoreClass =
-    RandomUtils.getServerClass("PacketPlayOutScoreboardScore");
-  public static final Class<Object> enumScoreboardActionClass =
-    RandomUtils.getServerClass("PacketPlayOutScoreboardScore$EnumScoreboardAction");
+  public static final FieldAccessor<PacketPlayOutScoreboardScore, String> SCORE_OBJECTIVE_NAME_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardScore.class, 1, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardScore, Integer> SCORE_VALUE_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardScore.class, 0, int.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardScore, PacketPlayOutScoreboardScore.EnumScoreboardAction> SCORE_ACTION_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardScore.class, 0, PacketPlayOutScoreboardScore.EnumScoreboardAction.class);
 
-  public static final Class<Object> packetPlayOutScoreboardTeamClass =
-    RandomUtils.getServerClass("PacketPlayOutScoreboardTeam");
-
-
-  public static final FieldAccessor<Object, String> OBJECTIVE_NAME_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 0, String.class);
-  public static final FieldAccessor<Object, String> OBJECTIVE_DISPLAY_NAME_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 1, String.class);
-  public static final FieldAccessor<Object, Object> OBJECTIVE_HEALTH_DISPLAY_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 0, enumScoreboardHealthDisplayClass);
-  public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 0, int.class);
-
-  public static final FieldAccessor<Object, Integer> DISPLAY_OBJECTIVE_POSITION =
-    ReflectUtil.findField(packetPlayOutScoreboardDisplayObjectiveClass, 0, int.class);
-  public static final FieldAccessor<Object, String> DISPLAY_OBJECTIVE_NAME =
-    ReflectUtil.findField(packetPlayOutScoreboardDisplayObjectiveClass, 0, String.class);
-
-  public static final FieldAccessor<Object, String> SCORE_OBJECTIVE_NAME_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 1, String.class);
-  public static final FieldAccessor<Object, Integer> SCORE_VALUE_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 0, int.class);
-  public static final FieldAccessor<Object, Object> SCORE_ACTION_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 0, enumScoreboardActionClass);
-
-  public static final FieldAccessor<Object, String> TEAM_NAME_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 0, String.class);
-  public static final FieldAccessor<Object, String> TEAM_DISPLAY_NAME_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 1, String.class);
-  public static final FieldAccessor<Object, String> TEAM_PREFIX_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 2, String.class);
-  public static final FieldAccessor<Object, String> TEAM_SUFFIX_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 3, String.class);
-  public static final FieldAccessor<Object, String> TEAM_NAME_TAG_VISIBILITY_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 4, String.class);
-  public static final FieldAccessor<Object, Integer> TEAM_COLOR_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 0, int.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, String> TEAM_NAME_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 0, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, String> TEAM_DISPLAY_NAME_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 1, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, String> TEAM_PREFIX_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 2, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, String> TEAM_SUFFIX_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 3, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, String> TEAM_NAME_TAG_VISIBILITY_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 4, String.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, Integer> TEAM_COLOR_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 0, int.class);
   @SuppressWarnings("rawtypes")
-  public static final FieldAccessor<Object, Collection> TEAM_ENTRIES_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 0, Collection.class);
-  public static final FieldAccessor<Object, Integer> TEAM_MODE_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 1, int.class);
-  public static final FieldAccessor<Object, Integer> TEAM_RULES_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 2, int.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, Collection> TEAM_ENTRIES_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 0, Collection.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, Integer> TEAM_MODE_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 1, int.class);
+  public static final FieldAccessor<PacketPlayOutScoreboardTeam, Integer> TEAM_RULES_FIELD =
+    ReflectUtil.findField(PacketPlayOutScoreboardTeam.class, 2, int.class);
 
   private PacketAccessors() {
   }

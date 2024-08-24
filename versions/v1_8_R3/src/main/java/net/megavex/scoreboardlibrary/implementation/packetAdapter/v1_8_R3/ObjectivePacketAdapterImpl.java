@@ -12,37 +12,26 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPack
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3.PacketAccessors.*;
-
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardObjectiveClass);
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardDisplayObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardDisplayObjectiveClass);
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardScoreConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardScoreClass, String.class);
-
-  private static final Object enumScoreboardActionChange = RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE");
-  private static final Object enumScoreboardHealthInteger = RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "INTEGER");
-  private static final Object enumScoreboardHealthHearts = RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "HEARTS");
-
-  private final PacketSender<Object> sender;
+  private final PacketSender<Packet<?>> sender;
   private final String objectiveName;
-  private Object removePacket;
+  private PacketPlayOutScoreboardObjective removePacket;
 
-  public ObjectivePacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull String objectiveName) {
+  public ObjectivePacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull String objectiveName) {
     this.sender = sender;
     this.objectiveName = objectiveName;
   }
 
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
-    Object packet = packetPlayOutScoreboardDisplayObjectiveConstructor.invoke();
+    PacketPlayOutScoreboardDisplayObjective packet = new PacketPlayOutScoreboardDisplayObjective();
     PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot));
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName);
     sender.sendPacket(players, packet);
@@ -66,7 +55,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   @Override
   public void remove(@NotNull Collection<Player> players) {
     if (removePacket == null) {
-      removePacket = packetPlayOutScoreboardObjectiveConstructor.invoke();
+      removePacket = new PacketPlayOutScoreboardObjective();
       PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
       PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
@@ -81,39 +70,39 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     @Nullable Component display,
     @Nullable ScoreFormat scoreFormat
   ) {
-    Object packet = packetPlayOutScoreboardScoreConstructor.invoke(entry);
+    PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, value);
-    PacketAccessors.SCORE_ACTION_FIELD.set(packet, enumScoreboardActionChange);
+    PacketAccessors.SCORE_ACTION_FIELD.set(packet, PacketPlayOutScoreboardScore.EnumScoreboardAction.CHANGE);
     sender.sendPacket(players, packet);
   }
 
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
-    Object packet = packetPlayOutScoreboardScoreConstructor.invoke(entry);
+    PacketPlayOutScoreboardScore packet = new PacketPlayOutScoreboardScore(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     sender.sendPacket(players, packet);
   }
 
-  private @NotNull Object createPropertiesPacket(
+  private @NotNull PacketPlayOutScoreboardObjective createPropertiesPacket(
     @NotNull PropertiesPacketType packetType,
     @NotNull Component value,
     @NotNull ObjectiveRenderType renderType
   ) {
-    Object packet = packetPlayOutScoreboardObjectiveConstructor.invoke();
+    PacketPlayOutScoreboardObjective packet = new PacketPlayOutScoreboardObjective();
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, ObjectiveConstants.mode(packetType));
 
     String legacyValue = LegacyFormatUtil.limitLegacyText(LegacyComponentSerializer.legacySection().serialize(value), ObjectiveConstants.LEGACY_VALUE_CHAR_LIMIT);
     PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, legacyValue);
 
-    Object nmsRenderType;
+    IScoreboardCriteria.EnumScoreboardHealthDisplay nmsRenderType;
     switch (renderType) {
       case INTEGER:
-        nmsRenderType = enumScoreboardHealthInteger;
+        nmsRenderType = IScoreboardCriteria.EnumScoreboardHealthDisplay.INTEGER;
         break;
       case HEARTS:
-        nmsRenderType = enumScoreboardHealthHearts;
+        nmsRenderType = IScoreboardCriteria.EnumScoreboardHealthDisplay.HEARTS;
         break;
       default:
         throw new IllegalStateException();
