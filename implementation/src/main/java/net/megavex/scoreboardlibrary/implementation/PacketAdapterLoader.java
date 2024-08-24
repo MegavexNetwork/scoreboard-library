@@ -11,7 +11,8 @@ import java.lang.reflect.InvocationTargetException;
 public final class PacketAdapterLoader {
   private static final String MODERN = "modern",
     V1_8_R3 = "v1_8_R3",
-    PACKET_EVENTS = "packetevents";
+    PACKET_EVENTS = "packetevents",
+    LEGACY_REFLECTIONS = "legacyreflections";
 
   private PacketAdapterLoader() {
   }
@@ -46,6 +47,8 @@ public final class PacketAdapterLoader {
 
   private static @Nullable Class<?> tryLoadVersion(@NotNull String serverVersion) {
     switch (serverVersion) {
+      case "1.7.10":
+        return tryLoadImplementationClass(LEGACY_REFLECTIONS);
       case "1.8.8":
         return tryLoadImplementationClass(V1_8_R3);
       case "1.17":
@@ -98,6 +101,7 @@ public final class PacketAdapterLoader {
       String path = "net.megavex.scoreboardlibrary.implementation.packetAdapter." + name + ".PacketAdapterProviderImpl";
       return Class.forName(path);
     } catch (ClassNotFoundException ignored) {
+      System.out.println("ERROR GETTING !");
       return null;
     }
   }
