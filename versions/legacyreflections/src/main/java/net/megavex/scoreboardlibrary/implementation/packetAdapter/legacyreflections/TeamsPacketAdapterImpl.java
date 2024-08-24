@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections;
 
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
@@ -117,7 +118,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 
           PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
           if (packetType == PropertiesPacketType.CREATE) {
-            PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, properties.entries());
+            PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, ImmutableList.copyOf(properties.syncedEntries()));
           }
 
           return packet;
