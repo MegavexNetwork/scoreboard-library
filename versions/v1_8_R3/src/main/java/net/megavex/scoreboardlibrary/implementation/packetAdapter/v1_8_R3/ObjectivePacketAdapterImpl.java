@@ -20,11 +20,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
-  private final PacketSender<Packet<?>> sender;
+  private final PacketSender<Object> sender;
   private final String objectiveName;
   private PacketPlayOutScoreboardObjective removePacket;
 
-  public ObjectivePacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull String objectiveName) {
+  public ObjectivePacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull String objectiveName) {
     this.sender = sender;
     this.objectiveName = objectiveName;
   }

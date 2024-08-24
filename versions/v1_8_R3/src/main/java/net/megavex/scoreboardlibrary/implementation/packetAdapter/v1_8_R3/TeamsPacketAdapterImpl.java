@@ -12,7 +12,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDispl
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import net.minecraft.server.v1_8_R3.EnumChatFormat;
-import net.minecraft.server.v1_8_R3.Packet;
 import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +23,11 @@ import java.util.Objects;
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  private final PacketSender<Packet<?>> sender;
+  private final PacketSender<Object> sender;
   private final String teamName;
   private PacketPlayOutScoreboardTeam removePacket;
 
-  public TeamsPacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull String teamName) {
+  public TeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull String teamName) {
     this.sender = sender;
     this.teamName = teamName;
   }
