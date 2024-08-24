@@ -11,8 +11,8 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConst
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.minecraft.server.v1_8_R3.EnumChatFormat;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,11 +21,14 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3.PacketAccessors.packetPlayOutScoreboardTeamClass;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
+  private static final Class<Object> enumChatFormatClass = RandomUtils.getServerClass("EnumChatFormat");
+  private static final ConstructorAccessor<Object> packetPlayOutScoreboardTeamConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardTeamClass);
   private final PacketSender<Object> sender;
   private final String teamName;
-  private PacketPlayOutScoreboardTeam removePacket;
+  private Object removePacket;
 
   public TeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull String teamName) {
     this.sender = sender;
@@ -35,7 +38,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
   @Override
   public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
-      removePacket = new PacketPlayOutScoreboardTeam();
+      removePacket = packetPlayOutScoreboardTeamConstructor.invoke();
       PacketAccessors.TEAM_NAME_FIELD.set(removePacket, teamName);
       PacketAccessors.TEAM_MODE_FIELD.set(removePacket, TeamConstants.MODE_REMOVE);
     }
@@ -62,7 +65,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 
     @Override
     public void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-      PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+      Object packet = packetPlayOutScoreboardTeamConstructor.invoke();
       PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName);
       PacketAccessors.TEAM_MODE_FIELD.set(packet, TeamConstants.mode(packetType));
       PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, entries);
@@ -79,7 +82,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
           String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
           String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
 
-          PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+          Object packet = packetPlayOutScoreboardTeamConstructor.invoke();
           PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName);
           PacketAccessors.TEAM_MODE_FIELD.set(packet, TeamConstants.mode(packetType));
           PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
@@ -90,7 +93,26 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
           NamedTextColor color = properties.playerColor();
           if (color != null) {
             String name = NamedTextColor.NAMES.key(color);
-            PacketAccessors.TEAM_COLOR_FIELD.set(packet, Objects.requireNonNull(EnumChatFormat.b(name)).b());
+            // NOTE: UNTESTED FOR NOW !
+            // Note 2: very high chance this changes between versions. Should check if possible.
+            // Original code: `Integer teamColorField = Objects.requireNonNull(EnumChatFormat.b(name)).b()`
+            Object enumChatFormatInstance = Objects.requireNonNull(RandomUtils.invokeStaticMethod(
+              enumChatFormatClass,
+              "b",
+              new Object[]{name},
+              new Class<?>[]{String.class}
+            ));
+
+            Integer teamColorField = (Integer)RandomUtils.invokeMethod(
+              enumChatFormatClass,
+              enumChatFormatInstance,
+              "b",
+              null,
+              null
+            );
+            System.out.println("If you see this, I did my job properly (temporary)");
+
+            PacketAccessors.TEAM_COLOR_FIELD.set(packet, teamColorField);
           }
 
           PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
