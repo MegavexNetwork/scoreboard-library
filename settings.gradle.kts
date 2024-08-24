@@ -17,6 +17,9 @@ project(":modern").projectDir = file("versions/modern")
 include(":v1_8_R3")
 project(":v1_8_R3").projectDir = file("versions/v1_8_R3")
 
+include(":legacyreflections")
+project(":legacyreflections").projectDir = file("versions/legacyreflections")
+
 val modulePrefix = rootProject.name
 rootProject.children.forEach {
   it.name = "$modulePrefix-${it.name}"

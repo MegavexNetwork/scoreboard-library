@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3.PacketAccessors.*;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.PacketAccessors.*;
 
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   private static final ConstructorAccessor<Object> packetPlayOutScoreboardObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardObjectiveClass);
