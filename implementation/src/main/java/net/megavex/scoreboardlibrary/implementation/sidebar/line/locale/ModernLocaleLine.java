@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar.line.locale;
 
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
@@ -10,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -24,9 +24,9 @@ public class ModernLocaleLine implements LocaleLine, ImmutableTeamProperties<Com
   public ModernLocaleLine(GlobalLineInfo info, SidebarLineHandler handler) {
     this.info = info;
     this.handler = handler;
-    this.entries = Collections.singleton(info.player());
+    this.entries = ImmutableList.of(info.player());
     this.packetAdapter = info.packetAdapter().createTeamDisplayAdapter(this);
-    packetAdapter.updateTeamPackets(entries);
+    packetAdapter.updateTeamPackets();
   }
 
   @Override
@@ -40,7 +40,7 @@ public class ModernLocaleLine implements LocaleLine, ImmutableTeamProperties<Com
 
   @Override
   public void updateTeam() {
-    packetAdapter.updateTeamPackets(entries);
+    packetAdapter.updateTeamPackets();
     packetAdapter.sendProperties(PropertiesPacketType.UPDATE, handler.players());
   }
 
@@ -65,7 +65,7 @@ public class ModernLocaleLine implements LocaleLine, ImmutableTeamProperties<Com
   }
 
   @Override
-  public @NotNull Collection<String> entries() {
+  public @NotNull Collection<String> syncedEntries() {
     return entries;
   }
 

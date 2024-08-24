@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 
+import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
@@ -29,9 +30,9 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
   }
 
   private class TeamDisplayPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamDisplayPacketAdapterImpl {
-    private final ClientboundSetPlayerTeamPacket.Parameters parameters = parametersConstructor.invoke();
-    private final ClientboundSetPlayerTeamPacket createPacket = createTeamsPacket(TeamConstants.MODE_CREATE, teamName, parameters, null);
-    private final ClientboundSetPlayerTeamPacket updatePacket = createTeamsPacket(TeamConstants.MODE_UPDATE, teamName, parameters, null);
+    private final ClientboundSetPlayerTeamPacket.Parameters parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
+    private ClientboundSetPlayerTeamPacket createPacket = null;
+    private ClientboundSetPlayerTeamPacket updatePacket = null;
     private Component displayName, prefix, suffix;
 
     public TeamDisplayPacketAdapterImpl(@NotNull ImmutableTeamProperties<Component> properties) {
@@ -39,14 +40,20 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
     }
 
     @Override
-    public void updateTeamPackets(@NotNull Collection<String> entries) {
+    public void updateTeamPackets() {
       fillParameters(parameters, null);
-      fillTeamPacket(createPacket, entries);
-      fillTeamPacket(updatePacket, entries);
+      createPacket = null;
+      updatePacket = null;
     }
 
     @Override
     public void sendProperties(@NotNull PropertiesPacketType packetType, @NotNull Collection<Player> players) {
+      if (createPacket == null || updatePacket == null) {
+        Collection<String> entries = ImmutableList.copyOf(properties.syncedEntries());
+        createPacket = createTeamsPacket(TeamConstants.MODE_CREATE, teamName, parameters, entries);
+        updatePacket = createTeamsPacket(TeamConstants.MODE_UPDATE, teamName, parameters, entries);
+      }
+
       switch (packetType) {
         case CREATE:
           sender.sendPacket(players, createPacket);

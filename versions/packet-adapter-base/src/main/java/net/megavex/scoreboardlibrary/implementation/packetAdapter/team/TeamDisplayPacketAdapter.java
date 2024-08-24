@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public interface TeamDisplayPacketAdapter {
-  default void updateTeamPackets(@NotNull Collection<String> entries) {
+  default void updateTeamPackets() {
   }
 
   void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries);

@@ -10,13 +10,14 @@ import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.api.team.enums.NameTagVisibility;
 import net.megavex.scoreboardlibrary.implementation.commons.CollectionProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -24,7 +25,8 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   private final ScoreboardTeamImpl team;
   private final TeamDisplayPacketAdapter packetAdapter;
   private final Set<Player> players = CollectionProvider.set(4);
-  private final Set<String> entries = new CopyOnWriteArraySet<>();
+  private final List<String> entries = CollectionProvider.list(4);
+  private final List<String> syncedEntries = CollectionProvider.list(4);
   private Component displayName = empty(),
     prefix = empty(),
     suffix = empty();
@@ -36,7 +38,7 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
   public TeamDisplayImpl(@NotNull ScoreboardTeamImpl team) {
     this.team = team;
     this.packetAdapter = team.packetAdapter().createTeamDisplayAdapter(this);
-    updateTeamPackets();
+    packetAdapter.updateTeamPackets();
   }
 
   @Override
@@ -46,12 +48,18 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
 
   @Override
   public @NotNull Collection<String> entries() {
-    return Collections.unmodifiableSet(entries);
+    return Collections.unmodifiableCollection(entries);
+  }
+
+  @Override
+  public @NotNull Collection<String> syncedEntries() {
+    return syncedEntries;
   }
 
   @Override
   public boolean addEntry(@NotNull String entry) {
-    if (entries.add(entry)) {
+    if (!entries.contains(entry)) {
+      entries.add(entry);
       team.teamManager().taskQueue().add(new TeamManagerTask.AddEntries(this, Collections.singleton(entry)));
       return true;
     }
@@ -210,8 +218,21 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
     return players;
   }
 
-  public void updateTeamPackets() {
-    packetAdapter.updateTeamPackets(entries);
+  public void handleUpdateDisplay() {
+    packetAdapter.updateTeamPackets();
+    packetAdapter().sendProperties(PropertiesPacketType.UPDATE, players());
+  }
+
+  public void handleAddEntries(@NotNull Collection<String> newEntries) {
+    packetAdapter.sendEntries(EntriesPacketType.ADD, players(), newEntries);
+    syncedEntries.addAll(newEntries);
+    packetAdapter.updateTeamPackets();
+  }
+
+  public void handleRemoveEntries(@NotNull Collection<String> oldEntries) {
+    packetAdapter.sendEntries(EntriesPacketType.REMOVE, players(), oldEntries);
+    syncedEntries.removeAll(oldEntries);
+    packetAdapter.updateTeamPackets();
   }
 
   private void scheduleUpdate() {

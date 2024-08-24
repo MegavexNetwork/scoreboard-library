@@ -43,12 +43,12 @@ public class WrapperPlayServerTeamsLegacy extends PacketWrapper<WrapperPlayServe
 
     if (teamMode == WrapperPlayServerTeams.TeamMode.CREATE) {
       if (serverVersion == ServerVersion.V_1_7_10) {
-        writeShort(properties.entries().size());
+        writeShort(properties.syncedEntries().size());
       } else {
-        writeVarInt(properties.entries().size());
+        writeVarInt(properties.syncedEntries().size());
       }
 
-      for (String entry : properties.entries()) {
+      for (String entry : properties.syncedEntries()) {
         writeString(entry);
       }
     }

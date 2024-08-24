@@ -33,6 +33,7 @@ indra {
     ci(true)
   }
   mitLicense()
+  reproducibleBuilds(true)
 
   javaVersions {
     target(8)

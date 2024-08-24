@@ -111,8 +111,8 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     Collection<Player> singleton = Collections.singleton(player);
     newTeamDisplay.packetAdapter().sendProperties(PropertiesPacketType.UPDATE, singleton);
 
-    Collection<String> oldEntries = oldTeamDisplay.entries();
-    Collection<String> newEntries = newTeamDisplay.entries();
+    Collection<String> oldEntries = oldTeamDisplay.syncedEntries();
+    Collection<String> newEntries = newTeamDisplay.syncedEntries();
 
     if (oldEntries.isEmpty()) {
       newTeamDisplay.packetAdapter().sendEntries(EntriesPacketType.ADD, singleton, newEntries);
