@@ -21,15 +21,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.PacketAccessors.*;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_8Plus;
 
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   private static final ConstructorAccessor<Object> packetPlayOutScoreboardObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardObjectiveClass);
   private static final ConstructorAccessor<Object> packetPlayOutScoreboardDisplayObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardDisplayObjectiveClass);
   private static final ConstructorAccessor<Object> packetPlayOutScoreboardScoreConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardScoreClass, String.class);
 
-  private static final Object enumScoreboardActionChange = RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE");
-  private static final Object enumScoreboardHealthInteger = RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "INTEGER");
-  private static final Object enumScoreboardHealthHearts = RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "HEARTS");
+  private static final Object enumScoreboardActionChange = is1_8Plus ? RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE") : null;
+  private static final Object enumScoreboardHealthInteger = is1_8Plus ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "INTEGER") : null;
+  private static final Object enumScoreboardHealthHearts = is1_8Plus ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "HEARTS") : null;
 
   private final PacketSender<Object> sender;
   private final String objectiveName;
@@ -84,7 +85,12 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     Object packet = packetPlayOutScoreboardScoreConstructor.invoke(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, value);
-    PacketAccessors.SCORE_ACTION_FIELD.set(packet, enumScoreboardActionChange);
+    if (is1_8Plus) {
+      PacketAccessors.SCORE_ACTION_FIELD_1_8.set(packet, enumScoreboardActionChange);
+    } else {
+      PacketAccessors.SCORE_ACTION_FIELD_1_7.set(packet, 0);
+    }
+
     sender.sendPacket(players, packet);
   }
 
@@ -107,19 +113,21 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     String legacyValue = LegacyFormatUtil.limitLegacyText(LegacyComponentSerializer.legacySection().serialize(value), ObjectiveConstants.LEGACY_VALUE_CHAR_LIMIT);
     PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, legacyValue);
 
-    Object nmsRenderType;
-    switch (renderType) {
-      case INTEGER:
-        nmsRenderType = enumScoreboardHealthInteger;
-        break;
-      case HEARTS:
-        nmsRenderType = enumScoreboardHealthHearts;
-        break;
-      default:
-        throw new IllegalStateException();
+    if (is1_8Plus) {
+      Object nmsRenderType;
+      switch (renderType) {
+        case INTEGER:
+          nmsRenderType = enumScoreboardHealthInteger;
+          break;
+        case HEARTS:
+          nmsRenderType = enumScoreboardHealthHearts;
+          break;
+        default:
+          throw new IllegalStateException();
+      }
+      PacketAccessors.OBJECTIVE_HEALTH_DISPLAY_FIELD.set(packet, nmsRenderType);
     }
 
-    PacketAccessors.OBJECTIVE_HEALTH_DISPLAY_FIELD.set(packet, nmsRenderType);
     return packet;
   }
 }

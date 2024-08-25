@@ -5,11 +5,14 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.R
 
 import java.util.Collection;
 
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_7Minus;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_8Plus;
+
 public final class PacketAccessors {
   public static final Class<Object> packetPlayOutScoreboardObjectiveClass =
     RandomUtils.getServerClass("PacketPlayOutScoreboardObjective");
   public static final Class<Object> enumScoreboardHealthDisplayClass =
-    RandomUtils.getServerClass("IScoreboardCriteria$EnumScoreboardHealthDisplay");
+    is1_8Plus ? RandomUtils.getServerClass("IScoreboardCriteria$EnumScoreboardHealthDisplay") : null;
 
   public static final Class<Object> packetPlayOutScoreboardDisplayObjectiveClass =
     RandomUtils.getServerClass("PacketPlayOutScoreboardDisplayObjective");
@@ -17,7 +20,7 @@ public final class PacketAccessors {
   public static final Class<Object> packetPlayOutScoreboardScoreClass =
     RandomUtils.getServerClass("PacketPlayOutScoreboardScore");
   public static final Class<Object> enumScoreboardActionClass =
-    RandomUtils.getServerClass("PacketPlayOutScoreboardScore$EnumScoreboardAction");
+    is1_8Plus ? RandomUtils.getServerClass("PacketPlayOutScoreboardScore$EnumScoreboardAction") : null;
 
   public static final Class<Object> packetPlayOutScoreboardTeamClass =
     RandomUtils.getServerClass("PacketPlayOutScoreboardTeam");
@@ -28,7 +31,7 @@ public final class PacketAccessors {
   public static final FieldAccessor<Object, String> OBJECTIVE_DISPLAY_NAME_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 1, String.class);
   public static final FieldAccessor<Object, Object> OBJECTIVE_HEALTH_DISPLAY_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 0, enumScoreboardHealthDisplayClass);
+    is1_8Plus ? ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 0, enumScoreboardHealthDisplayClass) : null;
   public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardObjectiveClass, 0, int.class);
 
@@ -41,8 +44,11 @@ public final class PacketAccessors {
     ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 1, String.class);
   public static final FieldAccessor<Object, Integer> SCORE_VALUE_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 0, int.class);
-  public static final FieldAccessor<Object, Object> SCORE_ACTION_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 0, enumScoreboardActionClass);
+
+  public static final FieldAccessor<Object, Object> SCORE_ACTION_FIELD_1_8 =
+    is1_8Plus ? ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 0, enumScoreboardActionClass) : null;
+  public static final FieldAccessor<Object, Integer> SCORE_ACTION_FIELD_1_7 =
+    is1_7Minus ? ReflectUtil.findField(packetPlayOutScoreboardScoreClass, 1, int.class) : null;
 
   public static final FieldAccessor<Object, String> TEAM_NAME_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 0, String.class);
@@ -53,7 +59,7 @@ public final class PacketAccessors {
   public static final FieldAccessor<Object, String> TEAM_SUFFIX_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 3, String.class);
   public static final FieldAccessor<Object, String> TEAM_NAME_TAG_VISIBILITY_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 4, String.class);
+    is1_8Plus ? ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 4, String.class) : null;
   public static final FieldAccessor<Object, Integer> TEAM_COLOR_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 0, int.class);
   @SuppressWarnings("rawtypes")
@@ -62,7 +68,7 @@ public final class PacketAccessors {
   public static final FieldAccessor<Object, Integer> TEAM_MODE_FIELD =
     ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 1, int.class);
   public static final FieldAccessor<Object, Integer> TEAM_RULES_FIELD =
-    ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 2, int.class);
+    is1_8Plus ? ReflectUtil.findField(packetPlayOutScoreboardTeamClass, 2, int.class) : null;
 
   private PacketAccessors() {
   }

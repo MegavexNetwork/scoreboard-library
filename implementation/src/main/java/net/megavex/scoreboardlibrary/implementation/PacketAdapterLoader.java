@@ -48,6 +48,7 @@ public final class PacketAdapterLoader {
   private static @Nullable Class<?> tryLoadVersion(@NotNull String serverVersion) {
     switch (serverVersion) {
       case "1.7.10":
+      case "1.12.2":
         return tryLoadImplementationClass(LEGACY_REFLECTIONS);
       case "1.8.8":
         return tryLoadImplementationClass(V1_8_R3);
