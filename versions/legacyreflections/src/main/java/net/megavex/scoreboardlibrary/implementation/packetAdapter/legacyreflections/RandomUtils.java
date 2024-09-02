@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflect
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class RandomUtils {
   private static final String NMS_VERSION_STRING = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -28,18 +29,35 @@ public class RandomUtils {
   }
 
   // TODO: method cache, either for all methods (cache elements & reuse when called) or for commonly used methods (dedicated fields)
-  public static Object invokeMethod(Class<?> clazz, Object instance, String methodName, Object[] args, Class<?>[] argClasses) {
+  public static Method getMethod(Class<?> clazz, String methodName, Class<?>[] argClasses) {
     // Note: can't just args to determine argClasses (eg if a method needs a Packet and you receive a type that inherits Packet)
     try {
-      return clazz.getMethod(methodName, argClasses).invoke(instance, args);
-    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+      return clazz.getMethod(methodName, argClasses);
+    } catch (NoSuchMethodException e) {
       throw new RuntimeException(e);
     }
   }
-  public static Object invokeStaticMethod(Class<?> clazz, String methodName, Object[] args, Class<?>[] argClasses) {
+  public static Method getStaticMethod(Class<?> clazz, String methodName, Class<?>[] argClasses) {
     try {
-      return clazz.getDeclaredMethod(methodName, argClasses).invoke(null, args);
-    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+      return clazz.getDeclaredMethod(methodName, argClasses);
+    } catch (NoSuchMethodException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public static Object invokeMethod(Object instance, Method method, Object[] args) {
+    // Note: can't just args to determine argClasses (eg if a method needs a Packet and you receive a type that inherits Packet)
+    try {
+      return method.invoke(instance, args);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  public static Object invokeStaticMethod(Method method, Object[] args) {
+    try {
+      return method.invoke(null, args);
+    } catch (IllegalAccessException | InvocationTargetException e) {
       throw new RuntimeException(e);
     }
   }

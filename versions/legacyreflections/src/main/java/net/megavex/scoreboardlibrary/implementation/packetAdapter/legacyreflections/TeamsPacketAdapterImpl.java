@@ -22,11 +22,13 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.OtherAccessors.enumChatFormatBMethod;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.OtherAccessors.enumChatFormatBStaticMethod;
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.PacketAccessors.packetPlayOutScoreboardTeamClass;
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_8Plus;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  private static final Class<Object> enumChatFormatClass = RandomUtils.getServerClass("EnumChatFormat");
+
   private static final ConstructorAccessor<Object> packetPlayOutScoreboardTeamConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardTeamClass);
   private final PacketSender<Object> sender;
   private final String teamName;
@@ -101,17 +103,13 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
             // Note 2: very high chance this changes between versions. Should check if possible.
             // Original code: `Integer teamColorField = Objects.requireNonNull(EnumChatFormat.b(name)).b()`
             Object enumChatFormatInstance = Objects.requireNonNull(RandomUtils.invokeStaticMethod(
-              enumChatFormatClass,
-              "b",
-              new Object[]{name},
-              new Class<?>[]{String.class}
+              enumChatFormatBStaticMethod,
+              new Object[]{name}
             ));
 
             Integer teamColorField = (Integer)RandomUtils.invokeMethod(
-              enumChatFormatClass,
               enumChatFormatInstance,
-              "b",
-              null,
+              enumChatFormatBMethod,
               null
             );
             System.out.println("If you see this, I did my job properly (temporary)");
