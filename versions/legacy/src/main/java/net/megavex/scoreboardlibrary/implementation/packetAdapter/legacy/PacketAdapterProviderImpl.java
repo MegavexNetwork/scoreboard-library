@@ -8,8 +8,8 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPack
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.craftPlayerGetHandleMethod;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.packetClass;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.CRAFT_PLAYER_GET_HANDLE;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.PACKET_CLASS;
 
 @SuppressWarnings("unused")
 public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<Object> {
@@ -32,11 +32,11 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
   public void sendPacket(@NotNull Player player, @NotNull Object packet) {
     // Original line:
     //((CraftPlayer) player).getHandle().playerConnection.sendPacket((Packet)packet);
-    Object craftPlayerHandle = RandomUtils.invokeMethod(player, craftPlayerGetHandleMethod, null);
+    Object craftPlayerHandle = RandomUtils.invokeMethod(player, CRAFT_PLAYER_GET_HANDLE, null);
 
     Object playerConnection = RandomUtils.getInstanceField(craftPlayerHandle.getClass(), craftPlayerHandle, "playerConnection");
 
     // Note: getMethod not cached rn because I need a playerConnection object first.
-    RandomUtils.invokeMethod(playerConnection, RandomUtils.getMethod(playerConnection.getClass(), "sendPacket",new Class<?>[]{packetClass}), new Object[]{packet});
+    RandomUtils.invokeMethod(playerConnection, RandomUtils.getMethod(playerConnection.getClass(), "sendPacket",new Class<?>[]{PACKET_CLASS}), new Object[]{packet});
   }
 }

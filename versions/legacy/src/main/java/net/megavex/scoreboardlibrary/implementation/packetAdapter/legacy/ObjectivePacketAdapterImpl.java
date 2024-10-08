@@ -24,13 +24,13 @@ import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.
 
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
-  private static final ConstructorAccessor<?> packetPlayOutScoreboardObjectiveConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardObjectiveClass).get();
-  private static final ConstructorAccessor<?> packetPlayOutScoreboardDisplayObjectiveConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardDisplayObjectiveClass).get();
-  private static final ConstructorAccessor<?> packetPlayOutScoreboardScoreConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardScoreClass, String.class).get();
+  private static final ConstructorAccessor<?> OBJECTIVE_CONSTRUCTOR = ReflectUtil.findConstructor(OBJECTIVE_CLASS).get();
+  private static final ConstructorAccessor<?> DISPLAY_OBJECTIVE_CONSTRUCTOR = ReflectUtil.findConstructor(DISPLAY_OBJECTIVE_CLASS).get();
+  private static final ConstructorAccessor<?> SCORE_CONSTRUCTOR = ReflectUtil.findConstructor(packetPlayOutScoreboardScoreClass, String.class).get();
 
-  private static final Object enumScoreboardActionChange = enumScoreboardActionClass != null ? RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE") : null;
-  private static final Object enumScoreboardHealthInteger = enumScoreboardHealthDisplayClass != null ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "INTEGER") : null;
-  private static final Object enumScoreboardHealthHearts = enumScoreboardHealthDisplayClass != null ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "HEARTS") : null;
+  private static final Object ACTION_CHANGE = enumScoreboardActionClass != null ? RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE") : null;
+  private static final Object HEALTH_INTEGER = HEALTH_DISPLAY_CLASS != null ? RandomUtils.getStaticField(HEALTH_DISPLAY_CLASS, "INTEGER") : null;
+  private static final Object HEALTH_HEARTS = HEALTH_DISPLAY_CLASS != null ? RandomUtils.getStaticField(HEALTH_DISPLAY_CLASS, "HEARTS") : null;
 
   private final PacketSender<Object> sender;
   private final String objectiveName;
@@ -43,7 +43,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
 
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
-    Object packet = packetPlayOutScoreboardDisplayObjectiveConstructor.invoke();
+    Object packet = DISPLAY_OBJECTIVE_CONSTRUCTOR.invoke();
     PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot));
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName);
     sender.sendPacket(players, packet);
@@ -67,7 +67,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   @Override
   public void remove(@NotNull Collection<Player> players) {
     if (removePacket == null) {
-      removePacket = packetPlayOutScoreboardObjectiveConstructor.invoke();
+      removePacket = OBJECTIVE_CONSTRUCTOR.invoke();
       PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
       PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
@@ -82,11 +82,11 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     @Nullable Component display,
     @Nullable ScoreFormat scoreFormat
   ) {
-    Object packet = packetPlayOutScoreboardScoreConstructor.invoke(entry);
+    Object packet = SCORE_CONSTRUCTOR.invoke(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, value);
     if (PacketAccessors.SCORE_ACTION_FIELD_1_8 != null) {
-      PacketAccessors.SCORE_ACTION_FIELD_1_8.set(packet, enumScoreboardActionChange);
+      PacketAccessors.SCORE_ACTION_FIELD_1_8.set(packet, ACTION_CHANGE);
     } else {
       PacketAccessors.SCORE_ACTION_FIELD_1_7.set(packet, 0);
     }
@@ -96,7 +96,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
 
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
-    Object packet = packetPlayOutScoreboardScoreConstructor.invoke(entry);
+    Object packet = SCORE_CONSTRUCTOR.invoke(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     sender.sendPacket(players, packet);
   }
@@ -106,7 +106,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     @NotNull Component value,
     @NotNull ObjectiveRenderType renderType
   ) {
-    Object packet = packetPlayOutScoreboardObjectiveConstructor.invoke();
+    Object packet = OBJECTIVE_CONSTRUCTOR.invoke();
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, ObjectiveConstants.mode(packetType));
 
@@ -117,10 +117,10 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
       Object nmsRenderType;
       switch (renderType) {
         case INTEGER:
-          nmsRenderType = enumScoreboardHealthInteger;
+          nmsRenderType = HEALTH_INTEGER;
           break;
         case HEARTS:
-          nmsRenderType = enumScoreboardHealthHearts;
+          nmsRenderType = HEALTH_HEARTS;
           break;
         default:
           throw new IllegalStateException();
