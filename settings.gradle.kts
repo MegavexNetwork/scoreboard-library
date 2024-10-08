@@ -11,8 +11,8 @@ project(":packet-adapter-base").projectDir = file("versions/packet-adapter-base"
 include(":packetevents")
 project(":packetevents").projectDir = file("versions/packetevents")
 
-include(":modern")
-project(":modern").projectDir = file("versions/modern")
+//include(":modern")
+//project(":modern").projectDir = file("versions/modern")
 
 include(":v1_8_R3")
 project(":v1_8_R3").projectDir = file("versions/v1_8_R3")
