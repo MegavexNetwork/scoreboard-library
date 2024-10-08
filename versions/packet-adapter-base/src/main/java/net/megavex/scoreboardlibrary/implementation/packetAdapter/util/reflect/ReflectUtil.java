@@ -8,6 +8,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Optional;
 
 public class ReflectUtil {
   // Inspired by
@@ -54,7 +55,12 @@ public class ReflectUtil {
   private ReflectUtil() {
   }
 
+
   public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, int index, @NotNull Class<V> valueClass) {
+    return findFieldUnchecked(clazz, index, valueClass);
+  }
+
+  public static <T, V> @NotNull FieldAccessor<T, V> findFieldUnchecked(@NotNull Class<?> clazz, int index, @NotNull Class<?> valueClass) {
     int i = 0;
     for (Field field : clazz.getDeclaredFields()) {
       if (Modifier.isStatic(field.getModifiers()) || field.getType() != valueClass) {
@@ -78,21 +84,12 @@ public class ReflectUtil {
     );
   }
 
-  public static <T> @NotNull ConstructorAccessor<T> findConstructorOrThrow(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
-    ConstructorAccessor<T> accessor = findConstructorOrNull(clazz, args);
-    if (accessor == null) {
-      throw new IllegalStateException("couldn't get constructor accessor for class " + clazz.getSimpleName());
-    }
-
-    return accessor;
-  }
-
-  public static <T> @Nullable ConstructorAccessor<T> findConstructorOrNull(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
+  public static <T> @NotNull Optional<ConstructorAccessor<T>> findConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
     try {
       MethodHandle handle = LOOKUP.findConstructor(clazz, MethodType.methodType(void.class, args));
-      return new ConstructorAccessor<>(convertToGeneric(handle));
+      return Optional.of(new ConstructorAccessor<>(convertToGeneric(handle)));
     } catch (NoSuchMethodException | IllegalAccessException e) {
-      return null;
+      return Optional.empty();
     }
   }
 

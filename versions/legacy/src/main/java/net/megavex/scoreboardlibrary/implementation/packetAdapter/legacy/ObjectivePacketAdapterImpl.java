@@ -21,16 +21,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.PacketAccessors.*;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.RandomUtils.is1_8Plus;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardObjectiveClass);
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardDisplayObjectiveConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardDisplayObjectiveClass);
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardScoreConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardScoreClass, String.class);
+  private static final ConstructorAccessor<?> packetPlayOutScoreboardObjectiveConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardObjectiveClass).get();
+  private static final ConstructorAccessor<?> packetPlayOutScoreboardDisplayObjectiveConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardDisplayObjectiveClass).get();
+  private static final ConstructorAccessor<?> packetPlayOutScoreboardScoreConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardScoreClass, String.class).get();
 
-  private static final Object enumScoreboardActionChange = is1_8Plus ? RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE") : null;
-  private static final Object enumScoreboardHealthInteger = is1_8Plus ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "INTEGER") : null;
-  private static final Object enumScoreboardHealthHearts = is1_8Plus ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "HEARTS") : null;
+  private static final Object enumScoreboardActionChange = enumScoreboardActionClass != null ? RandomUtils.getStaticField(enumScoreboardActionClass, "CHANGE") : null;
+  private static final Object enumScoreboardHealthInteger = enumScoreboardHealthDisplayClass != null ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "INTEGER") : null;
+  private static final Object enumScoreboardHealthHearts = enumScoreboardHealthDisplayClass != null ? RandomUtils.getStaticField(enumScoreboardHealthDisplayClass, "HEARTS") : null;
 
   private final PacketSender<Object> sender;
   private final String objectiveName;
@@ -85,7 +85,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     Object packet = packetPlayOutScoreboardScoreConstructor.invoke(entry);
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, value);
-    if (is1_8Plus) {
+    if (PacketAccessors.SCORE_ACTION_FIELD_1_8 != null) {
       PacketAccessors.SCORE_ACTION_FIELD_1_8.set(packet, enumScoreboardActionChange);
     } else {
       PacketAccessors.SCORE_ACTION_FIELD_1_7.set(packet, 0);
@@ -113,7 +113,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     String legacyValue = LegacyFormatUtil.limitLegacyText(LegacyComponentSerializer.legacySection().serialize(value), ObjectiveConstants.LEGACY_VALUE_CHAR_LIMIT);
     PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(packet, legacyValue);
 
-    if (is1_8Plus) {
+    if (PacketAccessors.OBJECTIVE_HEALTH_DISPLAY_FIELD != null) {
       Object nmsRenderType;
       switch (renderType) {
         case INTEGER:

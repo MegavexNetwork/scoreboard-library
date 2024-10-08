@@ -25,11 +25,10 @@ import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatU
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.enumChatFormatBMethod;
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.enumChatFormatBStaticMethod;
 import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.PacketAccessors.packetPlayOutScoreboardTeamClass;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.RandomUtils.is1_8Plus;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 
-  private static final ConstructorAccessor<Object> packetPlayOutScoreboardTeamConstructor = ReflectUtil.findConstructorOrThrow(packetPlayOutScoreboardTeamClass);
+  private static final ConstructorAccessor<?> packetPlayOutScoreboardTeamConstructor = ReflectUtil.findConstructor(packetPlayOutScoreboardTeamClass).get();
   private final PacketSender<Object> sender;
   private final String teamName;
   private Object removePacket;
@@ -92,7 +91,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
           PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
           PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
           PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
-          if (is1_8Plus) {
+          if (PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD != null) {
             PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
           }
 
@@ -117,7 +116,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
             PacketAccessors.TEAM_COLOR_FIELD.set(packet, teamColorField);
           }
 
-          if (is1_8Plus) {
+          if (PacketAccessors.TEAM_RULES_FIELD != null) {
             PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
           }
 
