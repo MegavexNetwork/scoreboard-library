@@ -1,12 +1,12 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.FieldAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 
 import java.util.Collection;
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_7Minus;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_8Plus;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.RandomUtils.is1_7Minus;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.RandomUtils.is1_8Plus;
 
 public final class PacketAccessors {
   public static final Class<Object> packetPlayOutScoreboardObjectiveClass =

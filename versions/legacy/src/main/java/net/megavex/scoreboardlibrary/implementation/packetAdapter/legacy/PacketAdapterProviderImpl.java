@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
@@ -8,8 +8,8 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPack
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.OtherAccessors.craftPlayerGetHandleMethod;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.OtherAccessors.packetClass;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.craftPlayerGetHandleMethod;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.packetClass;
 
 @SuppressWarnings("unused")
 public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<Object> {

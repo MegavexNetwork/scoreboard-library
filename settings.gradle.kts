@@ -18,8 +18,8 @@ project(":packetevents").projectDir = file("versions/packetevents")
 include(":v1_8_R3")
 project(":v1_8_R3").projectDir = file("versions/v1_8_R3")
 
-include(":legacyreflections")
-project(":legacyreflections").projectDir = file("versions/legacyreflections")
+include(":legacy")
+project(":legacy").projectDir = file("versions/legacy")
 
 val modulePrefix = rootProject.name
 rootProject.children.forEach {

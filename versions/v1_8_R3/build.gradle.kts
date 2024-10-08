@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
   // Alias to legacy for backwards compat
-  implementation(project(":scoreboard-library-legacyreflections"))
+  implementation(project(":scoreboard-library-legacy"))
 }

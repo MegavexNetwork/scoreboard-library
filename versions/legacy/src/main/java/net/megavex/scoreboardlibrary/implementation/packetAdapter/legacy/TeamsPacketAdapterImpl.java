@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
@@ -22,10 +22,10 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.OtherAccessors.enumChatFormatBMethod;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.OtherAccessors.enumChatFormatBStaticMethod;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.PacketAccessors.packetPlayOutScoreboardTeamClass;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections.RandomUtils.is1_8Plus;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.enumChatFormatBMethod;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.OtherAccessors.enumChatFormatBStaticMethod;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.PacketAccessors.packetPlayOutScoreboardTeamClass;
+import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.RandomUtils.is1_8Plus;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 

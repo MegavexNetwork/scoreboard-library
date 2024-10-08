@@ -1,4 +1,4 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacyreflections;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import java.lang.reflect.Method;
 

@@ -12,7 +12,7 @@ public final class PacketAdapterLoader {
   private static final String MODERN = "modern",
     V1_8_R3 = "v1_8_R3",
     PACKET_EVENTS = "packetevents",
-    LEGACY_REFLECTIONS = "legacyreflections";
+    LEGACY = "legacy";
 
   private PacketAdapterLoader() {
   }
@@ -49,7 +49,7 @@ public final class PacketAdapterLoader {
     switch (serverVersion) {
       case "1.7.10":
       case "1.12.2":
-        return tryLoadImplementationClass(LEGACY_REFLECTIONS);
+        return tryLoadImplementationClass(LEGACY);
       case "1.8.8":
         return tryLoadImplementationClass(V1_8_R3);
       case "1.17":
