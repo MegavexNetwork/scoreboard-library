@@ -23,6 +23,8 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
 
   private final Set<Player> players = CollectionProvider.set(8);
+  private final List<Player> internalPlayers = CollectionProvider.list(8);
+
   private final Map<String, ScoreboardTeamImpl> teams = new ConcurrentHashMap<>();
   private final Queue<TeamManagerTask> taskQueue = new ConcurrentLinkedQueue<>();
   private boolean closed;
@@ -155,6 +157,7 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
     return taskQueue;
   }
 
+  @Override
   public void display(@NotNull Player player) {
     for (ScoreboardTeamImpl team : teams.values()) {
       team.addPlayer(player);
@@ -170,14 +173,14 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
 
       if (task instanceof TeamManagerTask.Close) {
         for (ScoreboardTeamImpl team : teams.values()) {
-          Set<Player> removePlayers = CollectionProvider.set(players.size());
+          Set<Player> removePlayers = CollectionProvider.set(internalPlayers.size());
           for (TeamDisplayImpl value : team.displayMap().values()) {
             removePlayers.addAll(value.players());
           }
           team.packetAdapter().removeTeam(removePlayers);
         }
 
-        for (Player player : players) {
+        for (Player player : internalPlayers) {
           Objects.requireNonNull(scoreboardLibrary.getPlayer(player)).teamManagerQueue().remove(this);
         }
         return false;
@@ -185,12 +188,14 @@ public class TeamManagerImpl implements TeamManager, PlayerDisplayable {
         TeamManagerTask.AddPlayer addPlayerTask = (TeamManagerTask.AddPlayer) task;
         @NotNull ScoreboardLibraryPlayer slPlayer = scoreboardLibrary.getOrCreatePlayer(addPlayerTask.player());
         slPlayer.teamManagerQueue().add(this);
+        internalPlayers.add(addPlayerTask.player());
       } else if (task instanceof TeamManagerTask.RemovePlayer) {
         TeamManagerTask.RemovePlayer removePlayerTask = (TeamManagerTask.RemovePlayer) task;
         for (ScoreboardTeamImpl team : teams.values()) {
           team.removePlayer(removePlayerTask.player());
         }
 
+        internalPlayers.remove(removePlayerTask.player());
         Objects.requireNonNull(scoreboardLibrary.getPlayer(removePlayerTask.player())).teamManagerQueue().remove(this);
       } else if (task instanceof TeamManagerTask.ReloadPlayer) {
         TeamManagerTask.ReloadPlayer reloadPlayerTask = (TeamManagerTask.ReloadPlayer) task;
