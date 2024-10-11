@@ -91,6 +91,10 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
             PacketAccessors.TEAM_COLOR_FIELD.set(packet, teamColorField);
           }
 
+          if (PacketAccessors.TEAM_COLLISION_RULE_FIELD != null) {
+            PacketAccessors.TEAM_COLLISION_RULE_FIELD.set(packet, properties.collisionRule().key());
+          }
+
           if (packetType == PropertiesPacketType.CREATE) {
             PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, ImmutableList.copyOf(properties.syncedEntries()));
           }

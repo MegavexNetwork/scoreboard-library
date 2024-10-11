@@ -13,6 +13,7 @@ public final class PacketAccessors {
   public static final Object HEALTH_DISPLAY_HEARTS = HEALTH_DISPLAY_CLASS != null ? ReflectUtil.getEnumInstance(HEALTH_DISPLAY_CLASS, "HEARTS") : null;
 
   private static final boolean IS_AT_LEAST_1_8 = HEALTH_DISPLAY_INTEGER != null;
+  private static final boolean IS_AT_LEAST_1_9 = ReflectUtil.getOptionalClass(LegacyMinecraftClasses.server("ScoreboardTeamBase$EnumTeamPush")) != null;
 
   public static final Class<?> OBJECTIVE_CLASS =
     ReflectUtil.getClassOrThrow(LegacyMinecraftClasses.server("PacketPlayOutScoreboardObjective"));
@@ -62,6 +63,8 @@ public final class PacketAccessors {
     ReflectUtil.findFieldUnchecked(TEAM_CLASS, 3, String.class);
   public static final FieldAccessor<Object, String> TEAM_NAME_TAG_VISIBILITY_FIELD =
     IS_AT_LEAST_1_8 ? ReflectUtil.findFieldUnchecked(TEAM_CLASS, 4, String.class) : null;
+  public static final FieldAccessor<Object, String> TEAM_COLLISION_RULE_FIELD =
+    IS_AT_LEAST_1_9 ? ReflectUtil.findFieldUnchecked(TEAM_CLASS, 5, String.class) : null;
   public static final FieldAccessor<Object, Integer> TEAM_COLOR_FIELD =
     IS_AT_LEAST_1_8 ? ReflectUtil.findFieldUnchecked(TEAM_CLASS, 0, int.class) : null;
   @SuppressWarnings("rawtypes")
