@@ -45,19 +45,17 @@ public final class PacketAccessors {
     IS_1_20_5_OR_ABOVE = is1_20_5OrAbove;
 
     if (is1_20_5OrAbove) {
-      //noinspection rawtypes
-      OBJECTIVE_NUMBER_FORMAT_FIELD = (FieldAccessor) ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, Optional.class);
+      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(ClientboundSetObjectivePacket.class, 0, Optional.class);
       SCORE_1_20_2_CONSTRUCTOR = null;
       SCORE_1_20_3_CONSTRUCTOR = null;
     } else if (is1_20_3OrAbove) {
-      //noinspection rawtypes
-      OBJECTIVE_NUMBER_FORMAT_FIELD = (FieldAccessor) ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, NumberFormat.class);
-      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructorOrNull(ClientboundSetScorePacket.class, String.class, String.class, int.class, Component.class, NumberFormat.class);
+      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(ClientboundSetObjectivePacket.class, 0, NumberFormat.class);
+      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructor(ClientboundSetScorePacket.class, String.class, String.class, int.class, Component.class, NumberFormat.class);
       SCORE_1_20_2_CONSTRUCTOR = null;
     } else {
       OBJECTIVE_NUMBER_FORMAT_FIELD = null;
       SCORE_1_20_3_CONSTRUCTOR = null;
-      SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructorOrNull(ClientboundSetScorePacket.class, ServerScoreboard.Method.class, String.class, String.class, int.class);
+      SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructor(ClientboundSetScorePacket.class, ServerScoreboard.Method.class, String.class, String.class, int.class);
     }
   }
 
@@ -77,7 +75,7 @@ public final class PacketAccessors {
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, int.class);
 
   public static final ConstructorAccessor<ClientboundSetDisplayObjectivePacket> DISPLAY_1_20_1_CONSTRUCTOR =
-    ReflectUtil.findConstructorOrNull(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
+    ReflectUtil.findConstructor(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
   public static final FieldAccessor<ClientboundSetDisplayObjectivePacket, String> DISPLAY_OBJECTIVE_NAME =
     ReflectUtil.findField(ClientboundSetDisplayObjectivePacket.class, 0, String.class);
 
@@ -85,7 +83,7 @@ public final class PacketAccessors {
   public static final ConstructorAccessor<ClientboundSetScorePacket> SCORE_1_20_2_CONSTRUCTOR;
 
   public static final ConstructorAccessor<ClientboundSetPlayerTeamPacket> TEAM_PACKET_CONSTRUCTOR =
-    ReflectUtil.findConstructorOrThrow(ClientboundSetPlayerTeamPacket.class, String.class, int.class, Optional.class, Collection.class);
+    ReflectUtil.findConstructor(ClientboundSetPlayerTeamPacket.class, String.class, int.class, Optional.class, Collection.class);
   public static final PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> PARAMETERS_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(ClientboundSetPlayerTeamPacket.Parameters.class);
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Component> DISPLAY_NAME_FIELD =

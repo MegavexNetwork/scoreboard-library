@@ -11,15 +11,15 @@ project(":packet-adapter-base").projectDir = file("versions/packet-adapter-base"
 include(":packetevents")
 project(":packetevents").projectDir = file("versions/packetevents")
 
-//include(":modern")
-//project(":modern").projectDir = file("versions/modern")
+include(":modern")
+project(":modern").projectDir = file("versions/modern")
+
+include(":legacy")
+project(":legacy").projectDir = file("versions/legacy")
 
 // For backwards compat
 include(":v1_8_R3")
 project(":v1_8_R3").projectDir = file("versions/v1_8_R3")
-
-include(":legacy")
-project(":legacy").projectDir = file("versions/legacy")
 
 val modulePrefix = rootProject.name
 rootProject.children.forEach {
