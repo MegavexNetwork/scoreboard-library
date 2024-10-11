@@ -71,7 +71,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     PacketAccessors.SCORE_OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.SCORE_VALUE_FIELD.set(packet, value);
     if (PacketAccessors.SCORE_ACTION_FIELD_1_8 != null) {
-      PacketAccessors.SCORE_ACTION_FIELD_1_8.set(packet, PacketAccessors.SCORE_ACTION_v1_8_CHANGE);
+      PacketAccessors.SCORE_ACTION_FIELD_1_8.set(packet, PacketAccessors.SCORE_ACTION_CHANGE_1_8);
     } else {
       PacketAccessors.SCORE_ACTION_FIELD_1_7.set(packet, 0);
     }
