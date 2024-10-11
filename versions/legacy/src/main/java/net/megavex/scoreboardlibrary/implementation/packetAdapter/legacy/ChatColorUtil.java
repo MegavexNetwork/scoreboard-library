@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandle;
@@ -11,7 +12,7 @@ public final class ChatColorUtil {
   private static final MethodHandle FROM_NAME_METHOD, GET_INDEX_METHOD;
 
   static {
-    Class<Object> enumChatFormatClass = RandomUtils.getClassOrThrow(RandomUtils.server("EnumChatFormat"));
+    Class<?> enumChatFormatClass = ReflectUtil.getClassOrThrow(LegacyMinecraftClasses.server("EnumChatFormat"));
     MethodHandles.Lookup lookup = MethodHandles.lookup();
 
     try {

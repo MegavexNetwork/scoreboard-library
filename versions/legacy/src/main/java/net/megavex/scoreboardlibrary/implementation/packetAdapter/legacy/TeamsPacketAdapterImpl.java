@@ -11,8 +11,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConst
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,10 +18,8 @@ import java.util.Collection;
 import java.util.Locale;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
-import static net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy.PacketAccessors.TEAM_CLASS;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  private static final ConstructorAccessor<?> TEAM_CONSTRUCTOR = ReflectUtil.findConstructor(TEAM_CLASS).get();
   private final String teamName;
   private Object removePacket;
 
@@ -34,7 +30,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
   @Override
   public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
-      removePacket = TEAM_CONSTRUCTOR.invoke();
+      removePacket = PacketAccessors.TEAM_CONSTRUCTOR.invoke();
       PacketAccessors.TEAM_NAME_FIELD.set(removePacket, teamName);
       PacketAccessors.TEAM_MODE_FIELD.set(removePacket, TeamConstants.MODE_REMOVE);
     }
@@ -61,7 +57,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 
     @Override
     public void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-      Object packet = TEAM_CONSTRUCTOR.invoke();
+      Object packet = PacketAccessors.TEAM_CONSTRUCTOR.invoke();
       PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName);
       PacketAccessors.TEAM_MODE_FIELD.set(packet, TeamConstants.mode(packetType));
       PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, entries);
@@ -78,7 +74,7 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
           String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
           String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
 
-          Object packet = TEAM_CONSTRUCTOR.invoke();
+          Object packet = PacketAccessors.TEAM_CONSTRUCTOR.invoke();
           PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName);
           PacketAccessors.TEAM_MODE_FIELD.set(packet, TeamConstants.mode(packetType));
           PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);

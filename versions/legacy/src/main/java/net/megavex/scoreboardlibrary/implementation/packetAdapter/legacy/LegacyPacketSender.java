@@ -1,6 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.MinecraftClasses;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandle;
@@ -14,8 +16,8 @@ public final class LegacyPacketSender implements PacketSender<Object> {
   private static final MethodHandle GET_HANDLE_METHOD, PLAYER_CONNECTION_FIELD, SEND_PACKET_METHOD;
 
   static {
-    Class<?> packetClass = RandomUtils.getClassOrThrow(RandomUtils.server("Packet"));
-    Class<?> craftPlayerClass = RandomUtils.getClassOrThrow(RandomUtils.craftBukkit("entity.CraftPlayer"));
+    Class<?> packetClass = ReflectUtil.getClassOrThrow(LegacyMinecraftClasses.server("Packet"));
+    Class<?> craftPlayerClass = ReflectUtil.getClassOrThrow(MinecraftClasses.craftBukkit("entity.CraftPlayer"));
     MethodHandles.Lookup lookup = MethodHandles.lookup();
 
     try {
