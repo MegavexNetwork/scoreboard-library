@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-  // Alias to legacy for backwards compat
+  // Alias to legacy for backwards compatibility
   implementation(project(":scoreboard-library-legacy"))
 }

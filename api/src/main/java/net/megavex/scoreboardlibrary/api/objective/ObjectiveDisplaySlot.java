@@ -24,6 +24,9 @@ public interface ObjectiveDisplaySlot {
     return BelowName.INSTANCE;
   }
 
+  /**
+   * @since Minecraft 1.8
+   */
   static @NotNull TeamSidebar teamSidebar(@NotNull NamedTextColor teamColor) {
     Preconditions.checkNotNull(teamColor);
     return new TeamSidebar(teamColor);

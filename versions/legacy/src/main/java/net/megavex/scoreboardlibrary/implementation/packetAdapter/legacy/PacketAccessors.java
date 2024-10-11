@@ -12,19 +12,19 @@ public final class PacketAccessors {
   public static final Object HEALTH_DISPLAY_INTEGER = HEALTH_DISPLAY_CLASS != null ? ReflectUtil.getEnumInstance(HEALTH_DISPLAY_CLASS, "INTEGER") : null;
   public static final Object HEALTH_DISPLAY_HEARTS = HEALTH_DISPLAY_CLASS != null ? ReflectUtil.getEnumInstance(HEALTH_DISPLAY_CLASS, "HEARTS") : null;
 
-  public static final boolean IS_AT_LEAST_1_8 = HEALTH_DISPLAY_INTEGER != null;
+  private static final boolean IS_AT_LEAST_1_8 = HEALTH_DISPLAY_INTEGER != null;
 
   public static final Class<?> OBJECTIVE_CLASS =
     ReflectUtil.getClassOrThrow(LegacyMinecraftClasses.server("PacketPlayOutScoreboardObjective"));
   public static final ConstructorAccessor<?> OBJECTIVE_CONSTRUCTOR = ReflectUtil.findConstructor(OBJECTIVE_CLASS);
+  public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
+    ReflectUtil.findFieldUnchecked(OBJECTIVE_CLASS, 0, int.class);
   public static final FieldAccessor<Object, String> OBJECTIVE_NAME_FIELD =
     ReflectUtil.findFieldUnchecked(OBJECTIVE_CLASS, 0, String.class);
   public static final FieldAccessor<Object, String> OBJECTIVE_DISPLAY_NAME_FIELD =
     ReflectUtil.findFieldUnchecked(OBJECTIVE_CLASS, 1, String.class);
   public static final FieldAccessor<Object, Object> OBJECTIVE_HEALTH_DISPLAY_FIELD =
     HEALTH_DISPLAY_CLASS != null ? ReflectUtil.findFieldUnchecked(OBJECTIVE_CLASS, 0, HEALTH_DISPLAY_CLASS) : null;
-  public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
-    ReflectUtil.findFieldUnchecked(OBJECTIVE_CLASS, 0, int.class);
 
   public static final Class<?> DISPLAY_OBJECTIVE_CLASS =
     ReflectUtil.getClassOrThrow(LegacyMinecraftClasses.server("PacketPlayOutScoreboardDisplayObjective"));
@@ -63,14 +63,14 @@ public final class PacketAccessors {
   public static final FieldAccessor<Object, String> TEAM_NAME_TAG_VISIBILITY_FIELD =
     IS_AT_LEAST_1_8 ? ReflectUtil.findFieldUnchecked(TEAM_CLASS, 4, String.class) : null;
   public static final FieldAccessor<Object, Integer> TEAM_COLOR_FIELD =
-    ReflectUtil.findFieldUnchecked(TEAM_CLASS, 0, int.class);
+    IS_AT_LEAST_1_8 ? ReflectUtil.findFieldUnchecked(TEAM_CLASS, 0, int.class) : null;
   @SuppressWarnings("rawtypes")
   public static final FieldAccessor<Object, Collection> TEAM_ENTRIES_FIELD =
     ReflectUtil.findFieldUnchecked(TEAM_CLASS, 0, Collection.class);
   public static final FieldAccessor<Object, Integer> TEAM_MODE_FIELD =
-    ReflectUtil.findFieldUnchecked(TEAM_CLASS, 1, int.class);
+    ReflectUtil.findFieldUnchecked(TEAM_CLASS, IS_AT_LEAST_1_8 ? 1 : 0, int.class);
   public static final FieldAccessor<Object, Integer> TEAM_RULES_FIELD =
-    IS_AT_LEAST_1_8 ? ReflectUtil.findFieldUnchecked(TEAM_CLASS, 2, int.class) : null;
+    ReflectUtil.findFieldUnchecked(TEAM_CLASS, IS_AT_LEAST_1_8 ? 2 : 1, int.class);
 
   private PacketAccessors() {
   }

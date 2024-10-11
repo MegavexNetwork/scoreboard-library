@@ -29,7 +29,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
     Object packet = PacketAccessors.DISPLAY_OBJECTIVE_CONSTRUCTOR.invoke();
-    PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot));
+    PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot, false));
     PacketAccessors.DISPLAY_OBJECTIVE_NAME.set(packet, objectiveName);
     LegacyPacketSender.INSTANCE.sendPacket(players, packet);
   }
@@ -54,6 +54,7 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
     if (removePacket == null) {
       removePacket = PacketAccessors.OBJECTIVE_CONSTRUCTOR.invoke();
       PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
+      PacketAccessors.OBJECTIVE_DISPLAY_NAME_FIELD.set(removePacket, "");
       PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
     LegacyPacketSender.INSTANCE.sendPacket(players, removePacket);

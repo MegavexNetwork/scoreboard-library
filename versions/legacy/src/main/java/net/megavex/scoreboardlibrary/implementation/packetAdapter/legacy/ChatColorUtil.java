@@ -16,7 +16,7 @@ public final class ChatColorUtil {
     MethodHandles.Lookup lookup = MethodHandles.lookup();
 
     try {
-      Method fromNameMethod = enumChatFormatClass.getMethod("b", enumChatFormatClass);
+      Method fromNameMethod = enumChatFormatClass.getMethod("b", String.class);
       FROM_NAME_METHOD = lookup.unreflect(fromNameMethod);
 
       Method getIndexMethod = enumChatFormatClass.getMethod("b");

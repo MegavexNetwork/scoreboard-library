@@ -38,7 +38,7 @@ public final class PacketAccessors {
 
     boolean is1_20_5OrAbove = false;
     try {
-      Class.forName("net.minecraft.network.protocol.common.ClientboundTransferPacket"); // random 1.20.5 class
+      Class.forName("net.minecraft.network.protocol.common.ClientboundTransferPacket"); // Random 1.20.5 class
       is1_20_5OrAbove = true;
     } catch (ClassNotFoundException ignored) {
     }
@@ -75,7 +75,7 @@ public final class PacketAccessors {
     ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, int.class);
 
   public static final ConstructorAccessor<ClientboundSetDisplayObjectivePacket> DISPLAY_1_20_1_CONSTRUCTOR =
-    ReflectUtil.findConstructor(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
+    ReflectUtil.findOptionalConstructor(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
   public static final FieldAccessor<ClientboundSetDisplayObjectivePacket, String> DISPLAY_OBJECTIVE_NAME =
     ReflectUtil.findField(ClientboundSetDisplayObjectivePacket.class, 0, String.class);
 
@@ -100,9 +100,6 @@ public final class PacketAccessors {
     ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, ChatFormatting.class);
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Integer> OPTIONS_FIELD =
     ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, int.class);
-  @SuppressWarnings("rawtypes")
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket, Collection> ENTRIES_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.class, 0, Collection.class);
 
   private PacketAccessors() {
   }

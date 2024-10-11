@@ -104,13 +104,21 @@ public class ReflectUtil {
     );
   }
 
-  public static <T> @NotNull ConstructorAccessor<T> findConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
+  public static <T> @Nullable ConstructorAccessor<T> findOptionalConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
     try {
       MethodHandle handle = LOOKUP.findConstructor(clazz, MethodType.methodType(void.class, args));
       return new ConstructorAccessor<>(convertToGeneric(handle));
     } catch (NoSuchMethodException | IllegalAccessException e) {
-      throw new ExceptionInInitializerError("Constructor for class " + clazz.getName() + " not found");
+      return null;
     }
+  }
+
+  public static <T> @NotNull ConstructorAccessor<T> findConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
+    ConstructorAccessor<T> accessor = findOptionalConstructor(clazz, args);
+    if (accessor == null) {
+      throw new RuntimeException("Constructor for class " + clazz.getName() + " not found");
+    }
+    return accessor;
   }
 
   public static <T> @NotNull PacketConstructor<T> getEmptyConstructor(@NotNull Class<T> packetClass) {

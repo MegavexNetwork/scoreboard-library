@@ -80,18 +80,15 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
           PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
           PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
           PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
+          PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
           if (PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD != null) {
             PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
           }
 
           NamedTextColor color = properties.playerColor();
-          if (color != null) {
+          if (PacketAccessors.TEAM_COLOR_FIELD != null && color != null) {
             int teamColorField = ChatColorUtil.getColorIndex(color);
             PacketAccessors.TEAM_COLOR_FIELD.set(packet, teamColorField);
-          }
-
-          if (PacketAccessors.TEAM_RULES_FIELD != null) {
-            PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
           }
 
           if (packetType == PropertiesPacketType.CREATE) {
