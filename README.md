@@ -8,7 +8,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Features
 
-- Sidebars. Up to 42 characters (depends on the formatting) for 1.12.2 and below, no limit for newer versions
+- Sidebars. Up to 44 characters (depends on the formatting) for 1.12.2 and below, no limit for newer versions
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
 - Objectives.

@@ -82,7 +82,7 @@ public class LegacyLocaleLine implements LocaleLine, ImmutableTeamProperties<Str
       this.prefix = legacyValue.substring(0, prefixEnd);
 
       String last = prefix + LegacyComponentSerializer.SECTION_CHAR + (endsWithSection ? legacyValue.charAt(16) : "");
-      this.player = info.player() + ChatColor.RESET + ChatColor.getLastColors(last);
+      this.player = info.player() + ChatColor.getLastColors(last);
 
       int playerEnd = prefixEnd;
       if (legacyValue.length() > 32) {
@@ -93,11 +93,10 @@ public class LegacyLocaleLine implements LocaleLine, ImmutableTeamProperties<Str
         player += legacyValue.substring(prefixEnd, playerEnd);
       }
 
-      this.suffix = legacyValue.substring(playerEnd + (endsWithSection ? 2 : 0));
+      this.suffix = ChatColor.getLastColors(this.player) + legacyValue.substring(playerEnd + (endsWithSection ? 2 : 0));
       if (suffix.length() > 16) {
         String newSuffix = suffix.substring(0, 16);
-        if (newSuffix.endsWith(String.valueOf(LegacyComponentSerializer.SECTION_CHAR)) &&
-          ChatColor.getByChar(suffix.charAt(16)) != null) {
+        if (newSuffix.endsWith(String.valueOf(LegacyComponentSerializer.SECTION_CHAR))) {
           newSuffix = newSuffix.substring(0, 15);
         }
 

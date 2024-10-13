@@ -3,6 +3,7 @@ package net.megavex.scoreboardlibrary.implementation.sidebar;
 import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
@@ -16,7 +17,6 @@ import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
-import net.megavex.scoreboardlibrary.implementation.sidebar.line.PlayerNameProvider;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,6 @@ import static net.kyori.adventure.text.Component.empty;
 public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   private final ScoreboardLibraryImpl scoreboardLibrary;
   private final ObjectivePacketAdapter packetAdapter;
-  private final List<String> linePlayerNames;
 
   private final GlobalLineInfo[] lines;
   private Component title = empty();
@@ -48,7 +47,6 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
 
     String objectiveName = RandomStringUtils.randomAlphanumeric(16);
     this.packetAdapter = scoreboardLibrary.packetAdapter().createObjectiveAdapter(objectiveName);
-    this.linePlayerNames = PlayerNameProvider.provideLinePlayerNames(maxLines);
     this.lines = new GlobalLineInfo[maxLines];
   }
 
@@ -280,7 +278,10 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   private @NotNull GlobalLineInfo getLineInfo(int line) {
     GlobalLineInfo globalLineInfo = lines[line];
     if (globalLineInfo == null) {
-      globalLineInfo = lines[line] = new GlobalLineInfo(this, linePlayerNames.get(line), line);
+      char c = Character.toChars(128 + line)[0];
+      String playerName = "" + LegacyComponentSerializer.SECTION_CHAR + c;
+
+      globalLineInfo = lines[line] = new GlobalLineInfo(this, playerName, line);
       updateScores();
     }
 
