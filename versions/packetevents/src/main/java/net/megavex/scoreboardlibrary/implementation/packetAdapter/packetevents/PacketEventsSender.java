@@ -20,9 +20,12 @@ public class PacketEventsSender implements PacketSender<PacketWrapper<?>> {
     this.packetEvents = packetEvents;
   }
 
-  @SuppressWarnings("UnstableApiUsage, deprecation")
+  //@SuppressWarnings("UnstableApiUsage, deprecation")
   @Override
   public void sendPacket(Player player, PacketWrapper<?> packet) {
+    packetEvents.getPlayerManager().sendPacket(player, packet);
+
+    /*
     ServerVersion serverVer = packetEvents.getServerManager().getVersion();
     ClientVersion clientVer = packetEvents.getPlayerManager().getClientVersion(player);
     if (serverVer.isOlderThan(ServerVersion.V_1_13) || clientVer.isNewerThanOrEquals(ClientVersion.V_1_13)) {
@@ -57,5 +60,6 @@ public class PacketEventsSender implements PacketSender<PacketWrapper<?>> {
     packet.setServerVersion(clientVer.toServerVersion());
     packet.write();
     ChannelHelper.writeAndFlushInContext(channel, viaEncoder, packet.buffer);
+    */
   }
 }

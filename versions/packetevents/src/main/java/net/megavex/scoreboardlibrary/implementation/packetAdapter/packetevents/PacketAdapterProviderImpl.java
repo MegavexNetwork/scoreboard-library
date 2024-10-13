@@ -3,13 +3,11 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.PacketEventsAPI;
 import com.github.retrooper.packetevents.manager.server.ServerVersion;
-import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import net.megavex.scoreboardlibrary.implementation.commons.LineRenderingStrategy;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketAdapterProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents.team.TeamsPacketAdapterImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +37,10 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider {
   @Override
   public @NotNull LineRenderingStrategy lineRenderingStrategy(@NotNull Player player) {
     ServerVersion serverVer = packetEvents.getServerManager().getVersion();
+    return serverVer.isNewerThanOrEquals(ServerVersion.V_1_13) ? LineRenderingStrategy.MODERN : LineRenderingStrategy.LEGACY;
+
+    // Waiting for packetevents to fix https://github.com/retrooper/packetevents/issues/1024
+    /*
     if (serverVer.isOlderThan(ServerVersion.V_1_13)) {
       return LineRenderingStrategy.LEGACY;
     }
@@ -49,5 +51,6 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider {
 
     ClientVersion clientVer = packetEvents.getPlayerManager().getClientVersion(player);
     return clientVer.isNewerThanOrEquals(ClientVersion.V_1_13) ? LineRenderingStrategy.MODERN : LineRenderingStrategy.LEGACY;
+    */
   }
 }
