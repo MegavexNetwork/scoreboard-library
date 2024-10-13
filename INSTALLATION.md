@@ -75,7 +75,7 @@ like [Shadow](https://imperceptiblethoughts.com/shadow/).
   </dependency>
   <dependency>
     <groupId>net.megavex</groupId>
-    <artifactId>scoreboard-library-v1_8_R3</artifactId>
+    <artifactId>scoreboard-library-legacy</artifactId>
     <version>{VERSION HERE}</version>
     <scope>runtime</scope>
   </dependency>
