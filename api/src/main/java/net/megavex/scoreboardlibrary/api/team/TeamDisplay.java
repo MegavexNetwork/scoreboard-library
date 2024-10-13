@@ -127,6 +127,7 @@ public interface TeamDisplay {
 
   /**
    * @return name tag visibility rule value
+   * @since Minecraft 1.8
    */
   @NotNull NameTagVisibility nameTagVisibility();
 
@@ -134,6 +135,7 @@ public interface TeamDisplay {
    * Updates the name tag visibility rule.
    *
    * @param nameTagVisibility new rule value
+   * @since Minecraft 1.8
    */
   @NotNull TeamDisplay nameTagVisibility(@NotNull NameTagVisibility nameTagVisibility);
 
@@ -156,6 +158,7 @@ public interface TeamDisplay {
    * It is also used for displaying team specific sidebars with the {@link ObjectiveDisplaySlot.TeamSidebar}} display slot.
    *
    * @return player color
+   * @since Minecraft 1.8
    */
   @Nullable NamedTextColor playerColor();
 
@@ -164,6 +167,7 @@ public interface TeamDisplay {
    *
    * @param playerColor new player color
    * @see #playerColor()
+   * @since Minecraft 1.8
    */
   @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor);
 }

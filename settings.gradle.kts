@@ -14,6 +14,10 @@ project(":packetevents").projectDir = file("versions/packetevents")
 include(":modern")
 project(":modern").projectDir = file("versions/modern")
 
+include(":legacy")
+project(":legacy").projectDir = file("versions/legacy")
+
+// For backwards compatibility
 include(":v1_8_R3")
 project(":v1_8_R3").projectDir = file("versions/v1_8_R3")
 

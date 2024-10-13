@@ -1,48 +1,41 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.v1_8_R3;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.legacy;
 
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.minecraft.server.v1_8_R3.EnumChatFormat;
-import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Objects;
 
 import static net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil.limitLegacyText;
 
 public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  private final PacketSender<Packet<?>> sender;
   private final String teamName;
-  private PacketPlayOutScoreboardTeam removePacket;
+  private Object removePacket;
 
-  public TeamsPacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull String teamName) {
-    this.sender = sender;
+  public TeamsPacketAdapterImpl(@NotNull String teamName) {
     this.teamName = teamName;
   }
 
   @Override
   public void removeTeam(@NotNull Iterable<Player> players) {
     if (removePacket == null) {
-      removePacket = new PacketPlayOutScoreboardTeam();
+      removePacket = PacketAccessors.TEAM_CONSTRUCTOR.invoke();
       PacketAccessors.TEAM_NAME_FIELD.set(removePacket, teamName);
       PacketAccessors.TEAM_MODE_FIELD.set(removePacket, TeamConstants.MODE_REMOVE);
     }
 
-    sender.sendPacket(players, removePacket);
+    LegacyPacketSender.INSTANCE.sendPacket(players, removePacket);
   }
 
   @Override
@@ -64,38 +57,44 @@ public class TeamsPacketAdapterImpl implements TeamsPacketAdapter {
 
     @Override
     public void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-      PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+      Object packet = PacketAccessors.TEAM_CONSTRUCTOR.invoke();
       PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName);
       PacketAccessors.TEAM_MODE_FIELD.set(packet, TeamConstants.mode(packetType));
       PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, entries);
-      sender.sendPacket(players, packet);
+      LegacyPacketSender.INSTANCE.sendPacket(players, packet);
     }
 
     @Override
     public void sendProperties(@NotNull PropertiesPacketType packetType, @NotNull Collection<Player> players) {
       LocalePacketUtil.sendLocalePackets(
-        sender,
+        LegacyPacketSender.INSTANCE,
         players,
         locale -> {
           String displayName = limitLegacyText(toLegacy(properties.displayName(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
           String prefix = limitLegacyText(toLegacy(properties.prefix(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
           String suffix = limitLegacyText(toLegacy(properties.suffix(), locale), TeamConstants.LEGACY_CHAR_LIMIT);
 
-          PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
+          Object packet = PacketAccessors.TEAM_CONSTRUCTOR.invoke();
           PacketAccessors.TEAM_NAME_FIELD.set(packet, teamName);
           PacketAccessors.TEAM_MODE_FIELD.set(packet, TeamConstants.mode(packetType));
           PacketAccessors.TEAM_DISPLAY_NAME_FIELD.set(packet, displayName);
           PacketAccessors.TEAM_PREFIX_FIELD.set(packet, prefix);
           PacketAccessors.TEAM_SUFFIX_FIELD.set(packet, suffix);
-          PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
-
-          NamedTextColor color = properties.playerColor();
-          if (color != null) {
-            String name = NamedTextColor.NAMES.key(color);
-            PacketAccessors.TEAM_COLOR_FIELD.set(packet, Objects.requireNonNull(EnumChatFormat.b(name)).b());
+          PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
+          if (PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD != null) {
+            PacketAccessors.TEAM_NAME_TAG_VISIBILITY_FIELD.set(packet, properties.nameTagVisibility().key());
           }
 
-          PacketAccessors.TEAM_RULES_FIELD.set(packet, properties.packOptions());
+          NamedTextColor color = properties.playerColor();
+          if (PacketAccessors.TEAM_COLOR_FIELD != null && color != null) {
+            int teamColorField = ChatColorUtil.getColorIndex(color);
+            PacketAccessors.TEAM_COLOR_FIELD.set(packet, teamColorField);
+          }
+
+          if (PacketAccessors.TEAM_COLLISION_RULE_FIELD != null) {
+            PacketAccessors.TEAM_COLLISION_RULE_FIELD.set(packet, properties.collisionRule().key());
+          }
+
           if (packetType == PropertiesPacketType.CREATE) {
             PacketAccessors.TEAM_ENTRIES_FIELD.set(packet, ImmutableList.copyOf(properties.syncedEntries()));
           }

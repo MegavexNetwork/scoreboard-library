@@ -24,6 +24,10 @@ public class WrapperPlayServerTeamsLegacy extends PacketWrapper<WrapperPlayServe
 
   @Override
   public void write() {
+    if (serverVersion.isNewerThanOrEquals(ServerVersion.V_1_13)) {
+      throw new IllegalStateException("Tried to serialize legacy teams packet on 1.13+ server version");
+    }
+
     writeString(teamName, 16);
     writeByte(teamMode.ordinal());
     writeString(properties.displayName());

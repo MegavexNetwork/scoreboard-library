@@ -28,11 +28,15 @@ public final class ObjectiveConstants {
   }
 
   public static int displaySlotIndex(@NotNull ObjectiveDisplaySlot slot) {
+    return displaySlotIndex(slot, true);
+  }
+
+  public static int displaySlotIndex(@NotNull ObjectiveDisplaySlot slot, boolean isAbove1_8) {
     if (slot instanceof ObjectiveDisplaySlot.PlayerList) {
       return 0;
     }
 
-    if (slot instanceof ObjectiveDisplaySlot.Sidebar) {
+    if (slot instanceof ObjectiveDisplaySlot.Sidebar || (!isAbove1_8 && slot instanceof ObjectiveDisplaySlot.TeamSidebar)) {
       return 1;
     }
 
