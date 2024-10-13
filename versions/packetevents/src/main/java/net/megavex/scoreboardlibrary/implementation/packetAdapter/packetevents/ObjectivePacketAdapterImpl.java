@@ -1,6 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.packetevents;
 
 import com.github.retrooper.packetevents.PacketEventsAPI;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import com.github.retrooper.packetevents.wrapper.PacketWrapper;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisplayScoreboard;
@@ -107,12 +108,10 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
       objectiveName
     );
 
-    for (Player player : players) {
-      if (packetEvents.getPlayerManager().getClientVersion(player).isNewerThanOrEquals(ClientVersion.V_1_20_3)) {
-        provider.sendPacket(players, newPacket);
-      } else {
-        provider.sendPacket(players, oldPacket);
-      }
+    if (packetEvents.getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_20_3)) {
+      provider.sendPacket(players, newPacket);
+    } else {
+      provider.sendPacket(players, oldPacket);
     }
   }
 
