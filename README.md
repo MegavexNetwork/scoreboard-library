@@ -8,7 +8,7 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 
 ## Features
 
-- Sidebars. Up to 44 characters (depends on the formatting) for 1.12.2 and below, no limit for newer versions
+- Sidebars. Up to 42 characters (depends on the formatting) for 1.12.2-, no limit for newer versions
 - Teams. Supports showing different properties (display name, prefix, entries etc.) of the same team to different
   players
 - Objectives.
@@ -24,8 +24,8 @@ Join the [Discord](https://discord.gg/v7nmTDTW8W) or create an issue for support
 ## Available Packet Adapters
 
 - **modern.** Supports 1.17-1.21.1. Can take advantage of [Paper](https://papermc.io)'s native adventure support to be more efficient.
+- **legacy.** Supports 1.7.10-1.12.2.
 - **PacketEvents.** Supports 1.8+. Requires [PacketEvents 2.0](https://github.com/retrooper/packetevents/tree/2.0) to be shaded or installed as a plugin.
-- **1.8.8.**
 
 > [!NOTE]  
 > You can add multiple packet adapters, the best one will automatically be picked depending on the server version.
