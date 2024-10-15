@@ -1,32 +1,29 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.MinecraftClasses;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 
-public final class PacketUtil {
+public final class ModernPacketSender implements PacketSender<Object> {
+  public static final ModernPacketSender INSTANCE = new ModernPacketSender();
+
   private static final MethodHandle GET_HANDLE;
   private static final MethodHandle PLAYER_CONNECTION;
   private static final MethodHandle SEND_PACKET;
 
-  private PacketUtil() {
+  private ModernPacketSender() {
   }
 
   static {
-    String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
-
-    Class<?> craftPlayer;
-    try {
-      craftPlayer = Class.forName(cbPackage + ".entity.CraftPlayer");
-    } catch (ClassNotFoundException e) {
-      throw new ExceptionInInitializerError(e);
-    }
+    Class<?> craftPlayer = ReflectUtil.getClassOrThrow(MinecraftClasses.craftBukkit("entity.CraftBukkit"));
 
     MethodHandles.Lookup lookup = MethodHandles.publicLookup();
     MethodType methodType = MethodType.methodType(ServerPlayer.class);
@@ -71,7 +68,8 @@ public final class PacketUtil {
     SEND_PACKET = sendPacket;
   }
 
-  public static void sendPacket(Player player, Packet<?> packet) {
+  @Override
+  public void sendPacket(Player player, Object packet) {
     try {
       ServerPlayer handle = (ServerPlayer) GET_HANDLE.invoke(player);
       ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) PLAYER_CONNECTION.invoke(handle);

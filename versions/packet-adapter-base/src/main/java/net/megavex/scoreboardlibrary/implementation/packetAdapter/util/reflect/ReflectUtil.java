@@ -57,7 +57,7 @@ public class ReflectUtil {
 
   public static @NotNull Class<?> getClassOrThrow(String name) {
     Class<?> c = getOptionalClass(name);
-    if (c == null){
+    if (c == null) {
       throw new IllegalStateException("Class " + name + " not found");
     }
     return c;
@@ -104,6 +104,7 @@ public class ReflectUtil {
     );
   }
 
+
   public static <T> @Nullable ConstructorAccessor<T> findOptionalConstructor(@NotNull Class<T> clazz, @NotNull Class<?>... args) {
     try {
       MethodHandle handle = LOOKUP.findConstructor(clazz, MethodType.methodType(void.class, args));
@@ -120,6 +121,23 @@ public class ReflectUtil {
     }
     return accessor;
   }
+
+  // TEMP ---
+  public static <T> @NotNull PacketConstructor<T> getEmptyConstructorUnchecked(@NotNull Class<?> packetClass) {
+    //noinspection unchecked
+    return (PacketConstructor<T>) getEmptyConstructor(packetClass);
+  }
+
+  public static <T> @Nullable ConstructorAccessor<T> findOptionalConstructorUnchecked(@NotNull Class<?> clazz, @NotNull Class<?>... args) {
+    //noinspection unchecked
+    return (ConstructorAccessor<T>) findOptionalConstructor(clazz, args);
+  }
+
+  public static <T> @NotNull ConstructorAccessor<T> findConstructorUnchecked(@NotNull Class<?> clazz, @NotNull Class<?>... args) {
+    //noinspection unchecked
+    return (ConstructorAccessor<T>) findConstructor(clazz, args);
+  }
+  // ---
 
   public static <T> @NotNull PacketConstructor<T> getEmptyConstructor(@NotNull Class<T> packetClass) {
     try {

@@ -3,17 +3,13 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ModernPacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket.Parameters;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,21 +21,17 @@ import java.util.Locale;
 import java.util.Optional;
 
 public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  protected final PacketSender<Packet<?>> sender;
-  protected final ComponentProvider componentProvider;
   protected final String teamName;
-  private ClientboundSetPlayerTeamPacket removePacket;
+  private Object removePacket;
 
-  public AbstractTeamsPacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
-    this.sender = sender;
-    this.componentProvider = componentProvider;
+  public AbstractTeamsPacketAdapterImpl(@NotNull String teamName) {
     this.teamName = teamName;
   }
 
-  public static ClientboundSetPlayerTeamPacket createTeamsPacket(
+  public static Object createTeamsPacket(
     int method,
     @NotNull String name,
-    @Nullable Parameters parameters,
+    @Nullable Object parameters,
     @Nullable Collection<String> entries
   ) {
     return PacketAccessors.TEAM_PACKET_CONSTRUCTOR.invoke(
@@ -55,7 +47,7 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
     if (removePacket == null) {
       removePacket = createTeamsPacket(TeamConstants.MODE_REMOVE, teamName, null, null);
     }
-    sender.sendPacket(players, removePacket);
+    ModernPacketSender.INSTANCE.sendPacket(players, removePacket);
   }
 
   public abstract class TeamDisplayPacketAdapterImpl implements TeamDisplayPacketAdapter {
@@ -67,10 +59,10 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
 
     @Override
     public void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-      sender.sendPacket(players, createTeamsPacket(TeamConstants.mode(packetType), teamName, null, entries));
+      ModernPacketSender.INSTANCE.sendPacket(players, createTeamsPacket(TeamConstants.mode(packetType), teamName, null, entries));
     }
 
-    protected void fillParameters(@NotNull Parameters parameters, @UnknownNullability Locale locale) {
+    protected void fillParameters(Object parameters, @UnknownNullability Locale locale) {
       String nameTagVisibilityKey = properties.nameTagVisibility().key();
       PacketAccessors.NAME_TAG_VISIBILITY_FIELD.set(parameters, nameTagVisibilityKey);
 

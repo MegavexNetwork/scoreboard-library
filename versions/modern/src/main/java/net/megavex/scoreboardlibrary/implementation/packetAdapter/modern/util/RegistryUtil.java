@@ -1,5 +1,7 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
 
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.MinecraftClasses;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.core.RegistryAccess;
 import org.bukkit.Bukkit;
 
@@ -10,14 +12,7 @@ public final class RegistryUtil {
   public static final RegistryAccess MINECRAFT_REGISTRY;
 
   static {
-    String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
-    Class<?> craftRegistry;
-    try {
-      craftRegistry = Class.forName(cbPackage + ".CraftRegistry");
-    } catch (ClassNotFoundException e) {
-      throw new ExceptionInInitializerError(e);
-    }
-
+    Class<?> craftRegistry = ReflectUtil.getClassOrThrow(MinecraftClasses.craftBukkit("CraftRegistry"));
     try {
       Method method = craftRegistry.getDeclaredMethod("getMinecraftRegistry");
       MINECRAFT_REGISTRY = (RegistryAccess) method.invoke(null);
