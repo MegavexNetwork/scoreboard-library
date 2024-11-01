@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
 
 public final class PacketUtil {
   private static final MethodHandle GET_HANDLE;
@@ -36,19 +37,20 @@ public final class PacketUtil {
       throw new ExceptionInInitializerError(e);
     }
 
-    MethodHandle playerConnection;
-    try {
-      playerConnection = lookup.findGetter(ServerPlayer.class, "c", ServerGamePacketListenerImpl.class);
-    } catch (NoSuchFieldException e) {
-      try {
-        playerConnection = lookup.findGetter(ServerPlayer.class, "b", ServerGamePacketListenerImpl.class);
-      } catch (NoSuchFieldException | IllegalAccessException ex) {
-        throw new ExceptionInInitializerError(ex);
+    MethodHandle playerConnection = null;
+    for (Field field : ServerPlayer.class.getFields()) {
+      if (field.getType() == ServerGamePacketListenerImpl.class) {
+        try {
+          playerConnection = lookup.unreflectGetter(field);
+        } catch (IllegalAccessException e) {
+          throw new ExceptionInInitializerError(e);
+        }
       }
-    } catch (IllegalAccessException e) {
-      throw new ExceptionInInitializerError(e);
     }
-
+    
+    if (playerConnection == null) {
+      throw new ExceptionInInitializerError("failed to find player connection field");
+    }
     PLAYER_CONNECTION = playerConnection;
 
     MethodType sendMethodType = MethodType.methodType(void.class, Packet.class);

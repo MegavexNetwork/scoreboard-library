@@ -87,6 +87,8 @@ public final class PacketAdapterLoader {
       case "1.20.6":
       case "1.21":
       case "1.21.1":
+      case "1.21.2":
+      case "1.21.3":
         return tryLoadImplementationClass(MODERN);
       default:
         // Hide from relocation checkers
