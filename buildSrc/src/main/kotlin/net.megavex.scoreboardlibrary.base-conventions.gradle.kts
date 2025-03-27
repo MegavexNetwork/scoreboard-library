@@ -19,9 +19,6 @@ repositories {
 }
 
 dependencies {
-  compileOnly(libs.spigotApi)
-  compileOnly(libs.bundles.adventure)
-
   testImplementation(libs.spigotApi)
   testImplementation(libs.bundles.adventure)
   testImplementation(libs.junitJupiterApi)

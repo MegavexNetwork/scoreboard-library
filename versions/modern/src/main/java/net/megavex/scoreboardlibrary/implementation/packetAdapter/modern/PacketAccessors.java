@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.Team;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 
 import java.util.Collection;
@@ -44,6 +45,26 @@ public final class PacketAccessors {
     }
     IS_1_20_5_OR_ABOVE = is1_20_5OrAbove;
 
+    boolean is1_21_5OrAbove = false;
+    try {
+      Class.forName("net.minecraft.world.item.component.BlocksAttacks"); // Random 1.21.5 class
+      is1_21_5OrAbove = true;
+    } catch (ClassNotFoundException ignored) {
+    }
+    IS_1_21_5_OR_ABOVE = is1_21_5OrAbove;
+
+    if (is1_21_5OrAbove) {
+      NAME_TAG_VISIBILITY_FIELD_1_21_5 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, Team.Visibility.class);
+      COLLISION_RULE_FIELD_1_21_5 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, Team.CollisionRule.class);
+      NAME_TAG_VISIBILITY_FIELD_1_21_4 = null;
+      COLLISION_RULE_FIELD_1_21_4 = null;
+    } else {
+      NAME_TAG_VISIBILITY_FIELD_1_21_4 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, String.class);
+      COLLISION_RULE_FIELD_1_21_4 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 1, String.class);
+      NAME_TAG_VISIBILITY_FIELD_1_21_5 = null;
+      COLLISION_RULE_FIELD_1_21_5 = null;
+    }
+
     if (is1_20_5OrAbove) {
       OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(ClientboundSetObjectivePacket.class, 0, Optional.class);
       SCORE_1_20_2_CONSTRUCTOR = null;
@@ -59,7 +80,7 @@ public final class PacketAccessors {
     }
   }
 
-  public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE;
+  public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE, IS_1_21_5_OR_ABOVE;
 
   public static final PacketConstructor<ClientboundSetObjectivePacket> OBJECTIVE_PACKET_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(ClientboundSetObjectivePacket.class);
@@ -92,10 +113,12 @@ public final class PacketAccessors {
     ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 1, net.minecraft.network.chat.Component.class);
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, net.minecraft.network.chat.Component> SUFFIX_FIELD =
     ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 2, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, String> NAME_TAG_VISIBILITY_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, String.class);
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, String> COLLISION_RULE_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 1, String.class);
+
+  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, String> NAME_TAG_VISIBILITY_FIELD_1_21_4;
+  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, String> COLLISION_RULE_FIELD_1_21_4;
+  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Team.Visibility> NAME_TAG_VISIBILITY_FIELD_1_21_5;
+  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Team.CollisionRule> COLLISION_RULE_FIELD_1_21_5;
+
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, ChatFormatting> COLOR_FIELD =
     ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, ChatFormatting.class);
   public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Integer> OPTIONS_FIELD =

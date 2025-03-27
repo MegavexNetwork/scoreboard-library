@@ -14,15 +14,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket.Parameters;
+import net.minecraft.world.scores.Team;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapter {
   protected final PacketSender<Packet<?>> sender;
@@ -71,11 +69,19 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
     }
 
     protected void fillParameters(@NotNull Parameters parameters, @UnknownNullability Locale locale) {
-      String nameTagVisibilityKey = properties.nameTagVisibility().key();
-      PacketAccessors.NAME_TAG_VISIBILITY_FIELD.set(parameters, nameTagVisibilityKey);
+      if (PacketAccessors.IS_1_21_5_OR_ABOVE) {
+        Objects.requireNonNull(PacketAccessors.NAME_TAG_VISIBILITY_FIELD_1_21_5)
+          .set(parameters, Team.Visibility.valueOf(properties.nameTagVisibility().name()));
 
-      String collisionRuleKey = properties.collisionRule().key();
-      PacketAccessors.COLLISION_RULE_FIELD.set(parameters, collisionRuleKey);
+        Objects.requireNonNull(PacketAccessors.COLLISION_RULE_FIELD_1_21_5)
+          .set(parameters, Team.CollisionRule.valueOf(properties.collisionRule().name()));
+      } else {
+        Objects.requireNonNull(PacketAccessors.NAME_TAG_VISIBILITY_FIELD_1_21_4)
+          .set(parameters, properties.nameTagVisibility().key());
+
+        Objects.requireNonNull(PacketAccessors.COLLISION_RULE_FIELD_1_21_4)
+          .set(parameters, properties.collisionRule().key());
+      }
 
       char legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
       PacketAccessors.COLOR_FIELD.set(parameters, ChatFormatting.getByCode(legacyChar));

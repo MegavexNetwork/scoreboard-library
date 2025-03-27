@@ -4,7 +4,9 @@ plugins {
 }
 
 dependencies {
-  compileOnly(project(":scoreboard-library-packet-adapter-base"))
+  compileOnly(project(":scoreboard-library-packet-adapter-base")) {
+    exclude(group = "org.spigotmc", module = "spigot-api")
+  }
   paperweight.paperDevBundle(libs.versions.devBundle.get())
 }
 
@@ -22,6 +24,10 @@ tasks {
 
   assemble {
     dependsOn(reobfJar)
+  }
+
+  javadoc {
+    exclude("**")
   }
 }
 

@@ -1,7 +1,7 @@
 [versions]
 adventure = "4.17.0"
 junitJupiter = "5.11.3"
-devBundle = "1.21.4-R0.1-20241208.061653-9" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.4-R0.1-SNAPSHOT/maven-metadata.xml
+devBundle = "1.21.5-no-moonrise-20250327.163108-2" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.5-no-moonrise-SNAPSHOT/maven-metadata.xml
 
 [libraries]
 spigotApi = "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT" # do not update
@@ -18,7 +18,7 @@ junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", versio
 
 [plugins]
 kotlin = "org.jetbrains.kotlin.jvm:2.1.0"
-paperweight = "io.papermc.paperweight.userdev:1.7.7"
+paperweight = "io.papermc.paperweight.userdev:2.0.0-beta.16"
 
 [bundles]
 adventure = [ "adventureApi", "adventureTextSerializerGson", "adventureTextSerializerLegacy" ]
