@@ -39,6 +39,11 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   }
 
   @Override
+  public @NotNull String objectiveName() {
+    return objectiveName;
+  }
+
+  @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
     WrapperPlayServerDisplayScoreboard packet = new WrapperPlayServerDisplayScoreboard(ObjectiveConstants.displaySlotIndex(slot), objectiveName);
     provider.sendPacket(players, packet);

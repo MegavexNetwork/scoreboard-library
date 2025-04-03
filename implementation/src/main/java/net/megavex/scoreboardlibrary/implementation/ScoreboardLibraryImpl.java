@@ -90,7 +90,7 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
   }
 
   @Override
-  public @NotNull Sidebar createSidebar(int maxLines, @Nullable Locale locale) {
+  public @NotNull Sidebar createSidebar(int maxLines, @Nullable Locale locale, @NotNull String objectiveName) {
     checkClosed();
 
     if (maxLines <= 0) {
@@ -99,9 +99,9 @@ public class ScoreboardLibraryImpl implements ScoreboardLibrary {
 
     AbstractSidebar sidebar;
     if (locale == null) {
-      sidebar = new PlayerDependantLocaleSidebar(this, maxLines);
+      sidebar = new PlayerDependantLocaleSidebar(this, maxLines, objectiveName);
     } else {
-      sidebar = new SingleLocaleSidebar(this, maxLines, locale);
+      sidebar = new SingleLocaleSidebar(this, maxLines, objectiveName, locale);
     }
 
     sidebars().add(sidebar);

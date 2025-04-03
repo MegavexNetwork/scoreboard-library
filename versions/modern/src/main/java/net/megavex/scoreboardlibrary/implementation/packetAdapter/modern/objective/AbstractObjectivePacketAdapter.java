@@ -38,6 +38,11 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   }
 
   @Override
+  public @NotNull String objectiveName() {
+    return objectiveName;
+  }
+
+  @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
     sender.sendPacket(players, createDisplayPacket(slot));
   }

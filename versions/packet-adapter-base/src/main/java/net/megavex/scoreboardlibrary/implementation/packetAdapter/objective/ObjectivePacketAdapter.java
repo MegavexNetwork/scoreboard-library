@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public interface ObjectivePacketAdapter {
+  @NotNull String objectiveName();
+
   void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot);
 
   void sendProperties(

@@ -19,9 +19,9 @@ public final class NoopScoreboardLibrary implements ScoreboardLibrary {
   private boolean closed = false;
 
   @Override
-  public @NotNull Sidebar createSidebar(@Range(from = 1, to = Sidebar.MAX_LINES) int maxLines, @Nullable Locale locale) {
+  public @NotNull Sidebar createSidebar(@Range(from = 1, to = Integer.MAX_VALUE) int maxLines,  @Nullable Locale locale, @NotNull String objectiveName) {
     checkClosed();
-    return new NoopSidebar(maxLines, locale);
+    return new NoopSidebar(maxLines, objectiveName, locale);
   }
 
   @Override

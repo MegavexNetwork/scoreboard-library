@@ -17,7 +17,6 @@ import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
-import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,10 +41,8 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
 
   private final Queue<SidebarTask> taskQueue = new ConcurrentLinkedQueue<>();
 
-  public AbstractSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines) {
+  public AbstractSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int maxLines, @NotNull String objectiveName) {
     this.scoreboardLibrary = scoreboardLibrary;
-
-    String objectiveName = RandomStringUtils.randomAlphanumeric(16);
     this.packetAdapter = scoreboardLibrary.packetAdapter().createObjectiveAdapter(objectiveName);
     this.lines = new GlobalLineInfo[maxLines];
   }
@@ -105,6 +102,11 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   @Override
   public final @Range(from = 1, to = MAX_LINES) int maxLines() {
     return lines.length;
+  }
+
+  @Override
+  public @NotNull String objectiveName() {
+    return packetAdapter.objectiveName();
   }
 
   @Override

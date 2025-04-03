@@ -34,6 +34,11 @@ public interface Sidebar {
   @Range(from = 1, to = Integer.MAX_VALUE) int maxLines();
 
   /**
+   * @return objective name used by this sidebar
+   */
+  @NotNull String objectiveName();
+
+  /**
    * @return locale which is used for translating {@link net.kyori.adventure.text.TranslatableComponent}s,
    * or null if it depends on each player's client locale.
    * @see ScoreboardLibrary#createSidebar(int, Locale)

@@ -16,8 +16,8 @@ public class SingleLocaleSidebar extends AbstractSidebar {
   private final LocaleLineHandler sidebar;
   private final Set<Player> internalPlayers;
 
-  public SingleLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int size, @NotNull Locale locale) {
-    super(scoreboardLibrary, size);
+  public SingleLocaleSidebar(@NotNull ScoreboardLibraryImpl scoreboardLibrary, int size, @NotNull String objectiveName, @NotNull Locale locale) {
+    super(scoreboardLibrary, size, objectiveName);
     this.locale = locale;
     this.sidebar = new LocaleLineHandler(this, locale);
     this.internalPlayers = CollectionProvider.set(8);

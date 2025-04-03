@@ -27,6 +27,11 @@ public class ObjectivePacketAdapterImpl implements ObjectivePacketAdapter {
   }
 
   @Override
+  public @NotNull String objectiveName() {
+    return objectiveName;
+  }
+
+  @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
     Object packet = PacketAccessors.DISPLAY_OBJECTIVE_CONSTRUCTOR.invoke();
     PacketAccessors.DISPLAY_OBJECTIVE_POSITION.set(packet, ObjectiveConstants.displaySlotIndex(slot, false));

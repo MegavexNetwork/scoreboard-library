@@ -17,14 +17,16 @@ import static net.kyori.adventure.text.Component.empty;
 class NoopSidebar implements Sidebar {
   private final Set<Player> players = new HashSet<>();
   private final int maxLines;
+  private final String objectiveName;
   private final Locale locale;
   private final Component[] lines;
   private Component title = empty();
   private boolean closed;
 
-  NoopSidebar(int maxLines, @Nullable Locale locale) {
+  NoopSidebar(int maxLines, String objectiveName, @Nullable Locale locale) {
     this.maxLines = maxLines;
     this.locale = locale;
+    this.objectiveName = objectiveName;
     this.lines = new Component[maxLines];
   }
 
@@ -60,6 +62,11 @@ class NoopSidebar implements Sidebar {
   @Override
   public @Range(from = 1, to = MAX_LINES) int maxLines() {
     return maxLines;
+  }
+
+  @Override
+  public @NotNull String objectiveName() {
+    return objectiveName;
   }
 
   @Override
