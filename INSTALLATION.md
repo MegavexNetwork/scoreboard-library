@@ -29,7 +29,7 @@ dependencies {
   // https://github.com/retrooper/packetevents-example/blob/24f0c842d47362aef122b794dea29b8fee113fa3/thread-safe-listener/src/main/java/main/Main.java
 
   // If targeting a Minecraft version without native Adventure support, add it as well:
-  implementation("net.kyori:adventure-platform-bukkit:4.0.1")
+  implementation("net.kyori:adventure-platform-bukkit:4.3.4")
 }
 ```
 
