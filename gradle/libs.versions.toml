@@ -13,7 +13,7 @@ adventureTextSerializerGson = { module = "net.kyori:adventure-text-serializer-gs
 adventureTextSerializerLegacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
 
 junitJupiter = "org.junit.jupiter:junit-jupiter:5.12.2"
-junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.12.1"
+junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.12.2"
 
 [plugins]
 kotlin = "org.jetbrains.kotlin.jvm:2.1.20"
