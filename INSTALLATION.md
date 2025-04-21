@@ -34,7 +34,7 @@ dependencies {
 ```
 
 You will need to shade these dependencies and relocate them with something
-like [Shadow](https://imperceptiblethoughts.com/shadow/).
+like [Shadow](https://gradleup.com/shadow/).
 
 ## Maven
 
