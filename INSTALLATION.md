@@ -1,6 +1,6 @@
 # Installation
 
-Latest version: `2.2.2`
+Latest version: `2.3.0`
 
 ## Gradle
 
@@ -34,7 +34,7 @@ dependencies {
 ```
 
 You will need to shade these dependencies and relocate them with something
-like [Shadow](https://imperceptiblethoughts.com/shadow/).
+like [Shadow](https://gradleup.com/shadow/).
 
 ## Maven
 
