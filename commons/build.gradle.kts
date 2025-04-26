@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
   api(project(":scoreboard-library-api"))
+  compileOnly(libs.spigotApi)
 }

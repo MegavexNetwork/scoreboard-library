@@ -12,6 +12,7 @@ kotlin {
 dependencies {
   api(project(":scoreboard-library-api"))
   testImplementation(kotlin("test"))
+  compileOnly(libs.spigotApi)
 }
 
 tasks.withType<KotlinCompile>().configureEach {

@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-  compileOnlyApi(libs.spigotApi)
   compileOnlyApi(libs.bundles.adventure)
+  compileOnly(libs.spigotApi)
 }

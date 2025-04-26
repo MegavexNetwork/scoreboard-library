@@ -9,4 +9,5 @@ repositories {
 dependencies {
   compileOnly(project(":scoreboard-library-packet-adapter-base"))
   compileOnly(libs.packetEvents)
+  compileOnly(libs.spigotApi)
 }

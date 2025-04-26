@@ -5,4 +5,5 @@ plugins {
 dependencies {
   api(project(":scoreboard-library-api"))
   implementation(project(":scoreboard-library-packet-adapter-base"))
+  compileOnly(libs.spigotApi)
 }
