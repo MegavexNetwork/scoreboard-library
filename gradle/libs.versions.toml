@@ -1,5 +1,5 @@
 [versions]
-adventure = "4.20.0"
+adventure = "4.23.0"
 devBundle = "1.21.5-R0.1-20250412.153935-1" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.5-R0.1-SNAPSHOT/maven-metadata.xml
 
 [libraries]
