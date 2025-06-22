@@ -58,9 +58,25 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
 
   @Override
   public boolean addEntry(@NotNull String entry) {
+    for (ScoreboardTeam otherTeam : team.teamManager().teams()) {
+      TeamDisplay defaultDisp = otherTeam.defaultDisplay();
+      if (defaultDisp.entries().contains(entry)) {
+        defaultDisp.removeEntry(entry);
+      }
+
+      for (Player p : Bukkit.getOnlinePlayers()) {
+        TeamDisplay playerDisp = otherTeam.display(p);
+        if (playerDisp != defaultDisp && playerDisp.entries().contains(entry)) {
+          playerDisp.removeEntry(entry);
+        }
+      }
+    }
+
     if (!entries.contains(entry)) {
       entries.add(entry);
-      team.teamManager().taskQueue().add(new TeamManagerTask.AddEntries(this, Collections.singleton(entry)));
+      team.teamManager()
+        .taskQueue()
+        .add(new TeamManagerTask.AddEntries(this, Collections.singleton(entry)));
       return true;
     }
 
