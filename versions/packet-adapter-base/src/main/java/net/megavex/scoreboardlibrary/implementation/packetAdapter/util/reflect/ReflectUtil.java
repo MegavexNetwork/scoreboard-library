@@ -8,7 +8,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Optional;
 
 public class ReflectUtil {
   // Inspired by
@@ -55,25 +54,33 @@ public class ReflectUtil {
   private ReflectUtil() {
   }
 
-  public static @NotNull Class<?> getClassOrThrow(String name) {
-    Class<?> c = getOptionalClass(name);
-    if (c == null){
-      throw new IllegalStateException("Class " + name + " not found");
+  public static @NotNull Class<?> getClassOrThrow(String... names) {
+    Class<?> c = getOptionalClass(names);
+    if (c == null) {
+      throw new IllegalStateException("Class with names either of " + String.join(", ", names) + " not found");
     }
     return c;
   }
 
-  public static @Nullable Class<?> getOptionalClass(String name) {
-    try {
-      return Class.forName(name);
-    } catch (ClassNotFoundException e) {
-      return null;
+  public static @Nullable Class<?> getOptionalClass(String... names) {
+    for (String name : names) {
+      try {
+        return Class.forName(name);
+      } catch (ClassNotFoundException ignored) {
+      }
     }
+    return null;
   }
 
-  public static @NotNull Object getEnumInstance(@NotNull Class<?> clazz, @NotNull String name) {
-    //noinspection unchecked,rawtypes
-    return Enum.valueOf((Class<? extends Enum>) clazz, name);
+  public static @NotNull Object getEnumInstance(@NotNull Class<?> clazz, @NotNull String... names) {
+    for (String name : names) {
+      try {
+        //noinspection unchecked,rawtypes
+        return Enum.valueOf((Class<? extends Enum>) clazz, name);
+      } catch (IllegalArgumentException ignored){
+      }
+    }
+    throw new IllegalStateException("Enum " + clazz.getName() + " instance with names either of  " + String.join(",", names) + " not found");
   }
 
   public static <T, V> @NotNull FieldAccessor<T, V> findField(@NotNull Class<T> clazz, int index, @NotNull Class<V> valueClass) {

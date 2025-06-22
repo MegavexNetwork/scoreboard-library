@@ -15,7 +15,6 @@ import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
-import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +63,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
       packet = new ClientboundResetScorePacket(entry, objectiveName);
     } else {
       packet = Objects.requireNonNull(PacketAccessors.SCORE_1_20_2_CONSTRUCTOR)
-        .invoke(ServerScoreboard.Method.REMOVE, objectiveName, entry, 0);
+        .invoke(PacketAccessors.SCORE_1_20_2_METHOD_REMOVE, objectiveName, entry, 0);
     }
     sender.sendPacket(players, packet);
   }
@@ -94,7 +93,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
         .invoke(entry, objectiveName, value, nmsDisplay, numberFormat);
     } else {
       return Objects.requireNonNull(PacketAccessors.SCORE_1_20_2_CONSTRUCTOR)
-        .invoke(ServerScoreboard.Method.CHANGE, objectiveName, entry, value);
+        .invoke(PacketAccessors.SCORE_1_20_2_METHOD_CHANGE, objectiveName, entry, value);
     }
   }
 
