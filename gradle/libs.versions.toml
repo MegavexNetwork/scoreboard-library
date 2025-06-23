@@ -16,7 +16,7 @@ junitJupiter = "org.junit.jupiter:junit-jupiter:5.13.1"
 junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.1"
 
 [plugins]
-kotlin = "org.jetbrains.kotlin.jvm:2.1.21"
+kotlin = "org.jetbrains.kotlin.jvm:2.2.0"
 paperweight = "io.papermc.paperweight.userdev:2.0.0-beta.17"
 
 [bundles]
