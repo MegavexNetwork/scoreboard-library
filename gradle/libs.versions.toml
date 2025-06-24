@@ -12,7 +12,7 @@ adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
 adventureTextSerializerGson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "adventure" }
 adventureTextSerializerLegacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
 
-junitJupiter = "org.junit.jupiter:junit-jupiter:5.13.1"
+junitJupiter = "org.junit.jupiter:junit-jupiter:5.13.2"
 junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.1"
 
 [plugins]
