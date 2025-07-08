@@ -141,4 +141,9 @@ public interface ScoreboardObjective {
    * @param entry entry to remove score of
    */
   @NotNull ScoreboardObjective removeScore(@NotNull String entry);
+
+  /**
+   * Refreshes the objective.
+   */
+  void refresh();
 }

@@ -1,17 +1,16 @@
 package net.megavex.scoreboardlibrary.api.sidebar;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
+import java.util.Collection;
+import java.util.Locale;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import java.util.Collection;
-import java.util.Locale;
 
 /**
  * Represents a sidebar.
@@ -31,7 +30,8 @@ public interface Sidebar {
   /**
    * @return max amount of lines this sidebar can have
    */
-  @Range(from = 1, to = Integer.MAX_VALUE) int maxLines();
+  @Range(from = 1, to = Integer.MAX_VALUE)
+  int maxLines();
 
   /**
    * @return objective name used by this sidebar
@@ -90,6 +90,22 @@ public interface Sidebar {
     }
   }
 
+  /**
+   * Refreshes a line in this sidebar.
+   *
+   * @param index line index
+   */
+  void refreshLine(@Range(from = 0, to = Integer.MAX_VALUE - 1) int index);
+
+  /**
+   * Refreshes all lines in this sidebar.
+   */
+  default void refreshLines() {
+    for (int i = 0; i < maxLines(); i++) {
+      refreshLine(i);
+    }
+  }
+
   // Title
 
   /**
@@ -103,6 +119,11 @@ public interface Sidebar {
    * @param title title
    */
   void title(@NotNull ComponentLike title);
+
+  /**
+   * Refresh the title of the sidebar.
+   */
+  void refreshTitle();
 
   // Players
 

@@ -68,4 +68,8 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
     scores.remove(entry);
     return this;
   }
+
+  @Override
+  public void refresh() {
+  }
 }

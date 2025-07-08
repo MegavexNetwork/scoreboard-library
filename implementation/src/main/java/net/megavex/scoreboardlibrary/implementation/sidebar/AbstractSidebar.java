@@ -1,10 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.sidebar;
 
 import com.google.common.base.Preconditions;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
@@ -17,14 +13,21 @@ import net.megavex.scoreboardlibrary.implementation.player.PlayerDisplayable;
 import net.megavex.scoreboardlibrary.implementation.player.ScoreboardLibraryPlayer;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.GlobalLineInfo;
 import net.megavex.scoreboardlibrary.implementation.sidebar.line.LocaleLineHandler;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslator;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Consumer;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -127,6 +130,12 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   }
 
   @Override
+  public void refreshLine(@Range(from = 0, to = Integer.MAX_VALUE - 1) final int index) {
+    checkClosed();
+    taskQueue.add(new SidebarTask.UpdateLine(index, true, false));
+  }
+
+  @Override
   public final @Nullable Component line(@Range(from = 0, to = MAX_LINES - 1) int line) {
     checkClosed();
 
@@ -149,6 +158,12 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
       this.title = component;
       taskQueue.add(SidebarTask.UpdateTitle.INSTANCE);
     }
+  }
+
+  @Override
+  public void refreshTitle() {
+    checkClosed();
+    taskQueue.add(SidebarTask.UpdateTitle.INSTANCE);
   }
 
   public final @NotNull ScoreboardLibraryImpl scoreboardLibrary() {
