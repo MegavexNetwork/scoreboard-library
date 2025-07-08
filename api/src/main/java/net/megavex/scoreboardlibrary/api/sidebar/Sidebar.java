@@ -91,14 +91,14 @@ public interface Sidebar {
   }
 
   /**
-   * Refreshes a line in this sidebar.
+   * Refreshes a specific line, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s.
    *
    * @param index line index
    */
   void refreshLine(@Range(from = 0, to = Integer.MAX_VALUE - 1) int index);
 
   /**
-   * Refreshes all lines in this sidebar.
+   * Refreshes all lines in this sidebar, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s.
    */
   default void refreshLines() {
     for (int i = 0; i < maxLines(); i++) {
@@ -121,7 +121,7 @@ public interface Sidebar {
   void title(@NotNull ComponentLike title);
 
   /**
-   * Refresh the title of the sidebar.
+   * Refresh the title of the sidebar, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s.
    */
   void refreshTitle();
 

@@ -172,7 +172,7 @@ public interface TeamDisplay {
   @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor);
 
   /**
-   * Refreshes the team display.
+   * Refreshes the team display, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s.
    */
   void refresh();
 }
