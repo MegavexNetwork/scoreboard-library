@@ -1,6 +1,6 @@
 # Installation
 
-Latest version: `2.3.3`
+Latest version: `2.4.0`
 
 ## Gradle
 
