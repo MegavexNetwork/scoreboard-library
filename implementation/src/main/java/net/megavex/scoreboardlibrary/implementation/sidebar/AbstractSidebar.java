@@ -132,7 +132,12 @@ public abstract class AbstractSidebar implements Sidebar, PlayerDisplayable {
   @Override
   public void refreshLine(@Range(from = 0, to = Integer.MAX_VALUE - 1) final int index) {
     checkClosed();
-    taskQueue.add(new SidebarTask.UpdateLine(index, true, false));
+    GlobalLineInfo line = lines[index];
+    if (line != null) {
+      boolean updateValue = line.value() != null;
+      boolean updateScore = line.scoreFormat() != null;
+      taskQueue.add(new SidebarTask.UpdateLine(index, updateValue, updateScore));
+    }
   }
 
   @Override
