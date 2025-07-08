@@ -50,6 +50,11 @@ public interface ScoreboardObjective {
   void defaultScoreFormat(@Nullable ScoreFormat defaultScoreFormat);
 
   /**
+   * Refreshes the objective's {@link #value()} and {@link #defaultScoreFormat()}, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s.
+   */
+  void refreshProperties();
+
+  /**
    * Get the score for an entry, or null if the entry has no score.
    *
    * @param entry entry to get score of
@@ -143,7 +148,9 @@ public interface ScoreboardObjective {
   @NotNull ScoreboardObjective removeScore(@NotNull String entry);
 
   /**
-   * Refreshes the objective.
+   * Refreshes a score, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s inside its format.
+   *
+   * @param entry entry to refresh score of
    */
-  void refresh();
+  void refreshScore(@NotNull String entry);
 }

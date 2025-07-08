@@ -99,6 +99,13 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
+  public void refreshProperties() {
+    if (!closed) {
+      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+    }
+  }
+
+  @Override
   public @Nullable ObjectiveScore scoreInfo(@NotNull String entry) {
     return scores.get(entry);
   }
@@ -121,9 +128,10 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
-  public void refresh() {
-    if (!closed) {
-      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+  public void refreshScore(@NotNull String entry) {
+    ObjectiveScore score = scores.get(entry);
+    if (score != null) {
+      taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, score));
     }
   }
 
