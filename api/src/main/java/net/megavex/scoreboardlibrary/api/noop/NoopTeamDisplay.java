@@ -140,4 +140,8 @@ class NoopTeamDisplay implements TeamDisplay {
     this.playerColor = playerColor;
     return this;
   }
+
+  @Override
+  public void refresh() {
+  }
 }

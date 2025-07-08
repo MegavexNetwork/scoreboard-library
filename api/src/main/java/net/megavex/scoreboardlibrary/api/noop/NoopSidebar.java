@@ -82,6 +82,10 @@ class NoopSidebar implements Sidebar {
   }
 
   @Override
+  public void refreshLine(@Range(from = 0, to = Integer.MAX_VALUE - 1) final int index) {
+
+  }
+  @Override
   public @Nullable Component line(int line) {
     checkLineBounds(line);
     checkClosed();
@@ -98,6 +102,11 @@ class NoopSidebar implements Sidebar {
     Preconditions.checkNotNull(title);
     checkClosed();
     this.title = title.asComponent();
+  }
+
+  @Override
+  public void refreshTitle() {
+
   }
 
   private void checkClosed() {

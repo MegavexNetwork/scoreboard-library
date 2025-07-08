@@ -1,18 +1,21 @@
 package net.megavex.scoreboardlibrary.implementation.objective;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveScore;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Queue;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 import static net.kyori.adventure.text.Component.empty;
 
@@ -96,6 +99,13 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
   }
 
   @Override
+  public void refreshProperties() {
+    if (!closed) {
+      taskQueue.add(new ObjectiveManagerTask.UpdateObjective(this));
+    }
+  }
+
+  @Override
   public @Nullable ObjectiveScore scoreInfo(@NotNull String entry) {
     return scores.get(entry);
   }
@@ -115,6 +125,14 @@ public class ScoreboardObjectiveImpl implements ScoreboardObjective {
       taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, null));
     }
     return this;
+  }
+
+  @Override
+  public void refreshScore(@NotNull String entry) {
+    ObjectiveScore score = scores.get(entry);
+    if (score != null) {
+      taskQueue.add(new ObjectiveManagerTask.UpdateScore(this, entry, score));
+    }
   }
 
   public void sendProperties(@NotNull Collection<Player> players, @NotNull PropertiesPacketType packetType) {
