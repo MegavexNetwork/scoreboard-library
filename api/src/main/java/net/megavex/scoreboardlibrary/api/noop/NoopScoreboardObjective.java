@@ -53,6 +53,10 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   }
 
   @Override
+  public void refreshProperties() {
+  }
+
+  @Override
   public @Nullable ObjectiveScore scoreInfo(@NotNull String entry) {
     return scores.get(entry);
   }
@@ -67,5 +71,9 @@ public class NoopScoreboardObjective implements ScoreboardObjective {
   public @NotNull ScoreboardObjective removeScore(@NotNull String entry) {
     scores.remove(entry);
     return this;
+  }
+
+  @Override
+  public void refreshScore(@NotNull String entry) {
   }
 }

@@ -170,4 +170,9 @@ public interface TeamDisplay {
    * @since Minecraft 1.8
    */
   @NotNull TeamDisplay playerColor(@Nullable NamedTextColor playerColor);
+
+  /**
+   * Refreshes the team display, re-rendering any {@link net.kyori.adventure.text.TranslatableComponent}s.
+   */
+  void refresh();
 }

@@ -226,6 +226,11 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
     return this;
   }
 
+  @Override
+  public void refresh() {
+    scheduleUpdate();
+  }
+
   public @NotNull TeamDisplayPacketAdapter packetAdapter() {
     return packetAdapter;
   }
