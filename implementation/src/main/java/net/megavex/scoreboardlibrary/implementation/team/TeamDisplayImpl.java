@@ -13,6 +13,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamP
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,29 +59,32 @@ public class TeamDisplayImpl implements TeamDisplay, ImmutableTeamProperties<Com
 
   @Override
   public boolean addEntry(@NotNull String entry) {
-    for (ScoreboardTeam otherTeam : team.teamManager().teams()) {
-      TeamDisplay defaultDisp = otherTeam.defaultDisplay();
-      if (defaultDisp.entries().contains(entry)) {
-        defaultDisp.removeEntry(entry);
-      }
+    for (Player viewer : players) {
+      for (ScoreboardTeam otherTeam : team.teamManager().teams()) {
+        if (otherTeam == team) continue;
 
-      for (Player p : Bukkit.getOnlinePlayers()) {
-        TeamDisplay playerDisp = otherTeam.display(p);
-        if (playerDisp != defaultDisp && playerDisp.entries().contains(entry)) {
-          playerDisp.removeEntry(entry);
+        TeamDisplay otherDisplay = otherTeam.display(viewer);
+        if (otherDisplay.entries().contains(entry)) {
+          otherDisplay.removeEntry(entry);
         }
       }
     }
 
-    if (!entries.contains(entry)) {
-      entries.add(entry);
-      team.teamManager()
-        .taskQueue()
-        .add(new TeamManagerTask.AddEntries(this, Collections.singleton(entry)));
-      return true;
+    if (players.isEmpty()) {
+      for (ScoreboardTeam otherTeam : team.teamManager().teams()) {
+        if (otherTeam == team) continue;
+
+        TeamDisplay defaultDisplay = otherTeam.defaultDisplay();
+        if (defaultDisplay.entries().contains(entry)) {
+          defaultDisplay.removeEntry(entry);
+        }
+      }
     }
 
-    return false;
+    entries.add(entry);
+    team.teamManager().taskQueue().add(new TeamManagerTask.AddEntries(this, Collections.singleton(entry)));
+    return true;
+
   }
 
   @Override
