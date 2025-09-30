@@ -78,7 +78,7 @@ public final class ComponentSidebarLayout {
     public void drawLine(@NotNull ComponentLike line, @Nullable ScoreFormat scoreFormat) {
       Preconditions.checkNotNull(line);
 
-      if (index < Sidebar.MAX_LINES) {
+      if (index < sidebar.maxLines()) {
         sidebar.line(index++, line, scoreFormat);
       }
     }
