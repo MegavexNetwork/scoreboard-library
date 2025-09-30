@@ -1,11 +1,12 @@
 [versions]
-adventure = "4.23.0"
+adventure = "4.24.0"
+#devBundle = "1.21.9-R0.1-20250930.152416-1" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.9-R0.1-SNAPSHOT/maven-metadata.xml
 devBundle = "1.21.7-R0.1-20250701.225444-12" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.7-R0.1-SNAPSHOT/maven-metadata.xml
 
 [libraries]
 spigotApi = "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT" # do not update
-packetEvents = "com.github.retrooper:packetevents-spigot:2.8.0"
-buildIndra = { module = "net.kyori:indra-common", version = "3.1.3" }
+packetEvents = "com.github.retrooper:packetevents-spigot:2.9.5"
+buildIndra = { module = "net.kyori:indra-common", version = "3.2.0" }
 buildNmcp = "com.gradleup.nmcp:com.gradleup.nmcp.gradle.plugin:0.0.9"
 
 adventureApi = { module = "net.kyori:adventure-api", version.ref = "adventure" }
@@ -16,8 +17,8 @@ junitJupiter = "org.junit.jupiter:junit-jupiter:5.13.3"
 junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.3"
 
 [plugins]
-kotlin = "org.jetbrains.kotlin.jvm:2.2.0"
-paperweight = "io.papermc.paperweight.userdev:2.0.0-beta.18"
+kotlin = "org.jetbrains.kotlin.jvm:2.2.20"
+paperweight = "io.papermc.paperweight.userdev:2.0.0-beta.19"
 
 [bundles]
 adventure = [ "adventureApi", "adventureTextSerializerGson", "adventureTextSerializerLegacy" ]

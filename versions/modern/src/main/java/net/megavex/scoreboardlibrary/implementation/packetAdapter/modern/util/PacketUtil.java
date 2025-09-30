@@ -56,7 +56,7 @@ public final class PacketUtil {
     MethodType sendMethodType = MethodType.methodType(void.class, Packet.class);
     MethodHandle sendPacket = null;
 
-    String[] sendPacketNames = {"a", "sendPacket", "b"};
+    String[] sendPacketNames = {"a", "sendPacket", "b", "send"};
     for (String name : sendPacketNames) {
       try {
         sendPacket = lookup.findVirtual(ServerGamePacketListenerImpl.class, name, sendMethodType);
