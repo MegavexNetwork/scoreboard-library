@@ -17,7 +17,7 @@ junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.13.3"
 
 [plugins]
 kotlin = "org.jetbrains.kotlin.jvm:2.2.0"
-paperweight = "io.papermc.paperweight.userdev:2.0.0-beta.18"
+paperweight = "io.papermc.paperweight.userdev:2.0.0-beta.19"
 
 [bundles]
 adventure = [ "adventureApi", "adventureTextSerializerGson", "adventureTextSerializerLegacy" ]
