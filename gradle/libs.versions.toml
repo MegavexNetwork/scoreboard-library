@@ -1,7 +1,6 @@
 [versions]
 adventure = "4.24.0"
-#devBundle = "1.21.9-R0.1-20250930.152416-1" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.9-R0.1-SNAPSHOT/maven-metadata.xml
-devBundle = "1.21.7-R0.1-20250716.201120-28" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.7-R0.1-SNAPSHOT/maven-metadata.xml
+devBundle = "1.21.10-R0.1-20251007.183616-3" # find latest here: https://repo.papermc.io/repository/maven-snapshots/io/papermc/paper/dev-bundle/1.21.9-R0.1-SNAPSHOT/maven-metadata.xml
 
 [libraries]
 spigotApi = "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT" # do not update
