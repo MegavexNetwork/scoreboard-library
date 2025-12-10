@@ -11,8 +11,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConst
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket.Parameters;
 import net.minecraft.world.scores.Team;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +23,7 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
   protected final PacketSender<Object> sender;
   protected final ComponentProvider componentProvider;
   protected final String teamName;
-  private ClientboundSetPlayerTeamPacket removePacket;
+  private Object removePacket;
 
   public AbstractTeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
     this.sender = sender;
@@ -33,10 +31,10 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
     this.teamName = teamName;
   }
 
-  public static ClientboundSetPlayerTeamPacket createTeamsPacket(
+  public static Object createTeamsPacket(
     int method,
     @NotNull String name,
-    @Nullable Parameters parameters,
+    @Nullable Object parameters,
     @Nullable Collection<String> entries
   ) {
     return PacketAccessors.TEAM_PACKET_CONSTRUCTOR.invoke(
@@ -67,7 +65,7 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
       sender.sendPacket(players, createTeamsPacket(TeamConstants.mode(packetType), teamName, null, entries));
     }
 
-    protected void fillParameters(@NotNull Parameters parameters, @UnknownNullability Locale locale) {
+    protected void fillParameters(@NotNull Object parameters, @UnknownNullability Locale locale) {
       if (PacketAccessors.IS_1_21_5_OR_ABOVE) {
         Objects.requireNonNull(PacketAccessors.NAME_TAG_VISIBILITY_FIELD_1_21_5)
           .set(parameters, Team.Visibility.valueOf(properties.nameTagVisibility().name()));

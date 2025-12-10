@@ -7,9 +7,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.R
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.numbers.NumberFormat;
-import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
-import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
+import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Team;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
@@ -19,9 +17,17 @@ import java.util.Optional;
 
 public final class PacketAccessors {
   public static final Class<?> SET_OBJECTIVE_PKT_CLASS;
+  public static final Class<?> SET_DISPLAY_OBJECTIVE_PKT_CLASS;
+  public static final Class<?> SET_SCORE_PKT_CLASS;
+  public static final Class<?> SET_PLAYER_TEAM_PKT_CLASS;
+  public static final Class<?> TEAM_PARAMETERS_PKT_CLASS;
 
   static {
     SET_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetObjectivePacket");
+    SET_DISPLAY_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket");
+    SET_SCORE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetScorePacket");
+    SET_PLAYER_TEAM_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket");
+    TEAM_PARAMETERS_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters");
   }
 
   static {
@@ -66,37 +72,40 @@ public final class PacketAccessors {
     IS_1_21_6_OR_ABOVE = is1_21_6OrAbove;
 
     if (is1_21_5OrAbove) {
-      NAME_TAG_VISIBILITY_FIELD_1_21_5 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, Team.Visibility.class);
-      COLLISION_RULE_FIELD_1_21_5 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, Team.CollisionRule.class);
+      NAME_TAG_VISIBILITY_FIELD_1_21_5 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, Team.Visibility.class);
+      COLLISION_RULE_FIELD_1_21_5 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, Team.CollisionRule.class);
       NAME_TAG_VISIBILITY_FIELD_1_21_4 = null;
       COLLISION_RULE_FIELD_1_21_4 = null;
     } else {
-      NAME_TAG_VISIBILITY_FIELD_1_21_4 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, String.class);
-      COLLISION_RULE_FIELD_1_21_4 = ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 1, String.class);
+      NAME_TAG_VISIBILITY_FIELD_1_21_4 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, String.class);
+      COLLISION_RULE_FIELD_1_21_4 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 1, String.class);
       NAME_TAG_VISIBILITY_FIELD_1_21_5 = null;
       COLLISION_RULE_FIELD_1_21_5 = null;
     }
 
     if (is1_20_5OrAbove) {
       OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, Optional.class);
-      SCORE_1_20_2_CONSTRUCTOR = null;
+      SCORE_1_20_5_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, String.class, String.class, int.class, Optional.class, Optional.class);
       SCORE_1_20_3_CONSTRUCTOR = null;
+      SCORE_1_20_2_CONSTRUCTOR = null;
       SCORE_1_20_2_METHOD_CHANGE = null;
       SCORE_1_20_2_METHOD_REMOVE = null;
     } else if (is1_20_3OrAbove) {
       OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, NumberFormat.class);
-      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructor(ClientboundSetScorePacket.class, String.class, String.class, int.class, Component.class, NumberFormat.class);
+      SCORE_1_20_5_CONSTRUCTOR = null;
+      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, String.class, String.class, int.class, Component.class, NumberFormat.class);
       SCORE_1_20_2_METHOD_CHANGE = null;
       SCORE_1_20_2_METHOD_REMOVE = null;
       SCORE_1_20_2_CONSTRUCTOR = null;
     } else {
       OBJECTIVE_NUMBER_FORMAT_FIELD = null;
+      SCORE_1_20_5_CONSTRUCTOR = null;
       SCORE_1_20_3_CONSTRUCTOR = null;
 
       Class<?> methodClass = ReflectUtil.getClassOrThrow("net.minecraft.server.ServerScoreboard$Method", "net.minecraft.server.ScoreboardServer$Action");
       SCORE_1_20_2_METHOD_CHANGE = ReflectUtil.getEnumInstance(methodClass, "CHANGE", "a");
       SCORE_1_20_2_METHOD_REMOVE = ReflectUtil.getEnumInstance(methodClass, "REMOVE", "b");
-      SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructor(ClientboundSetScorePacket.class, methodClass, String.class, String.class, int.class);
+      SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, methodClass, String.class, String.class, int.class);
     }
   }
 
@@ -115,36 +124,39 @@ public final class PacketAccessors {
   public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
     ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, int.class);
 
-  public static final ConstructorAccessor<ClientboundSetDisplayObjectivePacket> DISPLAY_1_20_1_CONSTRUCTOR =
-    ReflectUtil.findOptionalConstructor(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);
-  public static final FieldAccessor<ClientboundSetDisplayObjectivePacket, String> DISPLAY_OBJECTIVE_NAME =
-    ReflectUtil.findField(ClientboundSetDisplayObjectivePacket.class, 0, String.class);
+  public static final ConstructorAccessor<?> DISPLAY_1_20_2_CONSTRUCTOR =
+    ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, DisplaySlot.class, Objective.class);
+  public static final ConstructorAccessor<?> DISPLAY_1_20_1_CONSTRUCTOR =
+    ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, int.class, Objective.class);
+  public static final FieldAccessor<Object, String> DISPLAY_OBJECTIVE_NAME =
+    ReflectUtil.findFieldUnchecked(SET_DISPLAY_OBJECTIVE_PKT_CLASS, 0, String.class);
 
-  public static final ConstructorAccessor<ClientboundSetScorePacket> SCORE_1_20_3_CONSTRUCTOR;
+  public static final ConstructorAccessor<?> SCORE_1_20_5_CONSTRUCTOR;
+  public static final ConstructorAccessor<?> SCORE_1_20_3_CONSTRUCTOR;
 
   public static final Object SCORE_1_20_2_METHOD_CHANGE, SCORE_1_20_2_METHOD_REMOVE;
-  public static final ConstructorAccessor<ClientboundSetScorePacket> SCORE_1_20_2_CONSTRUCTOR;
+  public static final ConstructorAccessor<?> SCORE_1_20_2_CONSTRUCTOR;
 
-  public static final ConstructorAccessor<ClientboundSetPlayerTeamPacket> TEAM_PACKET_CONSTRUCTOR =
-    ReflectUtil.findConstructor(ClientboundSetPlayerTeamPacket.class, String.class, int.class, Optional.class, Collection.class);
-  public static final PacketConstructor<ClientboundSetPlayerTeamPacket.Parameters> PARAMETERS_CONSTRUCTOR =
-    ReflectUtil.getEmptyConstructor(ClientboundSetPlayerTeamPacket.Parameters.class);
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Component> DISPLAY_NAME_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, net.minecraft.network.chat.Component> PREFIX_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 1, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, net.minecraft.network.chat.Component> SUFFIX_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 2, net.minecraft.network.chat.Component.class);
+  public static final ConstructorAccessor<?> TEAM_PACKET_CONSTRUCTOR =
+    ReflectUtil.findConstructor(SET_PLAYER_TEAM_PKT_CLASS, String.class, int.class, Optional.class, Collection.class);
+  public static final PacketConstructor<?> PARAMETERS_CONSTRUCTOR =
+    ReflectUtil.getEmptyConstructor(TEAM_PARAMETERS_PKT_CLASS);
+  public static final FieldAccessor<Object, Component> DISPLAY_NAME_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, net.minecraft.network.chat.Component.class);
+  public static final FieldAccessor<Object, net.minecraft.network.chat.Component> PREFIX_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 1, net.minecraft.network.chat.Component.class);
+  public static final FieldAccessor<Object, net.minecraft.network.chat.Component> SUFFIX_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 2, net.minecraft.network.chat.Component.class);
 
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, String> NAME_TAG_VISIBILITY_FIELD_1_21_4;
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, String> COLLISION_RULE_FIELD_1_21_4;
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Team.Visibility> NAME_TAG_VISIBILITY_FIELD_1_21_5;
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Team.CollisionRule> COLLISION_RULE_FIELD_1_21_5;
+  public static final FieldAccessor<Object, String> NAME_TAG_VISIBILITY_FIELD_1_21_4;
+  public static final FieldAccessor<Object, String> COLLISION_RULE_FIELD_1_21_4;
+  public static final FieldAccessor<Object, Team.Visibility> NAME_TAG_VISIBILITY_FIELD_1_21_5;
+  public static final FieldAccessor<Object, Team.CollisionRule> COLLISION_RULE_FIELD_1_21_5;
 
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, ChatFormatting> COLOR_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, ChatFormatting.class);
-  public static final FieldAccessor<ClientboundSetPlayerTeamPacket.Parameters, Integer> OPTIONS_FIELD =
-    ReflectUtil.findField(ClientboundSetPlayerTeamPacket.Parameters.class, 0, int.class);
+  public static final FieldAccessor<Object, ChatFormatting> COLOR_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, ChatFormatting.class);
+  public static final FieldAccessor<Object, Integer> OPTIONS_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, int.class);
 
   private PacketAccessors() {
   }

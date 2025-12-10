@@ -10,9 +10,7 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.Obje
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
 import net.minecraft.network.chat.numbers.NumberFormat;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
-import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
@@ -58,7 +56,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
 
   @Override
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
-    Packet<?> packet;
+    Object packet;
     if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
       packet = new ClientboundResetScorePacket(entry, objectiveName);
     } else {
@@ -68,10 +66,11 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     sender.sendPacket(players, packet);
   }
 
-  protected @NotNull ClientboundSetDisplayObjectivePacket createDisplayPacket(@NotNull ObjectiveDisplaySlot displaySlot) {
-    ClientboundSetDisplayObjectivePacket packet;
+  protected @NotNull Object createDisplayPacket(@NotNull ObjectiveDisplaySlot displaySlot) {
+    Object packet;
     if (PacketAccessors.IS_1_20_2_OR_ABOVE) {
-      packet = new ClientboundSetDisplayObjectivePacket(DisplaySlotProvider.toNms(displaySlot), null);
+      packet = Objects.requireNonNull(PacketAccessors.DISPLAY_1_20_2_CONSTRUCTOR)
+        .invoke(DisplaySlotProvider.toNms(displaySlot),null);
     } else {
       packet = Objects.requireNonNull(PacketAccessors.DISPLAY_1_20_1_CONSTRUCTOR)
         .invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
@@ -80,7 +79,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     return packet;
   }
 
-  protected @NotNull ClientboundSetScorePacket createScorePacket(
+  protected @NotNull Object createScorePacket(
     @NotNull String entry,
     int value,
     @Nullable net.minecraft.network.chat.Component nmsDisplay,

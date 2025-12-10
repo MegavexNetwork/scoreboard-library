@@ -10,7 +10,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketA
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
@@ -29,9 +28,9 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
   }
 
   private class TeamDisplayPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl.TeamDisplayPacketAdapterImpl {
-    private final ClientboundSetPlayerTeamPacket.Parameters parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
-    private ClientboundSetPlayerTeamPacket createPacket = null;
-    private ClientboundSetPlayerTeamPacket updatePacket = null;
+    private final Object parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
+    private Object createPacket = null;
+    private Object updatePacket = null;
     private Component displayName, prefix, suffix;
 
     public TeamDisplayPacketAdapterImpl(@NotNull ImmutableTeamProperties<Component> properties) {
@@ -64,7 +63,7 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
     }
 
     @Override
-    protected void fillParameters(ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters, @UnknownNullability Locale locale) {
+    protected void fillParameters(@NotNull Object parameters, @UnknownNullability Locale locale) {
       super.fillParameters(parameters, locale);
 
       if (properties.displayName() != displayName) {

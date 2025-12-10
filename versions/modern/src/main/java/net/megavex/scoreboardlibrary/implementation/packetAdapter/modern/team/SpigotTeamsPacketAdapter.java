@@ -10,7 +10,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDispl
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
@@ -40,7 +39,7 @@ public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
         sender,
         players,
         locale -> {
-          ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
+          Object parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
           fillParameters(parameters, locale);
           return createTeamsPacket(TeamConstants.mode(packetType), teamName, parameters, entries);
         }
@@ -48,7 +47,7 @@ public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
     }
 
     @Override
-    protected void fillParameters(ClientboundSetPlayerTeamPacket.@NotNull Parameters parameters, @UnknownNullability Locale locale) {
+    protected void fillParameters(@NotNull Object parameters, @UnknownNullability Locale locale) {
       super.fillParameters(parameters, locale);
 
       PacketAccessors.DISPLAY_NAME_FIELD.set(parameters, componentProvider.fromAdventure(properties.displayName(), locale));
