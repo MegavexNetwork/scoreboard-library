@@ -3,11 +3,11 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ModernComponentProvider;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ModernPacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
 import org.bukkit.entity.Player;
@@ -18,8 +18,8 @@ import java.util.Collection;
 import java.util.Locale;
 
 public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
-  public SpigotTeamsPacketAdapter(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
-    super(sender, componentProvider, teamName);
+  public SpigotTeamsPacketAdapter(@NotNull String teamName) {
+    super(teamName);
   }
 
   @Override
@@ -36,7 +36,7 @@ public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
     public void sendProperties(@NotNull PropertiesPacketType packetType, @NotNull Collection<Player> players) {
       Collection<String> entries = ImmutableList.copyOf(properties.syncedEntries());
       LocalePacketUtil.sendLocalePackets(
-        sender,
+        ModernPacketSender.INSTANCE,
         players,
         locale -> {
           Object parameters = PacketAccessors.PARAMETERS_CONSTRUCTOR.invoke();
@@ -50,9 +50,9 @@ public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
     protected void fillParameters(@NotNull Object parameters, @UnknownNullability Locale locale) {
       super.fillParameters(parameters, locale);
 
-      PacketAccessors.DISPLAY_NAME_FIELD.set(parameters, componentProvider.fromAdventure(properties.displayName(), locale));
-      PacketAccessors.PREFIX_FIELD.set(parameters, componentProvider.fromAdventure(properties.prefix(), locale));
-      PacketAccessors.SUFFIX_FIELD.set(parameters, componentProvider.fromAdventure(properties.suffix(), locale));
+      PacketAccessors.DISPLAY_NAME_FIELD.set(parameters, ModernComponentProvider.fromAdventure(properties.displayName(), locale));
+      PacketAccessors.PREFIX_FIELD.set(parameters, ModernComponentProvider.fromAdventure(properties.prefix(), locale));
+      PacketAccessors.SUFFIX_FIELD.set(parameters, ModernComponentProvider.fromAdventure(properties.suffix(), locale));
     }
   }
 }

@@ -4,31 +4,43 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.C
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.FieldAccessor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.PacketConstructor;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.numbers.NumberFormat;
-import net.minecraft.world.scores.DisplaySlot;
-import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.Team;
-import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 
 import java.util.Collection;
 import java.util.Optional;
 
 public final class PacketAccessors {
-  public static final Class<?> SET_OBJECTIVE_PKT_CLASS;
-  public static final Class<?> SET_DISPLAY_OBJECTIVE_PKT_CLASS;
-  public static final Class<?> SET_SCORE_PKT_CLASS;
-  public static final Class<?> SET_PLAYER_TEAM_PKT_CLASS;
-  public static final Class<?> TEAM_PARAMETERS_PKT_CLASS;
+  public static final Class<?> SET_OBJECTIVE_PKT_CLASS,
+    SET_DISPLAY_OBJECTIVE_PKT_CLASS,
+    SET_SCORE_PKT_CLASS,
+    SET_PLAYER_TEAM_PKT_CLASS,
+    TEAM_PARAMETERS_PKT_CLASS,
+    COMPONENT_CLASS,
+    NUMBER_FORMAT_CLASS,
+    DISPLAY_SLOT_CLASS,
+    OBJECTIVE_CLASS,
+    TEAM_VISIBILITY_CLASS,
+    TEAM_COLLISION_RULE_CLASS,
+    CHAT_FORMATTING_CLASS,
+    OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS;
 
   static {
+    // TODO: spigot mapping names
     SET_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetObjectivePacket");
     SET_DISPLAY_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket");
     SET_SCORE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetScorePacket");
     SET_PLAYER_TEAM_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket");
     TEAM_PARAMETERS_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters");
+    COMPONENT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component");
+    NUMBER_FORMAT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.numbers.NumberFormat");
+    DISPLAY_SLOT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.DisplaySlot");
+    OBJECTIVE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Objective");
+    TEAM_VISIBILITY_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Team$Visibility");
+    TEAM_COLLISION_RULE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Team$CollisionRule");
+    CHAT_FORMATTING_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.ChatFormatting");
+    OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.criteria.ObjectiveCriteria$RenderType");
   }
+
+  public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE, IS_1_21_5_OR_ABOVE, IS_1_21_6_OR_ABOVE;
 
   static {
     boolean is1_20_2OrAbove = false;
@@ -72,8 +84,8 @@ public final class PacketAccessors {
     IS_1_21_6_OR_ABOVE = is1_21_6OrAbove;
 
     if (is1_21_5OrAbove) {
-      NAME_TAG_VISIBILITY_FIELD_1_21_5 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, Team.Visibility.class);
-      COLLISION_RULE_FIELD_1_21_5 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, Team.CollisionRule.class);
+      NAME_TAG_VISIBILITY_FIELD_1_21_5 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, TEAM_VISIBILITY_CLASS);
+      COLLISION_RULE_FIELD_1_21_5 = ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, TEAM_COLLISION_RULE_CLASS);
       NAME_TAG_VISIBILITY_FIELD_1_21_4 = null;
       COLLISION_RULE_FIELD_1_21_4 = null;
     } else {
@@ -82,18 +94,20 @@ public final class PacketAccessors {
       NAME_TAG_VISIBILITY_FIELD_1_21_5 = null;
       COLLISION_RULE_FIELD_1_21_5 = null;
     }
+  }
 
-    if (is1_20_5OrAbove) {
+  static {
+    if (IS_1_20_5_OR_ABOVE) {
       OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, Optional.class);
       SCORE_1_20_5_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, String.class, String.class, int.class, Optional.class, Optional.class);
       SCORE_1_20_3_CONSTRUCTOR = null;
       SCORE_1_20_2_CONSTRUCTOR = null;
       SCORE_1_20_2_METHOD_CHANGE = null;
       SCORE_1_20_2_METHOD_REMOVE = null;
-    } else if (is1_20_3OrAbove) {
-      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, NumberFormat.class);
+    } else if (IS_1_20_3_OR_ABOVE) {
+      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, NUMBER_FORMAT_CLASS);
       SCORE_1_20_5_CONSTRUCTOR = null;
-      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, String.class, String.class, int.class, Component.class, NumberFormat.class);
+      SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, String.class, String.class, int.class, COMPONENT_CLASS, NUMBER_FORMAT_CLASS);
       SCORE_1_20_2_METHOD_CHANGE = null;
       SCORE_1_20_2_METHOD_REMOVE = null;
       SCORE_1_20_2_CONSTRUCTOR = null;
@@ -109,25 +123,23 @@ public final class PacketAccessors {
     }
   }
 
-  public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE, IS_1_21_5_OR_ABOVE, IS_1_21_6_OR_ABOVE;
-
   public static final PacketConstructor<?> OBJECTIVE_PACKET_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(SET_OBJECTIVE_PKT_CLASS);
   public static final FieldAccessor<Object, String> OBJECTIVE_NAME_FIELD =
     ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, String.class);
-  public static final FieldAccessor<Object, net.minecraft.network.chat.Component> OBJECTIVE_VALUE_FIELD =
-    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<Object, ObjectiveCriteria.RenderType> OBJECTIVE_RENDER_TYPE_FIELD =
-    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, ObjectiveCriteria.RenderType.class);
+  public static final FieldAccessor<Object, Object> OBJECTIVE_VALUE_FIELD =
+    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, COMPONENT_CLASS);
+  public static final FieldAccessor<Object, Object> OBJECTIVE_RENDER_TYPE_FIELD =
+    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS);
   // Optional<NumberFormat> for 1.20.5+, NumberFormat for below
   public static final FieldAccessor<Object, Object> OBJECTIVE_NUMBER_FORMAT_FIELD;
   public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
     ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, int.class);
 
   public static final ConstructorAccessor<?> DISPLAY_1_20_2_CONSTRUCTOR =
-    ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, DisplaySlot.class, Objective.class);
+    ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, DISPLAY_SLOT_CLASS, OBJECTIVE_CLASS);
   public static final ConstructorAccessor<?> DISPLAY_1_20_1_CONSTRUCTOR =
-    ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, int.class, Objective.class);
+    ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, int.class, OBJECTIVE_CLASS);
   public static final FieldAccessor<Object, String> DISPLAY_OBJECTIVE_NAME =
     ReflectUtil.findFieldUnchecked(SET_DISPLAY_OBJECTIVE_PKT_CLASS, 0, String.class);
 
@@ -141,20 +153,20 @@ public final class PacketAccessors {
     ReflectUtil.findConstructor(SET_PLAYER_TEAM_PKT_CLASS, String.class, int.class, Optional.class, Collection.class);
   public static final PacketConstructor<?> PARAMETERS_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(TEAM_PARAMETERS_PKT_CLASS);
-  public static final FieldAccessor<Object, Component> DISPLAY_NAME_FIELD =
-    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<Object, net.minecraft.network.chat.Component> PREFIX_FIELD =
-    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 1, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<Object, net.minecraft.network.chat.Component> SUFFIX_FIELD =
-    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 2, net.minecraft.network.chat.Component.class);
+  public static final FieldAccessor<Object, Object> DISPLAY_NAME_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, COMPONENT_CLASS);
+  public static final FieldAccessor<Object, Object> PREFIX_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 1, COMPONENT_CLASS);
+  public static final FieldAccessor<Object, Object> SUFFIX_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 2, COMPONENT_CLASS);
 
   public static final FieldAccessor<Object, String> NAME_TAG_VISIBILITY_FIELD_1_21_4;
   public static final FieldAccessor<Object, String> COLLISION_RULE_FIELD_1_21_4;
-  public static final FieldAccessor<Object, Team.Visibility> NAME_TAG_VISIBILITY_FIELD_1_21_5;
-  public static final FieldAccessor<Object, Team.CollisionRule> COLLISION_RULE_FIELD_1_21_5;
+  public static final FieldAccessor<Object, Object> NAME_TAG_VISIBILITY_FIELD_1_21_5;
+  public static final FieldAccessor<Object, Object> COLLISION_RULE_FIELD_1_21_5;
 
-  public static final FieldAccessor<Object, ChatFormatting> COLOR_FIELD =
-    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, ChatFormatting.class);
+  public static final FieldAccessor<Object, Object> COLOR_FIELD =
+    ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, CHAT_FORMATTING_CLASS);
   public static final FieldAccessor<Object, Integer> OPTIONS_FIELD =
     ReflectUtil.findFieldUnchecked(TEAM_PARAMETERS_PKT_CLASS, 0, int.class);
 

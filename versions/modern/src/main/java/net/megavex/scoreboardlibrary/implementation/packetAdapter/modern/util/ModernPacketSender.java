@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
 
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -11,12 +12,14 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 
-public final class PacketUtil {
+public final class ModernPacketSender implements PacketSender<Object> {
   private static final MethodHandle GET_HANDLE;
   private static final MethodHandle PLAYER_CONNECTION;
   private static final MethodHandle SEND_PACKET;
 
-  private PacketUtil() {
+  public static final ModernPacketSender INSTANCE = new ModernPacketSender();
+
+  private ModernPacketSender() {
   }
 
   static {
@@ -73,11 +76,12 @@ public final class PacketUtil {
     SEND_PACKET = sendPacket;
   }
 
-  public static void sendPacket(Player player, Object packet) {
+  @Override
+  public void sendPacket(Player player, Object packet) {
     try {
-      ServerPlayer handle = (ServerPlayer) GET_HANDLE.invoke(player);
-      ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) PLAYER_CONNECTION.invoke(handle);
-      SEND_PACKET.invoke(connection, packet);
+        ServerPlayer handle = (ServerPlayer) GET_HANDLE.invoke(player);
+        ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) PLAYER_CONNECTION.invoke(handle);
+        SEND_PACKET.invoke(connection, packet);
     } catch (Throwable e) {
       throw new IllegalStateException("couldn't send packet to player", e);
     }

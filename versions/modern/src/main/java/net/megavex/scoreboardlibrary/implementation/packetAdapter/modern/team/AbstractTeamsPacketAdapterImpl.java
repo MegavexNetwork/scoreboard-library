@@ -3,9 +3,8 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.commons.LegacyFormatUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ModernPacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPacketType;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
@@ -20,14 +19,10 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.*;
 
 public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  protected final PacketSender<Object> sender;
-  protected final ComponentProvider componentProvider;
   protected final String teamName;
   private Object removePacket;
 
-  public AbstractTeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
-    this.sender = sender;
-    this.componentProvider = componentProvider;
+  public AbstractTeamsPacketAdapterImpl(@NotNull String teamName) {
     this.teamName = teamName;
   }
 
@@ -50,7 +45,7 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
     if (removePacket == null) {
       removePacket = createTeamsPacket(TeamConstants.MODE_REMOVE, teamName, null, null);
     }
-    sender.sendPacket(players, removePacket);
+    ModernPacketSender.INSTANCE.sendPacket(players, removePacket);
   }
 
   public abstract class TeamDisplayPacketAdapterImpl implements TeamDisplayPacketAdapter {
@@ -62,7 +57,7 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
 
     @Override
     public void sendEntries(@NotNull EntriesPacketType packetType, @NotNull Collection<Player> players, @NotNull Collection<String> entries) {
-      sender.sendPacket(players, createTeamsPacket(TeamConstants.mode(packetType), teamName, null, entries));
+      ModernPacketSender.INSTANCE.sendPacket(players, createTeamsPacket(TeamConstants.mode(packetType), teamName, null, entries));
     }
 
     protected void fillParameters(@NotNull Object parameters, @UnknownNullability Locale locale) {

@@ -3,10 +3,9 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team;
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.ImmutableTeamProperties;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ModernPacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
@@ -18,8 +17,8 @@ import java.util.Collection;
 import java.util.Locale;
 
 public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
-  public PaperTeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
-    super(sender, componentProvider, teamName);
+  public PaperTeamsPacketAdapterImpl(@NotNull String teamName) {
+    super(teamName);
   }
 
   @Override
@@ -54,10 +53,10 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
 
       switch (packetType) {
         case CREATE:
-          sender.sendPacket(players, createPacket);
+          ModernPacketSender.INSTANCE.sendPacket(players, createPacket);
           break;
         case UPDATE:
-          sender.sendPacket(players, updatePacket);
+          ModernPacketSender.INSTANCE.sendPacket(players, updatePacket);
           break;
       }
     }

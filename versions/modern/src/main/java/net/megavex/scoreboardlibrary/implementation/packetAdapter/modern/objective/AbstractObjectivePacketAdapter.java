@@ -2,10 +2,9 @@ package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.object
 
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPacketType;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ModernPacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
@@ -23,14 +22,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketAdapter {
-  protected final PacketSender<Object> sender;
-  protected final ComponentProvider componentProvider;
   protected final String objectiveName;
   private ClientboundSetObjectivePacket removePacket;
 
-  public AbstractObjectivePacketAdapter(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String objectiveName) {
-    this.sender = sender;
-    this.componentProvider = componentProvider;
+  public AbstractObjectivePacketAdapter(@NotNull String objectiveName) {
     this.objectiveName = objectiveName;
   }
 
@@ -41,7 +36,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
 
   @Override
   public void display(@NotNull Collection<Player> players, @NotNull ObjectiveDisplaySlot slot) {
-    sender.sendPacket(players, createDisplayPacket(slot));
+    ModernPacketSender.INSTANCE.sendPacket(players, createDisplayPacket(slot));
   }
 
   @Override
@@ -51,7 +46,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
       PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
       PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
-    sender.sendPacket(players, removePacket);
+    ModernPacketSender.INSTANCE.sendPacket(players, removePacket);
   }
 
   @Override
@@ -63,7 +58,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
       packet = Objects.requireNonNull(PacketAccessors.SCORE_1_20_2_CONSTRUCTOR)
         .invoke(PacketAccessors.SCORE_1_20_2_METHOD_REMOVE, objectiveName, entry, 0);
     }
-    sender.sendPacket(players, packet);
+    ModernPacketSender.INSTANCE.sendPacket(players, packet);
   }
 
   protected @NotNull Object createDisplayPacket(@NotNull ObjectiveDisplaySlot displaySlot) {
