@@ -9,7 +9,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPa
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
-import net.minecraft.ChatFormatting;
 import net.minecraft.world.scores.Team;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +75,7 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
       }
 
       char legacyChar = LegacyFormatUtil.getChar(properties.playerColor());
-      PacketAccessors.COLOR_FIELD.set(parameters, ChatFormatting.getByCode(legacyChar));
+      PacketAccessors.COLOR_FIELD.set(parameters, PacketAccessors.CHAT_FORMATTING_GET_BY_CODE.invoke(legacyChar));
 
       int options = properties.packOptions();
       PacketAccessors.OPTIONS_FIELD.set(parameters, options);

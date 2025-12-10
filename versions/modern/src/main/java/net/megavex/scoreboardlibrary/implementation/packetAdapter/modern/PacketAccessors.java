@@ -1,10 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ConstructorAccessor;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.FieldAccessor;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.PacketConstructor;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.*;
 
+import java.lang.invoke.MethodType;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -122,6 +120,9 @@ public final class PacketAccessors {
       SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, methodClass, String.class, String.class, int.class);
     }
   }
+
+  public static final MethodAccessor CHAT_FORMATTING_GET_BY_CODE =
+    ReflectUtil.findMethod(CHAT_FORMATTING_CLASS, "getByCode", true, MethodType.methodType(CHAT_FORMATTING_CLASS, char.class));
 
   public static final PacketConstructor<?> OBJECTIVE_PACKET_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(SET_OBJECTIVE_PKT_CLASS);
