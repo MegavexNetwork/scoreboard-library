@@ -10,7 +10,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDispl
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.LocalePacketUtil;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 public class SpigotTeamsPacketAdapter extends AbstractTeamsPacketAdapterImpl {
-  public SpigotTeamsPacketAdapter(@NotNull PacketSender<Packet<?>> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
+  public SpigotTeamsPacketAdapter(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
     super(sender, componentProvider, teamName);
   }
 

@@ -25,12 +25,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketAdapter {
-  protected final PacketSender<Packet<?>> sender;
+  protected final PacketSender<Object> sender;
   protected final ComponentProvider componentProvider;
   protected final String objectiveName;
   private ClientboundSetObjectivePacket removePacket;
 
-  public AbstractObjectivePacketAdapter(@NotNull PacketSender<Packet<?>> sender, @NotNull ComponentProvider componentProvider, @NotNull String objectiveName) {
+  public AbstractObjectivePacketAdapter(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String objectiveName) {
     this.sender = sender;
     this.componentProvider = componentProvider;
     this.objectiveName = objectiveName;
@@ -97,13 +97,13 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     }
   }
 
-  protected @NotNull ClientboundSetObjectivePacket createObjectivePacket(
+  protected @NotNull Object createObjectivePacket(
     @NotNull PropertiesPacketType packetType,
     @NotNull net.minecraft.network.chat.Component nmsValue,
     @NotNull ObjectiveRenderType renderType,
     @Nullable Object numberFormat
   ) {
-    ClientboundSetObjectivePacket packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
+    Object packet = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
     PacketAccessors.OBJECTIVE_MODE_FIELD.set(packet, ObjectiveConstants.mode(packetType));
     PacketAccessors.OBJECTIVE_NAME_FIELD.set(packet, objectiveName);
     PacketAccessors.OBJECTIVE_VALUE_FIELD.set(packet, nmsValue);

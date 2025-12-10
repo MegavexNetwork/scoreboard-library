@@ -11,11 +11,10 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.team.Sp
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.PacketUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
-import net.minecraft.network.protocol.Packet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<Packet<?>> {
+public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketSender<Object> {
   private boolean isNativeAdventure;
   private final ComponentProvider componentProvider;
 
@@ -56,7 +55,7 @@ public class PacketAdapterProviderImpl implements PacketAdapterProvider, PacketS
   }
 
   @Override
-  public void sendPacket(@NotNull Player player, @NotNull Packet<?> packet) {
+  public void sendPacket(@NotNull Player player, @NotNull Object packet) {
     PacketUtil.sendPacket(player, packet);
   }
 }

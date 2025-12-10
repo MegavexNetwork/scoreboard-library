@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
-import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.world.scores.Objective;
@@ -19,6 +18,12 @@ import java.util.Collection;
 import java.util.Optional;
 
 public final class PacketAccessors {
+  public static final Class<?> SET_OBJECTIVE_PKT_CLASS;
+
+  static {
+    SET_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetObjectivePacket");
+  }
+
   static {
     boolean is1_20_2OrAbove = false;
     try {
@@ -73,13 +78,13 @@ public final class PacketAccessors {
     }
 
     if (is1_20_5OrAbove) {
-      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(ClientboundSetObjectivePacket.class, 0, Optional.class);
+      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, Optional.class);
       SCORE_1_20_2_CONSTRUCTOR = null;
       SCORE_1_20_3_CONSTRUCTOR = null;
       SCORE_1_20_2_METHOD_CHANGE = null;
       SCORE_1_20_2_METHOD_REMOVE = null;
     } else if (is1_20_3OrAbove) {
-      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(ClientboundSetObjectivePacket.class, 0, NumberFormat.class);
+      OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, NumberFormat.class);
       SCORE_1_20_3_CONSTRUCTOR = ReflectUtil.findConstructor(ClientboundSetScorePacket.class, String.class, String.class, int.class, Component.class, NumberFormat.class);
       SCORE_1_20_2_METHOD_CHANGE = null;
       SCORE_1_20_2_METHOD_REMOVE = null;
@@ -97,18 +102,18 @@ public final class PacketAccessors {
 
   public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE, IS_1_21_5_OR_ABOVE, IS_1_21_6_OR_ABOVE;
 
-  public static final PacketConstructor<ClientboundSetObjectivePacket> OBJECTIVE_PACKET_CONSTRUCTOR =
-    ReflectUtil.getEmptyConstructor(ClientboundSetObjectivePacket.class);
-  public static final FieldAccessor<ClientboundSetObjectivePacket, String> OBJECTIVE_NAME_FIELD =
-    ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, String.class);
-  public static final FieldAccessor<ClientboundSetObjectivePacket, net.minecraft.network.chat.Component> OBJECTIVE_VALUE_FIELD =
-    ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, net.minecraft.network.chat.Component.class);
-  public static final FieldAccessor<ClientboundSetObjectivePacket, ObjectiveCriteria.RenderType> OBJECTIVE_RENDER_TYPE_FIELD =
-    ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, ObjectiveCriteria.RenderType.class);
+  public static final PacketConstructor<?> OBJECTIVE_PACKET_CONSTRUCTOR =
+    ReflectUtil.getEmptyConstructor(SET_OBJECTIVE_PKT_CLASS);
+  public static final FieldAccessor<Object, String> OBJECTIVE_NAME_FIELD =
+    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, String.class);
+  public static final FieldAccessor<Object, net.minecraft.network.chat.Component> OBJECTIVE_VALUE_FIELD =
+    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, net.minecraft.network.chat.Component.class);
+  public static final FieldAccessor<Object, ObjectiveCriteria.RenderType> OBJECTIVE_RENDER_TYPE_FIELD =
+    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, ObjectiveCriteria.RenderType.class);
   // Optional<NumberFormat> for 1.20.5+, NumberFormat for below
-  public static final FieldAccessor<ClientboundSetObjectivePacket, Object> OBJECTIVE_NUMBER_FORMAT_FIELD;
-  public static final FieldAccessor<ClientboundSetObjectivePacket, Integer> OBJECTIVE_MODE_FIELD =
-    ReflectUtil.findField(ClientboundSetObjectivePacket.class, 0, int.class);
+  public static final FieldAccessor<Object, Object> OBJECTIVE_NUMBER_FORMAT_FIELD;
+  public static final FieldAccessor<Object, Integer> OBJECTIVE_MODE_FIELD =
+    ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, int.class);
 
   public static final ConstructorAccessor<ClientboundSetDisplayObjectivePacket> DISPLAY_1_20_1_CONSTRUCTOR =
     ReflectUtil.findOptionalConstructor(ClientboundSetDisplayObjectivePacket.class, int.class, Objective.class);

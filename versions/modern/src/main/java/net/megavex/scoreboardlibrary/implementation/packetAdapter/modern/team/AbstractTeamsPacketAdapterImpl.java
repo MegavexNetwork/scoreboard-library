@@ -11,7 +11,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConst
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket.Parameters;
 import net.minecraft.world.scores.Team;
@@ -23,12 +22,12 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.*;
 
 public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapter {
-  protected final PacketSender<Packet<?>> sender;
+  protected final PacketSender<Object> sender;
   protected final ComponentProvider componentProvider;
   protected final String teamName;
   private ClientboundSetPlayerTeamPacket removePacket;
 
-  public AbstractTeamsPacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
+  public AbstractTeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
     this.sender = sender;
     this.componentProvider = componentProvider;
     this.teamName = teamName;

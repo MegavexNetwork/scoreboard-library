@@ -10,7 +10,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketA
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +19,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl {
-  public PaperTeamsPacketAdapterImpl(@NotNull PacketSender<Packet<?>> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
+  public PaperTeamsPacketAdapterImpl(@NotNull PacketSender<Object> sender, @NotNull ComponentProvider componentProvider, @NotNull String teamName) {
     super(sender, componentProvider, teamName);
   }
 

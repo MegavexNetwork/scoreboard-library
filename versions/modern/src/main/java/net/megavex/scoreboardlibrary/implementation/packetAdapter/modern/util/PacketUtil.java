@@ -73,7 +73,7 @@ public final class PacketUtil {
     SEND_PACKET = sendPacket;
   }
 
-  public static void sendPacket(Player player, Packet<?> packet) {
+  public static void sendPacket(Player player, Object packet) {
     try {
       ServerPlayer handle = (ServerPlayer) GET_HANDLE.invoke(player);
       ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) PLAYER_CONNECTION.invoke(handle);

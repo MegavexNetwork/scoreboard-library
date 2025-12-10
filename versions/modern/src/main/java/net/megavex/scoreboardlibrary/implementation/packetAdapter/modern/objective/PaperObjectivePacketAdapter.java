@@ -8,7 +8,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.PropertiesPack
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.ComponentProvider;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAdapterProviderImpl;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
-import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,7 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
   ) {
     AdventureComponent nmsValue = NativeAdventureUtil.fromAdventureComponent(value);
     Object numberFormat = ScoreFormatConverter.convert(componentProvider, null, scoreFormat);
-    ClientboundSetObjectivePacket packet = createObjectivePacket(packetType, nmsValue, renderType, numberFormat);
+    Object packet = createObjectivePacket(packetType, nmsValue, renderType, numberFormat);
     sender.sendPacket(players, packet);
   }
 }
