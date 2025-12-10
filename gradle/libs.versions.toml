@@ -13,7 +13,7 @@ adventureTextSerializerGson = { module = "net.kyori:adventure-text-serializer-gs
 adventureTextSerializerLegacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
 
 # TODO: v6 only supports java 17
-junitJupiter = "org.junit.jupiter:junit-jupiter:5.13.4"
+junitJupiter = "org.junit.jupiter:junit-jupiter:5.14.1"
 junitPlatformLauncher = "org.junit.platform:junit-platform-launcher:1.14.1"
 
 [plugins]
