@@ -9,7 +9,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.EntriesPa
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamDisplayPacketAdapter;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.team.TeamsPacketAdapter;
-import net.minecraft.world.scores.Team;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,11 +60,47 @@ public abstract class AbstractTeamsPacketAdapterImpl implements TeamsPacketAdapt
 
     protected void fillParameters(@NotNull Object parameters, @UnknownNullability Locale locale) {
       if (PacketAccessors.IS_1_21_5_OR_ABOVE) {
+        Object nameTagVisibility;
+        switch (properties.nameTagVisibility()){
+          case NEVER:
+            nameTagVisibility = PacketAccessors.NAME_TAG_VISIBILITY_NEVER;
+            break;
+          case ALWAYS:
+            nameTagVisibility = PacketAccessors.NAME_TAG_VISIBILITY_ALWAYS;
+            break;
+          case HIDE_FOR_OTHER_TEAMS:
+            nameTagVisibility = PacketAccessors.NAME_TAG_VISIBILITY_HIDE_FOR_OTHER_TEAMS;
+            break;
+          case HIDE_FOR_OWN_TEAM:
+            nameTagVisibility = PacketAccessors.NAME_TAG_VISIBILITY_HIDE_FOR_OWN_TEAM;
+            break;
+          default:
+            throw new IllegalStateException("unknown name tag visibility " + properties.nameTagVisibility().name());
+        }
+
         Objects.requireNonNull(PacketAccessors.NAME_TAG_VISIBILITY_FIELD_1_21_5)
-          .set(parameters, Team.Visibility.valueOf(properties.nameTagVisibility().name()));
+          .set(parameters, nameTagVisibility);
+
+        Object collisionRule;
+        switch (properties.collisionRule()){
+          case NEVER:
+            collisionRule = PacketAccessors.COLLISION_RULE_NEVER;
+            break;
+          case ALWAYS:
+            collisionRule = PacketAccessors.COLLISION_RULE_ALWAYS;
+            break;
+          case PUSH_OTHER_TEAMS:
+            collisionRule = PacketAccessors.COLLISION_RULE_PUSH_OTHER_TEAMS;
+            break;
+          case PUSH_OWN_TEAM:
+            collisionRule = PacketAccessors.COLLISION_RULE_PUSH_OWN_TEAM;
+            break;
+          default:
+            throw new IllegalStateException("unknown collision rule " + properties.collisionRule().name());
+        }
 
         Objects.requireNonNull(PacketAccessors.COLLISION_RULE_FIELD_1_21_5)
-          .set(parameters, Team.CollisionRule.valueOf(properties.collisionRule().name()));
+          .set(parameters, collisionRule);
       } else {
         Objects.requireNonNull(PacketAccessors.NAME_TAG_VISIBILITY_FIELD_1_21_4)
           .set(parameters, properties.nameTagVisibility().key());

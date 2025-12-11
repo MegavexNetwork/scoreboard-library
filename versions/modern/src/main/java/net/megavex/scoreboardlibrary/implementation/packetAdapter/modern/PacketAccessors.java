@@ -1,20 +1,25 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
+import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.*;
+import net.minecraft.world.scores.Team;
 
 import java.lang.invoke.MethodType;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public final class PacketAccessors {
   public static final Class<?> SET_OBJECTIVE_PKT_CLASS,
     SET_DISPLAY_OBJECTIVE_PKT_CLASS,
     SET_SCORE_PKT_CLASS,
+    RESET_SCORE_PKT_CLASS,
     SET_PLAYER_TEAM_PKT_CLASS,
     TEAM_PARAMETERS_PKT_CLASS,
     COMPONENT_CLASS,
     NUMBER_FORMAT_CLASS,
-    DISPLAY_SLOT_CLASS,
+    DISPLAY_SLOT_CLASS, // 1.20.2
     OBJECTIVE_CLASS,
     TEAM_VISIBILITY_CLASS,
     TEAM_COLLISION_RULE_CLASS,
@@ -26,11 +31,12 @@ public final class PacketAccessors {
     SET_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetObjectivePacket");
     SET_DISPLAY_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket");
     SET_SCORE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetScorePacket");
+    RESET_SCORE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundResetScorePacket");
     SET_PLAYER_TEAM_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket");
     TEAM_PARAMETERS_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters");
     COMPONENT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component");
     NUMBER_FORMAT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.numbers.NumberFormat");
-    DISPLAY_SLOT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.DisplaySlot");
+    DISPLAY_SLOT_CLASS = ReflectUtil.getOptionalClass("net.minecraft.world.scores.DisplaySlot");
     OBJECTIVE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Objective");
     TEAM_VISIBILITY_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Team$Visibility");
     TEAM_COLLISION_RULE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Team$CollisionRule");
@@ -95,6 +101,12 @@ public final class PacketAccessors {
   }
 
   static {
+    if (IS_1_20_2_OR_ABOVE) {
+      RESET_SCORE_CONSTRUCTOR = ReflectUtil.findConstructor(RESET_SCORE_PKT_CLASS, String.class, String.class);
+    } else {
+      RESET_SCORE_CONSTRUCTOR = null;
+    }
+
     if (IS_1_20_5_OR_ABOVE) {
       OBJECTIVE_NUMBER_FORMAT_FIELD = ReflectUtil.findFieldUnchecked(SET_OBJECTIVE_PKT_CLASS, 0, Optional.class);
       SCORE_1_20_5_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, String.class, String.class, int.class, Optional.class, Optional.class);
@@ -124,6 +136,21 @@ public final class PacketAccessors {
   public static final MethodAccessor CHAT_FORMATTING_GET_BY_CODE =
     ReflectUtil.findMethod(CHAT_FORMATTING_CLASS, "getByCode", true, MethodType.methodType(CHAT_FORMATTING_CLASS, char.class));
 
+  public static final Object NAME_TAG_VISIBILITY_ALWAYS = ReflectUtil.getEnumInstance(TEAM_VISIBILITY_CLASS, "ALWAYS");
+  public static final Object NAME_TAG_VISIBILITY_NEVER = ReflectUtil.getEnumInstance(TEAM_VISIBILITY_CLASS, "NEVER");
+  public static final Object NAME_TAG_VISIBILITY_HIDE_FOR_OTHER_TEAMS = ReflectUtil.getEnumInstance(TEAM_VISIBILITY_CLASS, "HIDE_FOR_OTHER_TEAMS");
+  public static final Object NAME_TAG_VISIBILITY_HIDE_FOR_OWN_TEAM = ReflectUtil.getEnumInstance(TEAM_VISIBILITY_CLASS, "HIDE_FOR_OWN_TEAM");
+
+  public static final Object COLLISION_RULE_ALWAYS = ReflectUtil.getEnumInstance(TEAM_COLLISION_RULE_CLASS, "ALWAYS");
+  public static final Object COLLISION_RULE_NEVER = ReflectUtil.getEnumInstance(TEAM_COLLISION_RULE_CLASS, "NEVER");
+  public static final Object COLLISION_RULE_PUSH_OTHER_TEAMS = ReflectUtil.getEnumInstance(TEAM_COLLISION_RULE_CLASS, "PUSH_OTHER_TEAMS");
+  public static final Object COLLISION_RULE_PUSH_OWN_TEAM = ReflectUtil.getEnumInstance(TEAM_COLLISION_RULE_CLASS, "PUSH_OWN_TEAM");
+
+  public static final Object RENDER_TYPE_INTEGER = ReflectUtil.getEnumInstance(OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS, "INTEGER");
+  public static final Object RENDER_TYPE_HEARTS = ReflectUtil.getEnumInstance(OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS, "HEARTS");
+
+  public static final List<Object> DISPLAY_SLOT_VALUES = DISPLAY_SLOT_CLASS == null ? null : Arrays.asList(DISPLAY_SLOT_CLASS.getEnumConstants());
+
   public static final PacketConstructor<?> OBJECTIVE_PACKET_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(SET_OBJECTIVE_PKT_CLASS);
   public static final FieldAccessor<Object, String> OBJECTIVE_NAME_FIELD =
@@ -143,6 +170,8 @@ public final class PacketAccessors {
     ReflectUtil.findOptionalConstructor(SET_DISPLAY_OBJECTIVE_PKT_CLASS, int.class, OBJECTIVE_CLASS);
   public static final FieldAccessor<Object, String> DISPLAY_OBJECTIVE_NAME =
     ReflectUtil.findFieldUnchecked(SET_DISPLAY_OBJECTIVE_PKT_CLASS, 0, String.class);
+
+  public static final ConstructorAccessor<?> RESET_SCORE_CONSTRUCTOR; // 1.20.3+
 
   public static final ConstructorAccessor<?> SCORE_1_20_5_CONSTRUCTOR;
   public static final ConstructorAccessor<?> SCORE_1_20_3_CONSTRUCTOR;

@@ -7,12 +7,6 @@ import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketA
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.ModernPacketSender;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectiveConstants;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.objective.ObjectivePacketAdapter;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
-import net.minecraft.network.chat.numbers.NumberFormat;
-import net.minecraft.network.protocol.game.ClientboundResetScorePacket;
-import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
-import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
-import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +17,7 @@ import java.util.Optional;
 
 public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketAdapter {
   protected final String objectiveName;
-  private ClientboundSetObjectivePacket removePacket;
+  private Object removePacket;
 
   public AbstractObjectivePacketAdapter(@NotNull String objectiveName) {
     this.objectiveName = objectiveName;
@@ -42,7 +36,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   @Override
   public void remove(@NotNull Collection<Player> players) {
     if (removePacket == null) {
-      this.removePacket = ReflectUtil.getEmptyConstructor(ClientboundSetObjectivePacket.class).invoke();
+      this.removePacket = PacketAccessors.OBJECTIVE_PACKET_CONSTRUCTOR.invoke();
       PacketAccessors.OBJECTIVE_NAME_FIELD.set(removePacket, objectiveName);
       PacketAccessors.OBJECTIVE_MODE_FIELD.set(removePacket, ObjectiveConstants.MODE_REMOVE);
     }
@@ -53,7 +47,8 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   public void removeScore(@NotNull Collection<Player> players, @NotNull String entry) {
     Object packet;
     if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
-      packet = new ClientboundResetScorePacket(entry, objectiveName);
+      packet = Objects.requireNonNull(PacketAccessors.RESET_SCORE_CONSTRUCTOR)
+        .invoke(entry, objectiveName);
     } else {
       packet = Objects.requireNonNull(PacketAccessors.SCORE_1_20_2_CONSTRUCTOR)
         .invoke(PacketAccessors.SCORE_1_20_2_METHOD_REMOVE, objectiveName, entry, 0);
@@ -65,7 +60,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     Object packet;
     if (PacketAccessors.IS_1_20_2_OR_ABOVE) {
       packet = Objects.requireNonNull(PacketAccessors.DISPLAY_1_20_2_CONSTRUCTOR)
-        .invoke(DisplaySlotProvider.toNms(displaySlot),null);
+        .invoke(PacketAccessors.DISPLAY_SLOT_VALUES.get(ObjectiveConstants.displaySlotIndex(displaySlot)), null);
     } else {
       packet = Objects.requireNonNull(PacketAccessors.DISPLAY_1_20_1_CONSTRUCTOR)
         .invoke(ObjectiveConstants.displaySlotIndex(displaySlot), null);
@@ -81,7 +76,8 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
     @Nullable Object numberFormat
   ) {
     if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
-      return new ClientboundSetScorePacket(entry, objectiveName, value, Optional.ofNullable(nmsDisplay), Optional.ofNullable((NumberFormat) numberFormat));
+      return Objects.requireNonNull(PacketAccessors.SCORE_1_20_5_CONSTRUCTOR)
+        .invoke(entry, objectiveName, value, Optional.ofNullable(nmsDisplay), Optional.ofNullable(numberFormat));
     } else if (PacketAccessors.IS_1_20_3_OR_ABOVE) {
       return Objects.requireNonNull(PacketAccessors.SCORE_1_20_3_CONSTRUCTOR)
         .invoke(entry, objectiveName, value, nmsDisplay, numberFormat);
@@ -113,16 +109,16 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
       PacketAccessors.OBJECTIVE_NUMBER_FORMAT_FIELD.set(packet, value);
     }
 
-    ObjectiveCriteria.RenderType nmsRenderType;
+    Object nmsRenderType;
     switch (renderType) {
       case INTEGER:
-        nmsRenderType = ObjectiveCriteria.RenderType.INTEGER;
+        nmsRenderType = PacketAccessors.RENDER_TYPE_INTEGER;
         break;
       case HEARTS:
-        nmsRenderType = ObjectiveCriteria.RenderType.HEARTS;
+        nmsRenderType = PacketAccessors.RENDER_TYPE_HEARTS;
         break;
       default:
-        throw new IllegalStateException();
+        throw new IllegalStateException("unknown render type " + renderType);
     }
 
     PacketAccessors.OBJECTIVE_RENDER_TYPE_FIELD.set(packet, nmsRenderType);
