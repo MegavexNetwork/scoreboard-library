@@ -21,7 +21,7 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
 
   @Override
   public void sendScore(@NotNull Collection<Player> players, @NotNull String entry, int value, @Nullable Component display, @Nullable ScoreFormat scoreFormat) {
-    net.minecraft.network.chat.Component nmsDisplay = display == null ? null : ModernComponentProvider.fromAdventure(display, null);
+    Object nmsDisplay = display == null ? null : ModernComponentProvider.fromAdventure(display, null);
     Object numberFormat = ScoreFormatConverter.convert(null, scoreFormat);
     Object packet = createScorePacket(entry, value, nmsDisplay, numberFormat);
     ModernPacketSender.INSTANCE.sendPacket(players, packet);

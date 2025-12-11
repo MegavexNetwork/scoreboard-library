@@ -69,7 +69,7 @@ public class ModernComponentProvider {
     }
   }
 
-  public static net.minecraft.network.chat.@NotNull Component fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
+  public static @NotNull Object fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
     if (IS_NATIVE_ADVENTURE) {
       return NativeAdventureUtil.fromAdventureComponent(adventure);
     }

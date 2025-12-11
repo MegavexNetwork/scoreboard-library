@@ -1,8 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
-import net.megavex.scoreboardlibrary.api.team.enums.CollisionRule;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.*;
-import net.minecraft.world.scores.Team;
 
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
@@ -18,6 +16,7 @@ public final class PacketAccessors {
     SET_PLAYER_TEAM_PKT_CLASS,
     TEAM_PARAMETERS_PKT_CLASS,
     COMPONENT_CLASS,
+    STYLE_CLASS,
     NUMBER_FORMAT_CLASS,
     DISPLAY_SLOT_CLASS, // 1.20.2
     OBJECTIVE_CLASS,
@@ -35,6 +34,7 @@ public final class PacketAccessors {
     SET_PLAYER_TEAM_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket");
     TEAM_PARAMETERS_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters");
     COMPONENT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component");
+    STYLE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Style");
     NUMBER_FORMAT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.numbers.NumberFormat");
     DISPLAY_SLOT_CLASS = ReflectUtil.getOptionalClass("net.minecraft.world.scores.DisplaySlot");
     OBJECTIVE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Objective");

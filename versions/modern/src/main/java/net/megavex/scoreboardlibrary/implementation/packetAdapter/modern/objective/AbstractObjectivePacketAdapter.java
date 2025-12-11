@@ -72,7 +72,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
   protected @NotNull Object createScorePacket(
     @NotNull String entry,
     int value,
-    @Nullable net.minecraft.network.chat.Component nmsDisplay,
+    @Nullable Object nmsDisplay,
     @Nullable Object numberFormat
   ) {
     if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
@@ -89,7 +89,7 @@ public abstract class AbstractObjectivePacketAdapter implements ObjectivePacketA
 
   protected @NotNull Object createObjectivePacket(
     @NotNull PropertiesPacketType packetType,
-    @NotNull net.minecraft.network.chat.Component nmsValue,
+    @NotNull Object nmsValue,
     @NotNull ObjectiveRenderType renderType,
     @Nullable Object numberFormat
   ) {
