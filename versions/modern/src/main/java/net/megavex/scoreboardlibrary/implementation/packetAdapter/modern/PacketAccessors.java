@@ -1,5 +1,6 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
 
+import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.*;
 
 import java.lang.invoke.MethodType;
@@ -9,13 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 public final class PacketAccessors {
-  public static final Class<?> SET_OBJECTIVE_PKT_CLASS,
+  public static final Class<?> PKT_CLASS,
+    SET_OBJECTIVE_PKT_CLASS,
     SET_DISPLAY_OBJECTIVE_PKT_CLASS,
     SET_SCORE_PKT_CLASS,
     RESET_SCORE_PKT_CLASS,
     SET_PLAYER_TEAM_PKT_CLASS,
     TEAM_PARAMETERS_PKT_CLASS,
     COMPONENT_CLASS,
+    MUTABLE_COMPONENT_CLASS,
     COMPONENT_SERIALIZATION_CLASS,
     STYLE_CLASS,
     STYLE_SERIALIZER_CLASS,
@@ -29,10 +32,14 @@ public final class PacketAccessors {
     DATA_RESULT_CLASS,
     DYNAMIC_OPS_CLASS,
     JSON_OPS_CLASS,
-    CODEC_CLASS;
+    CODEC_CLASS,
+  SERVER_PLAYER_CLASS,
+  PLAYER_CONNECTION_CLASS,
+  ADVENTURE_COMPONENT_CLASS;
 
   static {
     // TODO: spigot mapping names
+    PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.Packet");
     SET_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetObjectivePacket");
     SET_DISPLAY_OBJECTIVE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket");
     SET_SCORE_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetScorePacket");
@@ -40,6 +47,7 @@ public final class PacketAccessors {
     SET_PLAYER_TEAM_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket");
     TEAM_PARAMETERS_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters");
     COMPONENT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component");
+    MUTABLE_COMPONENT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.MutableComponent");
     COMPONENT_SERIALIZATION_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.ComponentSerialization");
     STYLE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Style");
     STYLE_SERIALIZER_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Style$Serializer");
@@ -54,6 +62,9 @@ public final class PacketAccessors {
     DYNAMIC_OPS_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.DynamicOps");
     JSON_OPS_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.JsonOps");
     CODEC_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.Codec");
+    SERVER_PLAYER_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.server.level.ServerPlayer");
+    PLAYER_CONNECTION_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.server.network.ServerGamePacketListenerImpl");
+    ADVENTURE_COMPONENT_CLASS = ReflectUtil.getOptionalClass("io.papermc.paper.adventure.AdventureComponent");
   }
 
   public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE, IS_1_21_5_OR_ABOVE, IS_1_21_6_OR_ABOVE;
@@ -174,6 +185,9 @@ public final class PacketAccessors {
   public static final Object RENDER_TYPE_HEARTS = ReflectUtil.getEnumInstance(OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS, "HEARTS");
 
   public static final List<Object> DISPLAY_SLOT_VALUES = DISPLAY_SLOT_CLASS == null ? null : Arrays.asList(DISPLAY_SLOT_CLASS.getEnumConstants());
+
+  public static final ConstructorAccessor<?> ADVENTURE_COMPONENT_CONSTRUCTOR =
+    ADVENTURE_COMPONENT_CLASS != null ? ReflectUtil.findOptionalConstructor(ADVENTURE_COMPONENT_CLASS, Component.class) : null;
 
   public static final PacketConstructor<?> OBJECTIVE_PACKET_CONSTRUCTOR =
     ReflectUtil.getEmptyConstructor(SET_OBJECTIVE_PKT_CLASS);

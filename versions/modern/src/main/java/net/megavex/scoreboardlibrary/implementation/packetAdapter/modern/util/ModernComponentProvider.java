@@ -5,7 +5,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
-import net.minecraft.network.chat.MutableComponent;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,30 +36,16 @@ public class ModernComponentProvider {
     try {
       Method method = craftRegistry.getDeclaredMethod("getMinecraftRegistry");
       MINECRAFT_REGISTRY = method.invoke(null);
-
       CODEC = PacketAccessors.COMPONENT_SERIALIZATION_CLASS.getField("CODEC").get(null);
-
-
-
-
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
       throw new RuntimeException(e);
     }
 
-    boolean isNativeAdventure = false;
-    try {
-      Class.forName("io.papermc.paper.adventure.PaperAdventure");
+    // Hide from relocation checkers
+    String notRelocatedPackage = "net.ky".concat("ori.adventure.text");
 
-      // Hide from relocation checkers
-      String notRelocatedPackage = "net.ky".concat("ori.adventure.text");
-
-      // The native adventure optimisations only work when the adventure library isn't relocated
-      if (Component.class.getPackage().getName().equals(notRelocatedPackage)) {
-        isNativeAdventure = true;
-      }
-    } catch (ClassNotFoundException ignored) {
-    }
-    IS_NATIVE_ADVENTURE = isNativeAdventure;
+    // The native adventure optimisations only work when the adventure library isn't relocated
+    IS_NATIVE_ADVENTURE = PacketAccessors.ADVENTURE_COMPONENT_CLASS != null && Component.class.getPackage().getName().equals(notRelocatedPackage);
   }
 
   private static final MethodHandle FROM_JSON_METHOD;
@@ -70,7 +55,7 @@ public class ModernComponentProvider {
       Class<?> serializerClass = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component$Serializer", "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer");
       MethodHandle handle = null;
       for (Method method : serializerClass.getMethods()) {
-        if (method.getReturnType() == MutableComponent.class &&
+        if (method.getReturnType() == PacketAccessors.MUTABLE_COMPONENT_CLASS &&
           method.getParameterCount() >= 1 &&
           method.getParameterCount() <= 2 &&
           method.getParameterTypes()[0] == JsonElement.class

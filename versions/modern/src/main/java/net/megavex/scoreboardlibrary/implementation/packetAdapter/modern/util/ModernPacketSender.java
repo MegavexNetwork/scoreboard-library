@@ -1,10 +1,8 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
 
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.PacketSender;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import org.bukkit.Bukkit;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.MinecraftClasses;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandle;
@@ -13,27 +11,25 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 
 public final class ModernPacketSender implements PacketSender<Object> {
+  public static final ModernPacketSender INSTANCE = new ModernPacketSender();
+
   private static final MethodHandle GET_HANDLE;
   private static final MethodHandle PLAYER_CONNECTION;
   private static final MethodHandle SEND_PACKET;
-
-  public static final ModernPacketSender INSTANCE = new ModernPacketSender();
 
   private ModernPacketSender() {
   }
 
   static {
-    String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
-
     Class<?> craftPlayer;
     try {
-      craftPlayer = Class.forName(cbPackage + ".entity.CraftPlayer");
+      craftPlayer = Class.forName(MinecraftClasses.craftBukkit("entity.CraftPlayer"));
     } catch (ClassNotFoundException e) {
       throw new ExceptionInInitializerError(e);
     }
 
     MethodHandles.Lookup lookup = MethodHandles.publicLookup();
-    MethodType methodType = MethodType.methodType(ServerPlayer.class);
+    MethodType methodType = MethodType.methodType(PacketAccessors.SERVER_PLAYER_CLASS);
     try {
       GET_HANDLE = lookup.findVirtual(craftPlayer, "getHandle", methodType);
     } catch (NoSuchMethodException | IllegalAccessException e) {
@@ -41,8 +37,8 @@ public final class ModernPacketSender implements PacketSender<Object> {
     }
 
     MethodHandle playerConnection = null;
-    for (Field field : ServerPlayer.class.getFields()) {
-      if (field.getType() == ServerGamePacketListenerImpl.class) {
+    for (Field field : PacketAccessors.SERVER_PLAYER_CLASS.getFields()) {
+      if (field.getType() == PacketAccessors.PLAYER_CONNECTION_CLASS) {
         try {
           playerConnection = lookup.unreflectGetter(field);
         } catch (IllegalAccessException e) {
@@ -56,13 +52,13 @@ public final class ModernPacketSender implements PacketSender<Object> {
     }
     PLAYER_CONNECTION = playerConnection;
 
-    MethodType sendMethodType = MethodType.methodType(void.class, Packet.class);
+    MethodType sendMethodType = MethodType.methodType(void.class, PacketAccessors.PKT_CLASS);
     MethodHandle sendPacket = null;
 
     String[] sendPacketNames = {"a", "sendPacket", "b", "send"};
     for (String name : sendPacketNames) {
       try {
-        sendPacket = lookup.findVirtual(ServerGamePacketListenerImpl.class, name, sendMethodType);
+        sendPacket = lookup.findVirtual(PacketAccessors.PLAYER_CONNECTION_CLASS, name, sendMethodType);
       } catch (NoSuchMethodException ignored) {
       } catch (IllegalAccessException e) {
         throw new ExceptionInInitializerError(e);
@@ -79,8 +75,8 @@ public final class ModernPacketSender implements PacketSender<Object> {
   @Override
   public void sendPacket(Player player, Object packet) {
     try {
-        ServerPlayer handle = (ServerPlayer) GET_HANDLE.invoke(player);
-        ServerGamePacketListenerImpl connection = (ServerGamePacketListenerImpl) PLAYER_CONNECTION.invoke(handle);
+        Object handle = GET_HANDLE.invoke(player);
+        Object connection = PLAYER_CONNECTION.invoke(handle);
         SEND_PACKET.invoke(connection, packet);
     } catch (Throwable e) {
       throw new IllegalStateException("couldn't send packet to player", e);
