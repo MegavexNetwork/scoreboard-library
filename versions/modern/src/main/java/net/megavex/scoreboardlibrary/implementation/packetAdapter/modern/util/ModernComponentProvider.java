@@ -1,25 +1,53 @@
-package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern;
+package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util;
 
 import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.GlobalTranslator;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.NativeAdventureUtil;
-import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.util.RegistryUtil;
+import net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.PacketAccessors;
 import net.megavex.scoreboardlibrary.implementation.packetAdapter.util.reflect.ReflectUtil;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.chat.MutableComponent;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.Optional;
 
 import static net.kyori.adventure.text.serializer.gson.GsonComponentSerializer.gson;
 
-public class ComponentProviderImpl implements ComponentProvider {
+public class ModernComponentProvider {
+  public static final boolean IS_NATIVE_ADVENTURE;
+
+  private static final Object MINECRAFT_REGISTRY;
+  private static final Object CODEC;
+
+  static {
+    String cbPackage = Bukkit.getServer().getClass().getPackage().getName();
+    Class<?> craftRegistry;
+    try {
+      craftRegistry = Class.forName(cbPackage + ".CraftRegistry");
+    } catch (ClassNotFoundException e) {
+      throw new ExceptionInInitializerError(e);
+    }
+
+    try {
+      Method method = craftRegistry.getDeclaredMethod("getMinecraftRegistry");
+      MINECRAFT_REGISTRY = method.invoke(null);
+      CODEC = PacketAccessors.COMPONENT_SERIALIZATION_CLASS.getField("CODEC").get(null);
+    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e) {
+      throw new RuntimeException(e);
+    }
+
+    // Hide from relocation checkers
+    String notRelocatedPackage = "net.ky".concat("ori.adventure.text");
+
+    // The native adventure optimisations only work when the adventure library isn't relocated
+    IS_NATIVE_ADVENTURE = PacketAccessors.ADVENTURE_COMPONENT_CLASS != null && Component.class.getPackage().getName().equals(notRelocatedPackage);
+  }
+
   private static final MethodHandle FROM_JSON_METHOD;
 
   static {
@@ -27,7 +55,7 @@ public class ComponentProviderImpl implements ComponentProvider {
       Class<?> serializerClass = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component$Serializer", "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer");
       MethodHandle handle = null;
       for (Method method : serializerClass.getMethods()) {
-        if (method.getReturnType() == MutableComponent.class &&
+        if (method.getReturnType() == PacketAccessors.MUTABLE_COMPONENT_CLASS &&
           method.getParameterCount() >= 1 &&
           method.getParameterCount() <= 2 &&
           method.getParameterTypes()[0] == JsonElement.class
@@ -51,15 +79,8 @@ public class ComponentProviderImpl implements ComponentProvider {
     }
   }
 
-  private final boolean isNativeAdventure;
-
-  public ComponentProviderImpl(boolean isNativeAdventure) {
-    this.isNativeAdventure = isNativeAdventure;
-  }
-
-  @Override
-  public net.minecraft.network.chat.@NotNull Component fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
-    if (isNativeAdventure) {
+  public static @NotNull Object fromAdventure(@NotNull Component adventure, @Nullable Locale locale) {
+    if (IS_NATIVE_ADVENTURE) {
       return NativeAdventureUtil.fromAdventureComponent(adventure);
     }
 
@@ -71,18 +92,20 @@ public class ComponentProviderImpl implements ComponentProvider {
 
     if (FROM_JSON_METHOD == null) {
       // 1.21.6+
-      return ComponentSerialization.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow();
+      Object result = PacketAccessors.CODEC_PARSE.invoke(CODEC, PacketAccessors.JSON_OPS, json);
+      //noinspection OptionalGetWithoutIsPresent
+      return ((Optional<?>) PacketAccessors.RESULT_UNWRAP_METHOD.invoke(result)).get();
     }
 
     Object[] args;
     if (PacketAccessors.IS_1_20_5_OR_ABOVE) {
-      args = new Object[]{json, RegistryUtil.MINECRAFT_REGISTRY};
+      args = new Object[]{json, MINECRAFT_REGISTRY};
     } else {
       args = new Object[]{json};
     }
 
     try {
-      return (net.minecraft.network.chat.Component) FROM_JSON_METHOD.invokeWithArguments(args);
+      return FROM_JSON_METHOD.invokeWithArguments(args);
     } catch (Throwable e) {
       throw new RuntimeException(e);
     }

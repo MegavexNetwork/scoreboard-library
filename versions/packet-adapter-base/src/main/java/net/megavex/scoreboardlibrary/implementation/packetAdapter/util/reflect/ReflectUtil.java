@@ -152,6 +152,28 @@ public class ReflectUtil {
     };
   }
 
+  public static @NotNull MethodAccessor findMethod(@NotNull Class<?> clazz, @NotNull String name, boolean isStatic, @NotNull MethodType methodType) {
+    MethodAccessor accessor = findOptionalMethod(clazz, name, isStatic, methodType);
+    if (accessor == null) {
+      throw new RuntimeException("Method " + name + " for class " + clazz.getName() + " not found");
+    }
+    return accessor;
+  }
+
+  public static <T> @Nullable MethodAccessor findOptionalMethod(@NotNull Class<T> clazz, @NotNull String name, boolean isStatic, @NotNull MethodType methodType) {
+    try {
+      MethodHandle handle;
+      if (isStatic) {
+        handle = LOOKUP.findStatic(clazz, name, methodType);
+      } else {
+        handle = LOOKUP.findVirtual(clazz, name, methodType);
+      }
+      return new MethodAccessor(convertToGeneric(handle));
+    } catch (NoSuchMethodException | IllegalAccessException e) {
+      return null;
+    }
+  }
+
   private static @NotNull MethodHandle convertToGeneric(@NotNull MethodHandle handle) {
     MethodHandle target = handle.asFixedArity();
     MethodType methodType = MethodType.genericMethodType(0, true);
