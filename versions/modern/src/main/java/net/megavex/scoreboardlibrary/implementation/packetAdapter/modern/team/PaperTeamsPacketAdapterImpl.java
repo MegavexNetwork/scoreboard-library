@@ -66,19 +66,19 @@ public class PaperTeamsPacketAdapterImpl extends AbstractTeamsPacketAdapterImpl 
       super.fillParameters(parameters, locale);
 
       if (properties.displayName() != displayName) {
-        net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(properties.displayName());
+        Object vanilla = NativeAdventureUtil.fromAdventureComponent(properties.displayName());
         PacketAccessors.DISPLAY_NAME_FIELD.set(parameters, vanilla);
         displayName = properties.displayName();
       }
 
       if (properties.prefix() != prefix) {
-        net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(properties.prefix());
+        Object vanilla = NativeAdventureUtil.fromAdventureComponent(properties.prefix());
         PacketAccessors.PREFIX_FIELD.set(parameters, vanilla);
         prefix = properties.prefix();
       }
 
       if (properties.suffix() != suffix) {
-        net.minecraft.network.chat.Component vanilla = NativeAdventureUtil.fromAdventureComponent(properties.suffix());
+        Object vanilla = NativeAdventureUtil.fromAdventureComponent(properties.suffix());
         PacketAccessors.SUFFIX_FIELD.set(parameters, vanilla);
         suffix = properties.suffix();
       }

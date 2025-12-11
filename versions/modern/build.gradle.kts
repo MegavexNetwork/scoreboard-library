@@ -7,6 +7,7 @@ dependencies {
   compileOnly(project(":scoreboard-library-packet-adapter-base")) {
     exclude(group = "org.spigotmc", module = "spigot-api")
   }
+//  compileOnly(libs.spigotApi)
   paperweight.paperDevBundle(libs.versions.devBundle.get())
 }
 
@@ -45,7 +46,8 @@ publishing {
       classifier = "mojmap"
     }
 
-    artifact(tasks.reobfJar)
+//    artifact(tasks.reobfJar)
+    artifact(tasks.jar)
     artifact(tasks.javadocJar)
     artifact(tasks.sourcesJar)
   }

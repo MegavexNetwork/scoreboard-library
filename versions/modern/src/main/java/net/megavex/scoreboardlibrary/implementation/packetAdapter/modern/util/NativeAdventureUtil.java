@@ -8,7 +8,7 @@ public final class NativeAdventureUtil {
   private NativeAdventureUtil() {
   }
 
-  public static @NotNull AdventureComponent fromAdventureComponent(@NotNull Component component) {
+  public static @NotNull Object fromAdventureComponent(@NotNull Component component) {
     return new AdventureComponent(component);
   }
 }

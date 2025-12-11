@@ -1,6 +1,5 @@
 package net.megavex.scoreboardlibrary.implementation.packetAdapter.modern.objective;
 
-import io.papermc.paper.adventure.AdventureComponent;
 import net.kyori.adventure.text.Component;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveRenderType;
 import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
@@ -35,7 +34,7 @@ public class PaperObjectivePacketAdapter extends AbstractObjectivePacketAdapter 
     @NotNull ObjectiveRenderType renderType,
     @Nullable ScoreFormat scoreFormat
   ) {
-    AdventureComponent nmsValue = NativeAdventureUtil.fromAdventureComponent(value);
+    Object nmsValue = NativeAdventureUtil.fromAdventureComponent(value);
     Object numberFormat = ScoreFormatConverter.convert(null, scoreFormat);
     Object packet = createObjectivePacket(packetType, nmsValue, renderType, numberFormat);
     ModernPacketSender.INSTANCE.sendPacket(players, packet);

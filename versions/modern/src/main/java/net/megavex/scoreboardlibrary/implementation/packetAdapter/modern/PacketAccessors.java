@@ -16,14 +16,20 @@ public final class PacketAccessors {
     SET_PLAYER_TEAM_PKT_CLASS,
     TEAM_PARAMETERS_PKT_CLASS,
     COMPONENT_CLASS,
+    COMPONENT_SERIALIZATION_CLASS,
     STYLE_CLASS,
+    STYLE_SERIALIZER_CLASS,
     NUMBER_FORMAT_CLASS,
     DISPLAY_SLOT_CLASS, // 1.20.2
     OBJECTIVE_CLASS,
     TEAM_VISIBILITY_CLASS,
     TEAM_COLLISION_RULE_CLASS,
     CHAT_FORMATTING_CLASS,
-    OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS;
+    OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS,
+    DATA_RESULT_CLASS,
+    DYNAMIC_OPS_CLASS,
+    JSON_OPS_CLASS,
+    CODEC_CLASS;
 
   static {
     // TODO: spigot mapping names
@@ -34,7 +40,9 @@ public final class PacketAccessors {
     SET_PLAYER_TEAM_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket");
     TEAM_PARAMETERS_PKT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters");
     COMPONENT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Component");
+    COMPONENT_SERIALIZATION_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.ComponentSerialization");
     STYLE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Style");
+    STYLE_SERIALIZER_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.Style$Serializer");
     NUMBER_FORMAT_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.network.chat.numbers.NumberFormat");
     DISPLAY_SLOT_CLASS = ReflectUtil.getOptionalClass("net.minecraft.world.scores.DisplaySlot");
     OBJECTIVE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Objective");
@@ -42,6 +50,10 @@ public final class PacketAccessors {
     TEAM_COLLISION_RULE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.Team$CollisionRule");
     CHAT_FORMATTING_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.ChatFormatting");
     OBJECTIVE_CRITERIA_RENDER_TYPE_CLASS = ReflectUtil.getClassOrThrow("net.minecraft.world.scores.criteria.ObjectiveCriteria$RenderType");
+    DATA_RESULT_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.DataResult");
+    DYNAMIC_OPS_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.DynamicOps");
+    JSON_OPS_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.JsonOps");
+    CODEC_CLASS = ReflectUtil.getClassOrThrow("com.mojang.serialization.Codec");
   }
 
   public static final boolean IS_1_20_2_OR_ABOVE, IS_1_20_3_OR_ABOVE, IS_1_20_5_OR_ABOVE, IS_1_21_5_OR_ABOVE, IS_1_21_6_OR_ABOVE;
@@ -131,7 +143,19 @@ public final class PacketAccessors {
       SCORE_1_20_2_METHOD_REMOVE = ReflectUtil.getEnumInstance(methodClass, "REMOVE", "b");
       SCORE_1_20_2_CONSTRUCTOR = ReflectUtil.findConstructor(SET_SCORE_PKT_CLASS, methodClass, String.class, String.class, int.class);
     }
+
+    RESULT_UNWRAP_METHOD = ReflectUtil.findMethod(PacketAccessors.DATA_RESULT_CLASS, "result", false, MethodType.methodType(Optional.class));
+    try {
+      JSON_OPS = PacketAccessors.JSON_OPS_CLASS.getField("INSTANCE").get(null);
+    } catch (IllegalAccessException | NoSuchFieldException e) {
+      throw new RuntimeException(e);
+    }
+    CODEC_PARSE = ReflectUtil.findMethod(PacketAccessors.CODEC_CLASS, "parse", false, MethodType.methodType(PacketAccessors.DATA_RESULT_CLASS, PacketAccessors.DYNAMIC_OPS_CLASS, Object.class));
   }
+
+  public static final MethodAccessor RESULT_UNWRAP_METHOD;
+  public static final MethodAccessor CODEC_PARSE;
+  public static final Object JSON_OPS;
 
   public static final MethodAccessor CHAT_FORMATTING_GET_BY_CODE =
     ReflectUtil.findMethod(CHAT_FORMATTING_CLASS, "getByCode", true, MethodType.methodType(CHAT_FORMATTING_CLASS, char.class));
